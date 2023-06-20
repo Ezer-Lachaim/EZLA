@@ -7,7 +7,7 @@ export const metadata = {
   title: 'EZLA',
   description: 'Ezer Lachaim'
 };
-const x = new Promise ((resolve, reject) => {});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
