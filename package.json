@@ -10,6 +10,9 @@
     "lint": "next lint",
     "prepare": "husky install"
   },
+  "lint-staged": {
+    "*.{js,jsx}": "eslint --fix"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -35,6 +38,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2"
   }
 }
