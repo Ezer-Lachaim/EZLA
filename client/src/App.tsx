@@ -1,13 +1,16 @@
-import Button from '@mui/material/Button';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Backoffice from "./Backoffice/Backoffice";
+import Client from "./Client/Client";
 
 function App() {
-
   return (
-    <h1 className="text-3xl font-bold underline flex-auto text-blue-600">
-      Hello world!
-      <Button variant="contained">Contained</Button>
-    </h1>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Client />} />
+        <Route path="/backoffice" element={<Backoffice />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
