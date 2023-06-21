@@ -2,8 +2,9 @@ import { ChangeEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import withLayout from '../../components/LayoutHOC.tsx';
 
-export const ForgotPassword = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(true);
 
@@ -55,3 +56,5 @@ export const ForgotPassword = () => {
     </>
   );
 };
+
+export default withLayout(ForgotPassword, { title: 'החלפת סיסמא' });

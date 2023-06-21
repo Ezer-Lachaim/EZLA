@@ -3,10 +3,10 @@ import mainRoutes from './Backoffice/Routes/MainRoutes';
 import authRoutes from './Backoffice/Routes/AuthRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
-import { ForgotPassword } from './Client/pages/ForgotPassword/ForgotPassword';
+import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
 import Login from './Client/pages/Login/Login.tsx';
-import { OrderRide } from './Client/pages/OrderRide/OrderRide.tsx';
-import { VerificationCode } from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
+import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
+import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 
 function App() {
   return (
