@@ -1,6 +1,17 @@
-dist/
-node_modules/
-coverage/
-*.sqlite
+# API keys and secrets
 .env
-migrations/
+
+# Dependency directory
+node_modules
+
+# Editors
+.idea
+*.iml
+.vscode/settings.json
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
