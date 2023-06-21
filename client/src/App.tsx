@@ -16,7 +16,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="forgot-password/verify" element={<VerificationCode />} />
-          <Route path="order-ride" element={<OrderRide />} />
+          <Route path="register" element={<OrderRide />} />
         </Route>
         <Route path="/backoffice" element={<Backoffice />}>
           {mainRoutes.map((route) => route)}

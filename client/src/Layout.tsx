@@ -5,7 +5,49 @@ import { prefixer } from 'stylis';
 import createCache from '@emotion/cache';
 
 const theme = createTheme({
-  direction: 'rtl'
+  direction: 'rtl',
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: { color: '#F44336' }
+      }
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          fontSize: 14
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: 14
+        }
+      }
+    },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        label: {
+          fontSize: 14
+        },
+        root: {
+          margin: 0
+        }
+      }
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          marginRight: 8
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: 'Heebo, sans-serif'
+  }
 });
 
 // Create rtl cache
