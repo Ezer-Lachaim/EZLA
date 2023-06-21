@@ -1,5 +1,7 @@
 import '../globals.css';
 import { Inter } from 'next/font/google';
+import { NavBar } from './components/navbar/navbar';
+import { RootContainer } from './components/navbar/rootContainer/rootContainer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,8 +14,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div>header</div>
-        <div>{children}</div>
+        <RootContainer>
+          <NavBar title="הרשמה לשירות הסעות" isGoBack />
+          <main className="mt-20 flex items-center flex-col">
+            <div>header</div>
+            {children}
+          </main>
+        </RootContainer>
       </body>
     </html>
   );
