@@ -12,11 +12,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" dir="rtl">
+      <body className={`${inter.className} h-screen flex flex-col m-0`}>
+        <NavBar title="הרשמה לשירות הסעות" isGoBack />
         <RootContainer>
-          <NavBar title="הרשמה לשירות הסעות" isGoBack />
-          <main className="mt-20 flex items-center flex-col">
+          <main className="flex items-center flex-col p-5 h-full box-border">
             <div>header</div>
             {children}
           </main>
