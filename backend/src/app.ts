@@ -21,7 +21,7 @@ app.set("view engine", "pug");
 app.use(logger("dev"));
 
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(authHandler)
+// app.use(authHandler)
 app.use("/users", usersRouter);
 app.use("/rides", ridesRouter);
 app.use("/", index);
