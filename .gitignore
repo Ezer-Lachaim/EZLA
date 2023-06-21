@@ -17,6 +17,7 @@
 
 # misc
 .DS_Store
+tsconfig.tsbuildinfo
 *.pem
 
 # debug
@@ -25,11 +26,15 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+*.db
+*.db-journal
+
+
