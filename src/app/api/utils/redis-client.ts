@@ -12,7 +12,7 @@ const client = createClient({
 
 export const connect = async () => {
   if (!client.isOpen) {
-    client.connect();
+    await client.connect();
   }
 };
 
