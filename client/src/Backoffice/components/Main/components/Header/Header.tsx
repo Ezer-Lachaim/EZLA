@@ -9,7 +9,7 @@ import Badge from "@mui/material/Badge";
 
 export default function ButtonAppBar() {
   return (
-    <AppBar position="static" className="bg-white drop-shadow-md">
+    <AppBar position="static" className="bg-white drop-shadow-md" sx={{backgroundColor:'white'}}>
       <Toolbar>
         <img
           src="/logo.png"
