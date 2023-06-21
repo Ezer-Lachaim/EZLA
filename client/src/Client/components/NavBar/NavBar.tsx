@@ -7,10 +7,7 @@ interface Props {
   hasGoBack?: boolean;
 }
 
-export const NavBar = ({
-  title,
-  hasGoBack = false
-}: Props) => {
+export const NavBar = ({ title, hasGoBack = false }: Props) => {
   const navigate = useNavigate();
 
   const onClickBackIcon = () => {
