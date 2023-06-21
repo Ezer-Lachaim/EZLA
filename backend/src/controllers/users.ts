@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import client from '../repository/redis-client'
 
 /**
  * GET /
