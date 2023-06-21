@@ -1,5 +1,11 @@
+import { Outlet } from 'react-router-dom';
+
 const Client = () => {
-  return <div>Client</div>;
+  return (
+    <main>
+      <Outlet />
+    </main>
+  );
 };
 
 export default Client;
