@@ -14,4 +14,4 @@ export const OrderRide = () => {
       </Stepper>
     </Box>
   );
-}
+};

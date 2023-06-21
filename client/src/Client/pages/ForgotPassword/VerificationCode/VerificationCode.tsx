@@ -4,4 +4,4 @@ export const VerificationCode = () => {
       <h1>VerificationCode</h1>
     </div>
   );
-}
+};

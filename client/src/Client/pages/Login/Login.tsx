@@ -28,7 +28,6 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
-
   return (
     <div className="flex flex-col items-center w-full">
       <img src={Logo} alt="logo" width={106} height={68} />

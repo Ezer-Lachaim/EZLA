@@ -6,6 +6,7 @@
   "scripts": {
     "start:backend": "npm run start -w backend",
     "start:client": "npm run dev -w client",
+    "lint": "npm run lint --workspaces",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
