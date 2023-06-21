@@ -22,7 +22,8 @@
     "react-router-dom": "^6.13.0",
     "sort-by": "^1.2.0",
     "stylis": "^4.2.0",
-    "stylis-plugin-rtl": "^2.1.1"
+    "stylis-plugin-rtl": "^2.1.1",
+    "react-verification-input": "^3.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
