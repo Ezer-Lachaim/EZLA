@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <nav className="bg-blue w-250">
+    <nav className="bg-blue-600 w-250" >
       <List>
         <Link to="">
           <ListItem disablePadding>
