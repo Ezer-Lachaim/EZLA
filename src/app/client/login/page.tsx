@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex flex-col items-center w-full">
-      <h1>כניסה למערכת</h1>
+      <h1 className="text-lg text-blue-600">כניסה למערכת</h1>
       <LoginForm />
       <Link href="/client/forgot-pass" className="mt-5">
         שכחתי סיסמא

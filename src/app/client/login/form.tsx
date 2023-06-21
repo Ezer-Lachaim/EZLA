@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   Button,
   FormControl,
@@ -7,12 +8,15 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  OutlinedInput,
-  TextField
+  OutlinedInput
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
@@ -20,9 +24,9 @@ export const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm();
+  } = useForm<Inputs>();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
     <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)}>
