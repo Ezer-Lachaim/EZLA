@@ -20,7 +20,7 @@ export const RootContainer = ({ children }: { children: React.ReactNode }) => {
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
-        <div className="bg-white m-5">{children}</div>
+        <div className="relative flex-1 bg-white max-h-full overflow-auto">{children}</div>
       </ThemeProvider>
     </CacheProvider>
   );
