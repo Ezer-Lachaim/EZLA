@@ -23,6 +23,7 @@
     "project": "**/tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/no-use-before-define": "off",
     "import/extensions": "off",
     "@typescript-eslint/no-floating-promises": "error",
     "react/function-component-definition": "off",
