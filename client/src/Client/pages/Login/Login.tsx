@@ -26,13 +26,13 @@ export default function Login() {
     formState: { errors }
   } = useForm<Inputs>();
 
+  // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
 
   return (
     <div className="flex flex-col items-center w-full">
-      <img src={Logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-lg text-blue-600 font-bold m-5">כניסה למערכת</h1>
+      <img src={Logo} alt="logo" width={106} height={68} />
+      <h1 className="text-lg text-blue-600">כניסה למערכת</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <InputLabel htmlFor="email">אימייל</InputLabel>
@@ -79,13 +79,13 @@ export default function Login() {
           כניסה
         </Button>
       </form>
-      <Link to="/forgot-password" className="mt-5">
+      <Link to="/client/forgot-pass" className="mt-5">
         שכחתי סיסמא
       </Link>
       <div className="absolute bottom-4">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/register">להרשמה</Link>
+        <Link to="/client/register">להרשמה</Link>
       </div>
     </div>
   );
