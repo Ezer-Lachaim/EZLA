@@ -14,7 +14,7 @@ export const NavBar = ({
 }: Props) => {
   return (
     <AppBar className="p-4 static" position="static">
-      <div className="flex items-center justify-center w-full">
+      <div className="flex items-center justify-center w-full text-xl">
         {title}
         {isGoBack && (
           <ArrowForwardIosIcon
