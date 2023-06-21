@@ -17,10 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} h-screen flex flex-col m-0`} suppressHydrationWarning>
         <NavBar title="הרשמה לשירות הסעות" isGoBack />
         <RootContainer>
-          <main className="flex items-center flex-col p-5 h-full box-border">
-            <div>header</div>
-            {children}
-          </main>
+          <main className="flex items-center flex-col p-5 h-full box-border">{children}</main>
         </RootContainer>
         <Footer />
       </body>
