@@ -4,9 +4,9 @@ import SideBar from './components/SideBar/SideBar';
 
 const Main = () => {
   return (
-    <div>
+    <div className='flex flex-col h-full'>
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 flex-grow">
         <SideBar />
         <main className="flex flex-1 flex-col px-5 py-4">
           <Outlet />
