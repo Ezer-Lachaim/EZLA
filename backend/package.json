@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "server.js",
     "scripts": {
-        "start": "npm run serve",
+        "start": "npm run build && npm run serve",
         "build": "npm run build-ts",
         "serve": "node dist/server.js",
         "test": "jest --coverage=false --verbose",
@@ -25,6 +25,8 @@
     "license": "ISC",
     "dependencies": {
         "express": "^4.16.2",
+        "firebase": "^9.22.2",
+        "firebase-admin": "^11.9.0",
         "http-errors": "^1.7.1",
         "morgan": "^1.9.1",
         "pug": "^3.0.1"
