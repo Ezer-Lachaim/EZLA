@@ -1,7 +1,14 @@
+'use client';
+
+import PageHeader from './components/PageHeader/PageHeader';
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      hello backoffice
-    </main>
+    <div>
+      <PageHeader>
+        <PageHeader.Title>נסיעות פעילות</PageHeader.Title>
+        <PageHeader.ActionButton>צריך למחוק</PageHeader.ActionButton>
+      </PageHeader>
+    </div>
   );
 }
