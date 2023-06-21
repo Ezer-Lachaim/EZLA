@@ -1,6 +1,7 @@
 import VerificationInput from 'react-verification-input';
+import withLayout from '../../../components/LayoutHOC.tsx';
 
-export const VerificationCode = () => {
+const VerificationCode = () => {
   let email = '';
   const urlParams = new URLSearchParams(window.location.search);
   email = urlParams.get('email') || 'my_mail@mama.cita'; // remove the default value
@@ -23,3 +24,5 @@ export const VerificationCode = () => {
     </>
   );
 };
+
+export default withLayout(VerificationCode, { title: 'קוד אימות' });

@@ -2,12 +2,12 @@ import AppBar from '@mui/material/AppBar';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useNavigate } from 'react-router-dom';
 
-interface Props {
+export interface NavBarProps {
   title: string;
-  hasGoBack?: boolean;
+  hideBackButton?: boolean;
 }
 
-export const NavBar = ({ title, hasGoBack = false }: Props) => {
+export const NavBar = ({ title, hideBackButton = false }: NavBarProps) => {
   const navigate = useNavigate();
 
   const onClickBackIcon = () => {
@@ -18,7 +18,7 @@ export const NavBar = ({ title, hasGoBack = false }: Props) => {
     <AppBar className="p-4 static" position="static">
       <div className="flex items-center justify-center w-full text-xl">
         {title}
-        {hasGoBack && (
+        {!hideBackButton && (
           <ArrowForwardIosIcon
             className="absolute right-6 cursor-pointer"
             onClick={onClickBackIcon}
