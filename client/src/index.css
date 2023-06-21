@@ -11,3 +11,13 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+@layer base {
+    h1{
+        @apply text-lg text-blue-600 font-bold m-5;
+    }
+
+    a {
+        @apply text-blue-500 underline;
+    }
+}
