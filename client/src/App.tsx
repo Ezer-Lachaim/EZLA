@@ -3,9 +3,10 @@ import mainRoutes from './Backoffice/Routes/MainRoutes';
 import authRoutes from './Backoffice/Routes/AuthRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
-import { ForgotPasswordRouter } from './Client/pages/ForgotPassword/ForgotPasswordRouter.tsx';
-import { OrderRide } from './Client/pages/OrderRide/OrderRide.tsx';
+import { ForgotPassword } from './Client/pages/ForgotPassword/ForgotPassword';
 import Login from './Client/pages/Login/Login.tsx';
+import { OrderRide } from './Client/pages/OrderRide/OrderRide.tsx';
+import { VerificationCode } from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Routes>
         <Route path="" element={<Client />}>
           <Route path="login" element={<Login />} />
-          <Route path="forgot-password" element={<ForgotPasswordRouter />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="forgot-password/verify" element={<VerificationCode />} />
           <Route path="order-ride" element={<OrderRide />} />
         </Route>
         <Route path="/backoffice" element={<Backoffice />}>
