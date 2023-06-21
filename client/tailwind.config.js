@@ -5,6 +5,10 @@ export default {
     extend: {},
     fontFamily: {
       sans: ["Heebo", "sans-serif"],
+    extend: {
+      spacing: {
+        250: "250px",
+      },
     },
   },
   plugins: [],

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import client from "../repository/redis-client";
 
-/**
- * GET /
- * Home page.
- */
-export const index = async (req: Request, res: Response): Promise<void> => {
-    res.send({ hello: 'world' });
+export const getHospitals = async (req: Request, res: Response): Promise<void> => {
+    res.send(['תל השומר']);
+};
+
+export const getAllKeys = async (req: Request, res: Response): Promise<void> => {
+    const keys = await client.keys("*");
+    res.send(keys);
 };
