@@ -21,13 +21,5 @@
   "workspaces": [
     "client",
     "backend"
-  ],
-  "dependencies": {
-    "@mui/icons-material": "^5.11.16",
-    "stylis": "^4.2.0",
-    "stylis-plugin-rtl": "^2.1.1"
-  },
-  "devDependencies": {
-    "@types/stylis": "^4.2.0"
-  }
+  ]
 }
