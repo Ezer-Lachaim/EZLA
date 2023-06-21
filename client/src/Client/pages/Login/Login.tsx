@@ -79,13 +79,13 @@ export default function Login() {
           כניסה
         </Button>
       </form>
-      <Link to="/client/forgot-pass" className="mt-5">
+      <Link to="/forgot-password" className="mt-5">
         שכחתי סיסמא
       </Link>
       <div className="absolute bottom-4">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/client/register">להרשמה</Link>
+        <Link to="/register">להרשמה</Link>
       </div>
     </div>
   );
