@@ -23,6 +23,7 @@
     "project": "**/tsconfig.json"
   },
   "rules": {
+    "import/extensions": "off",
     "@typescript-eslint/no-floating-promises": "error",
     "react/function-component-definition": "off",
     "import/no-extraneous-dependencies": "off",

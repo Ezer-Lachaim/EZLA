@@ -11,7 +11,7 @@ interface Props {
 
 export const NavBar = ({ title, isGoBack = false, onClickBackIcon = undefined }: Props) => {
   return (
-    <AppBar className="p-4">
+    <AppBar className="p-4 static">
       <div className="flex items-center justify-center w-full">
         {title}
         {isGoBack && (

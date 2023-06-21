@@ -1,7 +1,8 @@
 import '../globals.css';
 import { Inter } from 'next/font/google';
 import { NavBar } from './components/navbar/navbar';
-import { RootContainer } from './components/navbar/rootContainer/rootContainer';
+import { RootContainer } from './components/rootContainer/rootContainer';
+import { Footer } from './components/footer/footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,15 +13,16 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" dir="rtl">
+      <body className={`${inter.className} h-screen flex flex-col m-0`} suppressHydrationWarning>
+        <NavBar title="הרשמה לשירות הסעות" isGoBack />
         <RootContainer>
-          <NavBar title="הרשמה לשירות הסעות" isGoBack />
-          <main className="mt-20 flex items-center flex-col">
+          <main className="flex items-center flex-col p-5 h-full box-border">
             <div>header</div>
             {children}
           </main>
         </RootContainer>
+        <Footer />
       </body>
     </html>
   );
