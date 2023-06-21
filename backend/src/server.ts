@@ -1,5 +1,6 @@
 import { app } from "./app";
-
+require('dotenv').config()
+import { connect } from "./repository/redis-client";
 const port = app.get("port");
 
 const server = app.listen(port, onListening);
@@ -27,10 +28,11 @@ function onError(error: NodeJS.ErrnoException) {
     }
 }
 
-function onListening() {
+async function onListening() {
     const addr = server.address();
     const bind =
         typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
+    await connect();
     console.log(`Listening on ${bind}`);
 }
 
