@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "cp ../openapi.yaml ./",
     "start1": "echo $(docker build --no-cache -q .)",
-    "start": "docker run -p 8080:8080 -e \"OPENAPI_MOCK_SPECIFICATION_URL=/tmp/openapi.yaml\" --rm -it $(docker build --no-cache -q .)",
+    "start": "docker run -p 8080:8080 -e \"OPENAPI_MOCK_SPECIFICATION_URL=/tmp/openapi.yaml\" -e \"OPENAPI_MOCK_CORS_ENABLED=true\" --rm -it $(docker build --no-cache -q .)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sharonamr",

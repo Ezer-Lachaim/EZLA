@@ -7,7 +7,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "generate:api:client": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-axios -o src/api-client/ --skip-validate-spec",
+    "generate:api:client": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o src/api-client/ --skip-validate-spec",
     "preview": "vite preview"
   },
   "dependencies": {
