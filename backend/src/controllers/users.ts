@@ -20,3 +20,7 @@ export const deleteOne = async (req: Request, res: Response): Promise<void> => {
 export const login = async (req: Request, res: Response): Promise<void> => {
     res.send({ login: 'world' });
 };
+
+export const createOne = async (req: Request, res: Response): Promise<void> => {
+    res.send(req.body);
+};
