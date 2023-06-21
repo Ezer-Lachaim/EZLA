@@ -26,8 +26,8 @@ export default function Login() {
     formState: { errors }
   } = useForm<Inputs>();
 
+  // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -79,13 +79,13 @@ export default function Login() {
           כניסה
         </Button>
       </form>
-      <Link to="/forgot-password" className="mt-5">
+      <Link to="/client/forgot-pass" className="mt-5">
         שכחתי סיסמא
       </Link>
       <div className="absolute bottom-4">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/register">להרשמה</Link>
+        <Link to="/client/register">להרשמה</Link>
       </div>
     </div>
   );

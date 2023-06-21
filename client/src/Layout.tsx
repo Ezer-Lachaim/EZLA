@@ -17,9 +17,7 @@ const cacheRtl = createCache({
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </CacheProvider>
   );
 };

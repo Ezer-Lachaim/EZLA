@@ -4,19 +4,18 @@ import VerificationInput from 'react-verification-input';
 export const VerificationCode = () => {
   let email = '';
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    email = urlParams.get('email') || 'my_mail@mama.cita';  // remove the default value
-    if (!email) {
-      window.location.href = '/client/forgot-password';
-    }
-  }, []);
+  const urlParams = new URLSearchParams(window.location.search);
+  email = urlParams.get('email') || 'my_mail@mama.cita';  // remove the default value
+  if (!email) {
+    window.location.href = '/client/forgot-password';
+  }
 
   return (
     <>
       <h1>שלחנו קוד אימות לאימייל שלך</h1>
       <h1>{email}</h1>
       <p>יש להזין את 4 הספרות של קוד האימות</p>
+      {/* eslint-disable-next-line no-console */}
       <div dir="ltr">
         <VerificationInput
           length={4}
