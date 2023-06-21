@@ -1,3 +1,5 @@
+import { Metadata } from 'next';
+
 async function getData() {
   const res = await fetch('http://localhost:3000/api/drives');
   // The return value is *not* serialized
@@ -11,6 +13,12 @@ async function getData() {
 
   return res.json();
 }
+
+export const metadata: Metadata = {
+  title: 'נוסעים',
+  description: 'Ezer Lachaim'
+};
+
 export default async function Page() {
   const data = await getData();
   return <div className="flex p-24">{JSON.stringify(data)}</div>;
