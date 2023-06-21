@@ -1,5 +1,5 @@
-import AppBar from "@mui/material/AppBar";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import AppBar from '@mui/material/AppBar';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Props {
   title: string;
@@ -7,11 +7,7 @@ interface Props {
   onClickBackIcon?: () => void;
 }
 
-export const NavBar = ({
-  title,
-  isGoBack = false,
-  onClickBackIcon = undefined,
-}: Props) => {
+export const NavBar = ({ title, isGoBack = false, onClickBackIcon = undefined }: Props) => {
   return (
     <AppBar className="p-4 static" position="static">
       <div className="flex items-center justify-center w-full">

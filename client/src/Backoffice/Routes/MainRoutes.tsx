@@ -1,5 +1,5 @@
-import { Route } from "react-router-dom";
-import ProtectedRoute from "./ProtectedRoute";
+import { Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 
 const mainRoutes = [
   <Route
@@ -28,7 +28,7 @@ const mainRoutes = [
         <div>volunteers</div>
       </ProtectedRoute>
     }
-  />,
+  />
 ];
 
 export default mainRoutes;

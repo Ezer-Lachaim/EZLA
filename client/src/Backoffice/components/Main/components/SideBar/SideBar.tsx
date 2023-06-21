@@ -1,19 +1,14 @@
-"use client";
+'use client';
 
-import {
-  ListItemButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import { Chair } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { ListItemButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Chair } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const SideBar = () => {
   return (
-    <nav className="bg-blue-600 w-250" >
+    <nav className="bg-blue-600 w-250">
       <List>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <Link to="">
           <ListItem disablePadding>
             <ListItemButton className="text-white">

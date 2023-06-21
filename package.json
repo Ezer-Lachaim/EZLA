@@ -6,6 +6,7 @@
   "scripts": {
     "start:backend": "npm run start -w backend",
     "start:client": "npm run dev -w client",
+    "lint": "npm run lint --workspaces",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,8 +23,17 @@
     "client",
     "backend"
   ],
-  "dependencies": {
-    "dotenv": "^16.3.1",
-    "redis": "^4.6.7"
+  "devDependencies": {
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "typescript": "^5.1.3"
   }
 }

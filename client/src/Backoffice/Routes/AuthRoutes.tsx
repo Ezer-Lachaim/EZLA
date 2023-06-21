@@ -1,5 +1,5 @@
-import { Route } from "react-router-dom";
-import RedirectToMainIfLoggedIn from "./RedirectToMainIfLoggedIn";
+import { Route } from 'react-router-dom';
+import RedirectToMainIfLoggedIn from './RedirectToMainIfLoggedIn';
 
 const AuthRoutes = [
   <Route
@@ -10,7 +10,7 @@ const AuthRoutes = [
         <div>Login</div>
       </RedirectToMainIfLoggedIn>
     }
-  />,
+  />
 ];
 
 export default AuthRoutes;
