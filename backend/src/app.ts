@@ -6,9 +6,9 @@ import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
 
 // Routes
 
-import { usersRouter } from "./routes/users";
-import { index } from "./routes/index";
-import { ridesRouter } from "./routes/rides";
+import { usersRouter } from './routes/users';
+import { index } from './routes/index';
+import { ridesRouter } from './routes/rides';
 // Create Express server
 export const app = express();
 
@@ -19,10 +19,10 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 
-app.use(express.static(path.join(__dirname, "../public")));
-app.use("/users", usersRouter);
-app.use("/rides", ridesRouter);
-app.use("/", index);
+app.use(express.static(path.join(__dirname, '../public')));
+app.use('/users', usersRouter);
+app.use('/rides', ridesRouter);
+app.use('/', index);
 
 app.use(errorNotFoundHandler);
 app.use(errorHandler);
