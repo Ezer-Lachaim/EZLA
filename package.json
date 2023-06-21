@@ -18,8 +18,11 @@
     "url": "https://github.com/Ezer-Lachaim/EZLA/issues"
   },
   "homepage": "https://github.com/Ezer-Lachaim/EZLA#readme",
-  "workspaces":[
+  "workspaces": [
     "client",
     "backend"
-  ]
+  ],
+  "dependencies": {
+    "@mui/icons-material": "^5.11.16"
+  }
 }
