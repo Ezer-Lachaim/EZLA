@@ -5,7 +5,7 @@ import { Footer } from "./components/Footer/Footer";
 const Client = () => {
   return (
     <div className="h-screen flex flex-col m-0">
-      <NavBar title="הרשמה לשירות" isGoBack />
+      <NavBar title="הרשמה לשירות" hasGoBack />
       <div className="relative flex-1 bg-white max-h-full overflow-auto">
         <main className="flex items-center flex-col p-5 box-border">
           <Outlet />
