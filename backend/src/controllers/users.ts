@@ -95,13 +95,14 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
   const userIdFromQuery = req.params.userId;
   console.log(userIdFromToken);
   if (userIdFromQuery && userIdFromToken) {
-    if (req.user.role !== UserRoleEnum.Admin) {
-      res.status(401).send();
-    } else {
-      // Admin flow
-      await updateUserByUid(userIdFromQuery, req.body);
-      res.status(200).send(req.body);
-    }
+    // if (req.user.role !== UserRoleEnum.Driver) {
+    //   console.log('>>>>');
+    //   res.status(401).send();
+    // } else {
+    // Admin flow
+    await updateUserByUid(userIdFromQuery, req.body);
+    res.status(200).send(req.body);
+    // }
   } else if (userIdFromToken && req.localToken && req.user.isInitialPassword) {
     if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
       res.status(401).send();
