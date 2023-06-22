@@ -46,7 +46,6 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    password?: string;
     /**
      * 
      * @type {string}
@@ -89,6 +88,7 @@ export interface User {
      * @memberof User
      */
     address?: string;
+    isInitialPassword:boolean;
 }
 
 /**

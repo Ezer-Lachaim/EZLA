@@ -1,10 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { initializeApp as initializeAppAdmin } from 'firebase-admin/app';
+import { initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
 import dotenv from 'dotenv';
+import { credential } from 'firebase-admin';
 
 dotenv.config();
 
@@ -18,8 +19,14 @@ const firebaseConfig = {
   measurementId: 'G-EK4J3MGLJ8'
 };
 
+const serviceAccount: ServiceAccount = {
+  projectId: 'ezla-pickup',
+  privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
+  clientEmail: 'firebase-adminsdk-mkix9@ezla-pickup.iam.gserviceaccount.com'
+};
+
 initializeApp(firebaseConfig);
-const app = initializeAppAdmin(firebaseConfig);
+const app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
 
 export function getAuthConfig() {
   return getAuth();
@@ -27,6 +34,10 @@ export function getAuthConfig() {
 
 export function getAuthConfigAdmin() {
   return getAdminAuth(app);
+}
+
+export async function updateUserPassword(uid: string, password: string) {
+  return getAdminAuth(app).updateUser(uid, { password });
 }
 
 export const firebase = {
