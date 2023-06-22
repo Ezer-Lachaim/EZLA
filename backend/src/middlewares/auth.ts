@@ -20,6 +20,8 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
         console.log(error);
         res.status(401).send({ error: 'User is not authorized' });
       });
+  } else {
+    res.status(401).send({ error: 'User is not authorized' });
   }
 };
 function isSignupRoute(req: CustomRequest) {
