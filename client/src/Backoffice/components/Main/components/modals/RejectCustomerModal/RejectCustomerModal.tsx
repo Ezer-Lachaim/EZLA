@@ -18,7 +18,6 @@ interface RejectCustomerModalProps {
 }
 function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
   const [reason, setReason] = useState('');
-  
   return (
     <Modal
       open={open}
