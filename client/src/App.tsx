@@ -17,8 +17,8 @@ import { UserContextProvider } from './context/UserContext/UserContext.tsx';
 
 function App() {
   return (
-    <UserContextProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserContextProvider>
         <Routes>
           <Route path="" element={<Client />}>
             <Route path="login" element={<Login />} />
@@ -38,8 +38,8 @@ function App() {
             {mainRoutes.map((route) => route)}
           </Route>
         </Routes>
-      </BrowserRouter>
-    </UserContextProvider>
+      </UserContextProvider>
+    </BrowserRouter>
   );
 }
 
