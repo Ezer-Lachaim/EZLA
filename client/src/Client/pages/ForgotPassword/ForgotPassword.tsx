@@ -1,24 +1,21 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import withLayout from '../../components/LayoutHOC.tsx';
 
-export const ForgotPassword = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(true);
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target?.value);
+  const validateEmail = (emailToValidate: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setValidEmail(emailRegex.test(emailToValidate));
   };
 
-  useEffect(() => {
-    validateEmail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email]);
-
-  const validateEmail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setValidEmail(emailRegex.test(email));
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target?.value);
+    validateEmail(e.target?.value);
   };
 
   return (
@@ -59,3 +56,5 @@ export const ForgotPassword = () => {
     </>
   );
 };
+
+export default withLayout(ForgotPassword, { title: 'החלפת סיסמא' });
