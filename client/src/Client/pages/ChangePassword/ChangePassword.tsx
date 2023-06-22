@@ -26,8 +26,8 @@ const ChangePassword = () => {
     formState: { errors }
   } = useForm<Inputs>();
 
-  // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    // eslint-disable-next-line no-console
     console.log(data);
 
     if (data.password !== data.confirmPassword) {
