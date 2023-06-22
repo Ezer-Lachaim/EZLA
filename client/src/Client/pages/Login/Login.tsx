@@ -13,7 +13,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { setToken, userAPI } from '../../../Config.ts';
+import { setToken, api } from '../../../Config.ts';
 
 type Inputs = {
   email: string;
@@ -30,7 +30,7 @@ const Login = () => {
 
   // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    const userResponse: { token: string } = (await userAPI.loginUser({
+    const userResponse: { token: string } = (await api.user.loginUser({
       loginUserRequest: { email, password }
     })) as unknown as { token: string };
     setToken(userResponse.token);
