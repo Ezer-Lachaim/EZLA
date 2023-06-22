@@ -2,7 +2,7 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getUserByUid } from '../repository/user';
+import { createUser, getUserByUid, updateIsInitialPass } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
@@ -92,8 +92,12 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
     } else {
       const newPassword = req.body.password;
       await updateUserPassword(req.user.userId, newPassword);
-
-      res.status(202).send();
+      await updateIsInitialPass(req.user.userId, false);
+      firebase
+      .signInWithEmailAndPassword(auth, req.user.email, newPassword)
+      .then(async (userRecord) => {
+         res.status(202).send({token: await userRecord.user.getIdToken()});
+      })
     }
   } else {
     res.status(400).send();

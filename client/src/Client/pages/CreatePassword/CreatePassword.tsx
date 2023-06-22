@@ -10,7 +10,9 @@ import {
 import { useState } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC';
+import { api, setToken } from '../../../Config';
 
 type Inputs = {
   email: string;
@@ -21,14 +23,15 @@ type Inputs = {
 const CreatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     register
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // eslint-disable-next-line no-console
     console.log(data);
 
@@ -36,6 +39,17 @@ const CreatePassword = () => {
       setNoMatch(true);
     } else {
       setNoMatch(false);
+    }
+    if (isValid && !noMatch) {
+      try {
+        const { token = null } = await api.user.updateUser({
+          userId: '',
+          user: { password: data.password }
+        });
+
+        setToken(token);
+        navigate('/passenger/order-ride');
+      } catch (error) {}
     }
   };
   return (
