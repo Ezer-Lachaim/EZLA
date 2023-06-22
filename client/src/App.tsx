@@ -10,6 +10,7 @@ import Login from './Client/pages/Login/Login.tsx';
 import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 import { Configuration, RideApi, RideStateEnum } from './api-client';
+import Rides from './Client/pages/Rides/Rides.tsx';
 
 const rideapi = new RideApi(new Configuration({ basePath: 'http://localhost:8080' }));
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
             <Route path="register" element={<OrderRide />} />
+            <Route path="rides" element={<Rides />} />
           </Route>
           <Route path="/backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
