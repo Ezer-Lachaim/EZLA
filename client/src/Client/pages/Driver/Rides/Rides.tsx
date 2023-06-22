@@ -6,10 +6,8 @@ import { useEffect, useState, useCallback } from 'react';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Configuration, Ride, RideApi, RideSpecialRequestEnum } from '../../../../api-client';
-import { BASE_API_URL } from '../../../../Config.ts';
-
-const ridesAPI = new RideApi(new Configuration({ basePath: BASE_API_URL }));
+import { Ride, RideSpecialRequestEnum } from '../../../../api-client';
+import { api } from '../../../../Config.ts';
 
 const specialMap = {
   [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
@@ -57,14 +55,15 @@ const RideCard = ({
             </div>
           </div>
           <div className="flex-col">
-            {Array.from(new Set(ride.specialRequest))?.map((req) => (
-              <Chip
-                className="ml-1 mt-1"
-                label={getLabel(req)}
-                variant="outlined"
-                color="primary"
-              />
-            ))}
+            {Array.isArray(ride.specialRequest) &&
+              Array.from(new Set(ride.specialRequest))?.map((req) => (
+                <Chip
+                  className="ml-1 mt-1"
+                  label={getLabel(req)}
+                  variant="outlined"
+                  color="primary"
+                />
+              ))}
           </div>
           {selected && (
             <div className="flex mt-2">
@@ -85,10 +84,9 @@ const RideCard = ({
 const Rides = () => {
   const [rides, setRides] = useState<Ride[]>();
   useEffect(() => {
-    async function fetchData() {
-      setRides(await ridesAPI.ridesGet());
-    }
-    fetchData();
+    (async () => {
+      setRides(await api.ride.ridesGet());
+    })();
   }, []);
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const onSelectRideCallback = useCallback((ride: Ride) => {

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getUser } from '../repository/user';
+import { createUser, getUserByUid } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
@@ -35,15 +35,15 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
   firebase
     .signInWithEmailAndPassword(auth, email, password)
     .then(async (userRecord) => {
-      const user: User = await getUser(userRecord.user.uid);
+      const user: User = await getUserByUid(userRecord.user.uid);
       if (user.role === UserRoleEnum.Requester) {
         if (user.registrationState === UserRegistrationStateEnum.Approved) {
-          res.send({ token: await userRecord.user.getIdToken(), user:user });
+          res.send({ token: await userRecord.user.getIdToken(), user });
         } else {
           res.status(401).send({ error: 'User status is not approved!' });
         }
       } else if (user.role === UserRoleEnum.Admin || user.role === UserRoleEnum.Driver) {
-        res.send({ token: await userRecord.user.getIdToken(), user:user });
+        res.send({ token: await userRecord.user.getIdToken(), user });
       } else {
         res.status(401).send({ error: 'User is not authorized!' });
       }

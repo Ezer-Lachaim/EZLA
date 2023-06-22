@@ -40,6 +40,16 @@ export async function updateUserPassword(uid: string, password: string) {
   return getAdminAuth(app).updateUser(uid, { password });
 }
 
+export async function generateResetPasswordLink(email:string) {
+  return getAuthConfigAdmin()
+  .generatePasswordResetLink(email);
+}
+
+export async function getUser(email:string) {
+  return getAuthConfigAdmin()
+  .getUserByEmail(email);
+}
+
 export const firebase = {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
