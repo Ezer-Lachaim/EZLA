@@ -421,6 +421,8 @@ components:
         address:
           type: string
           example: 'ג׳בוטינסקי 1'
+        isInitialPassword: 
+          type: boolean
     Car:
       type: object
       properties:
