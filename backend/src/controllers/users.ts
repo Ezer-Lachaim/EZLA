@@ -2,7 +2,7 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getAllUsers, getUserByUid, updateIsInitialPass } from '../repository/user';
+import { createUser, getAllUsers, getUserByUid, updateIsInitialPass, updateUserByUid } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
