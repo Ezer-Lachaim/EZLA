@@ -13,7 +13,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC';
 import { api, setToken } from '../../../Config';
-import { useUserContext } from '../../../context/UserContext/UserContext';
 
 type Inputs = {
   email: string;
@@ -25,7 +24,6 @@ const CreatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useUserContext();
 
   const {
     handleSubmit,
@@ -44,14 +42,13 @@ const CreatePassword = () => {
     }
     if (isValid && !noMatch) {
       try {
-        await api.user.updateUser({
+        const { token = null } = await api.user.updateUser({
           userId: '',
           user: { password: data.password }
         });
 
-        setToken(null);
-        setUser(null);
-        navigate('/login');
+        setToken(token);
+        navigate('/passenger/order-ride');
       } catch (error) {}
     }
   };
