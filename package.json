@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:backend": "npm run start -w backend",
-    "start:client": "npm run dev -w client",
-    "lint": "npm run lint --workspaces",
+    "lint": "npm run lint --workspaces --if-present",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +19,8 @@
   "homepage": "https://github.com/Ezer-Lachaim/EZLA#readme",
   "workspaces": [
     "client",
-    "backend"
+    "backend",
+    "backend-mock"
   ],
   "devDependencies": {
     "eslint-config-airbnb": "^19.0.4",

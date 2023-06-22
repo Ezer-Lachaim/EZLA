@@ -12,13 +12,14 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import Logo from '../../../assets/logo.png';
+import withLayout from '../../components/LayoutHOC.tsx';
 
 type Inputs = {
   email: string;
   password: string;
 };
 
-export default function Login() {
+const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const {
     register,
@@ -89,4 +90,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default withLayout(Login, { hideNavbar: true });
