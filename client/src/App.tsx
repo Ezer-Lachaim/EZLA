@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import mainRoutes from './Backoffice/Routes/MainRoutes';
-import authRoutes from './Backoffice/Routes/AuthRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
 import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
@@ -10,6 +9,8 @@ import Login from './Client/pages/Login/Login.tsx';
 import Register from './Client/pages/Register/Register.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 import { Configuration, RideApi, RideStateEnum } from './api-client';
+import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
+import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
 
 const rideapi = new RideApi(new Configuration({ basePath: 'http://localhost:8080' }));
 
@@ -32,10 +33,11 @@ function App() {
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
             <Route path="register" element={<Register />} />
+            <Route path="forgot-password/change" element={<ChangePassword />} />
+            <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
           </Route>
           <Route path="/backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
-            {authRoutes.map((route) => route)}
           </Route>
         </Routes>
       </BrowserRouter>
