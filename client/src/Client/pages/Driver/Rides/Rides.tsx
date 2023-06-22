@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState, useCallback } from 'react';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
-import withLayout from '../../components/LayoutHOC';
-import { Configuration, Ride, RideApi, RideSpecialRequestEnum } from '../../../api-client/index.ts';
-import { BASE_API_URL } from '../../../Config.ts';
+import withLayout from '../../../components/LayoutHOC.tsx';
+import { Configuration, Ride, RideApi, RideSpecialRequestEnum } from '../../../../api-client';
+import { BASE_API_URL } from '../../../../Config.ts';
 
 const ridesAPI = new RideApi(new Configuration({ basePath: BASE_API_URL }));
 

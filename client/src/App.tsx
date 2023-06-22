@@ -12,7 +12,8 @@ import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangeP
 import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
 import Passenger from './Client/pages/Passenger/Passenger.tsx';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
-import Rides from './Client/pages/Rides/Rides.tsx';
+import Driver from './Client/pages/Driver/Driver.tsx';
+import Rides from './Client/pages/Driver/Rides/Rides.tsx';
 import { UserContextProvider } from './context/UserContext/UserContext.tsx';
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
             <Route path="create-password" element={<CreatePassword />} />
             <Route path="passenger" element={<Passenger />}>
               <Route path="order-ride" element={<OrderRide />} />
+            </Route>
+            <Route path="driver" element={<Driver />}>
+              <Route path="rides" element={<Rides />} />
             </Route>
           </Route>
           <Route path="backoffice" element={<Backoffice />}>
