@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
@@ -10,6 +11,8 @@ import { ridesRouter } from './routes/rides';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
+
+app.use(cors());
 
 // Express configuration
 app.set('port', process.env.PORT || 3000);

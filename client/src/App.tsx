@@ -12,29 +12,34 @@ import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangeP
 import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
 import Passenger from './Client/pages/Passenger/Passenger.tsx';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
+import Rides from './Client/pages/Rides/Rides.tsx';
+import { UserContextProvider } from './context/UserContext/UserContext.tsx';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="" element={<Client />}>
-          <Route path="login" element={<Login />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="forgot-password/verify" element={<VerificationCode />} />
-          <Route path="forgot-password/change" element={<ChangePassword />} />
-          <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
-          <Route path="register" element={<Register />} />
-          <Route path="processing-user" element={<ProcessingUserPage />} />
-          <Route path="create-password" element={<CreatePassword />} />
-          <Route path="passenger" element={<Passenger />}>
-            <Route path="order-ride" element={<OrderRide />} />
+    <UserContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={<Client />}>
+            <Route path="login" element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="forgot-password/verify" element={<VerificationCode />} />
+            <Route path="forgot-password/change" element={<ChangePassword />} />
+            <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
+            <Route path="register" element={<Register />} />
+            <Route path="rides" element={<Rides />} />
+            <Route path="processing-user" element={<ProcessingUserPage />} />
+            <Route path="create-password" element={<CreatePassword />} />
+            <Route path="passenger" element={<Passenger />}>
+              <Route path="order-ride" element={<OrderRide />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="backoffice" element={<Backoffice />}>
-          {mainRoutes.map((route) => route)}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          <Route path="backoffice" element={<Backoffice />}>
+            {mainRoutes.map((route) => route)}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 

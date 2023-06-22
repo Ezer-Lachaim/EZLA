@@ -10,9 +10,12 @@ import {
   OutlinedInput
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
+import { setToken, api } from '../../../Config.ts';
+import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
+import { User } from '../../../api-client/models/User';
 
 type Inputs = {
   email: string;
@@ -21,14 +24,27 @@ type Inputs = {
 
 const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const { setUser } = useUserContext();
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<Inputs>();
 
-  // eslint-disable-next-line no-console
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const navigation = useNavigate();
+
+  const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
+    const userResponse = (await api.user.loginUser({
+      loginUserRequest: { email, password }
+    })) as unknown as { token: string; user: User };
+    setToken(userResponse.token);
+    setUser(userResponse.user);
+    if (userResponse.user.role === 'Admin') {
+      navigation('/backoffice');
+    } else {
+      navigation('/');
+    }
+  };
 
   return (
     <div className="flex flex-col items-center w-full">
