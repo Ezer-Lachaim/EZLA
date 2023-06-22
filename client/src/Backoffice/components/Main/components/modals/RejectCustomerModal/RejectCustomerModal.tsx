@@ -16,8 +16,13 @@ const style = {
 interface RejectCustomerModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
+  AccpetDeclineUser: (isAccepted: boolean) => Promise<void>;
 }
-function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
+function RejectCustomerModal({
+  open,
+  handleModal,
+  AccpetDeclineUser,
+}: RejectCustomerModalProps) {
   const [reason, setReason] = useState("");
   return (
     <Modal
@@ -70,6 +75,7 @@ function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
           </Button>
           <Button
             disabled={!reason}
+            onClick={() => AccpetDeclineUser(false)}
             variant="contained"
             className="bg-red-500 text-white"
           >
