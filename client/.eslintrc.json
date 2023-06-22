@@ -23,6 +23,7 @@
     "project": "**/tsconfig.json"
   },
   "rules": {
+    "react/no-array-index-key": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "import/extensions": "off",
     "@typescript-eslint/no-floating-promises": "off",
