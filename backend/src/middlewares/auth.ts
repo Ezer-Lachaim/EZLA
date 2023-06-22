@@ -33,7 +33,7 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
           } else {
             next();
           }
-        } catch(e) {
+        } catch (e) {
           res.status(401).send({ error: 'User is not authorized' });
         }
       });

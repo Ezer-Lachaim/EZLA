@@ -11,8 +11,14 @@ export async function getUserByUid(uid: string): Promise<User> {
   return { ...user } as User;
 }
 
-export async function updateIsInitialPass(uid: string, isInitial:boolean): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getAllUsers(state?: string): Promise<any> {
+  const keys = await client.keys('user:*');
+  return []
+    .concat(...(await client.json.mGet(keys, '$')))
+    .filter((user) => !state || (user.registrationState = state));
+}
+
+export async function updateIsInitialPass(uid: string, isInitial: boolean): Promise<void> {
   await client.json.set(`user:${uid}`, '$.isInitialPassword', isInitial);
 }
 

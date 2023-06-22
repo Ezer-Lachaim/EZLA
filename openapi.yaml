@@ -44,9 +44,9 @@ paths:
       description: Returns a list of users with the specified role (optional)
       operationId: getUsersByRole
       parameters:
-        - name: role
+        - name: state
           in: query
-          description: The role to filter users by
+          description: The state of user
           required: false
           schema:
             type: string
@@ -504,13 +504,12 @@ components:
               - AccessibleCar
               - PatientDelivery
           example: ["WheelChair"]
-        servicePeriod:
+        startServiceDate:
           type: string
-          enum:
-            - Week
-            - TwoWeeks
-            - Month
-            - More
+          format: date
+        endServiceDate:
+          type: string
+          format: date
         patient:
           $ref: '#/components/schemas/Patient'
 
