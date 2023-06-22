@@ -1,5 +1,6 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const style = {
   position: 'absolute' as const,
@@ -26,9 +27,14 @@ function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
+        <div className="flex justify-between">
         <Typography id="modal-modal-title" variant="h6" component="h2">
           סירוב נוסע חדש
         </Typography>
+        <Button className="p-0" color='inherit' onClick={() => handleModal(false)}>
+        <ClearIcon />
+        </Button>
+        </div>
         <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
           יש לכתוב את הסיבה לסירוב
         </Typography>
