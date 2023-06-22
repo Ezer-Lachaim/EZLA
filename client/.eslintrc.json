@@ -15,7 +15,7 @@
     "coverage/**/*",
     "dist/**/*",
     "temp/**/*",
-    "api-client/**/*"
+    "src/api-client/**/*"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -23,9 +23,10 @@
     "project": "**/tsconfig.json"
   },
   "rules": {
+    "react/no-array-index-key": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "import/extensions": "off",
-    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-floating-promises": "off",
     "react/function-component-definition": "off",
     "import/no-extraneous-dependencies": "off",
     "import/prefer-default-export": "off",
