@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { AccountCircle, Notifications } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
 
-export default function ButtonAppBar() {
+export default function AppHeader() {
   return (
     <AppBar position="static" className="bg-white drop-shadow-md" sx={{ backgroundColor: 'white' }}>
       <Toolbar>
