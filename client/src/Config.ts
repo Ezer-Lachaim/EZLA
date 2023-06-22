@@ -27,8 +27,8 @@ let currentToken: string | null = localStorage.getItem('token');
 
 export let api = createApi();
 
-export const setToken = (token: string) => {
-  localStorage.setItem('token', token);
+export const setToken = (token: string | null) => {
+  localStorage.setItem('token', token || '');
   currentToken = token;
   api = createApi();
 };

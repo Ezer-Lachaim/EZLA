@@ -8,6 +8,7 @@ import { authHandler } from './middlewares/auth';
 import { usersRouter } from './routes/users';
 import { index } from './routes/index';
 import { ridesRouter } from './routes/rides';
+import { driversRouter } from './routes/drivers';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -29,6 +30,7 @@ app.use(authHandler);
 
 app.use('/users', usersRouter);
 app.use('/rides', ridesRouter);
+app.use('/drivers', driversRouter)
 app.use('/', index);
 
 app.use(errorNotFoundHandler);

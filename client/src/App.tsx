@@ -12,14 +12,15 @@ import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangeP
 import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
 import Passenger from './Client/pages/Passenger/Passenger.tsx';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
-import Rides from './Client/pages/Rides/Rides.tsx';
+import Driver from './Client/pages/Driver/Driver.tsx';
+import Rides from './Client/pages/Driver/Rides/Rides.tsx';
 import { UserContextProvider } from './context/UserContext/UserContext.tsx';
 import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp.tsx';
 
 function App() {
   return (
-    <UserContextProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserContextProvider>
         <Routes>
           <Route path="" element={<Client />}>
             <Route path="login" element={<Login />} />
@@ -35,13 +36,16 @@ function App() {
             <Route path="passenger" element={<Passenger />}>
               <Route path="order-ride" element={<OrderRide />} />
             </Route>
+            <Route path="driver" element={<Driver />}>
+              <Route path="rides" element={<Rides />} />
+            </Route>
           </Route>
           <Route path="backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
           </Route>
         </Routes>
-      </BrowserRouter>
-    </UserContextProvider>
+      </UserContextProvider>
+    </BrowserRouter>
   );
 }
 

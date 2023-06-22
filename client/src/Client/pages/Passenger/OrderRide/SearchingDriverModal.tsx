@@ -17,7 +17,7 @@ const style = {
   p: 2.5
 };
 
-const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () => undefined }) => {
+const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   return (

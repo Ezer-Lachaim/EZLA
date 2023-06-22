@@ -111,6 +111,24 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/me:
+    get:
+      tags:
+        - user
+      summary: Get user by userId
+      description: ''
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found          
   /users/{userId}:
     get:
       tags:
