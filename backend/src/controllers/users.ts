@@ -17,8 +17,7 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
 };
 
 export const get = async (req: CustomRequest, res: Response): Promise<void> => {
-  console.log(`TOKEN:${req.token}`);
-  res.send({});
+  res.send(req.user);
 };
 
 export const validateStatus = async (req: CustomRequest, res: Response): Promise<void> => {
