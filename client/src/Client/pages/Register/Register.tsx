@@ -7,10 +7,7 @@ import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
 import { RideRequester } from '../../../api-client/index.ts';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
-// import { Configuration, UserApi } from '../../../api-client/index.ts';
-// import { BASE_API_URL } from '../../../Config.ts';
-
-// const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
+import { api } from '../../../Config.ts';
 
 const Register = () => {
   const { activeStepIndex, nextStep } = useRegistrationSteps();
@@ -57,7 +54,7 @@ const Register = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<RideRequester> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<RideRequester> = (data) => {};
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -80,4 +77,6 @@ const Register = () => {
   );
 };
 
-export default withLayout(Register, { title: 'הרשמה לשירות ההסעות' });
+export default withLayout(Register, {
+  title: 'הרשמה לשירות ההסעות'
+});

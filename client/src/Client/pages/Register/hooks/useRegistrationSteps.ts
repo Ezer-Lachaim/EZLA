@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export const useRegistrationSteps = () => {
-  const [activeStepIndex, setActiveStepIndex] = useState<number>(1);
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
 
   const nextStep = () => {
     setActiveStepIndex(activeStepIndex + 1);
