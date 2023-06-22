@@ -29,10 +29,10 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
   const { password } = req.body;
   firebase
     .signInWithEmailAndPassword(auth, email, password)
-    .then(function (userRecord) {
+    .then((userRecord) => {
       res.send(userRecord);
     })
-    .catch(function (error) {
+    .catch((error) => {
       res.status(500).send(error);
     });
 };
@@ -41,13 +41,13 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
   const user: User = req.body;
   firebase
     .createUserWithEmailAndPassword(auth, user.email, user.password)
-    .then(async function (userRecord) {
+    .then(async (userRecord) => {
       user.userId = userRecord.user.uid;
       user.role = UserRoleEnum.Requester;
       await create(userRecord.user.uid, user);
       res.send(userRecord);
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log('Something went wrong %s', error);
       res.status(400).send(error);
     });

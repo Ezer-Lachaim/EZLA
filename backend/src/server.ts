@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import dotenv from 'dotenv';
 import { app } from './app';
 import { connect } from './repository/redis-client';
