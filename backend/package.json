@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "server.js",
     "scripts": {
-        "start": "npm run build && npm run serve",
+        "start": "npm run serve",
         "build": "npm run build-ts",
         "serve": "node dist/server.js",
         "test": "jest --coverage=false --verbose",
