@@ -13,6 +13,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC';
 import { api, setToken } from '../../../Config';
+import { useUserContext } from '../../../context/UserContext/UserContext';
 
 type Inputs = {
   email: string;
@@ -24,12 +25,13 @@ const CreatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const navigate = useNavigate();
+  const { user, setUser } = useUserContext();
 
   const {
     handleSubmit,
     formState: { errors, isValid },
     register
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ defaultValues: { email: user?.email } });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // eslint-disable-next-line no-console
@@ -48,6 +50,7 @@ const CreatePassword = () => {
         });
 
         setToken(token);
+        setUser({ ...user, isInitialPassword: false });
         navigate('/passenger/order-ride');
       } catch (error) {}
     }
@@ -65,21 +68,14 @@ const CreatePassword = () => {
         noValidate
       >
         <FormControl>
-          <InputLabel htmlFor="email" required>
-            אימייל
-          </InputLabel>
+          <InputLabel htmlFor="email">אימייל</InputLabel>
           <OutlinedInput
             id="email"
+            disabled
             label="אימייל"
             placeholder="דוגמה: david@gmail.com"
             {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
-          {errors.email && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.email.type === 'required' && 'חסר אימייל'}
-              {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
-            </FormHelperText>
-          )}
         </FormControl>
         <FormControl variant="outlined">
           <InputLabel htmlFor="password" required>
@@ -97,7 +93,7 @@ const CreatePassword = () => {
                   onClick={() => setShowPassword((show) => !show)}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {!showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
@@ -129,7 +125,7 @@ const CreatePassword = () => {
                   onClick={() => setShowPassword((show) => !show)}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {!showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }

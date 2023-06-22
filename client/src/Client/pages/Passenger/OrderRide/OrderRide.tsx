@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
@@ -15,7 +16,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
-import { Ride } from '../../../../api-client';
+import { Ride, RideSpecialRequestEnum } from '../../../../api-client';
 
 // type Inputs = {
 //   sourceAddress: string;
@@ -32,13 +33,39 @@ import { Ride } from '../../../../api-client';
 //   };
 // };
 
+interface ClientRide extends Omit<Ride, 'specialRequest'> {
+  specialRequest: {
+    isWheelChair: boolean;
+    isBabySafetySeat: boolean;
+    isChildSafetySeat: boolean;
+    isHighVehicle: boolean;
+    isWheelChairTrunk: boolean;
+    isPatientDelivery: boolean;
+    [indexer: string]: boolean;
+  };
+}
+
+const specialMap = {
+  isWheelChair: RideSpecialRequestEnum.WheelChair,
+  isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
+  isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
+  isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isPatientDelivery: RideSpecialRequestEnum.PatientDelivery
+};
+
+const getSpecialEnum = (boolName: string): RideSpecialRequestEnum => {
+  // @ts-ignore
+  return specialMap[boolName];
+};
+
 const OrderRide = () => {
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors }
-  } = useForm<Ride>();
+  } = useForm<ClientRide>();
   const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
     'destination'
   );
@@ -51,8 +78,25 @@ const OrderRide = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const response = await api.ride.ridesPost({ ride: data });
+  const onSubmit: SubmitHandler<ClientRide> = async (data) => {
+    const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
+      (acc: RideSpecialRequestEnum[], cur) => {
+        if (data.specialRequest?.[cur]) {
+          acc.push(getSpecialEnum(cur));
+        }
+        return acc;
+      },
+      []
+    );
+
+    const ride = {
+      ...data,
+      specialRequest: specialRequestsArray
+    };
+    const response = await api.ride.ridesPost({
+      ride
+    });
+    console.log(ride);
     console.log(response);
     setIsModalOpen(true);
   };
@@ -139,28 +183,28 @@ const OrderRide = () => {
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isWheelChair')} />}
-            checked={watch().specialRequests?.isWheelChair}
+            control={<Checkbox {...register('specialRequest.isWheelChair')} />}
+            checked={watch().specialRequest?.isWheelChair}
             label="התאמה לכסא גלגלים"
           />
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isBabySafetySeat')} />}
+            control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
             label="מושב בטיחות לתינוק"
           />
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isChildSafetySeat')} />}
+            control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
             label="מושב בטיחות לילדים (גיל 3-8)"
           />
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isHighVehicle')} />}
+            control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
             label="רכב גבוה"
           />
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isWheelChairTrunk')} />}
+            control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
             label="תא מטען מתאים לכסא גלגלים"
           />
           <FormControlLabel
-            control={<Checkbox {...register('specialRequests.isPatientDelivery')} />}
+            control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
             label="משלוחים למאושפז"
           />
         </div>

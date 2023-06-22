@@ -2,7 +2,7 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getUserByUid, updateIsInitialPass } from '../repository/user';
+import { createUser, getUserByUid, updateIsInitialPass, updateUserByUid } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
@@ -59,7 +59,6 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
     length: 20,
     numbers: true
   });
-  console.log(generatedPass);
   firebase
     .createUserWithEmailAndPassword(auth, user.email, generatedPass)
     .then(async (userRecord) => {
@@ -84,7 +83,9 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
     if (req.user.role !== UserRoleEnum.Admin) {
       res.status(401).send();
     } else {
-      // TODO:Admin flow which update user with query param id (userIdFromQuery)
+      //Admin flow
+      await updateUserByUid(userIdFromQuery, req.body);
+      res.status(200).send(req.body);
     }
   } else if (userIdFromToken && req.localToken && req.user.isInitialPassword) {
     if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
