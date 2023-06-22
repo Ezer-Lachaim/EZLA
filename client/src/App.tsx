@@ -9,6 +9,7 @@ import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/Ver
 import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage.tsx';
 import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
 import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
+import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
           <Route path="register" element={<OrderRide />} />
           <Route path="processing-user" element={<ProcessingUserPage />} />
+          <Route path="create-password" element={<CreatePassword />} />
         </Route>
         <Route path="backoffice" element={<Backoffice />}>
           {mainRoutes.map((route) => route)}
