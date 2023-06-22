@@ -31,7 +31,7 @@ function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
         <Typography id="modal-modal-title" variant="h6" component="h2">
           סירוב נוסע חדש
         </Typography>
-        <Button className="p-0" color='inherit' onClick={() => handleModal(false)}>
+        <Button className="p-0" color="inherit" onClick={() => handleModal(false)}>
         <ClearIcon />
         </Button>
         </div>
@@ -51,10 +51,10 @@ function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
         />
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'end',
-            gap: '10px',
-            marginTop: '15px'
+            display: "flex",
+            justifyContent: "end",
+            gap: "10px",
+            marginTop: "15px"
           }}
         >
           <Button
