@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +12,14 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+@layer base {
+    h1 {
+        @apply text-lg text-blue-600 font-bold m-5;
+    }
+
+    a {
+        @apply text-blue-500 underline;
+    }
 }

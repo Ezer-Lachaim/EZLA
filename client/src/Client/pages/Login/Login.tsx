@@ -12,13 +12,14 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import Logo from '../../../assets/logo.png';
+import withLayout from '../../components/LayoutHOC.tsx';
 
 type Inputs = {
   email: string;
   password: string;
 };
 
-export default function Login() {
+const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const {
     register,
@@ -26,13 +27,13 @@ export default function Login() {
     formState: { errors }
   } = useForm<Inputs>();
 
+  // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
 
   return (
     <div className="flex flex-col items-center w-full">
       <img src={Logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-lg text-blue-600 font-bold m-5">כניסה למערכת</h1>
+      <h1>כניסה למערכת</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)}>
         <FormControl>
           <InputLabel htmlFor="email">אימייל</InputLabel>
@@ -89,4 +90,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default withLayout(Login, { hideNavbar: true });
