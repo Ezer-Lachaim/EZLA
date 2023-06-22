@@ -20,8 +20,8 @@ const ConfirmCancelModal = ({
   onContinue
 }: {
   open: boolean;
-  onCancel: () => undefined;
-  onContinue: () => undefined;
+  onCancel: () => void;
+  onContinue: () => void;
 }) => {
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
