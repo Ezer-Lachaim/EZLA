@@ -34,5 +34,5 @@ export function getAuthConfigAdmin(){
 
 export const firebase = {
     signInWithEmailAndPassword: signInWithEmailAndPassword,
-    createUserWithEmailAndPassword:createUserWithEmailAndPassword
+    createUserWithEmailAndPassword: createUserWithEmailAndPassword
 }

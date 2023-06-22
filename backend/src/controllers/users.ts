@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import client from '../repository/redis-client'
 import { firebase, getAuthConfig, getAuthConfigAdmin } from "../utils/firebase-config";
 import { User, UserRoleEnum } from "../models/user";
+import { create } from "../repository/user";
 
 /**
  * GET /
@@ -13,13 +14,6 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const get = async (req: Request, res: Response): Promise<void> => {
-    getAuthConfigAdmin().verifyIdToken(req.body.idToken).then((decodedToken) => {
-        const uid = decodedToken.uid;
-        res.send(decodedToken);
-      })
-      .catch((error) => {
-        // Handle error
-      });
     
 };
 
@@ -48,7 +42,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         .then(async function (userRecord) {
             user.userId = userRecord.user.uid;
             user.role = UserRoleEnum.Requester;
-            await client.json.set(`user:${userRecord.user.uid}`, '$', {...user});
+            await create(userRecord.user.uid, user);
             res.send(userRecord)
         })
         .catch(function (error) {
