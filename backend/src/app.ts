@@ -23,7 +23,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../public')));
-
+app.use('/', index);
 // if (process.env.NODE_ENV === 'production') {
 app.use(authHandler);
 // }
@@ -31,7 +31,7 @@ app.use(authHandler);
 app.use('/users', usersRouter);
 app.use('/rides', ridesRouter);
 app.use('/drivers', driversRouter);
-app.use('/', index);
+
 
 app.use(errorNotFoundHandler);
 app.use(errorHandler);
