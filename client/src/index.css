@@ -16,7 +16,7 @@ body {
 
 @layer base {
     h1 {
-        @apply text-lg text-blue-600 font-bold m-5;
+        @apply text-xl text-blue-600 font-bold m-5;
     }
 
     a {
