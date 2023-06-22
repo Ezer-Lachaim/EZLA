@@ -10,14 +10,13 @@ import {
 
 interface TableProps<TData = object> {
   data: TData[];
-  columns: ColumnDef<TData, unknown>[];
+  columns: ColumnDef<object, unknown>[];
 }
 
-const Table = ({ data, columns }: TableProps) => {
+const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
   const table = useReactTable({
     data,
     columns,
-    // Pipeline
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -25,7 +24,7 @@ const Table = ({ data, columns }: TableProps) => {
     debugTable: true
   });
   return (
-    <Paper elevation={2} style={{ padding: '1rem 0px' }}>
+    <Paper elevation={2}>
       <MuiTable>
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
