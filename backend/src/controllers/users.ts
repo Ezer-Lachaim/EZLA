@@ -91,7 +91,9 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
     if (req.user.role !== UserRoleEnum.Admin) {
       res.status(401).send();
     } else {
-      // TODO:Admin flow which update user with query param id (userIdFromQuery)
+      //Admin flow
+      await updateUserByUid(userIdFromQuery, req.body);
+      res.status(200).send(req.body);
     }
   } else if (userIdFromToken && req.localToken && req.user.isInitialPassword) {
     if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {

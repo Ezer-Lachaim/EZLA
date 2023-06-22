@@ -16,7 +16,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
-import { Ride, RideSpecialRequestEnum } from '../../../../api-client';
+import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 
 // type Inputs = {
 //   sourceAddress: string;
@@ -91,7 +91,8 @@ const OrderRide = () => {
 
     const ride = {
       ...data,
-      specialRequest: specialRequestsArray
+      specialRequest: specialRequestsArray,
+      state: RideStateEnum.WaitingForDriver
     };
     const response = await api.ride.ridesPost({
       ride

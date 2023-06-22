@@ -22,6 +22,8 @@ export async function updateIsInitialPass(uid: string, isInitial: boolean): Prom
   await client.json.set(`user:${uid}`, '$.isInitialPassword', isInitial);
 }
 
-export async function updateUser(uid: string, user: User): Promise<void> {
-  await client.json.set(`user:${uid}`, '$', { ...user });
+export async function updateUserByUid(uid: string, user: User): Promise<void> {
+  const userFromDB: any = await client.json.get(`user:${uid}`);
+  const updated = Object.assign(userFromDB, user);
+  await client.json.set(`user:${uid}`, '$', { ...updated });
 }
