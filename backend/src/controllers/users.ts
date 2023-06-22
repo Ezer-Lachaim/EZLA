@@ -38,12 +38,12 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
       const user: User = await getUser(userRecord.user.uid);
       if (user.role === UserRoleEnum.Requester) {
         if (user.registrationState === UserRegistrationStateEnum.Approved) {
-          res.send({ token: await userRecord.user.getIdToken() });
+          res.send({ token: await userRecord.user.getIdToken(), user:user });
         } else {
           res.status(401).send({ error: 'User status is not approved!' });
         }
       } else if (user.role === UserRoleEnum.Admin || user.role === UserRoleEnum.Driver) {
-        res.send(user);
+        res.send({ token: await userRecord.user.getIdToken(), user:user });
       } else {
         res.status(401).send({ error: 'User is not authorized!' });
       }
