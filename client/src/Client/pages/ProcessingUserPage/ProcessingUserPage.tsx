@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import withLayout from '../../components/LayoutHOC';
 import gears from '../../../assets/gears.png';
 
@@ -8,7 +7,7 @@ const ProcessingUserPage = () => {
       <div className="flex flex-col items-center ">
         <img src={gears} alt="logo" className="w-60" />
         <h1 className="m-0">פרטי ההרשמה שלך נמצאים בטיפול...</h1>
-        <Typography color="">ניצור איתך קשר כאשר ההרשמה תאושר</Typography>
+        <p>ניצור איתך קשר כאשר ההרשמה תאושר</p>
       </div>
     </div>
   );

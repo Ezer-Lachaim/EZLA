@@ -9,6 +9,7 @@ import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/Ver
 import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage.tsx';
 import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
 import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
+import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
 import Passenger from './Client/pages/Passenger/Passenger.tsx';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
 
@@ -24,7 +25,7 @@ function App() {
           <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
           <Route path="register" element={<Register />} />
           <Route path="processing-user" element={<ProcessingUserPage />} />
-
+          <Route path="create-password" element={<CreatePassword />} />
           <Route path="passenger" element={<Passenger />}>
             <Route path="order-ride" element={<OrderRide />} />
           </Route>
