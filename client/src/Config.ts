@@ -1,7 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 import { Configuration, HospitalApi, RideApi, UserApi } from './api-client/index.ts';
 
-export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8080';
+export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || '';
 
 export const getToken = () => currentToken || localStorage.getItem('token');
 
