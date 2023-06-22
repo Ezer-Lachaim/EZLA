@@ -2,7 +2,7 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getUserByUid, updateIsInitialPass } from '../repository/user';
+import { createUser, getAllUsers, getUserByUid, updateIsInitialPass } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
@@ -12,8 +12,16 @@ import { createJwt } from '../utils/jwt-util';
  */
 const auth = getAuthConfig();
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  console.log(`USER:${req.user.role}`);
-  res.send([]);
+  const isAdmin = req.user.role === UserRoleEnum.Admin;
+  if (isAdmin) {
+    try {
+      res.send(await getAllUsers(req.query.state?.toString()));
+    } catch (e) {
+      res.status(500).send();
+    }
+  } else {
+    res.status(401).send();
+  }
 };
 
 export const get = async (req: CustomRequest, res: Response): Promise<void> => {
@@ -93,10 +101,10 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
       await updateUserPassword(req.user.userId, newPassword);
       await updateIsInitialPass(req.user.userId, false);
       firebase
-      .signInWithEmailAndPassword(auth, req.user.email, newPassword)
-      .then(async (userRecord) => {
-         res.status(202).send({token: await userRecord.user.getIdToken()});
-      })
+        .signInWithEmailAndPassword(auth, req.user.email, newPassword)
+        .then(async (userRecord) => {
+          res.status(202).send({ token: await userRecord.user.getIdToken() });
+        });
     }
   } else {
     res.status(400).send();
