@@ -13,10 +13,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { Configuration, UserApi } from '../../../api-client/index.ts';
-import { BASE_API_URL } from '../../../Config.ts';
-
-const userAPI = new UserApi(new Configuration({ basePath: BASE_API_URL }));
+import { setToken, userAPI } from '../../../Config.ts';
 
 type Inputs = {
   email: string;
@@ -32,8 +29,11 @@ const Login = () => {
   } = useForm<Inputs>();
 
   // eslint-disable-next-line no-console
-  const onSubmit: SubmitHandler<Inputs> = ({ email, password }) => {
-    userAPI.loginUser({ loginUserRequest: { email, password } });
+  const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
+    const userResponse: { token: string } = (await userAPI.loginUser({
+      loginUserRequest: { email, password }
+    })) as unknown as { token: string };
+    setToken(userResponse.token);
   };
 
   return (
