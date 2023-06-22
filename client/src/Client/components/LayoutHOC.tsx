@@ -15,7 +15,7 @@ const withLayout = (
     <div className="h-screen flex flex-col m-0">
       {!hideNavbar && <NavBar title={title || 'עזר לחיים'} hideBackButton={hideBackButton} />}
       <div className="relative flex-1 bg-white max-h-full overflow-auto">
-        <main className="flex items-center flex-col p-5 box-border">
+        <main className="flex items-center flex-col p-5 box-border h-full">
           <Component />
         </main>
       </div>
