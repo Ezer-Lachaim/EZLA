@@ -59,7 +59,6 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
     length: 20,
     numbers: true
   });
-  console.log(generatedPass);
   firebase
     .createUserWithEmailAndPassword(auth, user.email, generatedPass)
     .then(async (userRecord) => {
