@@ -6,7 +6,7 @@ import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
 import Login from './Client/pages/Login/Login.tsx';
 import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
-import Rides from './Client/pages/Rides/Rides.tsx';
+import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage.tsx';
 import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
 import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
 
@@ -20,10 +20,10 @@ function App() {
           <Route path="forgot-password/verify" element={<VerificationCode />} />
           <Route path="forgot-password/change" element={<ChangePassword />} />
           <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
-          <Route path="rides" element={<Rides />} />
           <Route path="register" element={<OrderRide />} />
+          <Route path="processing-user" element={<ProcessingUserPage />} />
         </Route>
-        <Route path="/backoffice" element={<Backoffice />}>
+        <Route path="backoffice" element={<Backoffice />}>
           {mainRoutes.map((route) => route)}
         </Route>
       </Routes>
