@@ -1,7 +1,8 @@
 import { createClient } from 'redis';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = createClient({
   socket: {
