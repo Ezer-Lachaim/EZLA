@@ -124,11 +124,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'          
         '400':
           description: Invalid username supplied
         '404':
-          description: User not found
+          description: User not found          
   /users/{userId}:
     get:
       tags:
@@ -149,7 +149,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'          
         '400':
           description: Invalid username supplied
         '404':
@@ -164,7 +164,7 @@ paths:
         - name: userId
           in: path
           description: name that need to be deleted
-          required: false
+          required: true
           schema:
             type: string
       requestBody:
@@ -174,8 +174,15 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
     delete:
       tags:
         - user
@@ -223,24 +230,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Ride'
-    post:
-      tags:
-        - ride
-      summary: Create new ride
-      description: Create new ride
-      requestBody:
-        description: Created ride object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Ride'
-      responses:
-        default:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Ride'
+                  
   /active_ride:
     get:
       tags:
@@ -320,7 +310,7 @@ paths:
         '400':
           description: Invalid ride ID supplied
         '404':
-          description: Ride not found
+          description: Ride not found  
     delete:
       tags:
         - ride
@@ -414,14 +404,12 @@ components:
         address:
           type: string
           example: 'ג׳בוטינסקי 1'
-        isInitialPassword:
-          type: boolean
     Car:
       type: object
       properties:
         carId:
-          type: string
-          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+          type: integer
+          example: 123
         brand:
           type: string
           example: 'מזדה'
@@ -437,9 +425,6 @@ components:
     Ride:
       type: object
       properties:
-        rideId:
-          type: string
-          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
         destination:
           type: string
           example: "Airport"
@@ -483,8 +468,6 @@ components:
           example: 30
         driver:
          $ref: '#/components/schemas/Driver'
-        rideRequester:
-          $ref: '#/components/schemas/RideRequester'
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'
@@ -504,15 +487,16 @@ components:
               - AccessibleCar
               - PatientDelivery
           example: ["WheelChair"]
-        startServiceDate:
+        servicePeriod:
           type: string
-          format: date
-        endServiceDate:
-          type: string
-          format: date
+          enum:
+            - Week
+            - TwoWeeks
+            - Month
+            - More
         patient:
          $ref: '#/components/schemas/Patient'
-
+            
     Driver:
       allOf:
         - $ref: '#/components/schemas/User'
@@ -543,9 +527,7 @@ components:
           hospitalDept:
             type: string
             example: 'מחלקת שיקום'
-message:
-            type: string
-
+        
   requestBodies:
     UserArray:
       description: List of user object
