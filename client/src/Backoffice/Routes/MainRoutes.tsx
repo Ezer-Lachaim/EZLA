@@ -1,5 +1,8 @@
 import { Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
+import NewCustomers from '../components/Main/components/NewCustomers/NewCustomers';
+import Passengers from '../components/Main/components/Passengers/Passengers';
+import Volunteers from '../components/Main/components/Volunteers/Volunteers';
 
 const mainRoutes = [
   <Route
@@ -7,7 +10,7 @@ const mainRoutes = [
     path=""
     element={
       <ProtectedRoute>
-        <div>New customers</div>
+        <NewCustomers />
       </ProtectedRoute>
     }
   />,
@@ -16,7 +19,7 @@ const mainRoutes = [
     path="passengers"
     element={
       <ProtectedRoute>
-        <div>passengers</div>
+        <Passengers />
       </ProtectedRoute>
     }
   />,
@@ -25,7 +28,7 @@ const mainRoutes = [
     path="volunteers"
     element={
       <ProtectedRoute>
-        <div>volunteers</div>
+        <Volunteers />
       </ProtectedRoute>
     }
   />
