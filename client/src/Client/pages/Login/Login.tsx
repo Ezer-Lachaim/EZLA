@@ -41,11 +41,13 @@ const Login = () => {
             id="email"
             error={!!errors.email}
             label="אימייל"
-            {...register('email', { required: true })}
+            placeholder="דוגמה: david@gmail.com"
+            {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
-          {errors.email?.type === 'required' && (
+          {errors.email && (
             <FormHelperText error className="absolute top-full">
-              חסר אימייל
+              {errors.email.type === 'required' && 'חסר אימייל'}
+              {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
             </FormHelperText>
           )}
         </FormControl>
@@ -56,6 +58,7 @@ const Login = () => {
             error={!!errors.password}
             type={showPassword ? 'text' : 'password'}
             label="סיסמא"
+            placeholder="יש להקליד סיסמה"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
