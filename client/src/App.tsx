@@ -10,6 +10,8 @@ import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 import { Configuration, RideApi, RideStateEnum } from './api-client';
 import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage.tsx';
+import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
+import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
 
 const rideapi = new RideApi(new Configuration({ basePath: 'http://localhost:8080' }));
 
@@ -31,6 +33,8 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
+            <Route path="forgot-password/change" element={<ChangePassword />} />
+            <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
             <Route path="register" element={<OrderRide />} />
             <Route path="processing-user" element={<ProcessingUserPage />} />
           </Route>
