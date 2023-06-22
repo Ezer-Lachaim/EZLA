@@ -9,6 +9,7 @@ import {
   TextField
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../../api-client';
 
 const hospitals: GetHospitalList200ResponseInner[] = [
@@ -91,6 +92,24 @@ export const PatientInfoForm = () => {
         placeholder="טקסט הסבר"
         error={!!errors.patient?.hospitalDept}
         {...register('patient.hospitalDept')}
+      />
+      <DatePicker
+        label="תחילת התקופה בה תזדקקו לשירות ההסעות"
+        format="DD/MM/YYYY"
+        slotProps={{
+          textField: {
+            required: true
+          }
+        }}
+      />
+      <DatePicker
+        label="סיום התקופה בה תזדקקו לשירות ההסעות"
+        format="DD/MM/YYYY"
+        slotProps={{
+          textField: {
+            required: true
+          }
+        }}
       />
       <TextField
         label="הסיבה לשימוש בשירות ההסעות "

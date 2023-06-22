@@ -3,6 +3,8 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import { prefixer } from 'stylis';
 import createCache from '@emotion/cache';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme({
   direction: 'rtl',
@@ -59,7 +61,9 @@ const cacheRtl = createCache({
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+      </ThemeProvider>
     </CacheProvider>
   );
 };
