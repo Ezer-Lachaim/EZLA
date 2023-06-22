@@ -32,7 +32,7 @@ const ForgotPassword = () => {
             {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
           {errors.email && (
-            <FormHelperText error className="absolute top-full">
+            <FormHelperText error className="absolute top-full mr-0">
               {errors.email.type === 'required' && 'חסר אימייל'}
               {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
             </FormHelperText>
