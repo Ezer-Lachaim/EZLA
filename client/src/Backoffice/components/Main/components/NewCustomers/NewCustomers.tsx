@@ -5,9 +5,7 @@ import { useState } from "react";
 import PageHeader from "../PageHeader/PageHeader";
 import Table from "../../../Table/Table";
 import RejectCustomerModal from "../modals/RejectCustomerModal/RejectCustomerModal";
-// import { Configuration, UserApi } from '../../../api-client/index.ts';
 import { Configuration, UserApi } from "../../../../../api-client/index";
-// import { BASE_API_URL } from '../../../Config.ts';
 import { BASE_API_URL } from "../../../../../Config";
 
 const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
