@@ -57,8 +57,9 @@ const Register = () => {
   };
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
+    console.log(data);
     const user = await api.user.createUser({
-      user: data
+      rideRequester: data
     });
 
     if (user) {

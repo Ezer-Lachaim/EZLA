@@ -33,7 +33,7 @@ export const PassengerInfoForm = () => {
         required
         type="number"
         placeholder="יש להזין 9 ספרות כולל ספרת ביקורת"
-        {...register('userId', { required: true })}
+        {...register('userId', { required: true, minLength: 9 })}
       />
       <TextField
         label="טלפון נייד של המזמין"
