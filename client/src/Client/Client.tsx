@@ -6,8 +6,14 @@ const Client = () => {
   const navigate = useNavigate();
   if (user?.registrationState === 'Pending') {
     navigate('/processing-user');
-  } else if (user?.registrationState === 'Approved' && user.isInitialPassword) {
-    navigate('/create-password');
+  } else if (user?.registrationState === 'Approved') {
+    if (user.isInitialPassword) {
+      navigate('/create-password');
+    } else {
+      navigate('/passenger/order-ride');
+
+      // Need to check if passenger/volunteer and route
+    }
   }
 
   return <Outlet />;
