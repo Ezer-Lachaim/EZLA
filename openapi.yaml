@@ -1,0 +1,514 @@
+openapi: 3.0.3
+info:
+  title: Ezer LaChayim API
+  version: '1.0.0'
+  description: |
+    Redis' social hackathon June 2023 - bridge between volunteers and those in need of rides to the hospital
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: 'https://tbd.googlecloud.com'
+    description: Google CloudRun
+tags:
+  - name: user
+    description: All user types in the system, incl. ride requester, volunteer, admin user
+paths:
+  /users:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by a user that is successfully logged in to Firebase Auth
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    get:
+      tags:
+        - user
+      summary: Get all users with specific role
+      description: Returns a list of users with the specified role (optional)
+      operationId: getUsersByRole
+      parameters:
+        - name: role
+          in: query
+          description: The role to filter users by
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      requestBody:
+        description: User login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /users/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /users/{userId}:
+    get:
+      tags:
+        - user
+      summary: Get user by userId
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: userId
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    put:
+      tags:
+        - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /rides:
+    get:
+      tags:
+        - ride
+      summary: Get all rides
+      description: Get a list of all rides
+      parameters:
+        - in: query
+          name: state
+          schema:
+            type: string
+            enum:
+              - WaitingForDriver
+              - Booked
+              - DriverArrived
+              - Riding
+              - Completed
+              - Canceled
+          required: false
+          description: Ride state
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ride'
+                  
+  /active_ride:
+    get:
+      tags:
+        - ride
+      summary: Get active ride for user
+      description: Get the active ride for a specific user
+      operationId: getActiveRideForUser
+      parameters:
+        - name: userId
+          in: query
+          description: ID of the user for whom to retrieve the active ride
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: Active ride not found
+  /rides/{rideId}:
+    get:
+      tags:
+        - ride
+      summary: Get ride by ID
+      description: Get a specific ride by its ID
+      operationId: getRideById
+      parameters:
+        - name: rideId
+          in: path
+          description: ID of the ride to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Invalid ride ID supplied
+        '404':
+          description: Ride not found
+    put:
+      tags:
+        - ride
+      summary: Update ride
+      description: Update an existing ride
+      operationId: updateRide
+      parameters:
+        - name: rideId
+          in: path
+          description: ID of the ride to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated ride object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ride'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ride'
+        '400':
+          description: Invalid ride ID supplied
+        '404':
+          description: Ride not found  
+    delete:
+      tags:
+        - ride
+      summary: Delete ride
+      description: Deletes a specific ride by its ID
+      operationId: deleteRide
+      parameters:
+        - name: rideId
+          in: path
+          description: ID of the ride to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ride deleted successfully
+        '400':
+          description: Invalid ride ID supplied
+        '404':
+          description: Ride not found
+  /hospitals:
+    get:
+      tags:
+        - hospital
+      summary: Get a list of hospitals
+      operationId: getHospitalList
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    name:
+                      type: string
+                      example: 'תל השומר'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        authProvider:
+          type: string
+          enum:
+            - Email
+            - Google
+            - Apple
+        username:
+          type: string
+          example: '321234567 (for Israeli ID, but could be foreign passport)'
+        email:
+          type: string
+          example: 'moishe@redis.com'
+        password:
+          type: string
+          example: '6Cayaa3KoTEAcbyi'
+        role:
+          type: string
+          enum:
+            - Requester
+            - Driver
+            - Admin
+        firstName:
+          type: string
+          example: 'Moishe'
+        lastName:
+          type: string
+          example: 'Barak'
+        cellPhone:
+          type: string
+          example: '+972123456789'
+
+        registrationState:
+          type: string
+          enum:
+            - Pending
+            - Approved
+            - Rejected
+        city:
+          type: string
+          example: 'בני ברק'
+        address:
+          type: string
+          example: 'ג׳בוטינסקי 1'
+    Car:
+      type: object
+      properties:
+        carId:
+          type: integer
+          example: 123
+        brand:
+          type: string
+          example: 'מזדה'
+        model:
+          type: string
+          example: '3'
+        color:
+          type: string
+          example: 'לבן'
+        passengerSeatsCount:
+          type: integer
+          example: 4
+    Ride:
+      type: object
+      properties:
+        destination:
+          type: string
+          example: "Airport"
+        origin:
+          type: string
+          example: "Home"
+        cellphone:
+          type: number
+          example: 1234567890
+        state:
+          type: string
+          enum:
+            - WaitingForDriver
+            - Booked
+            - DriverArrived
+            - Riding
+            - Completed
+            - Canceled
+        passengerCount:
+          type: number
+          example: 2
+        specialRequest:
+          type: array
+          items:
+            type: string
+            enum:
+              - WheelChair
+              - WheelChairStorage
+              - BabyChair
+              - KidsChair
+              - AccessibleCar
+              - PatientDelivery
+          example: ["WheelChair"]
+        requestTimeStamp:
+          type: string
+          format: date
+          example: "2023-06-14"
+        destinationArrivalTime:
+          type: number
+          nullable: true
+          example: 30
+        driver:
+         $ref: '#/components/schemas/Driver'
+    RideRequester:
+      allOf:
+        - $ref: '#/components/schemas/User'
+      properties:
+        passengerCellPhone:
+          type: string
+          example: '+972123456789'
+        specialRequest:
+          type: array
+          items:
+            type: string
+            enum:
+              - WheelChair
+              - WheelChairStorage
+              - BabyChair
+              - KidsChair
+              - AccessibleCar
+              - PatientDelivery
+          example: ["WheelChair"]
+        servicePeriod:
+          type: string
+          enum:
+            - Week
+            - TwoWeeks
+            - Month
+            - More
+        patient:
+         $ref: '#/components/schemas/Patient'
+            
+    Driver:
+      allOf:
+        - $ref: '#/components/schemas/User'
+      properties:
+        license:
+          type: string
+          example: ''
+        licenseExpiryDate:
+          type: string
+          example: '2024-01-01'
+    Patient:
+      properties:
+          patientId:
+            type: string
+            example: '321234567 (for Israeli ID, but could be foreign passport)'
+          firstName:
+            type: string
+            example: 'John'
+          lastName:
+            type: string
+            example: 'Barak'
+          hospitalId:
+            type: number
+            example: 1
+          hospitalBuilding:
+            type: string
+            example: 'Shafra Children Hospital'
+          hospitalDept:
+            type: string
+            example: 'מחלקת שיקום'
+        
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'

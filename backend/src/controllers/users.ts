@@ -10,7 +10,7 @@ import { create } from "../repository/user";
  */
 const auth = getAuthConfig()
 export const getAll = async (req: Request, res: Response): Promise<void> => {
-    res.send([]);
+  res.send([]);
 };
 
 export const get = async (req: Request, res: Response): Promise<void> => {
@@ -18,7 +18,7 @@ export const get = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const deleteOne = async (req: Request, res: Response): Promise<void> => {
-    res.send({ hello: 'world' });
+  res.send({ hello: 'world' });
 };
 
 
