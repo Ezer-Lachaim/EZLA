@@ -11,8 +11,9 @@ import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 import { Configuration, RideApi, RideStateEnum } from './api-client';
 import Rides from './Client/pages/Rides/Rides.tsx';
+import { BASE_API_URL } from './Config.ts';
 
-const rideapi = new RideApi(new Configuration({ basePath: 'http://localhost:8080' }));
+const rideapi = new RideApi(new Configuration({ basePath: BASE_API_URL }));
 
 function App() {
   const [rideState, setRideState] = useState<RideStateEnum>();
