@@ -31,6 +31,7 @@ export const RegistrationForm = () => {
     defaultValues: registrationDefaultValues
   });
 
+  // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => console.log(data);
 
   return (
