@@ -18,6 +18,8 @@ interface RejectCustomerModalProps {
 }
 function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
   const [reason, setReason] = useState('');
+  console.log(reason);
+  
   return (
     <Modal
       open={open}
@@ -41,6 +43,7 @@ function RejectCustomerModal({ open, handleModal }: RejectCustomerModalProps) {
           required
           placeholder="יש לכתוב את הסיבה לסירוב"
           onChange={(e) => setReason(e.target.value)}
+          value={reason}
         />
         <Box
           sx={{
