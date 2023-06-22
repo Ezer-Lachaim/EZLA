@@ -1,29 +1,9 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/splashLogo.png';
 import redisLogo from '../../../assets/redisLogo.svg';
 
 export const Splash = () => {
-  const navigation = useNavigate();
-
-  useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout>;
-
-    const timer = () => {
-      timerId = setTimeout(() => {
-        navigation('/login');
-      }, 4 * 1000); // 4 sec
-    };
-
-    timer();
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [navigation]);
-
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen ">
+    <div className="flex flex-col items-center justify-center w-screen h-screen fixed bg-white z-50">
       <img src={logo} alt="logo" className="mb-2.5 animate-pulse" />
       <h1 className="text-center text-blue-500 font-medium w-64">
         שירות הסעות התנדבותי למבקרים בבתי חולים{' '}

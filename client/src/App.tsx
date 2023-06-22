@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import mainRoutes from './Backoffice/Routes/MainRoutes';
 import Backoffice from './Backoffice/Backoffice';
@@ -45,7 +45,6 @@ function App() {
       <UserContextProvider>
         <Routes>
           <Route path="" element={<Client />}>
-            <Route path="splash" element={<Splash />} />
             <Route path="login" element={<Login />} />
             <Route path="first-signup" element={<FirstSignUp />} />
             <Route path="terms" element={<Terms />} />
@@ -69,7 +68,7 @@ function App() {
             {mainRoutes.map((route) => route)}
           </Route>
         </Routes>
-        {shouldDisplaySplash && <Navigate replace to="/splash" />}
+        {shouldDisplaySplash && <Splash />}
       </UserContextProvider>
     </BrowserRouter>
   );
