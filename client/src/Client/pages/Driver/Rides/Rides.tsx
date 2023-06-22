@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Chip from '@mui/material/Chip';
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride, RideSpecialRequestEnum } from '../../../../api-client';
+import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 
 const specialMap = {
@@ -54,10 +54,12 @@ const RideCard = ({
               </Typography>
             </div>
           </div>
+          <div>{ride.state}</div>
           <div className="flex-col">
             {Array.isArray(ride.specialRequest) &&
               Array.from(new Set(ride.specialRequest))?.map((req) => (
                 <Chip
+                  key={req}
                   className="ml-1 mt-1"
                   label={getLabel(req)}
                   variant="outlined"
@@ -65,16 +67,37 @@ const RideCard = ({
                 />
               ))}
           </div>
-          {selected && (
-            <div className="flex mt-2">
-              <Button className="flex-1 flex-col m-1" variant="outlined">
-                צרו קשר
-              </Button>
-              <Button className="flex-1 flex-col m-1" variant="contained">
-                צאו לדרך
-              </Button>
-            </div>
-          )}
+          {selected &&
+            ride.state === RideStateEnum.WaitingForDriver &&
+            ride.state === RideStateEnum.Booked && (
+              <div className="flex mt-2">
+                <Button className="flex-1 flex-col m-1" variant="outlined">
+                  צרו קשר
+                </Button>
+                <Button
+                  className="flex-1 flex-col m-1"
+                  variant="contained"
+                  onClick={async () => {
+                    if (ride.state === RideStateEnum.WaitingForDriver) {
+                      await api.ride.updateRide({
+                        rideId: ride.rideId || '',
+                        ride: { ...ride, state: RideStateEnum.Booked }
+                      });
+                      console.log('Ride booked');
+                    } else if (ride.state === RideStateEnum.Booked) {
+                      await api.ride.updateRide({
+                        rideId: ride.rideId || '',
+                        ride: { ...ride, state: RideStateEnum.Completed }
+                      });
+                      console.log('Ride completed');
+                    }
+                  }}
+                >
+                  {ride.state === RideStateEnum.WaitingForDriver && 'צאו לדרך'}
+                  {ride.state === RideStateEnum.Booked && 'סיים נסיעה'}
+                </Button>
+              </div>
+            )}
         </div>
       </CardContent>
     </Card>
