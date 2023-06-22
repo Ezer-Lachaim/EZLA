@@ -54,7 +54,10 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className="whitespace-nowrap text-ellipsis overflow-hidden"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
