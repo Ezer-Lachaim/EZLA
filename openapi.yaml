@@ -124,11 +124,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'          
         '400':
           description: Invalid username supplied
         '404':
-          description: User not found
+          description: User not found          
   /users/{userId}:
     get:
       tags:
@@ -149,7 +149,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'          
         '400':
           description: Invalid username supplied
         '404':
@@ -174,8 +174,15 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
     delete:
       tags:
         - user
@@ -320,7 +327,7 @@ paths:
         '400':
           description: Invalid ride ID supplied
         '404':
-          description: Ride not found
+          description: Ride not found  
     delete:
       tags:
         - ride
@@ -502,12 +509,13 @@ components:
               - AccessibleCar
               - PatientDelivery
           example: ["WheelChair"]
-        startServiceDate:
+        servicePeriod:
           type: string
-          format: date
-        endServiceDate:
-          type: string
-          format: date
+          enum:
+            - Week
+            - TwoWeeks
+            - Month
+            - More
         patient:
          $ref: '#/components/schemas/Patient'
 
