@@ -9,11 +9,11 @@ interface LayoutHOCProps extends Partial<NavBarProps> {
 
 const withLayout = (
   Component: React.ComponentType,
-  { hideNavbar, hideFooter, title, hasGoBack }: LayoutHOCProps
+  { hideNavbar, hideFooter, title, hideBackButton }: LayoutHOCProps
 ) => {
   return () => (
     <div className="h-screen flex flex-col m-0">
-      {!hideNavbar && <NavBar title={title || 'עזר לחיים'} hasGoBack={hasGoBack} />}
+      {!hideNavbar && <NavBar title={title || 'עזר לחיים'} hideBackButton={hideBackButton} />}
       <div className="relative flex-1 bg-white max-h-full overflow-auto">
         <main className="flex items-center flex-col p-5 box-border">
           <Component />
