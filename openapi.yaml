@@ -124,11 +124,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
         '400':
           description: Invalid username supplied
         '404':
-          description: User not found          
+          description: User not found
   /users/{userId}:
     get:
       tags:
@@ -149,7 +149,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
         '400':
           description: Invalid username supplied
         '404':
@@ -248,20 +248,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ride'
-  /active_ride:
+  /rides/active_ride:
     get:
       tags:
         - ride
       summary: Get active ride for user
       description: Get the active ride for a specific user
       operationId: getActiveRideForUser
-      parameters:
-        - name: userId
-          in: query
-          description: ID of the user for whom to retrieve the active ride
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
@@ -327,7 +320,7 @@ paths:
         '400':
           description: Invalid ride ID supplied
         '404':
-          description: Ride not found  
+          description: Ride not found
     delete:
       tags:
         - ride
@@ -421,7 +414,7 @@ components:
         address:
           type: string
           example: 'ג׳בוטינסקי 1'
-        isInitialPassword: 
+        isInitialPassword:
           type: boolean
     Car:
       type: object
@@ -489,7 +482,7 @@ components:
           nullable: true
           example: 30
         driver:
-         $ref: '#/components/schemas/Driver'
+          $ref: '#/components/schemas/Driver'
         rideRequester:
           $ref: '#/components/schemas/RideRequester'
     RideRequester:
@@ -519,7 +512,7 @@ components:
             - Month
             - More
         patient:
-         $ref: '#/components/schemas/Patient'
+          $ref: '#/components/schemas/Patient'
 
     Driver:
       allOf:
@@ -533,26 +526,26 @@ components:
           example: '2024-01-01'
     Patient:
       properties:
-          patientId:
-            type: string
-            example: '321234567 (for Israeli ID, but could be foreign passport)'
-          firstName:
-            type: string
-            example: 'John'
-          lastName:
-            type: string
-            example: 'Barak'
-          hospitalId:
-            type: number
-            example: 1
-          hospitalBuilding:
-            type: string
-            example: 'Shafra Children Hospital'
-          hospitalDept:
-            type: string
-            example: 'מחלקת שיקום'
-message:
-            type: string
+        patientId:
+          type: string
+          example: '321234567 (for Israeli ID, but could be foreign passport)'
+        firstName:
+          type: string
+          example: 'John'
+        lastName:
+          type: string
+          example: 'Barak'
+        hospitalId:
+          type: number
+          example: 1
+        hospitalBuilding:
+          type: string
+          example: 'Shafra Children Hospital'
+        hospitalDept:
+          type: string
+          example: 'מחלקת שיקום'
+        message:
+          type: string
 
   requestBodies:
     UserArray:
