@@ -14,21 +14,23 @@ import {
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
+import { api } from '../../../../Config.ts';
+import { Ride } from '../../../../api-client';
 
-type Inputs = {
-  sourceAddress: string;
-  destinationAddress: string;
-  passengerPhone: string;
-  numberOfPassengers: number;
-  specialRequests: {
-    isWheelChair: boolean;
-    isBabySafetySeat: boolean;
-    isChildSafetySeat: boolean;
-    isHighVehicle: boolean;
-    isWheelChairTrunk: boolean;
-    isPatientDelivery: boolean;
-  };
-};
+// type Inputs = {
+//   sourceAddress: string;
+//   destinationAddress: string;
+//   passengerPhone: string;
+//   numberOfPassengers: number;
+//   specialRequests: {
+//     isWheelChair: boolean;
+//     isBabySafetySeat: boolean;
+//     isChildSafetySeat: boolean;
+//     isHighVehicle: boolean;
+//     isWheelChairTrunk: boolean;
+//     isPatientDelivery: boolean;
+//   };
+// };
 
 const OrderRide = () => {
   const {
@@ -36,7 +38,7 @@ const OrderRide = () => {
     watch,
     handleSubmit,
     formState: { errors }
-  } = useForm<Inputs>();
+  } = useForm<Ride>();
   const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
     'destination'
   );
@@ -49,10 +51,9 @@ const OrderRide = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const response = await api.ride.ridesPost({ ride: data });
+    console.log(response);
     setIsModalOpen(true);
   };
 
@@ -67,13 +68,13 @@ const OrderRide = () => {
               type="string"
               placeholder="יש להזין כתובת"
               required
-              error={!!errors?.sourceAddress}
-              helperText={errors?.sourceAddress && 'חסרה כתובת איסוף'}
-              {...register('sourceAddress', { required: true })}
+              error={!!errors?.origin}
+              helperText={errors?.origin && 'חסרה כתובת איסוף'}
+              {...register('origin', { required: true })}
             />
           ) : (
             <div>
-              <InputLabel htmlFor="email">כתובת איסוף</InputLabel>
+              <InputLabel>כתובת איסוף</InputLabel>
               <span>{autofilledAddressValue}</span>
             </div>
           )}
@@ -93,13 +94,13 @@ const OrderRide = () => {
               type="string"
               placeholder="יש להזין כתובת"
               required
-              error={!!errors?.destinationAddress}
-              helperText={errors?.destinationAddress && 'חסרה כתובת יעד'}
-              {...register('destinationAddress', { required: true })}
+              error={!!errors?.destination}
+              helperText={errors?.destination && 'חסרה כתובת יעד'}
+              {...register('destination', { required: true })}
             />
           ) : (
             <div>
-              <InputLabel htmlFor="email">כתובת יעד</InputLabel>
+              <InputLabel>כתובת יעד</InputLabel>
               <span>{autofilledAddressValue}</span>
             </div>
           )}
@@ -109,19 +110,19 @@ const OrderRide = () => {
           type="number"
           placeholder="יש להזין 10 ספרות של הטלפון הנייד"
           required
-          error={!!errors?.passengerPhone}
-          helperText={errors?.passengerPhone && 'חסר מספר טלפון'}
-          {...register('passengerPhone', { required: true })}
+          error={!!errors?.cellphone}
+          helperText={errors?.cellphone && 'חסר מספר טלפון'}
+          {...register('cellphone', { required: true })}
         />
         <FormControl>
-          <InputLabel htmlFor="numberOfPassengers" required>
+          <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
           </InputLabel>
           <Select
-            id="numberOfPassengers"
+            id="passengerCount"
             label="מספר נוסעים"
-            error={!!errors?.numberOfPassengers}
-            {...register('numberOfPassengers', { required: true })}
+            error={!!errors?.passengerCount}
+            {...register('passengerCount', { required: true })}
           >
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
@@ -129,7 +130,7 @@ const OrderRide = () => {
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
           </Select>
-          {errors.numberOfPassengers?.type === 'required' && (
+          {errors.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full">
               יש לבחור מספר נוסעים
             </FormHelperText>

@@ -541,7 +541,7 @@ components:
           hospitalDept:
             type: string
             example: 'מחלקת שיקום'
-message:
+          message:
             type: string
 
   requestBodies:
