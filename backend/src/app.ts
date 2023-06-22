@@ -7,6 +7,7 @@ import { authHandler } from './middlewares/auth';
 import { usersRouter } from './routes/users';
 import { index } from './routes/index';
 import { ridesRouter } from './routes/rides';
+
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
 
