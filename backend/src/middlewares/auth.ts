@@ -42,9 +42,9 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
   }
 };
 function isSignupRoute(req: CustomRequest) {
-  return req.url.includes('users') && req.method === 'POST';
+  return req.originalUrl.includes('users') && req.method === 'POST';
 }
 
 function isLoginRoute(req: CustomRequest) {
-  return req.url.includes('users/login') && req.method === 'POST';
+  return req.originalUrl.includes('users/login') && req.method === 'POST';
 }
