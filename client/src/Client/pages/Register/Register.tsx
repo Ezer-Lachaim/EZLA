@@ -1,12 +1,78 @@
+import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import { Button } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { RegistrationForm } from './components/RegistrationForm/RegistrationForm.tsx';
-import { RegistrationSteps } from './components/RegistrationSteps/RegistrationSteps.tsx';
+import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
+import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
+import { FormSteps } from './components/FormSteps/FormSteps.tsx';
+import { RideRequester } from '../../../api-client/index.ts';
+// import { Configuration, UserApi } from '../../../api-client/index.ts';
+// import { BASE_API_URL } from '../../../Config.ts';
+
+// const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
 
 const Register = () => {
+  const { activeStepIndex, nextStep } = useRegistrationSteps();
+  const methods = useForm<RideRequester>();
+
+  const { handleSubmit, trigger } = methods;
+
+  const nextStepHandler = async () => {
+    let isStepValid = false;
+
+    switch (activeStepIndex) {
+      case 0:
+        isStepValid = await trigger([
+          'firstName',
+          'lastName',
+          'userId',
+          'cellPhone',
+          'passengerCellPhone',
+          'email',
+          'address',
+          'specialRequest'
+        ]);
+        break;
+      case 1:
+        isStepValid = await trigger([
+          'patient.lastName',
+          'patient.lastName',
+          'patient.patientId',
+          'patient.hospitalId',
+          'patient.hospitalBuilding',
+          'patient.hospitalDept',
+          'servicePeriod'
+        ]);
+        break;
+      default:
+        break;
+    }
+
+    if (isStepValid) {
+      nextStep();
+    }
+  };
+
+  const onSubmit: SubmitHandler<RideRequester> = (data) => console.log(data);
+
   return (
     <div className="w-full">
-      <RegistrationSteps activeStepIndex={0} />
-      <RegistrationForm />
+      <RegistrationStepper activeStepIndex={activeStepIndex} />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <FormSteps activeStepIndex={activeStepIndex} />
+          <Button
+            variant="contained"
+            className="w-full mb-5"
+            size="large"
+            endIcon={<ArrowBackIcon />}
+            // disabled={!isDirty || !isValid}
+            onClick={nextStepHandler}
+          >
+            המשיכו לשלב הבא
+          </Button>
+        </form>
+      </FormProvider>
     </div>
   );
 };

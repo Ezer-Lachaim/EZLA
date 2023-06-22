@@ -1,47 +1,23 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { RegistrationFormInputs } from './RegistrationForm.types';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { useFormContext } from 'react-hook-form';
+import { RideRequester, RideRequesterSpecialRequestEnum } from '../../../../../../api-client';
 
-const registrationDefaultValues: RegistrationFormInputs = {
-  firstName: '',
-  lastName: '',
-  id: '',
-  registerPhone: '',
-  passengerPhone: '',
-  email: '',
-  address: '',
-  specialRequests: {
-    isWheelChair: false,
-    isBabySafetySeat: false,
-    isChildSafetySeat: false,
-    isHighVehicle: false,
-    isWheelChairTrunk: false,
-    isPatientDelivery: false
-  }
-};
-
-export const RegistrationForm = () => {
+export const PassengerInfoForm = () => {
   const {
     register,
-    watch,
-    handleSubmit,
-    formState: { isDirty, isValid }
-  } = useForm<RegistrationFormInputs>({
-    defaultValues: registrationDefaultValues
-  });
-
-  const onSubmit: SubmitHandler<RegistrationFormInputs> = (data) => console.log(data);
+    formState: { errors }
+  } = useFormContext<RideRequester>();
 
   return (
-    <form className="mt-5 flex flex-col gap-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <div className="mt-5 flex flex-col gap-6">
       <TextField
         label="שם פרטי"
         fullWidth
         autoFocus
         required
         type="text"
-        {...register('firstName', { required: true })}
+        error={!!errors.firstName}
+        {...register('firstName', { required: true, minLength: 3 })}
       />
       <TextField
         label="שם משפחה"
@@ -56,7 +32,7 @@ export const RegistrationForm = () => {
         required
         type="number"
         placeholder="יש להזין 9 ספרות כולל ספרת ביקורת"
-        {...register('id', { required: true })}
+        {...register('userId', { required: true })}
       />
       <TextField
         label="טלפון נייד של המזמין"
@@ -64,14 +40,14 @@ export const RegistrationForm = () => {
         required
         type="number"
         placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-        {...register('registerPhone', { required: true })}
+        {...register('cellPhone', { required: true })}
       />
       <TextField
         label="טלפון נייד של הנוסע (במידה והמזמין אינו הנוסע) "
         fullWidth
         type="number"
         placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-        {...register('passengerPhone', { required: true })}
+        {...register('passengerCellPhone', { required: true })}
       />
       <TextField
         label="אימייל של המזמין"
@@ -90,43 +66,39 @@ export const RegistrationForm = () => {
         {...register('address', { required: true })}
       />
 
-      <div className="mt-5 flex flex-col gap-2 mb-5">
+      <div className="flex flex-col gap-2 mb-9">
         <p className="text-sm text-gray-500">בקשות מיוחדות</p>
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isWheelChair')} />}
-          checked={watch().specialRequests.isWheelChair}
+          value={'WheelChair' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="התאמה לכסא גלגלים"
         />
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isBabySafetySeat')} />}
+          value={'BabyChair' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="מושב בטיחות לתינוק"
         />
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isChildSafetySeat')} />}
+          value={'KidsChair' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="מושב בטיחות לילדים (גיל 3-8)"
         />
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isHighVehicle')} />}
+          value={'AccessibleCar' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="רכב גבוה"
         />
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isWheelChairTrunk')} />}
+          value={'WheelChairStorage' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="תא מטען מתאים לכסא גלגלים"
         />
         <FormControlLabel
-          control={<Checkbox {...register('specialRequests.isPatientDelivery')} />}
+          value={'PatientDelivery' as RideRequesterSpecialRequestEnum}
+          control={<Checkbox {...register('specialRequest')} />}
           label="משלוחים למאושפז"
         />
       </div>
-      <Button
-        variant="contained"
-        size="large"
-        endIcon={<ArrowBackIcon />}
-        type="submit"
-        disabled={!isDirty || !isValid}
-      >
-        המשיכו לשלב הבא
-      </Button>
-    </form>
+    </div>
   );
 };

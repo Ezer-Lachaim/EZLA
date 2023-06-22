@@ -6,7 +6,7 @@ interface Props {
   activeStepIndex: number;
 }
 
-export const RegistrationSteps = ({ activeStepIndex }: Props) => {
+export const RegistrationStepper = ({ activeStepIndex }: Props) => {
   return (
     <Stepper activeStep={activeStepIndex} alternativeLabel>
       {steps.map((label) => (
