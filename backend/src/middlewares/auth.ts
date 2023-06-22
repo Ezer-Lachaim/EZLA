@@ -1,11 +1,11 @@
 import { NextFunction, Response } from 'express';
 import { verifyJwt } from '../utils/jwt-util';
-import { getUser } from '../repository/user';
+import { getUserByUid } from '../repository/user';
 import { getAuthConfigAdmin } from '../utils/firebase-config';
 import { CustomRequest } from './CustomRequest';
 
 export const authHandler = (req: CustomRequest, res: Response, next: NextFunction): void => {
-  if (isSignupRoute(req) || isLoginRoute(req) || req.url.includes('api-docs')) {
+  if (isSignupRoute(req) || isLoginRoute(req)) {
     next();
     return;
   }
@@ -18,19 +18,23 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
       .then(async (decodedToken) => {
         req.token = decodedToken;
         console.log(decodedToken.uid);
-        req.user = await getUser(decodedToken.uid);
+        req.user = await getUserByUid(decodedToken.uid);
         console.log(JSON.stringify(req.user));
         next();
       })
       .catch(async (error) => {
-        const localToken = verifyJwt(token);
-        req.localToken = localToken;
-        req.user = await getUser(localToken.body.toJSON().uid.toString());
-        if (!localToken) {
-          console.log(error);
+        try {
+          const localToken = verifyJwt(token);
+          req.localToken = localToken;
+          req.user = await getUserByUid(localToken.body.toJSON().uid.toString());
+          if (!localToken) {
+            console.log(error);
+            res.status(401).send({ error: 'User is not authorized' });
+          } else {
+            next();
+          }
+        } catch(e) {
           res.status(401).send({ error: 'User is not authorized' });
-        } else {
-          next();
         }
       });
   } else {
