@@ -504,13 +504,12 @@ components:
               - AccessibleCar
               - PatientDelivery
           example: ["WheelChair"]
-        servicePeriod:
+        startServiceDate:
           type: string
-          enum:
-            - Week
-            - TwoWeeks
-            - Month
-            - More
+          format: date
+        endServiceDate:
+          type: string
+          format: date
         patient:
           $ref: '#/components/schemas/Patient'
 
