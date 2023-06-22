@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
+import SearchingDriverModal from './SearchingDriverModal.tsx';
 
 type Inputs = {
   sourceAddress: string;
@@ -39,6 +40,7 @@ const OrderRide = () => {
   const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
     'destination'
   );
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const passenger = '[שם נוסע]';
   const autofilledAddressValue = 'בי”ח תל השומר / נשים ויולדות / מחלקת יולדות א';
@@ -47,8 +49,12 @@ const OrderRide = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
 
-  // eslint-disable-next-line no-console
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    // eslint-disable-next-line no-console
+    console.log(data);
+
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
@@ -62,6 +68,7 @@ const OrderRide = () => {
               placeholder="יש להזין כתובת"
               required
               error={!!errors?.sourceAddress}
+              helperText={errors?.sourceAddress && 'חסרה כתובת איסוף'}
               {...register('sourceAddress', { required: true })}
             />
           ) : (
@@ -87,6 +94,7 @@ const OrderRide = () => {
               placeholder="יש להזין כתובת"
               required
               error={!!errors?.destinationAddress}
+              helperText={errors?.destinationAddress && 'חסרה כתובת יעד'}
               {...register('destinationAddress', { required: true })}
             />
           ) : (
@@ -102,10 +110,11 @@ const OrderRide = () => {
           placeholder="יש להזין 10 ספרות של הטלפון הנייד"
           required
           error={!!errors?.passengerPhone}
+          helperText={errors?.passengerPhone && 'חסר מספר טלפון'}
           {...register('passengerPhone', { required: true })}
         />
         <FormControl>
-          <InputLabel htmlFor="email" required>
+          <InputLabel htmlFor="numberOfPassengers" required>
             מספר נוסעים
           </InputLabel>
           <Select
@@ -120,8 +129,8 @@ const OrderRide = () => {
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
           </Select>
-          {errors.email?.numberOfPassengers && (
-            <FormHelperText error className="absolute top-full mr-0">
+          {errors.numberOfPassengers?.type === 'required' && (
+            <FormHelperText error className="absolute top-full">
               יש לבחור מספר נוסעים
             </FormHelperText>
           )}
@@ -159,6 +168,8 @@ const OrderRide = () => {
           הזמינו נסיעה
         </Button>
       </form>
+
+      <SearchingDriverModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
