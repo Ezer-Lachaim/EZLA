@@ -1,6 +1,7 @@
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
@@ -10,6 +11,7 @@ import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { api } from '../../../Config.ts';
 
 const Register = () => {
+  const navigation = useNavigate();
   const { activeStepIndex, nextStep } = useRegistrationSteps();
   const methods = useForm<RegistrationFormInputs>();
 
@@ -54,7 +56,15 @@ const Register = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<RideRequester> = (data) => {};
+  const onSubmit: SubmitHandler<RideRequester> = async (data) => {
+    const user = await api.user.createUser({
+      user: data
+    });
+
+    if (user) {
+      navigation('/processing-user');
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -62,15 +72,27 @@ const Register = () => {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col flex-grow">
           <FormSteps activeStepIndex={activeStepIndex} />
-          <Button
-            variant="contained"
-            className="w-full mb-5"
-            size="large"
-            endIcon={<ArrowBackIcon />}
-            onClick={nextStepHandler}
-          >
-            {activeStepIndex === 2 ? 'סיום הרשמה' : 'המשיכו לשלב הבא'}
-          </Button>
+          {activeStepIndex < 2 ? (
+            <Button
+              variant="contained"
+              className="w-full mb-5"
+              size="large"
+              endIcon={<ArrowBackIcon />}
+              onClick={nextStepHandler}
+            >
+              המשיכו לשלב הבא
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              className="w-full mb-5"
+              size="large"
+              endIcon={<ArrowBackIcon />}
+              type="submit"
+            >
+              סיום הרשמה
+            </Button>
+          )}
         </form>
       </FormProvider>
     </div>

@@ -10,10 +10,11 @@ import {
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
+import { api } from '../../../../../../Config';
 
 const hospitals: GetHospitalList200ResponseInner[] = [
   {
@@ -32,6 +33,16 @@ export const PatientInfoForm = () => {
     formState: { errors },
     setValue
   } = useFormContext<RegistrationFormInputs>();
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      const response = await api.hospital.getHospitalList();
+
+      console.log(response);
+    };
+
+    fetchHospitals();
+  }, []);
 
   const onSelectHospital = (event: SelectChangeEvent<number>) => {
     setValue('patient.hospitalId', event.target.value as number);
