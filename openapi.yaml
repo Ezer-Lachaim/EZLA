@@ -529,7 +529,7 @@ components:
           hospitalDept:
             type: string
             example: 'מחלקת שיקום'
-        
+
   requestBodies:
     UserArray:
       description: List of user object
