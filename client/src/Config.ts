@@ -3,7 +3,7 @@ import { Configuration, HospitalApi, RideApi, UserApi } from './api-client/index
 
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8080';
 
-export const getToken = () => currentToken;
+export const getToken = () => currentToken || localStorage.getItem('token');
 
 const getApiConfiguration = () => {
   return new Configuration({
@@ -23,7 +23,7 @@ const createApi = () => {
   };
 };
 
-let currentToken: string | null = localStorage.getItem('token');
+let currentToken: string | null;
 
 export let api = createApi();
 

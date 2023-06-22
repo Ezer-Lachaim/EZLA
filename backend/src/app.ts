@@ -30,7 +30,7 @@ app.use(authHandler);
 
 app.use('/users', usersRouter);
 app.use('/rides', ridesRouter);
-app.use('/drivers', driversRouter)
+app.use('/drivers', driversRouter);
 app.use('/', index);
 
 app.use(errorNotFoundHandler);
