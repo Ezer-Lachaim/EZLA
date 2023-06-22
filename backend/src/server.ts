@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
+import dotenv from 'dotenv';
 import { app } from './app';
 import { connect } from './repository/redis-client';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+dotenv.config();
 
 const port = app.get('port');
 

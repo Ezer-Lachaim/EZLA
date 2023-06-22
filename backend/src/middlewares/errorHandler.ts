@@ -9,7 +9,8 @@ export const errorHandler = (err: WebError, req: Request, res: Response): void =
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error', { title: err.name, message: err.message });
+  res.send();
+  // res.render("error", { title: err.name, message: err.message });
 };
 
 export const errorNotFoundHandler = (req: Request, res: Response, next: NextFunction): void => {

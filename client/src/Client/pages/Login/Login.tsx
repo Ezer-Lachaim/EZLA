@@ -34,28 +34,35 @@ const Login = () => {
     <div className="flex flex-col items-center w-full">
       <img src={Logo} alt="logo" className="mb-2.5" />
       <h1>כניסה למערכת</h1>
-      <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <FormControl>
-          <InputLabel htmlFor="email">אימייל</InputLabel>
+          <InputLabel htmlFor="email" required>
+            אימייל
+          </InputLabel>
           <OutlinedInput
             id="email"
             error={!!errors.email}
             label="אימייל"
-            {...register('email', { required: true })}
+            placeholder="דוגמה: david@gmail.com"
+            {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
-          {errors.email?.type === 'required' && (
-            <FormHelperText error className="absolute top-full">
-              חסר אימייל
+          {errors.email && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.email.type === 'required' && 'חסר אימייל'}
+              {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
             </FormHelperText>
           )}
         </FormControl>
         <FormControl variant="outlined">
-          <InputLabel htmlFor="password">סיסמא</InputLabel>
+          <InputLabel htmlFor="password" required>
+            סיסמא
+          </InputLabel>
           <OutlinedInput
             id="password"
             error={!!errors.password}
             type={showPassword ? 'text' : 'password'}
             label="סיסמא"
+            placeholder="יש להקליד סיסמה"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -70,8 +77,8 @@ const Login = () => {
             {...register('password', { required: true })}
           />
           {errors.password?.type === 'required' && (
-            <FormHelperText error className="absolute top-full">
-              חסר סיסמא
+            <FormHelperText error className="absolute top-full mr-0">
+              חסרה סיסמא
             </FormHelperText>
           )}
         </FormControl>
