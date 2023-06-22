@@ -37,6 +37,7 @@ const Login = () => {
     const userResponse = (await api.user.loginUser({
       loginUserRequest: { email, password }
     })) as unknown as { token: string; user: User };
+    console.log(userResponse.token);
     setToken(userResponse.token);
     setUser(userResponse.user);
     if (userResponse.user.role === 'Admin') {
