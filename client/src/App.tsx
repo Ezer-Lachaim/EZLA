@@ -14,6 +14,7 @@ import Passenger from './Client/pages/Passenger/Passenger.tsx';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
 import Rides from './Client/pages/Rides/Rides.tsx';
 import { UserContextProvider } from './context/UserContext/UserContext.tsx';
+import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp.tsx';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="" element={<Client />}>
             <Route path="login" element={<Login />} />
+            <Route path="first-signup" element={<FirstSignUp />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
             <Route path="forgot-password/change" element={<ChangePassword />} />
