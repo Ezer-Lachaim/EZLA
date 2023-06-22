@@ -164,7 +164,7 @@ paths:
         - name: userId
           in: path
           description: name that need to be deleted
-          required: true
+          required: false
           schema:
             type: string
       requestBody:
@@ -397,6 +397,8 @@ components:
         address:
           type: string
           example: 'ג׳בוטינסקי 1'
+        isInitialPassword:
+          type: boolean
     Car:
       type: object
       properties:
