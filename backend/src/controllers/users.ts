@@ -33,7 +33,7 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
       res.send(userRecord);
     })
     .catch(function (error) {
-      res.status(500).send();
+      res.status(500).send(error);
     });
 };
 
