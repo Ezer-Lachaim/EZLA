@@ -1,24 +1,27 @@
-import { NextFunction, Request, Response } from "express";
-import { getAuthConfigAdmin } from "../utils/firebase-config"
+import { NextFunction, Response } from 'express';
+import { getAuthConfigAdmin } from '../utils/firebase-config';
+import { CustomRequest } from './CustomRequest';
 
-export const authHandler = (req: Request, res: Response, next: NextFunction): void => {
+export const authHandler = (req: CustomRequest, res: Response, next: NextFunction): void => {
+  if (isSignupRoute(req)) {
+    next();
+  }
 
-    if (req.url.includes('users/login')) {
-      next();
-      return;
-    }
+  const token = req.get('token');
 
-    const token = req.get('token');
-
-    if (token) {
-      getAuthConfigAdmin().verifyIdToken(token).then((decodedToken) => {
-        const uid = decodedToken.uid;
+  if (token) {
+    getAuthConfigAdmin()
+      .verifyIdToken(token)
+      .then((decodedToken) => {
+        req.token = decodedToken;
         next();
       })
       .catch((error) => {
-        res.status(401).send({error:'User is not authorized'});
+        console.log(error);
+        res.status(401).send({ error: 'User is not authorized' });
       });
-    }
-    
-    res.status(401).send({error:'User is not authorized'});
+  }
 };
+function isSignupRoute(req: CustomRequest) {
+  return req.url.includes('users') && req.method === 'POST';
+}
