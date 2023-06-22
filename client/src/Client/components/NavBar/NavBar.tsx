@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 export interface NavBarProps {
   title: string;
   hideBackButton?: boolean;
+  onBackClick?: () => void;
 }
 
-export const NavBar = ({ title, hideBackButton = false }: NavBarProps) => {
+export const NavBar = ({ title, hideBackButton = false, onBackClick = undefined }: NavBarProps) => {
   const navigate = useNavigate();
 
   const onClickBackIcon = () => {
@@ -21,7 +22,7 @@ export const NavBar = ({ title, hideBackButton = false }: NavBarProps) => {
         {!hideBackButton && (
           <ArrowForwardIosIcon
             className="absolute right-6 cursor-pointer"
-            onClick={onClickBackIcon}
+            onClick={onBackClick || onClickBackIcon}
           />
         )}
       </div>

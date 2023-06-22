@@ -1,19 +1,19 @@
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { Button } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
-import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { RideRequester } from '../../../api-client/index.ts';
-// import { Configuration, UserApi } from '../../../api-client/index.ts';
-// import { BASE_API_URL } from '../../../Config.ts';
-
-// const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
+import { RegistrationFormInputs } from './Register.types.ts';
+import { FormSteps } from './components/FormSteps/FormSteps.tsx';
+import { api } from '../../../Config.ts';
 
 const Register = () => {
+  const navigation = useNavigate();
   const { activeStepIndex, nextStep } = useRegistrationSteps();
-  const methods = useForm<RideRequester>();
+  const methods = useForm<RegistrationFormInputs>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -41,7 +41,10 @@ const Register = () => {
           'patient.hospitalId',
           'patient.hospitalBuilding',
           'patient.hospitalDept',
-          'servicePeriod'
+          'startServiceDate',
+          'endServiceDate',
+          'patient.message',
+          'isApproveTerms'
         ]);
         break;
       default:
@@ -53,27 +56,49 @@ const Register = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<RideRequester> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<RideRequester> = async (data) => {
+    const user = await api.user.createUser({
+      rideRequester: data
+    });
+
+    if (user) {
+      navigation('/processing-user');
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col">
       <RegistrationStepper activeStepIndex={activeStepIndex} />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col flex-grow">
+        <form noValidate className="flex flex-col flex-grow">
           <FormSteps activeStepIndex={activeStepIndex} />
-          <Button
-            variant="contained"
-            className="w-full mb-5"
-            size="large"
-            endIcon={<ArrowBackIcon />}
-            onClick={nextStepHandler}
-          >
-            {activeStepIndex === 2 ? 'סיום הרשמה' : 'המשיכו לשלב הבא'}
-          </Button>
+          {activeStepIndex < 2 ? (
+            <Button
+              variant="contained"
+              className="w-full mb-5"
+              size="large"
+              endIcon={<ArrowBackIcon />}
+              onClick={nextStepHandler}
+            >
+              המשיכו לשלב הבא
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              className="w-full mb-5"
+              size="large"
+              endIcon={<ArrowBackIcon />}
+              onClick={handleSubmit(onSubmit)}
+            >
+              סיום הרשמה
+            </Button>
+          )}
         </form>
       </FormProvider>
     </div>
   );
 };
 
-export default withLayout(Register, { title: 'הרשמה לשירות ההסעות' });
+export default withLayout(Register, {
+  title: 'הרשמה לשירות ההסעות'
+});

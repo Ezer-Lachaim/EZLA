@@ -110,7 +110,7 @@ const Login = () => {
       <div className="absolute bottom-4">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/register">להרשמה</Link>
+        <Link to="/first-signup">להרשמה</Link>
       </div>
     </div>
   );

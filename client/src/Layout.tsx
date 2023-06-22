@@ -8,6 +8,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme({
   direction: 'rtl',
+  palette: {
+    secondary: {
+      main: '#007DFF'
+    }
+  },
   components: {
     MuiFormLabel: {
       styleOverrides: {
