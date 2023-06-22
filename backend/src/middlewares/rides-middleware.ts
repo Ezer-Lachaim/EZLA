@@ -7,6 +7,6 @@ export const ridesHandler = (req: CustomRequest, res: Response, next: NextFuncti
     if (user.role === UserRoleEnum.Admin || user.role === UserRoleEnum.Driver) {
         next();
     } else {
-        res.status(401).send();
+        res.status(401).send({ error: 'User is not authorized' });
     }
 };

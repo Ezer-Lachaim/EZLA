@@ -461,6 +461,8 @@ components:
           example: 30
         driver:
          $ref: '#/components/schemas/Driver'
+        rideRequester:
+          $ref: '#/components/schemas/RideRequester'
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'

@@ -29,7 +29,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 //   const user: User = req.body
 //
 //   try {
-//     const activeRide = await redisClient.get(`active_ride:${userId}`);
+//     const activeRide = await redisClient.get(`active_ride:${user.userId}`);
 //     if (activeRide) {
 //       res.status(200).json(activeRide);
 //     } else {
@@ -69,41 +69,40 @@ export const updateRide = async (req: Request, res: Response): Promise<void> => 
 
   try {
     const currentRide = await redisClient.json.get(`ride:${rideId}`);
-    if (!currentRide){
-      res.status(404).json({ error: `Ride ${rideId} not found` });
-    }
-    Object.entries(rideUpdateValues).forEach(([key, value]) => {
-      if(currentRide.hasOwnProperty(key)){
-        currentRide[key] = value
+    if (currentRide) {
+      if (Object.keys(rideUpdateValues).every(key => currentRide.hasOwnProperty(key))) {
+        let updatedRide = Object.assign(currentRide, rideUpdateValues)
+        await redisClient.json.set(`ride:${rideId}`, '$', updatedRide);
+        res.status(200).json(updatedRide);
+      } else {
+        res.status(400).json({
+          error: "can't update ride with the given keys - one of the fields is " +
+              "not part of the ride properties"
+        });
       }
-    });
-    const result = await redisClient.json.set(`ride:${rideId}`,'$', currentRide);
-    console.log(result)
-    if (result) {
-      res.status(200).json(currentRide);
     } else {
-      res.status(404).json({ error: `Ride ${rideId} not found` });
+      res.status(404).json({error: `Ride ${rideId} not found`});
     }
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({error: 'Internal server error'});
   }
 };
 
 /**
  * DELETE /rides/{rideId}
- * Delete ride.
+ * Delete ride by ID.
  */
-// export const deleteRide = async (req: Request, res: Response): Promise<void> => {
-//   const { rideId } = req.params;
-//
-//   try {
-//     const result = await redisClient.delete(`ride:${rideId}`);
-//     if (result) {
-//       res.status(200).json({ message: 'Ride deleted successfully' });
-//     } else {
-//       res.status(404).json({ error: 'Ride not found' });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
+export const deleteRide = async (req: Request, res: Response): Promise<void> => {
+  const { rideId } = req.params;
+
+  try {
+    const result = await redisClient.del(`ride:${rideId}`);
+    if (result) {
+      res.status(200).json({ message: 'Ride deleted successfully' });
+    } else {
+      res.status(404).json({ error: `Ride: ${rideId} not found`});
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
