@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import mainRoutes from './Backoffice/Routes/MainRoutes';
-import authRoutes from './Backoffice/Routes/AuthRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
 import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
@@ -35,7 +34,6 @@ function App() {
           </Route>
           <Route path="/backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
-            {authRoutes.map((route) => route)}
           </Route>
         </Routes>
       </BrowserRouter>
