@@ -8,12 +8,12 @@ import {
   Stepper,
   TextField
 } from '@mui/material';
-import { fields } from './fields';
+import { fields } from './fields.ts';
 import withLayout from '../../components/LayoutHOC.tsx';
 
 const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
 
-const OrderRide = () => {
+const Register = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={0} alternativeLabel>
@@ -40,4 +40,4 @@ const OrderRide = () => {
   );
 };
 
-export default withLayout(OrderRide, { title: 'הרשמה לשירות ההסעות' });
+export default withLayout(Register, { title: 'הרשמה לשירות ההסעות' });

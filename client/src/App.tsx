@@ -7,7 +7,7 @@ import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
 import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
 import Login from './Client/pages/Login/Login.tsx';
-import OrderRide from './Client/pages/OrderRide/OrderRide.tsx';
+import Register from './Client/pages/Register/Register.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
 import { Configuration, RideApi, RideStateEnum } from './api-client';
 
@@ -31,7 +31,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
-            <Route path="register" element={<OrderRide />} />
+            <Route path="register" element={<Register />} />
           </Route>
           <Route path="/backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
