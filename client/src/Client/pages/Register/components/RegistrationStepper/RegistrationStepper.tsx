@@ -8,7 +8,7 @@ interface Props {
 
 export const RegistrationStepper = ({ activeStepIndex }: Props) => {
   return (
-    <Stepper activeStep={activeStepIndex} alternativeLabel>
+    <Stepper activeStep={activeStepIndex} alternativeLabel className="mb-8">
       {steps.map((label) => (
         <Step key={label}>
           <StepLabel>{label}</StepLabel>

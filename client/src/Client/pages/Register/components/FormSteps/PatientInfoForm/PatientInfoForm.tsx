@@ -32,7 +32,7 @@ export const PatientInfoForm = () => {
   };
 
   return (
-    <div className="mt-5 flex flex-col gap-4 mb-5">
+    <div className="flex flex-col gap-4 mb-5">
       <FormControlLabel control={<Checkbox />} label="השירות מיועד לטיפול עבור עצמי" />
       <TextField
         label="המטופל שם פרטי"

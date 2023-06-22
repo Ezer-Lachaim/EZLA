@@ -56,20 +56,19 @@ const Register = () => {
   const onSubmit: SubmitHandler<RideRequester> = (data) => console.log(data);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col">
       <RegistrationStepper activeStepIndex={activeStepIndex} />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col flex-grow">
           <FormSteps activeStepIndex={activeStepIndex} />
           <Button
             variant="contained"
             className="w-full mb-5"
             size="large"
             endIcon={<ArrowBackIcon />}
-            // disabled={!isDirty || !isValid}
             onClick={nextStepHandler}
           >
-            המשיכו לשלב הבא
+            {activeStepIndex === 2 ? 'סיום הרשמה' : 'המשיכו לשלב הבא'}
           </Button>
         </form>
       </FormProvider>
