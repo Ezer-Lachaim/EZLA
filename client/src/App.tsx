@@ -20,7 +20,6 @@ function App() {
           <Route path="forgot-password/verify" element={<VerificationCode />} />
           <Route path="forgot-password/change" element={<ChangePassword />} />
           <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
-          <Route path="rides" element={<Rides />} />
           <Route path="register" element={<Register />} />
           <Route path="processing-user" element={<ProcessingUserPage />} />
         </Route>
