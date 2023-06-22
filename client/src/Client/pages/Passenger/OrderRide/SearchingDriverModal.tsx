@@ -1,6 +1,8 @@
+import React from 'react';
 import { Modal, Box, Button, IconButton } from '@mui/material';
 import { Cancel, Close } from '@mui/icons-material';
 import car from '../../../../assets/car.png';
+import ConfirmCancelModal from './ConfirmCancelModal.tsx';
 
 const style = {
   position: 'absolute' as const,
@@ -16,25 +18,44 @@ const style = {
 };
 
 const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () => undefined }) => {
+  const [confirmClose, setConfirmClose] = React.useState(false);
+
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box sx={style}>
-        <div className="flex flex-col w-full h-full">
-          <div className="flex flex-col justify-center flex-grow">
-            <div className="flex justify-center mb-2">
-              <img src={car} alt="car" className="w-20" />
+      <>
+        <Box sx={style}>
+          <div className="flex flex-col w-full h-full">
+            <div className="flex flex-col justify-center flex-grow">
+              <div className="flex justify-center mb-2">
+                <img src={car} alt="car" className="w-20" />
+              </div>
+              <h1 className="text-center">מחפשים עבורכם מתנדב...</h1>
             </div>
-            <h1>מחפשים עבורכם מתנדב...</h1>
+            <Button
+              variant="outlined"
+              color="error"
+              className="flex gap-2"
+              onClick={() => setConfirmClose(true)}
+            >
+              <Cancel color="error" fontSize="small" />
+              ביטול נסיעה
+            </Button>
           </div>
-          <Button variant="outlined" color="error" className="flex gap-2" onClick={onClose}>
-            <Cancel color="error" fontSize="small" />
-            ביטול נסיעה
-          </Button>
-        </div>
-        <IconButton size="small" className="absolute left-2 top-1" onClick={onClose}>
-          <Close />
-        </IconButton>
-      </Box>
+          <IconButton
+            size="small"
+            className="absolute left-2 top-1"
+            onClick={() => setConfirmClose(true)}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+
+        <ConfirmCancelModal
+          open={confirmClose}
+          onCancel={onClose}
+          onContinue={() => setConfirmClose(false)}
+        />
+      </>
     </Modal>
   );
 };
