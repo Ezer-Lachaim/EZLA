@@ -6,6 +6,7 @@ export async function createUser(uid: string, user: User) {
 }
 
 export async function getUser(uid: string): Promise<User> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user: any = await client.json.get(`user:${uid}`);
   return { ...user } as User;
 }
