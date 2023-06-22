@@ -16,6 +16,8 @@ import Driver from './Client/pages/Driver/Driver.tsx';
 import Rides from './Client/pages/Driver/Rides/Rides.tsx';
 import { UserContextProvider } from './context/UserContext/UserContext.tsx';
 import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp.tsx';
+import Terms from './Client/pages/Terms/Terms.tsx';
+import Privacy from './Client/pages/Privacy/Privacy.tsx';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="" element={<Client />}>
             <Route path="login" element={<Login />} />
             <Route path="first-signup" element={<FirstSignUp />} />
+            <Route path="terms" element={<Terms />} />
+            <Route path="privacy" element={<Privacy />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="forgot-password/verify" element={<VerificationCode />} />
             <Route path="forgot-password/change" element={<ChangePassword />} />

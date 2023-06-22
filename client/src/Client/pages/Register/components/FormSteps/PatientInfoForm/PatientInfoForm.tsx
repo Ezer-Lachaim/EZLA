@@ -10,7 +10,10 @@ import {
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../../api-client';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
+import { RegistrationFormInputs } from '../../../Register.types';
 
 const hospitals: GetHospitalList200ResponseInner[] = [
   {
@@ -20,25 +23,47 @@ const hospitals: GetHospitalList200ResponseInner[] = [
 ];
 
 export const PatientInfoForm = () => {
+  const [isServiceForMe, setIsServiceForMe] = useState(false);
+
   const {
     register,
     control,
-    formState: { errors }
-  } = useFormContext<RideRequester>();
+    watch,
+    formState: { errors },
+    setValue
+  } = useFormContext<RegistrationFormInputs>();
 
   const onSelectHospital = (event: SelectChangeEvent<number>) => {
-    register('patient.hospitalId', {
-      value: event.target.value as number
-    });
+    setValue('patient.hospitalId', event.target.value as number);
+  };
+
+  const serviceForMeHandler = () => {
+    if (isServiceForMe) {
+      setValue('patient.firstName', '');
+      setValue('patient.lastName', '');
+      setValue('patient.patientId', '');
+    } else {
+      const { firstName, lastName, userId } = watch();
+      setValue('patient.firstName', firstName);
+      setValue('patient.lastName', lastName);
+      setValue('patient.patientId', userId);
+    }
+
+    setIsServiceForMe(!isServiceForMe);
   };
 
   return (
     <div className="flex flex-col gap-4 mb-5">
-      <FormControlLabel control={<Checkbox />} label="השירות מיועד לטיפול עבור עצמי" />
+      <FormControlLabel
+        control={<Checkbox onClick={serviceForMeHandler} />}
+        label="השירות מיועד לטיפול עבור עצמי"
+      />
       <TextField
         label="המטופל שם פרטי"
         fullWidth
         autoFocus
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         required
         type="text"
         error={!!errors.patient?.firstName}
@@ -48,14 +73,18 @@ export const PatientInfoForm = () => {
         label="המטופל שם משפחה"
         fullWidth
         required
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         type="text"
         error={!!errors.patient?.lastName}
-        {...register('patient.firstName', { required: true, minLength: 3 })}
+        {...register('patient.lastName', { required: true, minLength: 3 })}
       />
       <TextField
         label="המטופל תעודת זהות"
         fullWidth
         required
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         type="number"
         placeholder="טקסט הסבר"
         error={!!errors.patient?.patientId}
@@ -143,9 +172,13 @@ export const PatientInfoForm = () => {
         {...register('patient.message')}
       />
       <FormControlLabel
-        control={<Checkbox />}
-        label="הנני מאשר/ת כי קראתי את תקנון האתר ואת
-מדיניות הפרטיות ומסכים לתנאיהם"
+        control={<Checkbox {...register('isApproveTerms', { required: true })} />}
+        label={
+          <p>
+            הנני מאשר/ת כי קראתי את <Link to="/terms">תקנון האתר</Link> ואת{' '}
+            <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
+          </p>
+        }
       />
     </div>
   );

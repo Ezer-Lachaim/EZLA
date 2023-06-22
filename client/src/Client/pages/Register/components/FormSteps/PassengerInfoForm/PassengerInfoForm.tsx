@@ -1,12 +1,13 @@
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { RideRequester, RideRequesterSpecialRequestEnum } from '../../../../../../api-client';
+import { RideRequesterSpecialRequestEnum } from '../../../../../../api-client';
+import { RegistrationFormInputs } from '../../../Register.types';
 
 export const PassengerInfoForm = () => {
   const {
     register,
     formState: { errors }
-  } = useFormContext<RideRequester>();
+  } = useFormContext<RegistrationFormInputs>();
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,7 +48,7 @@ export const PassengerInfoForm = () => {
         fullWidth
         type="number"
         placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-        {...register('passengerCellPhone', { required: true })}
+        {...register('passengerCellPhone')}
       />
       <TextField
         label="אימייל של המזמין"

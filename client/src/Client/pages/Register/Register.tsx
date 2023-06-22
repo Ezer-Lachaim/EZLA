@@ -4,8 +4,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
-import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { RideRequester } from '../../../api-client/index.ts';
+import { RegistrationFormInputs } from './Register.types.ts';
+import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 // import { Configuration, UserApi } from '../../../api-client/index.ts';
 // import { BASE_API_URL } from '../../../Config.ts';
 
@@ -13,7 +14,7 @@ import { RideRequester } from '../../../api-client/index.ts';
 
 const Register = () => {
   const { activeStepIndex, nextStep } = useRegistrationSteps();
-  const methods = useForm<RideRequester>();
+  const methods = useForm<RegistrationFormInputs>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -43,7 +44,8 @@ const Register = () => {
           'patient.hospitalDept',
           'startServiceDate',
           'endServiceDate',
-          'patient.message'
+          'patient.message',
+          'isApproveTerms'
         ]);
         break;
       default:
