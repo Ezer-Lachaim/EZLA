@@ -1,6 +1,7 @@
 import { Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import NewCustomers from '../components/Main/components/NewCustomers/NewCustomers';
+import Passengers from '../components/Main/components/Passengers/Passengers';
 
 const mainRoutes = [
   <Route
@@ -17,7 +18,7 @@ const mainRoutes = [
     path="passengers"
     element={
       <ProtectedRoute>
-        <div>passengers</div>
+        <Passengers />
       </ProtectedRoute>
     }
   />,
