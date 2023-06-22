@@ -1,13 +1,14 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomRequest } from '../middlewares/CustomRequest';
 
 /**
  * GET /
  * Home page.
  */
-export const getAll = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
   res.send({ ride: 'world' });
 };
 
-export const get = async (req: Request, res: Response): Promise<void> => {
+export const get = async (req: CustomRequest, res: Response): Promise<void> => {
   res.send({ rideOne: req.params.rideId });
 };
