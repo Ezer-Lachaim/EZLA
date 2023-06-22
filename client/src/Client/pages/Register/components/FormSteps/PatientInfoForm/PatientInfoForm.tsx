@@ -16,15 +16,9 @@ import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
 import { api } from '../../../../../../Config';
 
-const hospitals: GetHospitalList200ResponseInner[] = [
-  {
-    name: 'בי״ח איכילוב',
-    id: 1
-  }
-];
-
 export const PatientInfoForm = () => {
   const [isServiceForMe, setIsServiceForMe] = useState(false);
+  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
   const {
     register,
@@ -38,7 +32,9 @@ export const PatientInfoForm = () => {
     const fetchHospitals = async () => {
       const response = await api.hospital.getHospitalList();
 
-      console.log(response);
+      if (response) {
+        setHospitals(response);
+      }
     };
 
     fetchHospitals();
@@ -78,7 +74,7 @@ export const PatientInfoForm = () => {
         required
         type="text"
         error={!!errors.patient?.firstName}
-        {...register('patient.firstName', { required: true, minLength: 3 })}
+        {...register('patient.firstName', { required: true })}
       />
       <TextField
         label="המטופל שם משפחה"
@@ -88,7 +84,7 @@ export const PatientInfoForm = () => {
         disabled={isServiceForMe}
         type="text"
         error={!!errors.patient?.lastName}
-        {...register('patient.lastName', { required: true, minLength: 3 })}
+        {...register('patient.lastName', { required: true })}
       />
       <TextField
         label="המטופל תעודת זהות"
@@ -105,7 +101,7 @@ export const PatientInfoForm = () => {
         <InputLabel id="hospital-label">בית החולים לאיסוף והורדה</InputLabel>
         <Select
           labelId="hospital-label"
-          defaultValue={hospitals[0].id}
+          defaultValue={hospitals[0]?.id}
           {...register('patient.hospitalId', { required: true })}
           label="בית החולים לאיסוף והורדה"
           placeholder="בחרו בית חולים"

@@ -57,7 +57,6 @@ const Register = () => {
   };
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
-    console.log(data);
     const user = await api.user.createUser({
       rideRequester: data
     });
@@ -71,7 +70,7 @@ const Register = () => {
     <div className="w-full h-full flex flex-col">
       <RegistrationStepper activeStepIndex={activeStepIndex} />
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col flex-grow">
+        <form noValidate className="flex flex-col flex-grow">
           <FormSteps activeStepIndex={activeStepIndex} />
           {activeStepIndex < 2 ? (
             <Button
@@ -89,7 +88,7 @@ const Register = () => {
               className="w-full mb-5"
               size="large"
               endIcon={<ArrowBackIcon />}
-              type="submit"
+              onClick={handleSubmit(onSubmit)}
             >
               סיום הרשמה
             </Button>

@@ -18,7 +18,7 @@ export const PassengerInfoForm = () => {
         required
         type="text"
         error={!!errors.firstName}
-        {...register('firstName', { required: true, minLength: 3 })}
+        {...register('firstName', { required: true })}
       />
       <TextField
         label="שם משפחה"
