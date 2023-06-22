@@ -41,7 +41,9 @@ const Register = () => {
           'patient.hospitalId',
           'patient.hospitalBuilding',
           'patient.hospitalDept',
-          'servicePeriod'
+          'startServiceDate',
+          'endServiceDate',
+          'patient.message'
         ]);
         break;
       default:

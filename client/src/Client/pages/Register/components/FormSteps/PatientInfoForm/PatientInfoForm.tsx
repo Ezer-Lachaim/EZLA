@@ -8,7 +8,7 @@ import {
   SelectChangeEvent,
   TextField
 } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../../api-client';
 
@@ -22,6 +22,7 @@ const hospitals: GetHospitalList200ResponseInner[] = [
 export const PatientInfoForm = () => {
   const {
     register,
+    control,
     formState: { errors }
   } = useFormContext<RideRequester>();
 
@@ -93,23 +94,42 @@ export const PatientInfoForm = () => {
         error={!!errors.patient?.hospitalDept}
         {...register('patient.hospitalDept')}
       />
-      <DatePicker
-        label="תחילת התקופה בה תזדקקו לשירות ההסעות"
-        format="DD/MM/YYYY"
-        slotProps={{
-          textField: {
-            required: true
-          }
-        }}
+      <Controller
+        control={control}
+        name="startServiceDate"
+        render={({ field }) => (
+          <DatePicker
+            label="תחילת התקופה בה תזדקקו לשירות ההסעות"
+            format="DD/MM/YYYY"
+            slotProps={{
+              textField: {
+                required: true,
+                placeholder: 'בחירת תאריך התחלה'
+              }
+            }}
+            onChange={(date) => field.onChange(date as Date)}
+            value={field.value}
+          />
+        )}
       />
-      <DatePicker
-        label="סיום התקופה בה תזדקקו לשירות ההסעות"
-        format="DD/MM/YYYY"
-        slotProps={{
-          textField: {
-            required: true
-          }
-        }}
+
+      <Controller
+        control={control}
+        name="endServiceDate"
+        render={({ field }) => (
+          <DatePicker
+            label="סיום התקופה בה תזדקקו לשירות ההסעות"
+            format="DD/MM/YYYY"
+            slotProps={{
+              textField: {
+                required: true,
+                placeholder: 'בחירת תאריך סיום'
+              }
+            }}
+            onChange={(date) => field.onChange(date as Date)}
+            value={field.value}
+          />
+        )}
       />
       <TextField
         label="הסיבה לשימוש בשירות ההסעות "
@@ -120,7 +140,7 @@ export const PatientInfoForm = () => {
         rows={3}
         required
         error={!!errors.patient?.message}
-        // {...register('patient')}
+        {...register('patient.message')}
       />
       <FormControlLabel
         control={<Checkbox />}
