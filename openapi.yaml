@@ -174,8 +174,15 @@ paths:
             schema:
               $ref: '#/components/schemas/User'
       responses:
-        default:
-          description: successful operation
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
     delete:
       tags:
         - user
@@ -397,6 +404,8 @@ components:
         address:
           type: string
           example: 'ג׳בוטינסקי 1'
+        isInitialPassword: 
+          type: boolean
     Car:
       type: object
       properties:
@@ -480,12 +489,13 @@ components:
               - AccessibleCar
               - PatientDelivery
           example: ["WheelChair"]
-        startServiceDate:
+        servicePeriod:
           type: string
-          format: date
-        endServiceDate:
-          type: string
-          format: date
+          enum:
+            - Week
+            - TwoWeeks
+            - Month
+            - More
         patient:
          $ref: '#/components/schemas/Patient'
             
@@ -519,9 +529,7 @@ components:
           hospitalDept:
             type: string
             example: 'מחלקת שיקום'
-          message:
-            type: string
-        
+
   requestBodies:
     UserArray:
       description: List of user object
