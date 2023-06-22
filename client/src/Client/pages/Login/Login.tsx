@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import Logo from '../../../assets/logo.png';
+import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
 
 type Inputs = {
@@ -32,7 +32,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <img src={Logo} alt="logo" className="mb-2.5" />
+      <img src={logo} alt="logo" className="mb-2.5" />
       <h1>כניסה למערכת</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <FormControl>
