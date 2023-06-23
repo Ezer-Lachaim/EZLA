@@ -64,7 +64,7 @@ export default Volunteers;
 
 const volunteersMock = [
   {
-    registerationDate: '2023‐06‐21T16:02:18Z',
+    registerationDate: '2023‐06‐21',
     name: 'ירון סולטן',
     idNumber: '73892748',
     phoneNumber: '0535305635',
