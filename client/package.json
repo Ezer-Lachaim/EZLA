@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "cross-env VITE_BASE_API_URL=https://api-hub-cevc6enttq-ue.a.run.app vite",
+    "start": "cross-env VITE_BASE_API_URL=http://localhost:3000 vite",
     "build": "vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "generate:api:client": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o src/api-client/ --skip-validate-spec",
