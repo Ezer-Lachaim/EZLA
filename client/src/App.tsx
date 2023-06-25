@@ -54,7 +54,6 @@ function App() {
             <Route path="forgot-password/change" element={<ChangePassword />} />
             <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
             <Route path="register" element={<Register />} />
-            <Route path="rides" element={<Rides />} />
             <Route path="processing-user" element={<ProcessingUserPage />} />
             <Route path="create-password" element={<CreatePassword />} />
             <Route path="passenger" element={<Passenger />}>
