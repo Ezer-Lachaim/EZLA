@@ -11,21 +11,23 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
   const driverPayload = req.body;
 
   if (userRole === UserRoleEnum.Admin) {
-    firebase
-      .createUserWithEmailAndPassword(auth, driverPayload.email, driverPayload.password)
-      .then(async (userRecord) => {
-        driverPayload.userId = userRecord.user.uid;
-        driverPayload.role = UserRoleEnum.Driver;
-        driverPayload.isInitialPassword = true;
-        driverPayload.registrationState = UserRegistrationStateEnum.Approved;
-        await createUser(driverPayload.userId, driverPayload);
-        res.send({
-          driverPayload
-        });
-      })
-      .catch((error) => {
-        res.status(500).send(error);
+    try {
+      const userRecord = await firebase.createUserWithEmailAndPassword(
+        auth,
+        driverPayload.email,
+        driverPayload.password
+      );
+      driverPayload.userId = userRecord.user.uid;
+      driverPayload.role = UserRoleEnum.Driver;
+      driverPayload.isInitialPassword = true;
+      driverPayload.registrationState = UserRegistrationStateEnum.Approved;
+      await createUser(driverPayload.userId, driverPayload);
+      res.send({
+        driverPayload
       });
+    } catch (e) {
+      res.status(500).send(e);
+    }
   } else {
     res.status(401).send();
   }
