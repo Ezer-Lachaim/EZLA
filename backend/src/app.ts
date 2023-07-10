@@ -3,12 +3,11 @@ import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
-import { authHandler } from './middlewares/auth';
 // Routes
 import { usersRouter } from './routes/users';
 import { index } from './routes/index';
 import { ridesRouter } from './routes/rides';
-import { driversRouter } from './routes/drivers';
+import { authHandler } from './middlewares/auth';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -22,16 +21,26 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../../client/dist')));
 
 // if (process.env.NODE_ENV === 'production') {
-app.use(authHandler);
+// app.use(authHandler);
 // }
 
-app.use('/users', usersRouter);
-app.use('/rides', ridesRouter);
-app.use('/drivers', driversRouter);
+app.use('/users', authHandler, usersRouter);
+app.use('/rides', authHandler, ridesRouter);
 app.use('/', index);
+
+// app.use('/api', () => {
+//   app.use(authHandler);
+//   app.use('/users', usersRouter);
+//   app.use('/rides', ridesRouter);
+//   app.use('/', index);
+// });
+
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+});
 
 app.use(errorNotFoundHandler);
 app.use(errorHandler);

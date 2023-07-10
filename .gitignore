@@ -26,3 +26,4 @@ dist-ssr
 
 api-client
 openapitools.json
+.env.yaml

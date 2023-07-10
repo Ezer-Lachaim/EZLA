@@ -16,6 +16,7 @@ import withLayout from '../../components/LayoutHOC.tsx';
 import { setToken, api } from '../../../Config.ts';
 import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
 import { User } from '../../../api-client/models/User';
+import PwaInstall from "../../components/PwaInstall/PwaInstall.tsx";
 
 type Inputs = {
   email: string;
@@ -107,10 +108,13 @@ const Login = () => {
       <Link to="/forgot-password" className="mt-5">
         שכחתי סיסמא
       </Link>
+
+      <PwaInstall />
+
       <div className="absolute bottom-4">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/register">להרשמה</Link>
+        <Link to="/first-signup">להרשמה</Link>
       </div>
     </div>
   );

@@ -8,53 +8,90 @@ import {
   SelectChangeEvent,
   TextField
 } from '@mui/material';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../../api-client';
-
-const hospitals: GetHospitalList200ResponseInner[] = [
-  {
-    name: 'בי״ח איכילוב',
-    id: 1
-  }
-];
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
+import { RegistrationFormInputs } from '../../../Register.types';
+import { api } from '../../../../../../Config';
 
 export const PatientInfoForm = () => {
+  const [isServiceForMe, setIsServiceForMe] = useState(false);
+  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+
   const {
     register,
-    formState: { errors }
-  } = useFormContext<RideRequester>();
+    control,
+    watch,
+    formState: { errors },
+    setValue
+  } = useFormContext<RegistrationFormInputs>();
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      const response = await api.hospital.getHospitalList();
+
+      if (response) {
+        setHospitals(response);
+      }
+    };
+
+    fetchHospitals();
+  }, []);
 
   const onSelectHospital = (event: SelectChangeEvent<number>) => {
-    register('patient.hospitalId', {
-      value: event.target.value as number
-    });
+    setValue('patient.hospitalId', event.target.value as number);
+  };
+
+  const serviceForMeHandler = () => {
+    if (isServiceForMe) {
+      setValue('patient.firstName', '');
+      setValue('patient.lastName', '');
+      setValue('patient.patientId', '');
+    } else {
+      const { firstName, lastName, userId } = watch();
+      setValue('patient.firstName', firstName);
+      setValue('patient.lastName', lastName);
+      setValue('patient.patientId', userId);
+    }
+
+    setIsServiceForMe(!isServiceForMe);
   };
 
   return (
     <div className="flex flex-col gap-4 mb-5">
-      <FormControlLabel control={<Checkbox />} label="השירות מיועד לטיפול עבור עצמי" />
+      <FormControlLabel
+        control={<Checkbox onClick={serviceForMeHandler} />}
+        label="השירות מיועד לטיפול עבור עצמי"
+      />
       <TextField
         label="המטופל שם פרטי"
         fullWidth
         autoFocus
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         required
         type="text"
         error={!!errors.patient?.firstName}
-        {...register('patient.firstName', { required: true, minLength: 3 })}
+        {...register('patient.firstName', { required: true })}
       />
       <TextField
         label="המטופל שם משפחה"
         fullWidth
         required
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         type="text"
         error={!!errors.patient?.lastName}
-        {...register('patient.firstName', { required: true, minLength: 3 })}
+        {...register('patient.lastName', { required: true })}
       />
       <TextField
         label="המטופל תעודת זהות"
         fullWidth
         required
+        variant={isServiceForMe ? 'filled' : 'outlined'}
+        disabled={isServiceForMe}
         type="number"
         placeholder="טקסט הסבר"
         error={!!errors.patient?.patientId}
@@ -64,7 +101,7 @@ export const PatientInfoForm = () => {
         <InputLabel id="hospital-label">בית החולים לאיסוף והורדה</InputLabel>
         <Select
           labelId="hospital-label"
-          defaultValue={hospitals[0].id}
+          defaultValue={hospitals[0]?.id}
           {...register('patient.hospitalId', { required: true })}
           label="בית החולים לאיסוף והורדה"
           placeholder="בחרו בית חולים"
@@ -93,23 +130,42 @@ export const PatientInfoForm = () => {
         error={!!errors.patient?.hospitalDept}
         {...register('patient.hospitalDept')}
       />
-      <DatePicker
-        label="תחילת התקופה בה תזדקקו לשירות ההסעות"
-        format="DD/MM/YYYY"
-        slotProps={{
-          textField: {
-            required: true
-          }
-        }}
+      <Controller
+        control={control}
+        name="startServiceDate"
+        render={({ field }) => (
+          <DatePicker
+            label="תחילת התקופה בה תזדקקו לשירות ההסעות"
+            format="DD/MM/YYYY"
+            slotProps={{
+              textField: {
+                required: true,
+                placeholder: 'בחירת תאריך התחלה'
+              }
+            }}
+            onChange={(date) => field.onChange(date as Date)}
+            value={field.value}
+          />
+        )}
       />
-      <DatePicker
-        label="סיום התקופה בה תזדקקו לשירות ההסעות"
-        format="DD/MM/YYYY"
-        slotProps={{
-          textField: {
-            required: true
-          }
-        }}
+
+      <Controller
+        control={control}
+        name="endServiceDate"
+        render={({ field }) => (
+          <DatePicker
+            label="סיום התקופה בה תזדקקו לשירות ההסעות"
+            format="DD/MM/YYYY"
+            slotProps={{
+              textField: {
+                required: true,
+                placeholder: 'בחירת תאריך סיום'
+              }
+            }}
+            onChange={(date) => field.onChange(date as Date)}
+            value={field.value}
+          />
+        )}
       />
       <TextField
         label="הסיבה לשימוש בשירות ההסעות "
@@ -120,12 +176,16 @@ export const PatientInfoForm = () => {
         rows={3}
         required
         error={!!errors.patient?.message}
-        // {...register('patient')}
+        {...register('patient.message')}
       />
       <FormControlLabel
-        control={<Checkbox />}
-        label="הנני מאשר/ת כי קראתי את תקנון האתר ואת
-מדיניות הפרטיות ומסכים לתנאיהם"
+        control={<Checkbox {...register('isApproveTerms', { required: true })} />}
+        label={
+          <p>
+            הנני מאשר/ת כי קראתי את <Link to="/terms">תקנון האתר</Link> ואת{' '}
+            <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
+          </p>
+        }
       />
     </div>
   );

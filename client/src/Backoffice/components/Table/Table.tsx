@@ -34,14 +34,14 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
     debugTable: true
   });
   return (
-    <Paper elevation={2}>
+    <Paper elevation={2} >
       <TableContainer>
-        <MuiTable>
+        <MuiTable >
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableCell key={header.id}>
+                  <TableCell key={header.id} className="px-2">
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -56,7 +56,7 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className="whitespace-nowrap text-ellipsis overflow-hidden"
+                    className="whitespace-nowrap px-2 text-ellipsis overflow-hidden max-w-[200px]"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

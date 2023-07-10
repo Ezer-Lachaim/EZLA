@@ -32,7 +32,7 @@ const CreatePassword = () => {
     formState: { errors, isValid },
     register
   } = useForm<Inputs>({ defaultValues: { email: user?.email } });
-
+  const userContext = useUserContext();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     // eslint-disable-next-line no-console
     console.log(data);
@@ -45,13 +45,17 @@ const CreatePassword = () => {
     if (isValid && !noMatch) {
       try {
         const { token = null } = await api.user.updateUser({
-          userId: '',
+          userId: userContext.user?.userId || '',
           user: { password: data.password }
         });
 
         setToken(token);
         setUser({ ...user, isInitialPassword: false });
-        navigate('/passenger/order-ride');
+        if (user?.role === 'Driver') {
+          navigate('/driver/rides');
+        } else {
+          navigate('/passenger/order-ride');
+        }
       } catch (error) {}
     }
   };

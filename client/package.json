@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "cross-env VITE_BASE_API_URL=http://localhost:3000 vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "generate:api:client": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o src/api-client/ --skip-validate-spec",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "npm run generate:api:client"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

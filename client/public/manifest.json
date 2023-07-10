@@ -1,0 +1,18 @@
+{
+  "theme_color": "#007DFF",
+  "background_color": "#ffffff",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "icon_large_w.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "name": "עזר לחיים",
+  "short_name": "EZLA",
+  "description": "שירות הסעות התנדבותי למבקרים בבתי חולים"
+}

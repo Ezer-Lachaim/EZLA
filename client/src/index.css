@@ -4,16 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    height: 100vh;
-}
-
-#root {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
 @layer base {
     h1 {
         @apply text-xl text-blue-600 font-bold m-5;

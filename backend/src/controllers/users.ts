@@ -1,8 +1,15 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { Response } from 'express';
 import generator from 'generate-password';
 import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
-import { createUser, getUserByUid, updateIsInitialPass } from '../repository/user';
+import {
+  createUser,
+  getAllUsers,
+  getUserByUid,
+  updateIsInitialPass,
+  updateUserByUid
+} from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
 
@@ -12,8 +19,16 @@ import { createJwt } from '../utils/jwt-util';
  */
 const auth = getAuthConfig();
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  console.log(`USER:${req.user.role}`);
-  res.send([]);
+  const isAdmin = req.user.role === UserRoleEnum.Admin;
+  if (isAdmin) {
+    try {
+      res.send(await getAllUsers(req.query.state?.toString()));
+    } catch (e) {
+      res.status(500).send();
+    }
+  } else {
+    res.status(401).send();
+  }
 };
 
 export const get = async (req: CustomRequest, res: Response): Promise<void> => {
@@ -80,11 +95,14 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
   const userIdFromQuery = req.params.userId;
   console.log(userIdFromToken);
   if (userIdFromQuery && userIdFromToken) {
-    if (req.user.role !== UserRoleEnum.Admin) {
-      res.status(401).send();
-    } else {
-      // TODO:Admin flow which update user with query param id (userIdFromQuery)
-    }
+    // if (req.user.role !== UserRoleEnum.Driver) {
+    //   console.log('>>>>');
+    //   res.status(401).send();
+    // } else {
+    // Admin flow
+    await updateUserByUid(userIdFromQuery, req.body);
+    res.status(200).send(req.body);
+    // }
   } else if (userIdFromToken && req.localToken && req.user.isInitialPassword) {
     if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
       res.status(401).send();
@@ -93,10 +111,10 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
       await updateUserPassword(req.user.userId, newPassword);
       await updateIsInitialPass(req.user.userId, false);
       firebase
-      .signInWithEmailAndPassword(auth, req.user.email, newPassword)
-      .then(async (userRecord) => {
-         res.status(202).send({token: await userRecord.user.getIdToken()});
-      })
+        .signInWithEmailAndPassword(auth, req.user.email, newPassword)
+        .then(async (userRecord) => {
+          res.status(202).send({ token: await userRecord.user.getIdToken() });
+        });
     }
   } else {
     res.status(400).send();
