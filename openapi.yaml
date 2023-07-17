@@ -179,10 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+                $ref: '#/components/schemas/UpdateUserResponse'
     delete:
       tags:
         - user
@@ -527,6 +524,10 @@ components:
       properties: 
         user:
           $ref: '#/components/schemas/RideRequester'
+        token:
+          type: string
+    UpdateUserResponse:
+      properties: 
         token:
           type: string
     Patient:
