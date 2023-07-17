@@ -103,8 +103,8 @@ export const updateUserWithTempToken = async (req: CustomRequest, res: Response)
       res.status(401).send({ error: 'User is not approved!' });
     } else {
       try {
-        if (req.body.user.password) {
-          const newPassword = req.body.user.password;
+        if (req.body.password) {
+          const newPassword = req.body.password;
           await updateUserPassword(req.user.userId, newPassword);
           await updateIsInitialPass(req.user.userId, false);
           const userRecord = await firebase.signInWithEmailAndPassword(
