@@ -8,7 +8,7 @@ import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
 import { RideRequester } from '../../../api-client/index.ts';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
-import { api } from '../../../Config.ts';
+import { api, setToken } from '../../../Config.ts';
 
 const Register = () => {
   const navigation = useNavigate();
@@ -22,30 +22,36 @@ const Register = () => {
 
     switch (activeStepIndex) {
       case 0:
-        isStepValid = await trigger([
-          'firstName',
-          'lastName',
-          'userId',
-          'cellPhone',
-          'passengerCellPhone',
-          'email',
-          'address',
-          'specialRequest'
-        ]);
+        isStepValid = await trigger(
+          [
+            'firstName',
+            'lastName',
+            'userId',
+            'cellPhone',
+            'passengerCellPhone',
+            'email',
+            'address',
+            'specialRequest'
+          ],
+          { shouldFocus: true }
+        );
         break;
       case 1:
-        isStepValid = await trigger([
-          'patient.lastName',
-          'patient.lastName',
-          'patient.patientId',
-          'patient.hospitalId',
-          'patient.hospitalBuilding',
-          'patient.hospitalDept',
-          'startServiceDate',
-          'endServiceDate',
-          'patient.message',
-          'isApproveTerms'
-        ]);
+        isStepValid = await trigger(
+          [
+            'patient.lastName',
+            'patient.lastName',
+            'patient.patientId',
+            'patient.hospitalId',
+            'patient.hospitalBuilding',
+            'patient.hospitalDept',
+            'startServiceDate',
+            'endServiceDate',
+            'patient.message',
+            'isApproveTerms'
+          ],
+          { shouldFocus: true }
+        );
         break;
       default:
         break;
@@ -57,11 +63,12 @@ const Register = () => {
   };
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
-    const user = await api.user.createUser({
+    const { user, token } = await api.user.createUser({
       rideRequester: data
     });
 
     if (user) {
+      setToken(token || '');
       navigation('/processing-user');
     }
   };

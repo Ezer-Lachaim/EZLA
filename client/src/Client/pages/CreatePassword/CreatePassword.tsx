@@ -120,7 +120,7 @@ const CreatePassword = () => {
           <OutlinedInput
             id="repeatPassword"
             type={showPassword ? 'text' : 'password'}
-            label="סיסמה"
+            label="וידוא סיסמה"
             placeholder="יש להקליד סיסמה שוב"
             endAdornment={
               <InputAdornment position="end">
