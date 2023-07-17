@@ -29,7 +29,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RideRequester'
+              type: object
+            properties:
+              user:
+                $ref: '#/components/schemas/RideRequester'
+              token:
+                type: string
       responses:
         default:
           description: successful operation
