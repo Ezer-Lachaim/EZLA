@@ -72,7 +72,7 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
 };
 
 export const signup = async (req: CustomRequest, res: Response): Promise<void> => {
-  const user: User = req.body;
+  const { user }: { user: User } = req.body;
   const generatedPass = generator.generate({
     length: 20,
     numbers: true
