@@ -19,15 +19,19 @@ import { createJwt } from '../utils/jwt-util';
  */
 const auth = getAuthConfig();
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  const isAdmin = req.user.role === UserRoleEnum.Admin;
-  if (isAdmin) {
-    try {
-      res.send(await getAllUsers(req.query.state?.toString()));
-    } catch (e) {
-      res.status(500).send();
+  try {
+    const isAdmin = req.user.role === UserRoleEnum.Admin;
+    if (isAdmin) {
+      try {
+        res.send(await getAllUsers(req.query.state?.toString()));
+      } catch (e) {
+        res.status(500).send();
+      }
+    } else {
+      res.status(401).send();
     }
-  } else {
-    res.status(401).send();
+  } catch (error) {
+    res.status(500).send();
   }
 };
 
@@ -91,11 +95,36 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
   }
 };
 
-export const updateUser = async (req: CustomRequest, res: Response): Promise<void> => {
+export const updateUserWithTempToken = async (req: CustomRequest, res: Response): Promise<void> => {
   const userIdFromToken = req.user.userId;
   const userIdFromQuery = req.params.userId;
-  console.log(userIdFromToken);
-  if (userIdFromQuery && userIdFromToken) {
+  if (userIdFromQuery === userIdFromToken && req.localToken && req.user.isInitialPassword) {
+    if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
+      res.status(401).send({ error: 'User is not approved!' });
+    } else {
+      try {
+        const newPassword = req.body.password;
+        await updateUserPassword(req.user.userId, newPassword);
+        await updateIsInitialPass(req.user.userId, false);
+        const userRecord = await firebase.signInWithEmailAndPassword(
+          auth,
+          req.user.email,
+          newPassword
+        );
+        res.status(202).send({ token: await userRecord.user.getIdToken() });
+      } catch (e) {
+        console.log(e);
+        res.status(500).send();
+      }
+    }
+  } else {
+    res.status(401).send();
+  }
+};
+
+export const updateUserFromBO = async (req: CustomRequest, res: Response): Promise<void> => {
+  const userIdFromQuery = req.params.userId;
+  try {
     if (req.user.role !== UserRoleEnum.Admin) {
       res.status(401).send();
     } else {
@@ -103,21 +132,8 @@ export const updateUser = async (req: CustomRequest, res: Response): Promise<voi
       await updateUserByUid(userIdFromQuery, req.body);
       res.status(200).send(req.body);
     }
-  } else if (userIdFromToken && req.localToken && req.user.isInitialPassword) {
-    if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
-      res.status(401).send();
-    } else {
-      const newPassword = req.body.password;
-      await updateUserPassword(req.user.userId, newPassword);
-      await updateIsInitialPass(req.user.userId, false);
-      const userRecord = await firebase.signInWithEmailAndPassword(
-        auth,
-        req.user.email,
-        newPassword
-      );
-      res.status(202).send({ token: await userRecord.user.getIdToken() });
-    }
-  } else {
-    res.status(400).send();
+  } catch (e) {
+    console.log(e);
+    res.status(500).send();
   }
 };
