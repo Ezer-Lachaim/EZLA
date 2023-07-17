@@ -48,12 +48,12 @@ export const PatientInfoForm = () => {
     if (isServiceForMe) {
       setValue('patient.firstName', '');
       setValue('patient.lastName', '');
-      setValue('patient.patientId', '');
+      setValue('patient.nationalId', '');
     } else {
       const { firstName, lastName, userId } = watch();
       setValue('patient.firstName', firstName);
       setValue('patient.lastName', lastName);
-      setValue('patient.patientId', userId);
+      setValue('patient.nationalId', userId);
     }
 
     setIsServiceForMe(!isServiceForMe);
@@ -94,8 +94,8 @@ export const PatientInfoForm = () => {
         disabled={isServiceForMe}
         type="number"
         placeholder="טקסט הסבר"
-        error={!!errors.patient?.patientId}
-        {...register('patient.patientId', { required: true, minLength: 9 })}
+        error={!!errors.patient?.nationalId}
+        {...register('patient.nationalId', { required: true, minLength: 9 })}
       />
       <FormControl fullWidth>
         <InputLabel id="hospital-label">בית החולים לאיסוף והורדה</InputLabel>

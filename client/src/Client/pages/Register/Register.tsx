@@ -26,7 +26,7 @@ const Register = () => {
           [
             'firstName',
             'lastName',
-            'userId',
+            'nationalId',
             'cellPhone',
             'passengerCellPhone',
             'email',
@@ -41,7 +41,7 @@ const Register = () => {
           [
             'patient.lastName',
             'patient.lastName',
-            'patient.patientId',
+            'patient.nationalId',
             'patient.hospitalId',
             'patient.hospitalBuilding',
             'patient.hospitalDept',
@@ -64,7 +64,7 @@ const Register = () => {
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
     const { user, token } = await api.user.createUser({
-      rideRequester: data
+      createUserRequest: { user: data }
     });
 
     if (user) {
