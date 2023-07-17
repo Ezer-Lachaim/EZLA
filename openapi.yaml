@@ -403,6 +403,9 @@ components:
         userId:
           type: string
           example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        nationalId:
+          type: string
+          example: '123456789'
         authProvider:
           type: string
           enum:
@@ -574,7 +577,7 @@ components:
         - password
     Patient:
       properties:
-        patientId:
+        nationalId:
           type: string
           example: '321234567 (for Israeli ID, but could be foreign passport)'
         firstName:
