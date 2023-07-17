@@ -134,6 +134,38 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
+  /users/update_initial_password/{userId}:
+    put:
+      tags:
+        - user
+      summary: Update initial password
+      description: Updates the initial password for a user.
+      operationId: updateInitialPassword
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user to update the initial password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated password object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInitialPasswordRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateInitialPasswordResponse'
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found
+
   /users/{userId}:
     get:
       tags:
@@ -531,10 +563,17 @@ components:
           $ref: '#/components/schemas/RideRequester'
         token:
           type: string
-    UpdateUserResponse:
+    UpdateInitialPasswordResponse:
       properties: 
         token:
           type: string
+    UpdateInitialPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+      required:
+        - password
     Patient:
       properties:
         patientId:
