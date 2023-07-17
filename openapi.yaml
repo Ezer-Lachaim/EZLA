@@ -41,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideRequester'
+                $ref: '#/components/schemas/CreateUserResponse'
     get:
       tags:
         - user
@@ -184,10 +184,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+                $ref: '#/components/schemas/UpdateUserResponse'
     delete:
       tags:
         - user
@@ -528,6 +525,16 @@ components:
         licenseExpiryDate:
           type: string
           example: '2024-01-01'
+    CreateUserResponse:
+      properties: 
+        user:
+          $ref: '#/components/schemas/RideRequester'
+        token:
+          type: string
+    UpdateUserResponse:
+      properties: 
+        token:
+          type: string
     Patient:
       properties:
         patientId:
