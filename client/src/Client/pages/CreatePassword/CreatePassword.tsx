@@ -44,9 +44,9 @@ const CreatePassword = () => {
     }
     if (isValid && !noMatch) {
       try {
-        const { token = null } = await api.user.updateUser({
+        const { token = null } = await api.user.updateInitialPassword({
           userId: userContext.user?.userId || '',
-          user: { password: data.password }
+          updateInitialPasswordRequest: { password: data.password }
         });
 
         setToken(token);

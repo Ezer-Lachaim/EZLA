@@ -17,6 +17,7 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
 import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 // type Inputs = {
 //   sourceAddress: string;
@@ -70,8 +71,9 @@ const OrderRide = () => {
     'destination'
   );
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { user } = useUserContext();
 
-  const passenger = '[שם נוסע]';
+  const passenger = user?.firstName || 'נוסע';
   const autofilledAddressValue = 'בי”ח תל השומר / נשים ויולדות / מחלקת יולדות א';
 
   const onSwitchAutofilled = () => {

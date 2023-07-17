@@ -30,11 +30,9 @@ paths:
           application/json:
             schema:
               type: object
-            properties:
-              user:
-                $ref: '#/components/schemas/RideRequester'
-              token:
-                type: string
+              properties:
+                user:
+                  $ref: '#/components/schemas/RideRequester'
       responses:
         default:
           description: successful operation
@@ -134,6 +132,38 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
+  /users/update_initial_password/{userId}:
+    put:
+      tags:
+        - user
+      summary: Update initial password
+      description: Updates the initial password for a user.
+      operationId: updateInitialPassword
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user to update the initial password
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated password object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInitialPasswordRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateInitialPasswordResponse'
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found
+
   /users/{userId}:
     get:
       tags:
@@ -184,7 +214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateUserResponse'
+                $ref: '#/components/schemas/RideRequester'
     delete:
       tags:
         - user
@@ -373,6 +403,9 @@ components:
         userId:
           type: string
           example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        nationalId:
+          type: string
+          example: '123456789'
         authProvider:
           type: string
           enum:
@@ -531,13 +564,20 @@ components:
           $ref: '#/components/schemas/RideRequester'
         token:
           type: string
-    UpdateUserResponse:
+    UpdateInitialPasswordResponse:
       properties: 
         token:
           type: string
+    UpdateInitialPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+      required:
+        - password
     Patient:
       properties:
-        patientId:
+        nationalId:
           type: string
           example: '321234567 (for Israeli ID, but could be foreign passport)'
         firstName:

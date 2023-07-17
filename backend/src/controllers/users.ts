@@ -72,7 +72,7 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
 };
 
 export const signup = async (req: CustomRequest, res: Response): Promise<void> => {
-  const user: User = req.body;
+  const { user }: { user: User } = req.body;
   const generatedPass = generator.generate({
     length: 20,
     numbers: true
@@ -103,15 +103,19 @@ export const updateUserWithTempToken = async (req: CustomRequest, res: Response)
       res.status(401).send({ error: 'User is not approved!' });
     } else {
       try {
-        const newPassword = req.body.password;
-        await updateUserPassword(req.user.userId, newPassword);
-        await updateIsInitialPass(req.user.userId, false);
-        const userRecord = await firebase.signInWithEmailAndPassword(
-          auth,
-          req.user.email,
-          newPassword
-        );
-        res.status(202).send({ token: await userRecord.user.getIdToken() });
+        if (req.body.password) {
+          const newPassword = req.body.password;
+          await updateUserPassword(req.user.userId, newPassword);
+          await updateIsInitialPass(req.user.userId, false);
+          const userRecord = await firebase.signInWithEmailAndPassword(
+            auth,
+            req.user.email,
+            newPassword
+          );
+          res.status(202).send({ token: await userRecord.user.getIdToken() });
+        } else {
+          res.status(400).send({ error: 'Missing password' });
+        }
       } catch (e) {
         console.log(e);
         res.status(500).send();
