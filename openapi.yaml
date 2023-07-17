@@ -36,11 +36,7 @@ paths:
           content:
             application/json:
               schema:
-            properties:
-              user:
-                $ref: '#/components/schemas/RideRequester'
-              token:
-                type: string
+                $ref: '#/components/schemas/CreateUserResponse'
     get:
       tags:
         - user
@@ -527,6 +523,12 @@ components:
         licenseExpiryDate:
           type: string
           example: '2024-01-01'
+    CreateUserResponse:
+      properties: 
+        user:
+          $ref: '#/components/schemas/RideRequester'
+        token:
+          type: string
     Patient:
       properties:
         patientId:
