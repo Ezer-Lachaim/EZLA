@@ -33,8 +33,6 @@ paths:
               properties:
                 user:
                   $ref: '#/components/schemas/RideRequester'
-                token:
-                  type: string
       responses:
         default:
           description: successful operation
