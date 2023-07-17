@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import redisClient from '../repository/redis-client';
-import {Ride, RideStateEnum} from '../models/ride';
-import {CustomRequest} from "../middlewares/CustomRequest";
+import { Ride, RideStateEnum } from '../models/ride';
+import { CustomRequest } from '../middlewares/CustomRequest';
 
 /**
  * GET /rides
@@ -99,15 +99,18 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         const updatedRide = Object.assign(currentRide, rideUpdateValues);
         await redisClient.json.set(`ride:${rideId}`, '$', { ...updatedRide });
 
-        if(updatedRide.state === RideStateEnum.Canceled || updatedRide.state === RideStateEnum.Completed){
+        if (
+          updatedRide.state === RideStateEnum.Canceled ||
+          updatedRide.state === RideStateEnum.Completed
+        ) {
           await redisClient.del(`active_ride:${userIdFromToken}`);
         }
         res.status(200).json(updatedRide);
       } else {
         res.status(400).json({
           error:
-              "can't update ride with the given keys - one of the fields is " +
-              'not part of the ride properties'
+            "can't update ride with the given keys - one of the fields is " +
+            'not part of the ride properties'
         });
       }
     } else {
