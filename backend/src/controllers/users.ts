@@ -63,8 +63,9 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
         res.status(401).send({ error: 'User is not authorized!' });
       }
     })
-    .catch((error) => {
-      res.status(500).send(error);
+    .catch((e) => {
+      console.log(e);
+      res.status(401).send({ error: 'wrong username or password' });
     });
 };
 
