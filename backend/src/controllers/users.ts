@@ -62,14 +62,10 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
       } else {
         res.status(401).send({ error: 'User is not authorized!' });
       }
-    } else if (user.role === UserRoleEnum.Admin || user.role === UserRoleEnum.Driver) {
-      res.send({ token: await userRecord.user.getIdToken(), user });
-    } else {
-      res.status(401).send({ error: 'User is not authorized!' });
-    }
-  } catch (e) {
-    res.status(401).send({ error: 'wrong username or password' });
-  }
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
 };
 
 export const signup = async (req: CustomRequest, res: Response): Promise<void> => {
