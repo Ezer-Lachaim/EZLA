@@ -2,13 +2,14 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField
 } from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -50,55 +51,83 @@ export const PatientInfoForm = () => {
       setValue('patient.lastName', '');
       setValue('patient.nationalId', '');
     } else {
-      const { firstName, lastName, userId } = watch();
+      const { firstName, lastName, nationalId } = watch();
       setValue('patient.firstName', firstName);
       setValue('patient.lastName', lastName);
-      setValue('patient.nationalId', userId);
+      setValue('patient.nationalId', nationalId);
     }
 
     setIsServiceForMe(!isServiceForMe);
   };
 
   return (
-    <div className="flex flex-col gap-4 mb-5">
+    <div className="flex flex-col gap-9 mb-5">
       <FormControlLabel
         control={<Checkbox onClick={serviceForMeHandler} />}
         label="השירות מיועד לטיפול עבור עצמי"
       />
-      <TextField
-        label="המטופל שם פרטי"
-        fullWidth
-        autoFocus
-        variant={isServiceForMe ? 'filled' : 'outlined'}
-        disabled={isServiceForMe}
-        required
-        type="text"
-        error={!!errors.patient?.firstName}
-        {...register('patient.firstName', { required: true })}
-      />
-      <TextField
-        label="המטופל שם משפחה"
-        fullWidth
-        required
-        variant={isServiceForMe ? 'filled' : 'outlined'}
-        disabled={isServiceForMe}
-        type="text"
-        error={!!errors.patient?.lastName}
-        {...register('patient.lastName', { required: true })}
-      />
-      <TextField
-        label="המטופל תעודת זהות"
-        fullWidth
-        required
-        variant={isServiceForMe ? 'filled' : 'outlined'}
-        disabled={isServiceForMe}
-        type="number"
-        placeholder="טקסט הסבר"
-        error={!!errors.patient?.nationalId}
-        {...register('patient.nationalId', { required: true, minLength: 9 })}
-      />
-      <FormControl fullWidth>
-        <InputLabel id="hospital-label">בית החולים לאיסוף והורדה</InputLabel>
+      <FormControl>
+        <TextField
+          label="המטופל שם פרטי"
+          fullWidth
+          autoFocus
+          variant={isServiceForMe ? 'filled' : 'outlined'}
+          disabled={isServiceForMe}
+          required
+          type="text"
+          error={!!errors.patient?.firstName}
+          {...register('patient.firstName', { required: true, minLength: 2 })}
+        />
+        {errors.patient?.firstName && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {errors.patient?.firstName.type === 'required' && 'יש להזין שם פרטי'}
+            {errors.patient?.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+          </FormHelperText>
+        )}
+      </FormControl>
+      <FormControl>
+        <TextField
+          label="המטופל שם משפחה"
+          fullWidth
+          required
+          variant={isServiceForMe ? 'filled' : 'outlined'}
+          disabled={isServiceForMe}
+          type="text"
+          error={!!errors.patient?.lastName}
+          {...register('patient.lastName', { required: true, minLength: 2 })}
+        />
+        {errors.patient?.lastName && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {errors.patient?.lastName.type === 'required' && 'יש להזין שם משפחה'}
+            {errors.patient?.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+          </FormHelperText>
+        )}
+      </FormControl>
+      <FormControl>
+        <TextField
+          label="המטופל תעודת זהות"
+          fullWidth
+          required
+          variant={isServiceForMe ? 'filled' : 'outlined'}
+          disabled={isServiceForMe}
+          type="number"
+          placeholder="טקסט הסבר"
+          error={!!errors.patient?.nationalId}
+          {...register('patient.nationalId', { required: true, minLength: 9 })}
+        />
+        {errors.patient?.nationalId && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {errors.patient?.nationalId.type === 'required' && 'יש להזין תעודת זהות'}
+            {(errors.patient?.nationalId.type === 'minLength' ||
+              errors.patient?.nationalId.type === 'maxLength') &&
+              'יש להזין תעודת זהות עם 9 ספרות'}
+          </FormHelperText>
+        )}
+      </FormControl>
+      <FormControl fullWidth required>
+        <InputLabel id="hospital-label" required>
+          בית החולים לאיסוף והורדה
+        </InputLabel>
         <Select
           labelId="hospital-label"
           defaultValue={hospitals[0]?.id}
@@ -106,6 +135,7 @@ export const PatientInfoForm = () => {
           label="בית החולים לאיסוף והורדה"
           placeholder="בחרו בית חולים"
           onChange={onSelectHospital}
+          error={!!errors.patient?.hospitalId}
         >
           {hospitals.map((hospital) => (
             <MenuItem key={hospital.id} value={hospital.id}>
@@ -113,6 +143,11 @@ export const PatientInfoForm = () => {
             </MenuItem>
           ))}
         </Select>
+        {errors.patient?.hospitalId && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {errors.patient?.hospitalId.type === 'required' && 'יש לבחור בית חולים'}
+          </FormHelperText>
+        )}
       </FormControl>
       <TextField
         label="בניין בביה”ח"
@@ -133,60 +168,101 @@ export const PatientInfoForm = () => {
       <Controller
         control={control}
         name="startServiceDate"
+        rules={{ required: true }}
         render={({ field }) => (
-          <DatePicker
-            label="תחילת התקופה בה תזדקקו לשירות ההסעות"
-            format="DD/MM/YYYY"
-            slotProps={{
-              textField: {
-                required: true,
-                placeholder: 'בחירת תאריך התחלה'
-              }
-            }}
-            onChange={(date) => field.onChange(date as Date)}
-            value={field.value}
-          />
+          <FormControl fullWidth required>
+            <DatePicker
+              label="תחילת התקופה בה תזדקקו לשירות ההסעות"
+              format="DD/MM/YYYY"
+              slotProps={{
+                textField: {
+                  required: true,
+                  placeholder: 'בחירת תאריך התחלה',
+                  error: !!errors.startServiceDate
+                }
+              }}
+              disablePast
+              onChange={(date) => field.onChange(date as Date)}
+              value={field.value}
+            />
+            {errors.startServiceDate && (
+              <FormHelperText error className="absolute top-full mr-0">
+                {errors.startServiceDate.type === 'required' && 'יש להזין תאריך התחלה'}
+              </FormHelperText>
+            )}
+          </FormControl>
         )}
       />
 
       <Controller
         control={control}
         name="endServiceDate"
+        rules={{ required: true }}
         render={({ field }) => (
-          <DatePicker
-            label="סיום התקופה בה תזדקקו לשירות ההסעות"
-            format="DD/MM/YYYY"
-            slotProps={{
-              textField: {
-                required: true,
-                placeholder: 'בחירת תאריך סיום'
-              }
-            }}
-            onChange={(date) => field.onChange(date as Date)}
-            value={field.value}
-          />
+          <FormControl fullWidth required>
+            <DatePicker
+              label="סיום התקופה בה תזדקקו לשירות ההסעות"
+              format="DD/MM/YYYY"
+              slotProps={{
+                textField: {
+                  required: true,
+                  placeholder: 'בחירת תאריך סיום',
+                  error: !!errors.endServiceDate
+                }
+              }}
+              disablePast
+              onChange={(date) => field.onChange(date as Date)}
+              value={field.value}
+            />
+            {errors.startServiceDate && (
+              <FormHelperText error className="absolute top-full mr-0">
+                {errors.startServiceDate.type === 'required' && 'יש להזין תאריך סיום'}
+              </FormHelperText>
+            )}
+          </FormControl>
         )}
       />
-      <TextField
-        label="הסיבה לשימוש בשירות ההסעות "
-        fullWidth
-        type="text"
-        placeholder="טקסט הסבר"
-        multiline
-        rows={3}
-        required
-        error={!!errors.patient?.message}
-        {...register('patient.message')}
-      />
-      <FormControlLabel
-        control={<Checkbox {...register('isApproveTerms', { required: true })} />}
-        label={
-          <p>
-            הנני מאשר/ת כי קראתי את <Link to="/terms">תקנון האתר</Link> ואת{' '}
-            <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
-          </p>
-        }
-      />
+
+      <FormControl fullWidth required>
+        <TextField
+          label="הסיבה לשימוש בשירות ההסעות"
+          fullWidth
+          type="text"
+          placeholder="טקסט הסבר"
+          multiline
+          rows={3}
+          required
+          error={!!errors.patient?.message}
+          {...register('patient.message', { required: true })}
+        />
+        {errors.patient?.message && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {(errors.patient?.message as FieldError).type === 'required' &&
+              'חסרה הסיבה לשימוש שירות ההסעות'}
+          </FormHelperText>
+        )}
+      </FormControl>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              {...register('isApproveTerms', { required: true })}
+              sx={errors.isApproveTerms ? { color: 'red' } : {}}
+            />
+          }
+          label={
+            <p>
+              הנני מאשר/ת כי קראתי את <Link to="/terms">תקנון האתר</Link> ואת{' '}
+              <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
+            </p>
+          }
+        />
+        {errors.isApproveTerms && (
+          <FormHelperText error>
+            {errors.isApproveTerms.type === 'required' && 'יש לאשר קריאת תקנון האתר'}
+          </FormHelperText>
+        )}
+      </div>
     </div>
   );
 };
