@@ -225,5 +225,6 @@ const OrderRide = () => {
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה לביקור חולים',
   hideBackButton: true,
-  hideFooter: true
+  hideFooter: true,
+  showLogoutButton: true
 });

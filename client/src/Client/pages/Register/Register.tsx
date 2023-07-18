@@ -39,7 +39,7 @@ const Register = () => {
       case 1:
         isStepValid = await trigger(
           [
-            'patient.lastName',
+            'patient.firstName',
             'patient.lastName',
             'patient.nationalId',
             'patient.hospitalId',

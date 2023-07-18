@@ -9,7 +9,7 @@ interface LayoutHOCProps extends Partial<NavBarProps> {
 
 const withLayout = (
   Component: React.ComponentType,
-  { hideNavbar, hideFooter, title, hideBackButton, onBackClick }: LayoutHOCProps
+  { hideNavbar, hideFooter, title, hideBackButton, onBackClick, showLogoutButton }: LayoutHOCProps
 ) => {
   return () => (
     <div className="h-screen flex flex-col m-0">
@@ -18,6 +18,7 @@ const withLayout = (
           title={title || 'עזר לחיים'}
           hideBackButton={hideBackButton}
           onBackClick={onBackClick}
+          showLogoutButton={showLogoutButton}
         />
       )}
       <div className="relative flex-1 bg-white max-h-full overflow-auto">
