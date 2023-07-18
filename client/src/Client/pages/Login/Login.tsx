@@ -10,13 +10,14 @@ import {
   OutlinedInput
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { setToken, api } from '../../../Config.ts';
 import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
-import { User } from '../../../api-client/models/User';
-import PwaInstall from "../../components/PwaInstall/PwaInstall.tsx";
+import { User, ResponseError } from '../../../api-client';
+import PwaInstall from '../../components/PwaInstall/PwaInstall';
+import useNavigateUser from '../../hooks/useNavigateUser.ts';
 
 type Inputs = {
   email: string;
@@ -29,22 +30,25 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError
   } = useForm<Inputs>();
 
-  const navigation = useNavigate();
+  const { navigateAfterLogin } = useNavigateUser();
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    const userResponse = (await api.user.loginUser({
-      loginUserRequest: { email, password }
-    })) as unknown as { token: string; user: User };
-    console.log(userResponse.token);
-    setToken(userResponse.token);
-    setUser(userResponse.user);
-    if (userResponse.user.role === 'Admin') {
-      navigation('/backoffice');
-    } else {
-      navigation('/');
+    try {
+      const userResponse = (await api.user.loginUser({
+        loginUserRequest: { email, password }
+      })) as unknown as { token: string; user: User };
+      console.log(userResponse.token);
+      setToken(userResponse.token);
+      setUser(userResponse.user);
+      navigateAfterLogin(userResponse.user);
+    } catch (e) {
+      if ((e as ResponseError).response.status === 401) {
+        setError('password', { type: '401' }, { shouldFocus: true });
+      }
     }
   };
 
@@ -94,9 +98,10 @@ const Login = () => {
             }
             {...register('password', { required: true })}
           />
-          {errors.password?.type === 'required' && (
+          {errors.password && (
             <FormHelperText error className="absolute top-full mr-0">
-              חסרה סיסמא
+              {errors.password.type === 'required' && 'חסרה סיסמא'}
+              {errors.password.type === '401' && 'האימייל או סיסמה שהקלדתם אינם נכונים.'}
             </FormHelperText>
           )}
         </FormControl>
