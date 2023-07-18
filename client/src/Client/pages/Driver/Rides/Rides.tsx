@@ -68,8 +68,8 @@ const RideCard = ({
               ))}
           </div>
           {selected &&
-            ride.state === RideStateEnum.WaitingForDriver &&
-            ride.state === RideStateEnum.Booked && (
+            (ride.state === RideStateEnum.WaitingForDriver ||
+              ride.state === RideStateEnum.Booked) && (
               <div className="flex mt-2">
                 <Button className="flex-1 flex-col m-1" variant="outlined">
                   צרו קשר
@@ -129,4 +129,4 @@ const Rides = () => {
   );
 };
 
-export default withLayout(Rides, { title: 'קריאות פתוחות' });
+export default withLayout(Rides, { title: 'קריאות פתוחות', showLogoutButton: true });

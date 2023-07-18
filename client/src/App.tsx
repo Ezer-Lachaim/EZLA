@@ -20,6 +20,7 @@ import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp.tsx';
 import Terms from './Client/pages/Terms/Terms.tsx';
 import Privacy from './Client/pages/Privacy/Privacy.tsx';
 import { Splash } from './Client/pages/Splash/Splash.tsx';
+import Logout from './Client/pages/Login/Logout.tsx';
 
 function App() {
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
@@ -46,6 +47,7 @@ function App() {
         <Routes>
           <Route path="" element={<Client />}>
             <Route path="login" element={<Login />} />
+            <Route path="logout" element={<Logout />} />
             <Route path="first-signup" element={<FirstSignUp />} />
             <Route path="terms" element={<Terms />} />
             <Route path="privacy" element={<Privacy />} />
