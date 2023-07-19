@@ -9,4 +9,4 @@ usersRouter.get('/validate_status/:userId', controller.validateStatus);
 usersRouter.post('/', controller.signup);
 usersRouter.post('/login', controller.login);
 usersRouter.put('/update_initial_password/:userId?', controller.updateUserWithTempToken);
-usersRouter.put('/backoffice/:userId?', controller.updateUserFromBO);
+usersRouter.put('/:userId?', controller.updateUserFromBO);
