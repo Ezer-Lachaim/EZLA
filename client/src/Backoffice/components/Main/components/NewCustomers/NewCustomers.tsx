@@ -1,10 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button, Stack } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
+import { api } from '../../../../../Config.ts';
+import { GetUsersStateEnum, RideRequester } from '../../../../../api-client';
 
 type TempCustomer = (typeof customersMock)[0];
 const columns: ColumnDef<Partial<TempCustomer>>[] = [
@@ -33,7 +35,7 @@ const columns: ColumnDef<Partial<TempCustomer>>[] = [
     accessorKey: 'id',
     header: '',
     accessorFn: (data) => data.id,
-    cell: () => {
+    cell: ({ row }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [toggleModal, setToggleModal] = useState(false);
       const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
@@ -57,6 +59,12 @@ const columns: ColumnDef<Partial<TempCustomer>>[] = [
               color="success"
               style={{ minWidth: 0 }}
               className="w-7 h-7"
+              onClick={() => {
+                api.user.updateUser({
+                  userId: row.original.userId || '',
+                  rideRequester: { registrationState: GetUsersStateEnum.Approved }
+                });
+              }}
             >
               <Check fontSize="small" />
             </Button>
@@ -73,13 +81,23 @@ const columns: ColumnDef<Partial<TempCustomer>>[] = [
 ];
 
 const NewCustomers = () => {
+  const [data, setData] = useState<RideRequester[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await api.user.getUsers({ state: GetUsersStateEnum.Pending });
+      setData(result);
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <PageHeader>
         <PageHeader.Title>נרשמים חדשים והארכות תוקף (3)</PageHeader.Title>
         <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
-      <Table data={customersMock} columns={columns} />
+      <Table data={data} columns={columns} />
     </div>
   );
 };

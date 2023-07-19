@@ -31,7 +31,7 @@ function App() {
     const timer = () => {
       timerId = setTimeout(() => {
         setShouldDisplaySplash(false);
-      }, 4 * 1000); // 4 sec
+      }, 2 * 1000);
     };
 
     timer();
