@@ -45,7 +45,7 @@ paths:
         - user
       summary: Get all users with specific role
       description: Returns a list of users with the specified role (optional)
-      operationId: getUsersByRole
+      operationId: getUsers
       parameters:
         - name: state
           in: query
@@ -53,6 +53,20 @@ paths:
           required: false
           schema:
             type: string
+            enum:
+              - Pending
+              - Approved
+              - Rejected
+        - name: type
+          in: query
+          description: The state of user
+          required: false
+          schema:
+            type: string
+            enum:
+              - Requester
+              - Driver
+              - Admin
       responses:
         '200':
           description: successful operation
