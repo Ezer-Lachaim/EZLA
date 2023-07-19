@@ -79,19 +79,21 @@ export const PassengerInfoForm = () => {
           </FormHelperText>
         )}
       </FormControl>
-      <TextField
-        label="טלפון נייד של הנוסע (במידה והמזמין אינו הנוסע) "
-        fullWidth
-        type="number"
-        placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-        error={!!errors.passengerCellPhone}
-        {...register('passengerCellPhone', { pattern: /^05\d-?\d{7}$/ })}
-      />
-      {errors.cellPhone && (
-        <FormHelperText error className="absolute top-full mr-0">
-          {errors.cellPhone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
-        </FormHelperText>
-      )}
+      <FormControl>
+        <TextField
+          label="טלפון נייד של הנוסע (במידה והמזמין אינו הנוסע) "
+          fullWidth
+          type="number"
+          placeholder="יש להזין 10 ספרות של הטלפון הנייד"
+          error={!!errors.passengerCellPhone}
+          {...register('passengerCellPhone', { pattern: /^05\d-?\d{7}$/ })}
+        />
+        {errors.passengerCellPhone && (
+          <FormHelperText error className="absolute top-full mr-0">
+            {errors.passengerCellPhone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+          </FormHelperText>
+        )}
+      </FormControl>
       <FormControl>
         <TextField
           label="אימייל של המזמין"
