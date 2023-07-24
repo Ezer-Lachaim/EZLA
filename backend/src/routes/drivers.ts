@@ -4,3 +4,4 @@ import * as controller from '../controllers/drivers';
 export const driversRouter = Router();
 
 driversRouter.post('/', controller.create);
+driversRouter.get('/', controller.getAll);
