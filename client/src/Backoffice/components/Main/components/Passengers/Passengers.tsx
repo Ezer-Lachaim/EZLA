@@ -1,437 +1,132 @@
 import { ColumnDef } from '@tanstack/react-table';
-// import { Button, Stack } from '@mui/material';
+
 import { OutlinedFlag, Flag } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
+import { api } from '../../../../../Config';
+import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
-type TempPassenger = (typeof passengersMock)[0];
-const columns: ColumnDef<Partial<TempPassenger>>[] = [
-  {
-    accessorKey: 'registerationDate',
-    header: 'תאריך הרשמה',
-    accessorFn: (data) => data.registerationDate
-  },
-  { accessorKey: 'name', header: 'שם נוסע', accessorFn: (data) => data.name },
-  { accessorKey: 'phoneNumber', header: 'יצירת קשר', accessorFn: (data) => data.phoneNumber },
-  { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
-  { accessorKey: 'address', header: 'כתובת איסוף', accessorFn: (data) => data.address },
-  {
-    accessorKey: 'reason',
-    header: 'סיבת שימוש בהסעות',
-    accessorFn: (data) => data.reason
-  },
-  { accessorKey: 'hospitalName', header: 'בית חולים', accessorFn: (data) => data.hospitalName },
-  {
-    accessorKey: 'startDate',
-    header: 'תקופה',
-    accessorFn: (data) => data.endDate,
-    cell: () => {
-      return <span className="ml-2 whitespace-nowrap">01/07/23 - 14/07/23</span>;
+const getPassengersColumns = (
+  hospitals: GetHospitalList200ResponseInner[]
+): ColumnDef<Partial<RideRequester>>[] => {
+  return [
+    {
+      accessorKey: 'signupDate',
+      header: 'תאריך הרשמה',
+      accessorFn: (data) => {
+        if (!isValid(data.signupDate)) return '-';
+        return format(data.signupDate!, 'dd/MM/yyyy');
+      }
+    },
+    {
+      accessorKey: 'firstName',
+      header: 'שם נוסע',
+      accessorFn: (data) => {
+        const fullName = `${data?.patient?.firstName ?? ''} ${data?.patient?.lastName ?? ''}`;
+        if (!fullName.trim()) return '-';
+        return fullName;
+      }
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'יצירת קשר',
+      accessorFn: (data) => data?.passengerCellPhone || data?.cellPhone || '-'
+    },
+    { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
+    { accessorKey: 'address', header: 'כתובת איסוף', accessorFn: (data) => data.address },
+    {
+      accessorKey: 'reason',
+      header: 'סיבת שימוש בהסעות',
+      accessorFn: (data) => data.patient?.message || '-'
+    },
+    {
+      accessorKey: 'hospitalName',
+      header: 'בית חולים',
+      accessorFn: (data) => {
+        const patientHospital = hospitals?.find(
+          (hospital) => hospital.id === data.patient?.hospitalId
+        );
+        if (!patientHospital) return '-';
+        return patientHospital.name;
+      }
+    },
+    {
+      accessorKey: 'startServiceDate',
+      header: 'תקופה',
+      cell: ({ row }) => {
+        if (!isValid(row.original.startServiceDate) || !isValid(row.original.endServiceDate)) {
+          return '-';
+        }
+
+        return (
+          <span className="ml-2 whitespace-nowrap">
+            {format(row.original.startServiceDate!, 'dd/MM/yyyy')} -
+            {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+          </span>
+        );
+      }
+    },
+    {
+      accessorKey: 'endServiceDate',
+      header: 'תוקף עד',
+      cell: ({ row }) => {
+        if (!isValid(row.original.endServiceDate)) return '-';
+        const isExpired = isBefore(row.original.endServiceDate!, new Date());
+
+        if (isExpired) {
+          return (
+            <div>
+              <Flag color="error" />
+              <span className="mr-4 whitespace-nowrap">פג תוקף</span>
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            {isExpired ? <Flag color="error" /> : <OutlinedFlag color="success" />}
+            <span className="mr-4 whitespace-nowrap">
+              {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+            </span>
+          </div>
+        );
+      }
     }
-  },
-  {
-    accessorKey: 'endDate',
-    header: 'תוקף עד',
-    accessorFn: (data) => data.endDate,
-    cell: (cell) => {
-      const isExpired = cell.row.index % 2 === 0;
-      return (
-        <div>
-          {isExpired ? <Flag color="error" /> : <OutlinedFlag color="success" />}
-          <span className="mr-4 whitespace-nowrap">14/07/23</span>
-        </div>
-      );
-    }
-  }
-];
+  ];
+};
 
 const Passengers = () => {
+  const [passengers, setPassengers] = useState<RideRequester[]>([]);
+  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const columns = getPassengersColumns(hospitals);
+
+  useEffect(() => {
+    const fetchPassengers = async () => {
+      const result = await api.user.getUsers({
+        state: 'Approved',
+        role: 'Requester'
+      });
+
+      setPassengers(result);
+    };
+    const fetchHospitals = async () => {
+      const result = await api.hospital.getHospitalList();
+      setHospitals(result);
+    };
+    fetchPassengers();
+    fetchHospitals();
+  }, [setPassengers]);
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>נוסעים (189)</PageHeader.Title>
+        <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
         <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
-      <Table data={passengersMock} columns={columns} />
+      <Table data={passengers} columns={columns} />
     </div>
   );
 };
 
 export default Passengers;
-
-const passengersMock = [
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  }
-];

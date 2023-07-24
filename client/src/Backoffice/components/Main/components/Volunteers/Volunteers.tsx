@@ -1,7 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, Clear } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
+import { api } from '../../../../../Config';
+import { Driver } from '../../../../../api-client';
 
 type TempPassenger = (typeof volunteersMock)[0];
 const columns: ColumnDef<Partial<TempPassenger>>[] = [
@@ -49,6 +52,15 @@ const columns: ColumnDef<Partial<TempPassenger>>[] = [
 ];
 
 const Volunteers = () => {
+  const [drivers, setDrivers] = useState<Driver[]>([]);
+  useEffect(() => {
+    const fetchDrivers = async () => {
+      const response = await api.driver.getAllDrivers();
+
+      setDrivers(response);
+    };
+    fetchDrivers();
+  }, []);
   return (
     <div>
       <PageHeader>
