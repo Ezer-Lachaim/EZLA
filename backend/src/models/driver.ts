@@ -26,6 +26,7 @@ export interface Driver extends User {
     numOfSeats:number;
     carPlateNumber:string;
     carCapabilities?: Array<string>;
+    volunteeringArea:string;
 }
 
 
