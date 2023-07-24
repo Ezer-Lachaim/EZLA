@@ -14,12 +14,13 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const values = useMemo(() => ({ user, setUser, activeRide }), [user]);
   const getCurrentUser = async () => {
     try {
-      const userResponse = await api.user.getCurrentUser();
-      setUser(userResponse);
+      let activeRideResponse = null;
       try {
-        const activeRideResponse = await api.ride.getActiveRideForUser();
-        setActiveRide(activeRideResponse);
+        activeRideResponse = await api.ride.getActiveRideForUser();
       } catch (error) {}
+      const userResponse = await api.user.getCurrentUser();
+      setActiveRide(activeRideResponse);
+      setUser(userResponse);
     } catch (error) {
       setToken(null);
     } finally {
