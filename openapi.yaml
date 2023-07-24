@@ -248,23 +248,26 @@ paths:
         '404':
           description: User not found
   /users/reset_password:
-    get:
+    post:
       tags:
         - user
-      summary: Get reset password link for user
-      description: Generates and returns a reset password link for the specified user.
-      operationId: getResetPasswordLink
+      summary: Send reset password email
+      description: sends a reset password email to the specified user.
+      operationId: sendResetPasswordEmail
+      requestBody:
+        description: User email to receive the reset password link
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResetPasswordResponse'
+        '204':
+          description: Reset password link sent successfully
         '400':
-          description: Invalid user ID supplied
+          description: Invalid request body
         '404':
-          description: User not found
+          description: User not found (email not registered)
+
   /rides:
     get:
       tags:
@@ -614,12 +617,15 @@ components:
           type: string
       required:
         - password
-    ResetPasswordResponse:
+
+    ResetPasswordRequest:
       type: object
       properties:
-        reset_password_link:
+        email:
           type: string
-          description: The reset password link for the user.
+      required:
+        - email
+
     Patient:
       properties:
         nationalId:
