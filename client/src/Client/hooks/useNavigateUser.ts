@@ -3,7 +3,7 @@ import { useUserContext } from '../../context/UserContext/UserContext.tsx';
 import { User, UserRoleEnum } from '../../api-client';
 
 const useNavigateUser = () => {
-  const { user } = useUserContext();
+  const { user, activeRide } = useUserContext();
   const navigate = useNavigate();
 
   const navigateAfterLogin = (explicitUser: User | undefined = undefined) => {
@@ -12,7 +12,11 @@ const useNavigateUser = () => {
     if (actualUser?.role === 'Admin') {
       navigate('/backoffice');
     } else if (actualUser?.role === UserRoleEnum.Driver) {
-      navigate('/driver/rides');
+      if (activeRide) {
+        navigate('/driver/active');
+      } else {
+        navigate('/driver/rides');
+      }
     } else if (actualUser?.role === UserRoleEnum.Requester) {
       navigate('/passenger/order-ride');
     }
