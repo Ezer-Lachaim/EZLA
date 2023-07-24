@@ -13,6 +13,7 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
@@ -71,7 +72,8 @@ const OrderRide = () => {
     'destination'
   );
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const { user } = useUserContext();
+  const { user, activeRide } = useUserContext();
+  const navigate = useNavigate();
 
   const passenger = user?.firstName || 'נוסע';
   const autofilledAddressValue = 'בי”ח תל השומר / נשים ויולדות / מחלקת יולדות א';
@@ -79,6 +81,16 @@ const OrderRide = () => {
   const onSwitchAutofilled = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
+
+  React.useEffect(() => {
+    if (activeRide) {
+      if (activeRide.state === RideStateEnum.WaitingForDriver) {
+        setIsModalOpen(true);
+      } else if (activeRide.state === RideStateEnum.Booked) {
+        navigate('/passenger/active');
+      }
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
