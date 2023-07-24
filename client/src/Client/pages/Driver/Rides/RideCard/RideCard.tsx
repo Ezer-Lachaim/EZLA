@@ -4,6 +4,7 @@ import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../../api-client';
 import { api } from '../../../../../Config';
+import { useUserContext } from '../../../../../context/UserContext/UserContext';
 
 const specialMap = {
   [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
@@ -25,6 +26,8 @@ export const RideCard = ({
   onSelect: (ride: Ride) => void;
   selected: boolean;
 }) => {
+  const { user } = useUserContext();
+
   const onClickCallback = useCallback(() => {
     onSelect(ride);
   }, [onSelect, ride]);
@@ -33,7 +36,7 @@ export const RideCard = ({
     if (ride.state === RideStateEnum.WaitingForDriver) {
       await api.ride.updateRide({
         rideId: ride.rideId || '',
-        ride: { ...ride, state: RideStateEnum.Booked }
+        ride: { ...ride, state: RideStateEnum.Booked, driver: { userId: user?.userId } }
       });
       console.log('Ride booked');
     }
