@@ -46,7 +46,7 @@ const Login = () => {
       setUser(userResponse.user);
       navigateAfterLogin(userResponse.user);
     } catch (e) {
-      if ((e as ResponseError).response.status === 401) {
+      if ((e as ResponseError).response?.status === 401) {
         setError('password', { type: '401' }, { shouldFocus: true });
       }
     }
