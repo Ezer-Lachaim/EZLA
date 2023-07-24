@@ -11,12 +11,12 @@ export async function getUserByUid(uid: string): Promise<User> {
   return { ...user } as User;
 }
 
-export async function getAllUsers(state?: string, type?: string): Promise<any> {
+export async function getAllUsers(state?: string, role?: string): Promise<any> {
   const keys = await client.keys('user:*');
   return []
     .concat(...(await client.json.mGet(keys, '$')))
     .filter((user) => !state || user.registrationState === state)
-    .filter((user) => !type || user.type === type);
+    .filter((user) => !role || user.role === role);
 }
 
 export async function updateIsInitialPass(uid: string, isInitial: boolean): Promise<void> {

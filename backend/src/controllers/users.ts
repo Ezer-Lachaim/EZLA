@@ -28,7 +28,7 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
     const isAdmin = req.user.role === UserRoleEnum.Admin;
     if (isAdmin) {
       try {
-        res.send(await getAllUsers(req.query.state?.toString(), req.query.type?.toString()));
+        res.send(await getAllUsers(req.query.state?.toString(), req.query.role?.toString()));
       } catch (e) {
         res.status(500).send();
       }

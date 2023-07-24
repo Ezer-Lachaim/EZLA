@@ -57,9 +57,9 @@ paths:
               - Pending
               - Approved
               - Rejected
-        - name: type
+        - name: role
           in: query
-          description: The state of user
+          description: The role of user
           required: false
           schema:
             type: string
