@@ -1,28 +1,39 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, Clear } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Driver } from '../../../../../api-client';
 import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 
-type TempPassenger = (typeof volunteersMock)[0];
-const columns: ColumnDef<Partial<TempPassenger>>[] = [
+const columns: ColumnDef<Partial<Driver>>[] = [
   {
-    accessorKey: 'registerationDate',
+    accessorKey: 'signupDate',
     header: 'תאריך הרשמה',
-    accessorFn: (data) => data.registerationDate
+    accessorFn: (data) => {
+      if (!data.signupDate) return '-';
+      return format(data.signupDate, 'HH:mm - dd/MM/yyyy');
+    }
   },
-  { accessorKey: 'name', header: 'שם מתנדב', accessorFn: (data) => data.name },
-  { accessorKey: 'idNumber', header: 'ת.ז.', accessorFn: (data) => data.idNumber },
-  { accessorKey: 'phoneNumber', header: 'יצירת קשר', accessorFn: (data) => data.phoneNumber },
+  {
+    accessorKey: 'name',
+    header: 'שם מתנדב',
+    accessorFn: (data) => {
+      const fullName = `${data.firstName ?? ''} ${data.lastName ?? ''}`;
+      if (!fullName.trim()) return '-';
+      return fullName;
+    }
+  },
+  { accessorKey: 'nationalId', header: 'ת.ז.', accessorFn: (data) => data.nationalId || '-' },
+  { accessorKey: 'cellPhone', header: 'יצירת קשר', accessorFn: (data) => data.cellPhone || '-' },
   { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
-  { accessorKey: 'city', header: 'עיר מגורים', accessorFn: (data) => data.city },
+  { accessorKey: 'city', header: 'עיר מגורים', accessorFn: (data) => data.city || '-' },
   {
     accessorKey: 'volunteerArea',
     header: 'אזור התנדבות',
-    accessorFn: (data) => data.volunteerArea
+    accessorFn: (data) => data.volunteerArea || '-'
   },
   {
     accessorKey: 'hasDrivingLicense',
@@ -54,6 +65,7 @@ const columns: ColumnDef<Partial<TempPassenger>>[] = [
 
 const Volunteers = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
@@ -62,38 +74,24 @@ const Volunteers = () => {
     };
     fetchDrivers();
   }, []);
-  const [toggleModal, setToggleModal] = useState(false);
-  const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>מתנדבים (57)</PageHeader.Title>
-        <PageHeader.ActionButton onClick={() => handleModal(true)}>הוספת מתנדב חדש</PageHeader.ActionButton>
+        <PageHeader.Title>מתנדבים ({drivers.length})</PageHeader.Title>
+        <PageHeader.ActionButton onClick={() => setIsAddDriverModalOpen(true)}>
+          הוספת מתנדב חדש
+        </PageHeader.ActionButton>
+
+        <AddCustomerModal
+          customerType="volunteer"
+          open={isAddDriverModalOpen}
+          handleModal={setIsAddDriverModalOpen}
+        />
       </PageHeader>
       <Table data={drivers} columns={columns} />
-      <AddCustomerModal customerType='volunteer' open={toggleModal} handleModal={handleModal} />
     </div>
   );
 };
 
 export default Volunteers;
-
-const volunteersMock = [
-  {
-    registerationDate: '2023‐06‐21',
-    name: 'ירון סולטן',
-    idNumber: '73892748',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    city: 'אופקים',
-    volunteerArea: 'הדרום',
-    hasDrivingLicense: true,
-    hasCarLicense: false,
-    carType: 'טויוטה קורולה 19',
-    carColor: 'ירוק בקבוק',
-    carPlateNumber: '85-122-31',
-    carSeats: 4,
-    specialDescription: 'מושב בטיחות לתינוק, מושב בטיחות לילדים ומלא מלא מלא מקום בתא המטען',
-    numberOfDrives: 4
-  }
-];
