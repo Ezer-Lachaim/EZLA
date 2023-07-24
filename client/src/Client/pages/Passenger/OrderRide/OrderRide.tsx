@@ -97,7 +97,14 @@ const OrderRide = () => {
       state: RideStateEnum.WaitingForDriver
     };
     const response = await api.ride.ridesPost({
-      ride: { ...ride, rideRequester: { userId: user?.userId } }
+      ride: {
+        ...ride,
+        rideRequester: {
+          userId: user?.userId,
+          firstName: user?.firstName,
+          lastName: user?.lastName
+        }
+      }
     });
     console.log(ride);
     console.log(response);
