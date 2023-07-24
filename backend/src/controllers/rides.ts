@@ -68,6 +68,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   const rideId = uuidv4();
   const ride = req.body as Ride;
   ride.rideId = rideId;
+  ride.requestTimeStamp = new Date().toString();
 
   try {
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as any) });
