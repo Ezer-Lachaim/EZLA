@@ -3,8 +3,8 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import {
   firebase,
-  generateResetPasswordLink,
   getAuthConfig,
+  sendPasswordResetEmailForUser,
   updateUserPassword
 } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
@@ -49,8 +49,8 @@ export const getResetPasswordLinkForUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const resetPasswordLink = await generateResetPasswordLink(req.user.email);
-    res.status(200).send({ reset_password_link: resetPasswordLink });
+    await sendPasswordResetEmailForUser(req.body.email);
+    res.status(200).send();
   } catch (e) {
     res.status(500).send();
   }
