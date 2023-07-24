@@ -70,7 +70,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   {
     accessorKey: 'carCapabilities',
     header: 'מיוחדים',
-    accessorFn: (data) => data.carCapabilities
+    accessorFn: (data) => data.carCapabilities || 'להשלים-----'
   },
   { accessorKey: 'numberOfDrives', header: 'נסיעות', accessorFn: (data) => 'להשלים-----' }
 ];
