@@ -89,6 +89,8 @@ export interface User {
      */
     address?: string;
     isInitialPassword:boolean;
+    signupDate?:Date;
+    rejectCause:string;
 }
 
 /**

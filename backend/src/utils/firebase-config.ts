@@ -1,7 +1,12 @@
 import { initializeApp } from 'firebase/app';
 import { initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from 'firebase/auth';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
 import dotenv from 'dotenv';
@@ -40,8 +45,8 @@ export async function updateUserPassword(uid: string, password: string) {
   return getAdminAuth(app).updateUser(uid, { password });
 }
 
-export async function generateResetPasswordLink(email: string) {
-  return getAuthConfigAdmin().generatePasswordResetLink(email);
+export async function sendPasswordResetEmailForUser(email: string) {
+  return sendPasswordResetEmail(getAuth(), email);
 }
 
 export async function getUser(email: string) {

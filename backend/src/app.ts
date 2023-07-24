@@ -8,6 +8,7 @@ import { usersRouter } from './routes/users';
 import { index } from './routes/index';
 import { ridesRouter } from './routes/rides';
 import { authHandler } from './middlewares/auth';
+import { driversRouter } from './routes/drivers';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, '../../client/dist')));
 // }
 
 app.use('/users', authHandler, usersRouter);
+app.use('/drivers', authHandler, driversRouter);
 app.use('/rides', authHandler, ridesRouter);
 app.use('/', index);
 
