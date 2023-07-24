@@ -18,6 +18,7 @@ import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
 import useNavigateUser from '../../hooks/useNavigateUser.ts';
+import { setNotificationsToken } from '../../../init-firebase.ts';
 
 type Inputs = {
   email: string;
@@ -44,6 +45,7 @@ const Login = () => {
       console.log(userResponse.token);
       setToken(userResponse.token);
       setUser(userResponse.user);
+      setNotificationsToken();
       navigateAfterLogin(userResponse.user);
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
