@@ -13,8 +13,8 @@ const FirstSignUp = () => {
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1 className="text-center">שירות הסעות התנדבותי למבקרים בבתי חולים</h1>
       <p className="text-center text-sm">
-        מרכז 'עזר לחיים' נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה ברורה שהעזרה
-        והסיוע מצילים ומוסיפים חיים ונותנים כוח לחולה להתמודד בדרך לבריאות.
+        מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
+        ברורה שהעזרה והסיוע מצילים ומוסיפים חיים ונותנים כוח לחולה להתמודד בדרך לבריאות.
       </p>
       <Button
         variant="contained"
@@ -39,7 +39,7 @@ const FirstSignUp = () => {
       </Button>
       <p className="text-xs text-center">
         מחפשים להצטרף לשירותנו כמתדנבים?💪❤️ <br />
-        התקשרו לשירות לקוחות למטה!
+        התקשרו לשירות הלקוחות למטה!
       </p>
 
       <div className="flex gap-2 absolute bottom-4">

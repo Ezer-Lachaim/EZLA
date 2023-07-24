@@ -665,6 +665,8 @@ components:
           type: number
         carPlateNumber:
           type: string
+        volunteeringArea:
+          type: string
         carCapabilities:
           type: array
           items:
