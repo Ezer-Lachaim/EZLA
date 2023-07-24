@@ -7,21 +7,22 @@ import ForgotPassword from './Client/pages/ForgotPassword/ForgotPassword';
 import Login from './Client/pages/Login/Login.tsx';
 import Register from './Client/pages/Register/Register.tsx';
 import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/VerificationCode';
-import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage.tsx';
-import ChangePassword from './Client/pages/ChangePassword/ChangePassword.tsx';
-import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess.tsx';
-import CreatePassword from './Client/pages/CreatePassword/CreatePassword.tsx';
-import Passenger from './Client/pages/Passenger/Passenger.tsx';
-import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide.tsx';
-import Driver from './Client/pages/Driver/Driver.tsx';
-import Rides from './Client/pages/Driver/Rides/Rides.tsx';
-import { UserContextProvider } from './context/UserContext/UserContext.tsx';
-import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp.tsx';
-import Terms from './Client/pages/Terms/Terms.tsx';
-import Privacy from './Client/pages/Privacy/Privacy.tsx';
-import { Splash } from './Client/pages/Splash/Splash.tsx';
-import Logout from './Client/pages/Login/Logout.tsx';
-import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide.tsx';
+import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage';
+import ChangePassword from './Client/pages/ChangePassword/ChangePassword';
+import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess';
+import CreatePassword from './Client/pages/CreatePassword/CreatePassword';
+import Passenger from './Client/pages/Passenger/Passenger';
+import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide';
+import Driver from './Client/pages/Driver/Driver';
+import Rides from './Client/pages/Driver/Rides/Rides';
+import { UserContextProvider } from './context/UserContext/UserContext';
+import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp';
+import Terms from './Client/pages/Terms/Terms';
+import Privacy from './Client/pages/Privacy/Privacy';
+import { Splash } from './Client/pages/Splash/Splash';
+import Logout from './Client/pages/Login/Logout';
+import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide';
+import PassengerActiveRide from './Client/pages/Passenger/ActiveRide/ActiveRide';
 
 function App() {
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
@@ -61,6 +62,7 @@ function App() {
             <Route path="create-password" element={<CreatePassword />} />
             <Route path="passenger" element={<Passenger />}>
               <Route path="order-ride" element={<OrderRide />} />
+              <Route path="active" element={<PassengerActiveRide />} />
             </Route>
             <Route path="driver" element={<Driver />}>
               <Route path="rides" element={<Rides />} />

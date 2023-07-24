@@ -13,6 +13,7 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
@@ -82,7 +83,8 @@ const OrderRide = () => {
   );
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
-  const { user } = useUserContext();
+  const { user, activeRide } = useUserContext();
+  const navigate = useNavigate();
 
   const rideRequester = user as RideRequester;
 
@@ -113,6 +115,16 @@ const OrderRide = () => {
   const onSwitchAutofilled = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
+
+  React.useEffect(() => {
+    if (activeRide) {
+      if (activeRide.state === RideStateEnum.WaitingForDriver) {
+        setIsModalOpen(true);
+      } else if (activeRide.state === RideStateEnum.Booked) {
+        navigate('/passenger/active');
+      }
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
