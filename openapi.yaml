@@ -247,6 +247,24 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
+  /users/reset_password:
+    get:
+      tags:
+        - user
+      summary: Get reset password link for user
+      description: Generates and returns a reset password link for the specified user.
+      operationId: getResetPasswordLink
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetPasswordResponse'
+        '400':
+          description: Invalid user ID supplied
+        '404':
+          description: User not found
   /rides:
     get:
       tags:
@@ -589,6 +607,12 @@ components:
           type: string
       required:
         - password
+    ResetPasswordResponse:
+      type: object
+      properties:
+        reset_password_link:
+          type: string
+          description: The reset password link for the user.
     Patient:
       properties:
         nationalId:
