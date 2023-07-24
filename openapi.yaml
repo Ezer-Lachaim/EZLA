@@ -649,12 +649,33 @@ components:
       allOf:
         - $ref: '#/components/schemas/User'
       properties:
-        license:
+        isValidLicense:
+          type: boolean
+          example: true
+        isValidCarLicense:
+          type: boolean
+          example: true
+        carColor:
           type: string
-          example: ''
-        licenseExpiryDate:
+        carManufacturer:
           type: string
-          example: '2024-01-01'
+        carModel:
+          type: string
+        numOfSeats:
+          type: number
+        carPlateNumber:
+          type: string
+        carCapabilities:
+          type: array
+          items:
+            type: string
+            enum:
+              - WheelChair
+              - WheelChairStorage
+              - BabyChair
+              - KidsChair
+              - AccessibleCar
+              - PatientDelivery
     CreateUserResponse:
       properties: 
         user:
