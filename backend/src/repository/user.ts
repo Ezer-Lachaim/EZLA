@@ -23,6 +23,10 @@ export async function updateIsInitialPass(uid: string, isInitial: boolean): Prom
   await client.json.set(`user:${uid}`, '$.isInitialPassword', isInitial);
 }
 
+export async function updateFcmToken(uid: string, fcmToken: string): Promise<void> {
+  await client.json.set(`user:${uid}`, '$.fcmToken', fcmToken);
+}
+
 export async function updateUserByUid(uid: string, user: User): Promise<void> {
   const userFromDB: any = await client.json.get(`user:${uid}`);
   const updated = Object.assign(userFromDB, user);

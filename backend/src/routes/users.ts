@@ -11,3 +11,4 @@ usersRouter.post('/login', controller.login);
 usersRouter.put('/update_initial_password/:userId?', controller.updateUserWithTempToken);
 usersRouter.post('/reset_password', controller.getResetPasswordLinkForUser);
 usersRouter.put('/:userId?', controller.updateUserFromBO);
+usersRouter.post('/registerFcmToken', controller.registerFcmToken);

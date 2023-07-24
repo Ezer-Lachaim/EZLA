@@ -12,6 +12,7 @@ import {
   createUser,
   getAllUsers,
   getUserByUid,
+  updateFcmToken,
   updateIsInitialPass,
   updateUserByUid
 } from '../repository/user';
@@ -36,6 +37,19 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       res.status(401).send();
     }
   } catch (error) {
+    res.status(500).send();
+  }
+};
+
+export const registerFcmToken = async (req: CustomRequest, res: Response): Promise<void> => {
+  const { fcmToken } = req.body;
+  try {
+    if (!fcmToken) {
+      res.status(400).send({ error: 'fcmToken not provided' });
+    }
+    await updateFcmToken(req.user.userId, fcmToken);
+  } catch (e) {
+    console.log(e);
     res.status(500).send();
   }
 };

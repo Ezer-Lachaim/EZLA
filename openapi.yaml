@@ -267,6 +267,24 @@ paths:
           description: Invalid request body
         '404':
           description: User not found (email not registered)
+  /users/registerFcmToken:
+    post:
+      tags:
+        - user
+      summary: Register FCM Token
+      description: Registers the FCM token for a user to enable push notifications.
+      operationId: registerFcmToken
+      requestBody:
+        description: FCM token object to be registered
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterFcmTokenRequest'
+      responses:
+        '200':
+          description: FCM token registered successfully
+        '400':
+          description: Invalid request body
 
   /drivers:
     post:
@@ -654,6 +672,13 @@ components:
           type: string
       required:
         - password
+    RegisterFcmTokenRequest:
+      type: object
+      properties:
+        fcmToken:
+          type: string
+      required:
+        - fcmToken
 
     ResetPasswordRequest:
       type: object
