@@ -15,9 +15,11 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const getCurrentUser = async () => {
     try {
       const userResponse = await api.user.getCurrentUser();
-      const activeRideResponse = await api.ride.getActiveRideForUser();
       setUser(userResponse);
-      setActiveRide(activeRideResponse);
+      try {
+        const activeRideResponse = await api.ride.getActiveRideForUser();
+        setActiveRide(activeRideResponse);
+      } catch (error) {}
     } catch (error) {
       setToken(null);
     } finally {
