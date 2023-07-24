@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
+import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 const specialMap = {
   [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
@@ -29,6 +30,7 @@ const RideCard = ({
   onSelect: (ride: Ride) => void;
   selected: boolean;
 }) => {
+  const { user } = useUserContext();
   const onClickCallback = useCallback(() => {
     onSelect(ride);
   }, [onSelect, ride]);
@@ -81,7 +83,11 @@ const RideCard = ({
                     if (ride.state === RideStateEnum.WaitingForDriver) {
                       await api.ride.updateRide({
                         rideId: ride.rideId || '',
-                        ride: { ...ride, state: RideStateEnum.Booked }
+                        ride: {
+                          ...ride,
+                          state: RideStateEnum.Booked,
+                          driver: { userId: user?.userId }
+                        }
                       });
                       console.log('Ride booked');
                     } else if (ride.state === RideStateEnum.Booked) {
@@ -108,7 +114,7 @@ const Rides = () => {
   const [rides, setRides] = useState<Ride[]>();
   useEffect(() => {
     (async () => {
-      setRides(await api.ride.ridesGet());
+      setRides(await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }));
     })();
   }, []);
   const [selectedRide, setSelectedRide] = useState<Ride>();
