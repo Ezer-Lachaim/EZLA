@@ -1,3 +1,4 @@
+import { format, intlFormatDistance, isValid } from 'date-fns';
 import { ColumnDef } from '@tanstack/react-table';
 import { Button, Stack } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
@@ -6,543 +7,166 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
 import { api } from '../../../../../Config.ts';
-import { GetUsersStateEnum, RideRequester } from '../../../../../api-client';
+import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
-type TempCustomer = (typeof customersMock)[0];
-const columns: ColumnDef<Partial<TempCustomer>>[] = [
-  { accessorKey: 'pendingTimeMs', header: 'זמן המתנה', accessorFn: (data) => data.pendingTimeMs },
-  {
-    accessorKey: 'registerationDate',
-    header: 'תאריך הרשמה',
-    accessorFn: (data) => data.registerationDate
-  },
-  { accessorKey: 'name', header: 'שם נוסע', accessorFn: (data) => data.name },
-  { accessorKey: 'phoneNumber', header: 'יצירת קשר', accessorFn: (data) => data.phoneNumber },
-  { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
-  { accessorKey: 'address', header: 'כתובת איסוף', accessorFn: (data) => data.address },
-  {
-    accessorKey: 'reason',
-    header: 'סיבת שימוש בהסעות',
-    accessorFn: (data) => data.reason
-  },
-  { accessorKey: 'hospitalName', header: 'בית חולים', accessorFn: (data) => data.hospitalName },
-  {
-    accessorKey: 'endDate',
-    header: 'תקופה',
-    accessorFn: (data) => data.endDate
-  },
-  {
-    accessorKey: 'id',
-    header: '',
-    accessorFn: (data) => data.id,
-    cell: ({ row }) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [toggleModal, setToggleModal] = useState(false);
-      const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
-      return (
-        <div className="flex gap-1 items-center">
-          <span className="ml-2 whitespace-nowrap">01/07/23 - 14/07/23</span>
-          <Stack direction="row" spacing={1}>
-            <Button
-              size="small"
-              variant="outlined"
-              color="error"
-              style={{ minWidth: 0 }}
-              className="w-7 h-7"
-              onClick={() => handleModal(true)}
-            >
-              <Close fontSize="small" />
-            </Button>
-            <Button
-              size="small"
-              variant="outlined"
-              color="success"
-              style={{ minWidth: 0 }}
-              className="w-7 h-7"
-              onClick={() => {
-                api.user.updateUser({
-                  userId: row.original.userId || '',
-                  rideRequester: { registrationState: GetUsersStateEnum.Approved }
-                });
-              }}
-            >
-              <Check fontSize="small" />
-            </Button>
-          </Stack>
-          <RejectCustomerModal
-            // userId={data.getValue()}
-            open={toggleModal}
-            handleModal={handleModal}
-          />
-        </div>
-      );
+const getNewCustomersColumns = (
+  hospitals: GetHospitalList200ResponseInner[]
+): ColumnDef<Partial<RideRequester>>[] => {
+  return [
+    {
+      accessorKey: 'pendingTime',
+      header: 'זמן המתנה',
+      accessorFn: (data) => {
+        if (!data.signupDate) return '-';
+        return intlFormatDistance(data.signupDate, Date.now(), {
+          locale: 'he',
+          style: 'narrow',
+          numeric: 'always'
+        });
+      }
+    },
+    {
+      accessorKey: 'signupDate',
+      header: 'תאריך הרשמה',
+      accessorFn: (data) => {
+        // const date = new Date(data.signupDate);
+        // console.log(date);
+        if (!data.signupDate) return '-';
+
+        return format(data.signupDate, 'HH:mm - dd/MM/yyyy');
+      }
+    },
+    {
+      accessorKey: 'name',
+      header: 'שם נוסע',
+      accessorFn: (data) => {
+        const fullName = `${data.firstName ?? ''} ${data.lastName ?? ''}`;
+        if (!fullName.trim()) return '-';
+
+        return fullName;
+      }
+    },
+    {
+      accessorKey: 'phoneNumber',
+      header: 'יצירת קשר',
+      accessorFn: (data) => data.cellPhone || '-'
+    },
+    { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
+    { accessorKey: 'address', header: 'כתובת איסוף', accessorFn: (data) => data.address || '-' },
+    {
+      accessorKey: 'reason',
+      header: 'סיבת שימוש בהסעות',
+      accessorFn: (data) => data.patient?.message || '-'
+    },
+    {
+      accessorKey: 'hospitalName',
+      header: 'בית חולים',
+      accessorFn: (data) => {
+        const patientHospital = hospitals?.find(
+          (hospital) => hospital.id === data.patient?.hospitalId
+        );
+        if (!patientHospital) return '-';
+
+        return patientHospital.name;
+      }
+    },
+    {
+      accessorKey: 'endServiceDate',
+      header: 'תקופה',
+      cell: ({ row }) => {
+        if (!isValid(row.original.startServiceDate) || !isValid(row.original.endServiceDate)) {
+          return '-';
+        }
+
+        return (
+          <span className="ml-2 whitespace-nowrap">
+            {format(row.original.startServiceDate!, 'dd/MM/yyyy')} -
+            {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+          </span>
+        );
+      }
+    },
+    {
+      accessorKey: 'userId',
+      header: '',
+      cell: ({ row }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const [toggleModal, setToggleModal] = useState(false);
+        const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+        return (
+          <div className="flex gap-1 items-center">
+            <Stack direction="row" spacing={1}>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                style={{ minWidth: 0 }}
+                className="w-7 h-7"
+                onClick={() => handleModal(true)}
+              >
+                <Close fontSize="small" />
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="success"
+                style={{ minWidth: 0 }}
+                className="w-7 h-7"
+                onClick={async () => {
+                  await api.user.updateUser({
+                    userId: row.original.userId || '',
+                    rideRequester: { registrationState: 'Approved' }
+                  });
+
+                  window.location.reload();
+                }}
+              >
+                <Check fontSize="small" />
+              </Button>
+            </Stack>
+            <RejectCustomerModal
+              userId={row.original.userId ?? ''}
+              open={toggleModal}
+              handleModal={handleModal}
+            />
+          </div>
+        );
+      }
     }
-  }
-];
+  ];
+};
 
 const NewCustomers = () => {
-  const [data, setData] = useState<RideRequester[]>([]);
+  const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
+  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const columns = getNewCustomersColumns(hospitals);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await api.user.getUsers({ state: GetUsersStateEnum.Pending });
-      setData(result);
+    const fetchPendingUsers = async () => {
+      const result = await api.user.getUsers({
+        state: 'Pending',
+        role: 'Requester'
+      });
+
+      setPendingUsers(result);
     };
-    fetchData();
-  }, []);
+    const fetchHospitals = async () => {
+      const result = await api.hospital.getHospitalList();
+      setHospitals(result);
+    };
+    fetchPendingUsers();
+    fetchHospitals();
+  }, [setPendingUsers]);
 
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>נרשמים חדשים והארכות תוקף (3)</PageHeader.Title>
+        <PageHeader.Title>נרשמים חדשים והארכות תוקף ({pendingUsers.length})</PageHeader.Title>
         <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
-      <Table data={data} columns={columns} />
+      <Table data={pendingUsers} columns={columns} />
     </div>
   );
 };
 
 export default NewCustomers;
-
-const customersMock = [
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z'
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  },
-  {
-    pendingTimeMs: 12897371289,
-    registerationDate: '2023‐06‐21T16:02:18Z',
-    name: 'ירון סולטן',
-    phoneNumber: '0535305635',
-    email: 'yaron.sultan@redis.com',
-    address: 'ירושלים 87, אופקים',
-    reason: 'ביקור חולה',
-    hospitalName: 'אסף הרופא',
-    startDate: '2023‐06‐21T16:02:18Z',
-    endDate: '2023‐06‐28T16:02:18Z',
-    id: String(Math.random())
-  }
-];

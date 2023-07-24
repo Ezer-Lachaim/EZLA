@@ -57,9 +57,9 @@ paths:
               - Pending
               - Approved
               - Rejected
-        - name: type
+        - name: role
           in: query
-          description: The state of user
+          description: The role of user
           required: false
           schema:
             type: string
@@ -248,23 +248,63 @@ paths:
         '404':
           description: User not found
   /users/reset_password:
-    get:
+    post:
       tags:
         - user
-      summary: Get reset password link for user
-      description: Generates and returns a reset password link for the specified user.
-      operationId: getResetPasswordLink
+      summary: Send reset password email
+      description: sends a reset password email to the specified user.
+      operationId: sendResetPasswordEmail
+      requestBody:
+        description: User email to receive the reset password link
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '204':
+          description: Reset password link sent successfully
+        '400':
+          description: Invalid request body
+        '404':
+          description: User not found (email not registered)
+
+  /drivers:
+    post:
+      tags:
+        - driver
+      summary: Create a new driver
+      description: Creates a new driver using the provided Driver schema.
+      operationId: createDriver
+      requestBody:
+        description: Driver object to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+      responses:
+        '201':
+          description: Driver created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Invalid request body
+    get:
+      tags:
+        - driver
+      summary: Get all drivers
+      description: Retrieves a list of all drivers.
+      operationId: getAllDrivers
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResetPasswordResponse'
-        '400':
-          description: Invalid user ID supplied
-        '404':
-          description: User not found
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
   /rides:
     get:
       tags:
@@ -469,6 +509,10 @@ components:
           type: string
           example: '+972123456789'
 
+        rejectCause:
+          type: string
+          example: 'reject cause'
+          
         registrationState:
           type: string
           enum:
@@ -483,6 +527,9 @@ components:
           example: 'ג׳בוטינסקי 1'
         isInitialPassword:
           type: boolean
+        signupDate:
+          type: string
+          format: date
     Car:
       type: object
       properties:
@@ -607,12 +654,15 @@ components:
           type: string
       required:
         - password
-    ResetPasswordResponse:
+
+    ResetPasswordRequest:
       type: object
       properties:
-        reset_password_link:
+        email:
           type: string
-          description: The reset password link for the user.
+      required:
+        - email
+
     Patient:
       properties:
         nationalId:

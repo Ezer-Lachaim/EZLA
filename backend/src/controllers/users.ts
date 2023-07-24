@@ -3,8 +3,8 @@ import { Response } from 'express';
 import generator from 'generate-password';
 import {
   firebase,
-  generateResetPasswordLink,
   getAuthConfig,
+  sendPasswordResetEmailForUser,
   updateUserPassword
 } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
@@ -28,7 +28,7 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
     const isAdmin = req.user.role === UserRoleEnum.Admin;
     if (isAdmin) {
       try {
-        res.send(await getAllUsers(req.query.state?.toString()));
+        res.send(await getAllUsers(req.query.state?.toString(), req.query.role?.toString()));
       } catch (e) {
         res.status(500).send();
       }
@@ -49,8 +49,8 @@ export const getResetPasswordLinkForUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const resetPasswordLink = await generateResetPasswordLink(req.user.email);
-    res.status(200).send({ reset_password_link: resetPasswordLink });
+    await sendPasswordResetEmailForUser(req.body.email);
+    res.status(200).send();
   } catch (e) {
     res.status(500).send();
   }
@@ -104,6 +104,7 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
     user.role = UserRoleEnum.Requester;
     user.isInitialPassword = true;
     user.registrationState = UserRegistrationStateEnum.Pending;
+    user.signupDate = new Date();
     await createUser(userRecord.user.uid, user);
     res.send({ token: createJwt({ email: user.email, uid: userRecord.user.uid }), user });
   } catch (e) {
