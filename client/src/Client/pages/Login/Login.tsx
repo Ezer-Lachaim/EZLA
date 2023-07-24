@@ -47,13 +47,14 @@ const Login = () => {
       navigateAfterLogin(userResponse.user);
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
+        setError('email', { type: '401' });
         setError('password', { type: '401' }, { shouldFocus: true });
       }
     }
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full max-w-lg">
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1>כניסה למערכת</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
