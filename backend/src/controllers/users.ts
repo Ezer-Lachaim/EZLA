@@ -48,6 +48,7 @@ export const registerFcmToken = async (req: CustomRequest, res: Response): Promi
       res.status(400).send({ error: 'fcmToken not provided' });
     }
     await updateFcmToken(req.user.userId, fcmToken);
+    res.status(200).send();
   } catch (e) {
     console.log(e);
     res.status(500).send();
