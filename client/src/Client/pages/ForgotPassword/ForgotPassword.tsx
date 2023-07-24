@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
+import { useState } from 'react';
 import withLayout from '../../components/LayoutHOC.tsx';
+import { api } from '../../../Config.ts';
 
 type Inputs = {
   email: string;
@@ -13,9 +15,17 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors }
   } = useForm<Inputs>();
+  const [success, setSuccess] = useState<boolean | null>(null);
 
   // eslint-disable-next-line no-console
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
+    try {
+      await api.user.sendResetPasswordEmail({ resetPasswordRequest: { email } });
+      setSuccess(true);
+    } catch (e) {
+      setSuccess(false);
+    }
+  };
 
   return (
     <>
@@ -38,9 +48,17 @@ const ForgotPassword = () => {
             </FormHelperText>
           )}
         </FormControl>
-        <Button variant="contained" size="large" className="w-full" type="submit">
+        <Button
+          variant="contained"
+          size="large"
+          className="w-full"
+          type="submit"
+          disabled={!!success}
+        >
           שליחה
         </Button>
+        {success && <p>הודעת אימות נשלחה לאימייל שלך</p>}
+        {success === false && <p>אירעה שגיאה בשליחת האימייל</p>}
       </form>
     </>
   );
