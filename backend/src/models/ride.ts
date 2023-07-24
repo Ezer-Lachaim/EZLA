@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 import { Driver } from './driver';
+import {RideRequester} from './ride-requester';
 /**
  * 
  * @export
@@ -20,6 +21,12 @@ import { Driver } from './driver';
 export interface Ride {
     /**
      * 
+     * @type {string}
+     * @memberof Ride
+     */
+    rideId?: string;
+    /**
+     *
      * @type {string}
      * @memberof Ride
      */
@@ -37,7 +44,7 @@ export interface Ride {
      */
     cellphone?: number;
     /**
-     * 
+     *
      * @type {string}
      * @memberof Ride
      */
@@ -72,6 +79,12 @@ export interface Ride {
      * @memberof Ride
      */
     driver?: Driver;
+    /**
+     *
+     * @type {RideRequester}
+     * @memberof Ride
+     */
+    rideRequester?: RideRequester
 }
 
 /**

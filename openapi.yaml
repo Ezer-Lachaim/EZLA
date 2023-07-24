@@ -57,9 +57,9 @@ paths:
               - Pending
               - Approved
               - Rejected
-        - name: type
+        - name: role
           in: query
-          description: The state of user
+          description: The role of user
           required: false
           schema:
             type: string
@@ -268,6 +268,43 @@ paths:
         '404':
           description: User not found (email not registered)
 
+  /drivers:
+    post:
+      tags:
+        - driver
+      summary: Create a new driver
+      description: Creates a new driver using the provided Driver schema.
+      operationId: createDriver
+      requestBody:
+        description: Driver object to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+      responses:
+        '201':
+          description: Driver created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Invalid request body
+    get:
+      tags:
+        - driver
+      summary: Get all drivers
+      description: Retrieves a list of all drivers.
+      operationId: getAllDrivers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
   /rides:
     get:
       tags:

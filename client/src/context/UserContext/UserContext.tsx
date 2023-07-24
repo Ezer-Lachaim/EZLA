@@ -1,29 +1,32 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { User } from '../../api-client';
+import { Ride, User } from '../../api-client';
 import { api, getToken, setToken } from '../../Config';
 
-const UserContext = createContext({} as { user: User | null; setUser: (user: User) => void });
+const UserContext = createContext(
+  {} as { user: User | null; setUser: (user: User) => void; activeRide: Ride | null }
+);
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [activeRide, setActiveRide] = useState<Ride | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
-  const navigate = useNavigate();
 
-  const values = useMemo(() => ({ user, setUser }), [user]);
+  const values = useMemo(() => ({ user, setUser, activeRide }), [user]);
   const getCurrentUser = async () => {
     try {
       const userResponse = await api.user.getCurrentUser();
       setUser(userResponse);
-      if (userResponse.role === 'Admin') {
-        navigate('/backoffice');
-      }
+      try {
+        const activeRideResponse = await api.ride.getActiveRideForUser();
+        setActiveRide(activeRideResponse);
+      } catch (error) {}
     } catch (error) {
       setToken(null);
     } finally {
       setDidFinishUserInit(true);
     }
   };
+
   useEffect(() => {
     if (getToken() && !user) {
       getCurrentUser();
