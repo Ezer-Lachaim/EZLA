@@ -28,7 +28,7 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
     const isAdmin = req.user.role === UserRoleEnum.Admin;
     if (isAdmin) {
       try {
-        res.send(await getAllUsers(req.query.state?.toString()));
+        res.send(await getAllUsers(req.query.state?.toString(), req.query.type?.toString()));
       } catch (e) {
         res.status(500).send();
       }
@@ -104,6 +104,7 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
     user.role = UserRoleEnum.Requester;
     user.isInitialPassword = true;
     user.registrationState = UserRegistrationStateEnum.Pending;
+    user.signupDate = new Date();
     await createUser(userRecord.user.uid, user);
     res.send({ token: createJwt({ email: user.email, uid: userRecord.user.uid }), user });
   } catch (e) {

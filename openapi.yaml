@@ -469,6 +469,10 @@ components:
           type: string
           example: '+972123456789'
 
+        rejectCause:
+          type: string
+          example: 'reject cause'
+          
         registrationState:
           type: string
           enum:
@@ -483,6 +487,9 @@ components:
           example: 'ג׳בוטינסקי 1'
         isInitialPassword:
           type: boolean
+        signupDate:
+          type: string
+          format: date
     Car:
       type: object
       properties:
