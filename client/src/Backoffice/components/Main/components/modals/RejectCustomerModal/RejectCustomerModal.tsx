@@ -40,6 +40,7 @@ function RejectCustomerModal({ open, handleModal, userId }: RejectCustomerModalP
       onClose={() => handleModal(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      disablePortal
     >
       <Box sx={style}>
         <div className="flex justify-between">
@@ -74,7 +75,6 @@ function RejectCustomerModal({ open, handleModal, userId }: RejectCustomerModalP
         >
           <Button
             variant="outlined"
-            className="bg-red-500 text-white"
             onClick={() => handleModal(false)}
           >
             ביטול
@@ -83,7 +83,8 @@ function RejectCustomerModal({ open, handleModal, userId }: RejectCustomerModalP
             onClick={handleReject}
             disabled={!reason}
             variant="contained"
-            className="bg-red-500 text-white"
+            color='primary'
+            className="text-white"
           >
             שליחה
           </Button>

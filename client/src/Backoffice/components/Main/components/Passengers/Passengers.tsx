@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
-import { api } from '../../../../../Config';
+import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
 const getPassengersColumns = (
@@ -98,33 +98,16 @@ const getPassengersColumns = (
 };
 
 const Passengers = () => {
-  const [passengers, setPassengers] = useState<RideRequester[]>([]);
-  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
-  const columns = getPassengersColumns(hospitals);
-
-  useEffect(() => {
-    const fetchPassengers = async () => {
-      const result = await api.user.getUsers({
-        state: 'Approved',
-        role: 'Requester'
-      });
-
-      setPassengers(result);
-    };
-    const fetchHospitals = async () => {
-      const result = await api.hospital.getHospitalList();
-      setHospitals(result);
-    };
-    fetchPassengers();
-    fetchHospitals();
-  }, [setPassengers]);
+  const [toggleModal, setToggleModal] = useState(false);
+  const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
-        <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
+        <PageHeader.Title>נוסעים (189)</PageHeader.Title>
+        <PageHeader.ActionButton onClick={() => handleModal(true)}>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
-      <Table data={passengers} columns={columns} />
+      <Table data={passengersMock} columns={columns} />
+      <AddCustomerModal customerType='volunteer' open={toggleModal} handleModal={handleModal} />
     </div>
   );
 };

@@ -9,6 +9,11 @@ import { RideRequester } from '../../../api-client/index.ts';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { api, setToken } from '../../../Config.ts';
+// import { Configuration, UserApi } from '../../../api-client/index.ts';
+// import { BASE_API_URL } from '../../../Config.ts';
+
+// const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
+const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
 
 const Register = () => {
   const navigation = useNavigate();
@@ -75,7 +80,7 @@ const Register = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <RegistrationStepper activeStepIndex={activeStepIndex} />
+      <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps} />
       <FormProvider {...methods}>
         <form noValidate className="flex flex-col flex-grow">
           <FormSteps activeStepIndex={activeStepIndex} />

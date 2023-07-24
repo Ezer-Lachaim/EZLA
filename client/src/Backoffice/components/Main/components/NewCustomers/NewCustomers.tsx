@@ -8,6 +8,7 @@ import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
 import { api } from '../../../../../Config.ts';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
+import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 
 const getNewCustomersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -158,6 +159,8 @@ const NewCustomers = () => {
     fetchHospitals();
   }, [setPendingUsers]);
 
+  const [toggleModal, setToggleModal] = useState(false);
+  const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
   return (
     <div>
       <PageHeader>
@@ -165,7 +168,11 @@ const NewCustomers = () => {
         <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
       <Table data={pendingUsers} columns={columns} />
-    </div>
+      <PageHeader.Title>נרשמים חדשים והארכות תוקף (3)</PageHeader.Title>
+      <PageHeader.ActionButton onClick={() => handleModal(true)}>
+        הוספת נוסע חדש
+      </PageHeader.ActionButton>
+    </div >
   );
 };
 

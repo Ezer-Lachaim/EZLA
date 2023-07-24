@@ -5,6 +5,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Driver } from '../../../../../api-client';
+import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 
 type TempPassenger = (typeof volunteersMock)[0];
 const columns: ColumnDef<Partial<TempPassenger>>[] = [
@@ -61,13 +62,16 @@ const Volunteers = () => {
     };
     fetchDrivers();
   }, []);
+  const [toggleModal, setToggleModal] = useState(false);
+  const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
   return (
     <div>
       <PageHeader>
         <PageHeader.Title>מתנדבים (57)</PageHeader.Title>
-        <PageHeader.ActionButton>הוספת מתנדב חדש</PageHeader.ActionButton>
+        <PageHeader.ActionButton onClick={() => handleModal(true)}>הוספת מתנדב חדש</PageHeader.ActionButton>
       </PageHeader>
-      <Table data={volunteersMock} columns={columns} />
+      <Table data={drivers} columns={columns} />
+      <AddCustomerModal customerType='volunteer' open={toggleModal} handleModal={handleModal} />
     </div>
   );
 };
