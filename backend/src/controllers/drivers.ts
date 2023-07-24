@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
-import { createUser } from '../repository/user';
+import { createUser, getAllUsers } from '../repository/user';
 import { firebase, getAuthConfig } from '../utils/firebase-config';
 
 const auth = getAuthConfig();
@@ -30,5 +30,22 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
     }
   } else {
     res.status(401).send();
+  }
+};
+
+export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
+  try {
+    const isAdmin = req.user.role === UserRoleEnum.Admin;
+    if (isAdmin) {
+      try {
+        res.send(await getAllUsers(undefined, 'Driver'));
+      } catch (e) {
+        res.status(500).send();
+      }
+    } else {
+      res.status(401).send();
+    }
+  } catch (error) {
+    res.status(500).send();
   }
 };
