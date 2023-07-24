@@ -93,28 +93,20 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
   try {
     const currentRide = (await redisClient.json.get(`ride:${rideId}`)) as Ride;
     if (currentRide) {
-      if (Object.keys(rideUpdateValues).every((key) => currentRide.hasOwnProperty(key))) {
-        const updatedRide = Object.assign(currentRide, rideUpdateValues);
-        await redisClient.json.set(`ride:${rideId}`, '$', { ...updatedRide });
+      const updatedRide = Object.assign(currentRide, rideUpdateValues);
+      await redisClient.json.set(`ride:${rideId}`, '$', { ...updatedRide });
 
-        if (
-          updatedRide.state === RideStateEnum.Canceled ||
-          updatedRide.state === RideStateEnum.Completed
-        ) {
-          await redisClient.del(`active_ride:${currentRide.driver.userId}`);
-          await redisClient.del(`active_ride:${currentRide.rideRequester.userId}`);
-        }
-        if (updatedRide.state === RideStateEnum.Booked) {
-          await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
-        }
-        res.status(200).json(updatedRide);
-      } else {
-        res.status(400).json({
-          error:
-            "can't update ride with the given keys - one of the fields is " +
-            'not part of the ride properties'
-        });
+      if (
+        updatedRide.state === RideStateEnum.Canceled ||
+        updatedRide.state === RideStateEnum.Completed
+      ) {
+        await redisClient.del(`active_ride:${currentRide.driver.userId}`);
+        await redisClient.del(`active_ride:${currentRide.rideRequester.userId}`);
       }
+      if (updatedRide.state === RideStateEnum.Booked) {
+        await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+      }
+      res.status(200).json(updatedRide);
     } else {
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }

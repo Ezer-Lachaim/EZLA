@@ -21,6 +21,7 @@ import Terms from './Client/pages/Terms/Terms.tsx';
 import Privacy from './Client/pages/Privacy/Privacy.tsx';
 import { Splash } from './Client/pages/Splash/Splash.tsx';
 import Logout from './Client/pages/Login/Logout.tsx';
+import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide.tsx';
 
 function App() {
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
@@ -63,6 +64,7 @@ function App() {
             </Route>
             <Route path="driver" element={<Driver />}>
               <Route path="rides" element={<Rides />} />
+              <Route path="active" element={<ActiveRide />} />
             </Route>
           </Route>
           <Route path="backoffice" element={<Backoffice />}>
