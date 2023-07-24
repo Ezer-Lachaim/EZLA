@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
+import { messaging, credential } from 'firebase-admin';
 
 import {
   getAuth,
@@ -10,7 +11,7 @@ import {
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
 import dotenv from 'dotenv';
-import { credential } from 'firebase-admin';
+import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
 
 dotenv.config();
 
@@ -51,6 +52,10 @@ export async function sendPasswordResetEmailForUser(email: string) {
 
 export async function getUser(email: string) {
   return getAuthConfigAdmin().getUserByEmail(email);
+}
+
+export async function sendPushNotification(registrationToken: string, payload: MessagingPayload) {
+  return messaging().sendToDevice(registrationToken, payload);
 }
 
 export const firebase = {

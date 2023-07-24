@@ -23,6 +23,7 @@ import { Splash } from './Client/pages/Splash/Splash';
 import Logout from './Client/pages/Login/Logout';
 import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide';
 import PassengerActiveRide from './Client/pages/Passenger/ActiveRide/ActiveRide';
+import { initFirebaseCloudMessaging } from './init-firebase.ts';
 
 function App() {
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
@@ -32,6 +33,7 @@ function App() {
 
     const timer = () => {
       timerId = setTimeout(() => {
+        initFirebaseCloudMessaging();
         setShouldDisplaySplash(false);
       }, 2 * 1000);
     };

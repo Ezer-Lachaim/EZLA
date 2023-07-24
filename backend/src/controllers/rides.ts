@@ -1,5 +1,8 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import { getUserByUid } from '../repository/user';
+import { User } from '../models/user';
+import { sendPushNotification } from '../utils/firebase-config';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -105,6 +108,16 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
       }
       if (updatedRide.state === RideStateEnum.Booked) {
+        if (currentRide.rideRequester?.userId) {
+          const user: User = await getUserByUid(currentRide.rideRequester?.userId);
+          try {
+            await sendPushNotification(user.fcmToken, {
+              notification: { title: 'עדכון על הנסיעה', body: 'הנסיעה שלך התקבלה על ידי נהג' }
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        }
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
       }
       res.status(200).json(updatedRide);

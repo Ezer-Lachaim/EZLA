@@ -91,6 +91,7 @@ export interface User {
     isInitialPassword:boolean;
     signupDate?:Date;
     rejectCause:string;
+    fcmToken:string;
 }
 
 /**
