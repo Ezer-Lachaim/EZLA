@@ -2,9 +2,7 @@ import { useCallback } from 'react';
 import { Button, Card, CardContent, Chip, Divider, Typography } from '@mui/material';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../../api-client';
-import { api } from '../../../../../Config';
-import { useUserContext } from '../../../../../context/UserContext/UserContext';
+import { Ride, RideSpecialRequestEnum } from '../../../../../api-client';
 
 const specialMap = {
   [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
@@ -20,27 +18,17 @@ const getLabel = (type: RideSpecialRequestEnum): string => specialMap[type];
 export const RideCard = ({
   ride,
   onSelect,
-  selected
+  selected,
+  onApprovePassenger
 }: {
   ride: Ride;
   onSelect: (ride: Ride) => void;
   selected: boolean;
+  onApprovePassenger: () => void;
 }) => {
-  const { user } = useUserContext();
-
   const onClickCallback = useCallback(() => {
     onSelect(ride);
   }, [onSelect, ride]);
-
-  const selectRide = async () => {
-    if (ride.state === RideStateEnum.WaitingForDriver) {
-      await api.ride.updateRide({
-        rideId: ride.rideId || '',
-        ride: { ...ride, state: RideStateEnum.Booked, driver: { userId: user?.userId } }
-      });
-      console.log('Ride booked');
-    }
-  };
 
   return (
     <Card className="shadow-sm rounded-xl">
@@ -97,7 +85,7 @@ export const RideCard = ({
                   size="large"
                   variant="contained"
                   startIcon={<CarIcon />}
-                  onClick={selectRide}
+                  onClick={onApprovePassenger}
                   color="secondary"
                 >
                   צאו לדרך

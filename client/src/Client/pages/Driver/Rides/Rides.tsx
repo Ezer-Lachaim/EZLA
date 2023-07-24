@@ -1,37 +1,70 @@
 import { useEffect, useState, useCallback } from 'react';
+import { SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import { RideCard } from './RideCard/RideCard.tsx';
+import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
+import { useUserContext } from '../../../../context/UserContext/UserContext';
 
 const Rides = ({ rides }: { rides: Ride[] }) => {
   const [selectedRide, setSelectedRide] = useState<Ride>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
   }, []);
 
+  const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
+    if (selectedRide?.state === RideStateEnum.WaitingForDriver) {
+      await api.ride.updateRide({
+        rideId: selectedRide?.rideId || '',
+        ride: {
+          ...selectedRide,
+          state: RideStateEnum.Booked,
+          driver: { userId: user?.userId },
+          destinationArrivalTime: minutesToArrive
+        }
+      });
+
+      setIsModalOpen(false);
+      navigate('/driver/active');
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col gap-5 pb-4">
-      {rides.length > 0 ? (
-        <>
-          <h1 className="m-0 text-center text-black">
-            בחרו נסיעה מתוך {rides.length} קריאות פתוחות
-          </h1>
-          {rides.map((ride, index) => (
-            <RideCard
-              ride={ride}
-              key={`ride-${index}`}
-              onSelect={onSelectRideCallback}
-              selected={selectedRide === ride}
-            />
-          ))}
-        </>
-      ) : (
-        <p className="text-center text-black mt-5">
-          כרגע אין קריאות פתוחות, נשלח לך ברגע שתפתח קריאה חדשה.
-        </p>
-      )}
-    </div>
+    <>
+      <RideApprovalModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={onSubmitRide}
+      />
+      <div className="w-full flex flex-col gap-5 pb-4">
+        {rides.length > 0 ? (
+          <>
+            <h1 className="m-0 text-center text-black">
+              בחרו נסיעה מתוך {rides.length} קריאות פתוחות
+            </h1>
+            {rides.map((ride, index) => (
+              <RideCard
+                ride={ride}
+                key={`ride-${index}`}
+                onSelect={onSelectRideCallback}
+                selected={selectedRide === ride}
+                onApprovePassenger={() => setIsModalOpen(true)}
+              />
+            ))}
+          </>
+        ) : (
+          <p className="text-center text-black mt-5">
+            כרגע אין קריאות פתוחות, נשלח לך ברגע שתפתח קריאה חדשה.
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 
