@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 import { Driver } from './driver';
-import {RideRequester} from './rideRequester';
+import {RideRequester} from './ride-requester';
 /**
  * 
  * @export
