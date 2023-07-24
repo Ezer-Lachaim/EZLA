@@ -7,6 +7,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
+import { api } from '../../../../../Config';
 
 const getPassengersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -98,16 +99,43 @@ const getPassengersColumns = (
 };
 
 const Passengers = () => {
-  const [toggleModal, setToggleModal] = useState(false);
-  const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+  const [passengers, setPassengers] = useState<RideRequester[]>([]);
+  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const columns = getPassengersColumns(hospitals);
+  const [isAddPassengerModalOpen, setIsAddPassengerModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchPassengers = async () => {
+      const result = await api.user.getUsers({
+        state: 'Approved',
+        role: 'Requester'
+      });
+
+      setPassengers(result);
+    };
+    const fetchHospitals = async () => {
+      const result = await api.hospital.getHospitalList();
+      setHospitals(result);
+    };
+    fetchPassengers();
+    fetchHospitals();
+  }, [setPassengers]);
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>נוסעים (189)</PageHeader.Title>
-        <PageHeader.ActionButton onClick={() => handleModal(true)}>הוספת נוסע חדש</PageHeader.ActionButton>
+        <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
+
+        <PageHeader.ActionButton onClick={() => setIsAddPassengerModalOpen(false)}>
+          הוספת נוסע חדש
+        </PageHeader.ActionButton>
       </PageHeader>
-      <Table data={passengersMock} columns={columns} />
-      <AddCustomerModal customerType='volunteer' open={toggleModal} handleModal={handleModal} />
+      <Table data={passengers} columns={columns} />
+      {/* Modal not ready for passenger */}
+      <AddCustomerModal
+        customerType="volunteer"
+        open={isAddPassengerModalOpen}
+        handleModal={setIsAddPassengerModalOpen}
+      />
     </div>
   );
 };
