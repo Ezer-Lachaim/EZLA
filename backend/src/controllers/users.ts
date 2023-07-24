@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { Response } from 'express';
 import generator from 'generate-password';
-import { firebase, getAuthConfig, updateUserPassword } from '../utils/firebase-config';
+import {
+  firebase,
+  generateResetPasswordLink,
+  getAuthConfig,
+  updateUserPassword
+} from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import {
   createUser,
@@ -37,6 +42,18 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
 
 export const get = async (req: CustomRequest, res: Response): Promise<void> => {
   res.send(req.user);
+};
+
+export const getResetPasswordLinkForUser = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const resetPasswordLink = await generateResetPasswordLink(req.user.email);
+    res.status(200).send({ reset_password_link: resetPasswordLink });
+  } catch (e) {
+    res.status(500).send();
+  }
 };
 
 export const validateStatus = async (req: CustomRequest, res: Response): Promise<void> => {
