@@ -100,8 +100,8 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         updatedRide.state === RideStateEnum.Canceled ||
         updatedRide.state === RideStateEnum.Completed
       ) {
-        await redisClient.del(`active_ride:${currentRide.driver.userId}`);
-        await redisClient.del(`active_ride:${currentRide.rideRequester.userId}`);
+        await redisClient.del(`active_ride:${currentRide.driver?.userId}`);
+        await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
       }
       if (updatedRide.state === RideStateEnum.Booked) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
@@ -111,6 +111,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
