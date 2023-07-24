@@ -1,54 +1,49 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SpecialRequirements from "./SpecialRequirements/SpecialRequirements";
-import MedicalRequirements from "./MedicalRequirements/MedicalRequirements";
-import { useState } from "react";
-import NewPassenger from "./NewPassengerInfo/NewPassengerInfo";
-import { RegistrationStepper } from "../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper";
-import NewDriverInfo from "./NewDriverInfo/NewDriverInfo";
-import NewDriverCarInfo from "./NewDriverCarInfo/NewDriverCarInfo";
-import NewPassengerInfo from "./NewPassengerInfo/NewPassengerInfo";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { Box, Button, Modal, Typography } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useState } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+
+import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
+import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
+import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
+import { Driver } from '../../../../../../api-client';
 
 const style = {
-  position: "absolute" as const,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 670,
-  bgcolor: "background.paper",
-  borderRadius: "4px",
+  bgcolor: 'background.paper',
+  borderRadius: '4px',
   boxShadow: 24,
-  p: 2,
+  p: 2
 };
 const customerOptions = {
-  volunteer: "מתנדב",
-  passenger: "נוסע",
+  volunteer: 'מתנדב',
+  passenger: 'נוסע'
 };
 const steps = {
-  passenger: ["פרטי נוסע", "פרטים רפואיים"],
-  volunteer: ["פרטי מתנדב", "פרטי רכב"],
+  passenger: ['פרטי נוסע', 'פרטים רפואיים'],
+  volunteer: ['פרטי מתנדב', 'פרטי רכב']
 };
 interface AddCustomerModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
   customerType: keyof typeof customerOptions;
 }
-function AddCustomerModal({
-  open,
-  handleModal,
-  customerType,
-}: AddCustomerModalProps) {
+function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const stepBackOrClose = () => {
-    if (activeStepIndex) {
+    if (activeStepIndex > 0) {
       setActiveStepIndex(activeStepIndex - 1);
     } else {
+      setActiveStepIndex(0);
       handleModal(false);
     }
   };
-  const methods = useForm();
+  const methods = useForm<Driver>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -58,37 +53,36 @@ function AddCustomerModal({
     switch (activeStepIndex) {
       case 0:
         isStepValid = await trigger([
-          "firstName",
-          "lastName",
-          "userId",
-          "cellPhone",
-          "passengerCellPhone",
-          "email",
-          "address",
-          "specialRequest",
+          'firstName',
+          'nationalId',
+          'email',
+          'city',
+          'lastName',
+          'cellPhone',
+          'volunteeringArea'
         ]);
         break;
       case 1:
         isStepValid = await trigger([
-          "patient.lastName",
-          "patient.lastName",
-          "patient.patientId",
-          "patient.hospitalId",
-          "patient.hospitalBuilding",
-          "patient.hospitalDept",
-          "servicePeriod",
+          'carManufacturer',
+          'patient.lastName',
+          'patient.patientId',
+          'patient.hospitalId',
+          'patient.hospitalBuilding',
+          'patient.hospitalDept',
+          'servicePeriod'
         ]);
         break;
       default:
         break;
     }
 
-    if (isStepValid) {
+    if (true && activeStepIndex === 0) {
       setActiveStepIndex(activeStepIndex + 1);
     }
   };
 
-  const onSubmit: SubmitHandler = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Driver> = (data) => console.log(data);
   return (
     <Modal
       open={open}
@@ -106,55 +100,35 @@ function AddCustomerModal({
             <ClearIcon />
           </Button>
         </div>
-        <RegistrationStepper
-          activeStepIndex={activeStepIndex}
-          steps={steps[customerType]}
-        />
+        <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps[customerType]} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* first step passenger*/}
-            {customerType === "passenger" && !activeStepIndex ? (
-              <NewPassengerInfo />
-            ) : null}
-            {customerType === "passenger" && !activeStepIndex ? (
-              <SpecialRequirements />
-            ) : null}
-
-            {/* second step passenger*/}
-            {customerType === "passenger" && activeStepIndex ? (
-              <MedicalRequirements />
-            ) : null}
-
             {/* first step driver */}
-            {customerType === "volunteer" && !activeStepIndex ? (
-              <NewDriverInfo />
-            ) : null}
+            {customerType === 'volunteer' && !activeStepIndex ? <NewDriverInfo /> : null}
 
             {/* second step driver */}
-            {customerType === "volunteer" && activeStepIndex ? (
-              <NewDriverCarInfo />
-            ) : null}
+            {customerType === 'volunteer' && activeStepIndex ? <NewDriverCarInfo /> : null}
           </form>
         </FormProvider>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "end",
-            gap: "10px",
-            marginTop: "15px",
+            display: 'flex',
+            justifyContent: 'end',
+            gap: '10px',
+            marginTop: '15px'
           }}
         >
           <Button variant="outlined" color="primary" onClick={stepBackOrClose}>
-            {activeStepIndex > 0 ? "חזור" : "ביטול"}
+            {activeStepIndex > 0 ? 'חזור' : 'ביטול'}
           </Button>
           <Button
             variant="contained"
             color="primary"
             className="text-white"
-            endIcon={<ArrowBackIcon />}
+            endIcon={activeStepIndex === 0 && <ArrowBackIcon />}
             onClick={nextStepHandler}
           >
-            לשלב הבא
+            {activeStepIndex === 0 ? 'לשלב הבא' : 'אישור'}
           </Button>
         </Box>
       </Box>

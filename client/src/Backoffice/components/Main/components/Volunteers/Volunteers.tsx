@@ -66,6 +66,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
 const Volunteers = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
+  console.log(drivers);
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
