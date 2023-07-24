@@ -12,15 +12,25 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
 
   return (
     <div className="w-full flex flex-col gap-5 pb-4">
-      <h1 className="m-0 text-center text-black">בחרו נסיעה מתוך 8 קריאות פתוחות</h1>
-      {rides.map((ride, index) => (
-        <RideCard
-          ride={ride}
-          key={`ride-${index}`}
-          onSelect={onSelectRideCallback}
-          selected={selectedRide === ride}
-        />
-      ))}
+      {rides.length > 0 ? (
+        <>
+          <h1 className="m-0 text-center text-black">
+            בחרו נסיעה מתוך {rides.length} קריאות פתוחות
+          </h1>
+          {rides.map((ride, index) => (
+            <RideCard
+              ride={ride}
+              key={`ride-${index}`}
+              onSelect={onSelectRideCallback}
+              selected={selectedRide === ride}
+            />
+          ))}
+        </>
+      ) : (
+        <p className="text-center text-black mt-5">
+          כרגע אין קריאות פתוחות, נשלח לך ברגע שתפתח קריאה חדשה.
+        </p>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -16,7 +16,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
-import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 // type Inputs = {
@@ -60,6 +60,16 @@ const getSpecialEnum = (boolName: string): RideSpecialRequestEnum => {
   return specialMap[boolName];
 };
 
+const getPatientDestination = (
+  hospitalName: string,
+  hospitalDept: string,
+  hospitalBuilding: string
+) => {
+  return `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
+    hospitalBuilding && ` / ${hospitalBuilding}`
+  }`;
+};
+
 const OrderRide = () => {
   const {
     register,
@@ -71,10 +81,34 @@ const OrderRide = () => {
     'destination'
   );
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
   const { user } = useUserContext();
 
+  const rideRequester = user as RideRequester;
+
   const passenger = user?.firstName || 'נוסע';
-  const autofilledAddressValue = 'בי”ח תל השומר / נשים ויולדות / מחלקת יולדות א';
+
+  useEffect(() => {
+    const fetchHospitals = async () => {
+      const response = await api.hospital.getHospitalList();
+
+      if (response) {
+        const hospitalName =
+          response.find((hospital) => hospital.id === rideRequester.patient?.hospitalId)?.name ||
+          '';
+
+        setAutofilledAddressValue(
+          getPatientDestination(
+            hospitalName,
+            rideRequester.patient?.hospitalDept || '',
+            rideRequester.patient?.hospitalBuilding || ''
+          )
+        );
+      }
+    };
+
+    fetchHospitals();
+  }, [rideRequester]);
 
   const onSwitchAutofilled = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
@@ -93,6 +127,13 @@ const OrderRide = () => {
 
     const ride = {
       ...data,
+      ...(autofilledAddress === 'destination'
+        ? {
+            destination: autofilledAddressValue
+          }
+        : {
+            origin: autofilledAddressValue
+          }),
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver
     };
