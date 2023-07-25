@@ -7,13 +7,9 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
 import { api } from '../../../../../Config.ts';
-import {
-  GetHospitalList200ResponseInner,
-  GetUsersStateEnum,
-  RideRequester
-} from '../../../../../api-client';
+import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
-const useNewCustomersColumns = (
+const getNewCustomersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
 ): ColumnDef<Partial<RideRequester>>[] => {
   return [
@@ -44,7 +40,7 @@ const useNewCustomersColumns = (
       accessorKey: 'name',
       header: 'שם נוסע',
       accessorFn: (data) => {
-        const fullName = `${data.patient?.firstName ?? ''} ${data.patient?.lastName ?? ''}`;
+        const fullName = `${data.firstName ?? ''} ${data.lastName ?? ''}`;
         if (!fullName.trim()) return '-';
 
         return fullName;
@@ -119,7 +115,7 @@ const useNewCustomersColumns = (
                 onClick={async () => {
                   await api.user.updateUser({
                     userId: row.original.userId || '',
-                    rideRequester: { registrationState: GetUsersStateEnum.Approved }
+                    rideRequester: { registrationState: 'Approved' }
                   });
 
                   window.location.reload();
@@ -143,15 +139,16 @@ const useNewCustomersColumns = (
 const NewCustomers = () => {
   const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
-  console.log(hospitals);
-  console.log(pendingUsers);
-  const columns = useNewCustomersColumns(hospitals);
+  const columns = getNewCustomersColumns(hospitals);
 
   useEffect(() => {
     const fetchPendingUsers = async () => {
-      const result = await api.user.getUsers({ state: GetUsersStateEnum.Pending });
+      const result = await api.user.getUsers({
+        state: 'Pending',
+        role: 'Requester'
+      });
 
-      setPendingUsers(result.filter((user) => user.registrationState === 'Pending'));
+      setPendingUsers(result);
     };
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
@@ -164,7 +161,7 @@ const NewCustomers = () => {
   return (
     <div>
       <PageHeader>
-        <PageHeader.Title>נרשמים חדשים והארכות תוקף (3)</PageHeader.Title>
+        <PageHeader.Title>נרשמים חדשים והארכות תוקף ({pendingUsers.length})</PageHeader.Title>
         <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
       <Table data={pendingUsers} columns={columns} />

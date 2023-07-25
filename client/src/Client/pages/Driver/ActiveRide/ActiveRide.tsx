@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
   import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
+import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride } from '../../../../api-client';
+import { Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 
 const ActiveRide = () => {
@@ -12,9 +13,13 @@ const ActiveRide = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(ride);
-  }, [ride]);
+  const finishRide = async () => {
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      ride: { ...ride, state: RideStateEnum.Completed }
+    });
+    console.log('Ride completed');
+  };
 
   return (
     <div className="w-full overflow-auto">
@@ -34,6 +39,8 @@ const ActiveRide = () => {
         {ride?.specialRequest?.map((specialRequest) => (
           <p>{specialRequest}</p>
         ))}
+
+        <Button onClick={finishRide}>Complete ride</Button>
       </div>
     </div>
   );

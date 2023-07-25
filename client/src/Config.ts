@@ -1,5 +1,5 @@
 /* eslint-disable import/no-mutable-exports */
-import { Configuration, HospitalApi, RideApi, UserApi } from './api-client/index.ts';
+import { Configuration, DriverApi, HospitalApi, RideApi, UserApi } from './api-client/index.ts';
 
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || '';
 
@@ -19,7 +19,8 @@ const createApi = () => {
   return {
     user: new UserApi(configuration),
     ride: new RideApi(configuration),
-    hospital: new HospitalApi(configuration)
+    hospital: new HospitalApi(configuration),
+    driver: new DriverApi(configuration)
   };
 };
 
