@@ -7,7 +7,9 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run start -w backend",
-    "dev:client": "npm run start -w client"
+    "dev:backend": "npm run dev -w backend",
+    "dev:client": "npm run start -w client",
+    "generate:api:client": "npm run generate:api:client -w client"
   },
   "repository": {
     "type": "git",
