@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/UserContext/UserContext.tsx';
-import { User, UserRoleEnum } from '../../api-client';
+import { RideStateEnum, User, UserRoleEnum } from '../../api-client';
 
 const useNavigateUser = () => {
   const { user, activeRide } = useUserContext();
@@ -18,7 +18,21 @@ const useNavigateUser = () => {
         navigate('/driver/rides');
       }
     } else if (actualUser?.role === UserRoleEnum.Requester) {
-      navigate('/passenger/order-ride');
+      if (activeRide) {
+        if (
+          activeRide.state === RideStateEnum.WaitingForDriver ||
+          activeRide.state === RideStateEnum.Canceled
+        ) {
+          navigate('/passenger/order-ride');
+        } else if (
+          activeRide.state === RideStateEnum.Booked ||
+          activeRide.state === RideStateEnum.DriverCanceled
+        ) {
+          navigate('/passenger/active');
+        }
+      } else {
+        navigate('/passenger/order-ride');
+      }
     }
   };
 

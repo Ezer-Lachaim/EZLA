@@ -13,27 +13,11 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
-
-// type Inputs = {
-//   sourceAddress: string;
-//   destinationAddress: string;
-//   passengerPhone: string;
-//   numberOfPassengers: number;
-//   specialRequests: {
-//     isWheelChair: boolean;
-//     isBabySafetySeat: boolean;
-//     isChildSafetySeat: boolean;
-//     isHighVehicle: boolean;
-//     isWheelChairTrunk: boolean;
-//     isPatientDelivery: boolean;
-//   };
-// };
 
 interface ClientRide extends Omit<Ride, 'specialRequest'> {
   specialRequest: {
@@ -72,19 +56,39 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
+  const { user, activeRide } = useUserContext();
   const {
     register,
     watch,
     handleSubmit,
     formState: { errors }
-  } = useForm<ClientRide>();
+  } = useForm<ClientRide>({
+    defaultValues: {
+      origin: user?.address,
+      cellphone: user?.cellPhone,
+      specialRequest: {
+        isWheelChair: (user as RideRequester)?.specialRequest?.includes(specialMap.isWheelChair),
+        isBabySafetySeat: (user as RideRequester)?.specialRequest?.includes(
+          specialMap.isBabySafetySeat
+        ),
+        isChildSafetySeat: (user as RideRequester)?.specialRequest?.includes(
+          specialMap.isChildSafetySeat
+        ),
+        isHighVehicle: (user as RideRequester)?.specialRequest?.includes(specialMap.isHighVehicle),
+        isWheelChairTrunk: (user as RideRequester)?.specialRequest?.includes(
+          specialMap.isWheelChairTrunk
+        ),
+        isPatientDelivery: (user as RideRequester)?.specialRequest?.includes(
+          specialMap.isPatientDelivery
+        )
+      }
+    }
+  });
   const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
     'destination'
   );
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [ride, setRide] = React.useState<Ride | null>(null);
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
-  const { user, activeRide } = useUserContext();
-  const navigate = useNavigate();
 
   const rideRequester = user as RideRequester;
 
@@ -119,9 +123,7 @@ const OrderRide = () => {
   React.useEffect(() => {
     if (activeRide) {
       if (activeRide.state === RideStateEnum.WaitingForDriver) {
-        setIsModalOpen(true);
-      } else if (activeRide.state === RideStateEnum.Booked) {
-        navigate('/passenger/active');
+        setRide(activeRide);
       }
     }
   }, []);
@@ -137,7 +139,7 @@ const OrderRide = () => {
       []
     );
 
-    const ride = {
+    const newRide = {
       ...data,
       ...(autofilledAddress === 'destination'
         ? {
@@ -147,21 +149,27 @@ const OrderRide = () => {
             origin: autofilledAddressValue
           }),
       specialRequest: specialRequestsArray,
-      state: RideStateEnum.WaitingForDriver
+      state: RideStateEnum.WaitingForDriver,
+      rideRequester: {
+        userId: user?.userId,
+        firstName: user?.firstName,
+        lastName: user?.lastName
+      }
     };
     const response = await api.ride.ridesPost({
-      ride: {
-        ...ride,
-        rideRequester: {
-          userId: user?.userId,
-          firstName: user?.firstName,
-          lastName: user?.lastName
-        }
-      }
+      ride: newRide
     });
-    console.log(ride);
     console.log(response);
-    setIsModalOpen(true);
+    setRide(response);
+  };
+
+  const onCancelRide = async () => {
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
+    });
+
+    setRide(null);
   };
 
   return (
@@ -170,15 +178,21 @@ const OrderRide = () => {
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           {autofilledAddress === 'destination' ? (
-            <TextField
-              label="כתובת איסוף"
-              type="string"
-              placeholder="יש להזין כתובת"
-              required
-              error={!!errors?.origin}
-              helperText={errors?.origin && 'חסרה כתובת איסוף'}
-              {...register('origin', { required: true })}
-            />
+            <FormControl>
+              <TextField
+                label="כתובת איסוף"
+                type="string"
+                placeholder="יש להזין כתובת"
+                required
+                error={!!errors?.origin}
+                {...register('origin', { required: true })}
+              />
+              {errors.origin && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                </FormHelperText>
+              )}
+            </FormControl>
           ) : (
             <div>
               <InputLabel>כתובת איסוף</InputLabel>
@@ -196,15 +210,22 @@ const OrderRide = () => {
             </Button>
           </div>
           {autofilledAddress === 'source' ? (
-            <TextField
-              label="כתובת יעד"
-              type="string"
-              placeholder="יש להזין כתובת"
-              required
-              error={!!errors?.destination}
-              helperText={errors?.destination && 'חסרה כתובת יעד'}
-              {...register('destination', { required: true })}
-            />
+            <FormControl>
+              <TextField
+                label="כתובת יעד"
+                type="string"
+                placeholder="יש להזין כתובת"
+                required
+                error={!!errors?.destination}
+                {...register('destination', { required: true })}
+              />
+
+              {errors.destination && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                </FormHelperText>
+              )}
+            </FormControl>
           ) : (
             <div>
               <InputLabel>כתובת יעד</InputLabel>
@@ -212,15 +233,22 @@ const OrderRide = () => {
             </div>
           )}
         </div>
-        <TextField
-          label="טלפון ליצירת קשר"
-          type="number"
-          placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-          required
-          error={!!errors?.cellphone}
-          helperText={errors?.cellphone && 'חסר מספר טלפון'}
-          {...register('cellphone', { required: true })}
-        />
+        <FormControl>
+          <TextField
+            label="טלפון ליצירת קשר"
+            type="string"
+            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
+            required
+            error={!!errors?.cellphone}
+            {...register('cellphone', { required: true, pattern: /^05\d-?\d{7}$/ })}
+          />
+          {errors.cellphone && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+            </FormHelperText>
+          )}
+        </FormControl>
         <FormControl>
           <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
@@ -238,7 +266,7 @@ const OrderRide = () => {
             <MenuItem value={5}>5</MenuItem>
           </Select>
           {errors.passengerCount?.type === 'required' && (
-            <FormHelperText error className="absolute top-full">
+            <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
             </FormHelperText>
           )}
@@ -252,22 +280,27 @@ const OrderRide = () => {
           />
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
+            checked={watch().specialRequest?.isBabySafetySeat}
             label="מושב בטיחות לתינוק"
           />
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
+            checked={watch().specialRequest?.isChildSafetySeat}
             label="מושב בטיחות לילדים (גיל 3-8)"
           />
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
+            checked={watch().specialRequest?.isHighVehicle}
             label="רכב גבוה"
           />
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
+            checked={watch().specialRequest?.isWheelChairTrunk}
             label="תא מטען מתאים לכסא גלגלים"
           />
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
+            checked={watch().specialRequest?.isPatientDelivery}
             label="משלוחים למאושפז"
           />
         </div>
@@ -277,11 +310,10 @@ const OrderRide = () => {
         </Button>
       </form>
 
-      <SearchingDriverModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SearchingDriverModal open={!!ride} onClose={onCancelRide} />
     </div>
   );
 };
-
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה לביקור חולים',
   hideBackButton: true,

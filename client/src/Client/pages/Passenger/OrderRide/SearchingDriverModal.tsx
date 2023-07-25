@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Box, Button, IconButton } from '@mui/material';
 import { Cancel, Close } from '@mui/icons-material';
 import car from '../../../../assets/car.png';
-import ConfirmCancelModal from './ConfirmCancelModal.tsx';
+import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 
 const style = {
   position: 'absolute' as const,
@@ -50,7 +50,7 @@ const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () =>
           </IconButton>
         </Box>
 
-        <ConfirmCancelModal
+        <ConfirmCancelRideModal
           open={confirmClose}
           onCancel={onClose}
           onContinue={() => setConfirmClose(false)}

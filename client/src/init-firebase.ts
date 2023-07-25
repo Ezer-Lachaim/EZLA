@@ -17,11 +17,11 @@ export const initFirebaseCloudMessaging = async () => {
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
-    console.log('status >', status);
+    // console.log('status >', status);
     if (status === 'granted') {
       // Get new token from Firebase
       const messaging = getMessaging();
-      console.log(messaging);
+      // console.log(messaging);
 
       // Set token in our local storage and send to our server
       onMessage(messaging, (payload) => {
@@ -38,11 +38,11 @@ export const setNotificationsToken = async () => {
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
-    console.log('status >', status);
+    // console.log('status >', status);
     if (status === 'granted') {
       // Get new token from Firebase
       const messaging = getMessaging();
-      console.log(messaging);
+      // console.log(messaging);
       const fcmToken = await getToken(messaging, {
         vapidKey:
           'BCuU7yCkK_syBZI-Wm-aaUZJsnQkcLYlNBKxFzfvsEO03fX-JPJRPFLX_mufz9oqx0Q_cIWkbQc1IFQ_iRmcLl4'

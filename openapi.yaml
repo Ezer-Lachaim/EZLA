@@ -340,6 +340,8 @@ paths:
               - DriverArrived
               - Riding
               - Completed
+              - DriverCanceled
+              - RequesterCanceled
               - Canceled
           required: false
           description: Ride state
@@ -525,7 +527,7 @@ components:
           example: 'Barak'
         cellPhone:
           type: string
-          example: '+972123456789'
+          example: '0523334444'
 
         rejectCause:
           type: string
@@ -579,8 +581,8 @@ components:
           type: string
           example: "Home"
         cellphone:
-          type: number
-          example: 1234567890
+          type: string
+          example: "0523334444"
         state:
           type: string
           enum:
@@ -589,6 +591,8 @@ components:
             - DriverArrived
             - Riding
             - Completed
+            - DriverCanceled
+            - RequesterCanceled
             - Canceled
         passengerCount:
           type: number
@@ -623,7 +627,7 @@ components:
       properties:
         passengerCellPhone:
           type: string
-          example: '+972123456789'
+          example: '0523334444'
         specialRequest:
           type: array
           items:

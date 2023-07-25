@@ -100,6 +100,17 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       const updatedRide = Object.assign(currentRide, rideUpdateValues);
       await redisClient.json.set(`ride:${rideId}`, '$', { ...updatedRide });
 
+      if (updatedRide.state === RideStateEnum.DriverCanceled) {
+        await redisClient.del(`active_ride:${currentRide.driver?.userId}`);
+      }
+      if (updatedRide.state === RideStateEnum.RequesterCanceled) {
+        if (updatedRide.driver) {
+          await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+        } else {
+          // If canceled before driver accepted then we need to cancel the ride
+          updatedRide.state = RideStateEnum.Canceled;
+        }
+      }
       if (
         updatedRide.state === RideStateEnum.Canceled ||
         updatedRide.state === RideStateEnum.Completed
