@@ -52,10 +52,6 @@ export const setNotificationsToken = async () => {
       if (fcmToken) {
         console.log('fcmToken >>', fcmToken);
         api.user.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
-        onMessage(messaging, (payload) => {
-          console.log(payload);
-          window.location.href = window.location.origin;
-        });
       }
     }
   } catch (error) {
