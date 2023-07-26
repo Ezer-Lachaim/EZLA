@@ -6,6 +6,7 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import { Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
+import DriverArrivedModal from './DriverArrivedModal.tsx';
 
 const ActiveRide = () => {
   const [confirmClose, setConfirmClose] = useState(false);
@@ -36,6 +37,16 @@ const ActiveRide = () => {
     navigate('/driver/rides');
   };
 
+  const onContinue = async () => {
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      ride: { ...ride, state: RideStateEnum.Riding }
+    });
+    console.log('Riding');
+
+    navigate('/driver/riding');
+  };
+
   return (
     <div className="w-full overflow-auto">
       <div className="bg-yellow-300 text-center rounded-md">
@@ -62,6 +73,13 @@ const ActiveRide = () => {
       <Button variant="outlined" color="error" onClick={() => setConfirmClose(true)}>
         ביטול הנסיעה
       </Button>
+
+      <DriverArrivedModal
+        open={ride?.state === RideStateEnum.DriverArrived}
+        requesterPhone={ride?.rideRequester?.cellPhone || ''}
+        onContinue={onContinue}
+        onCancel={() => setConfirmClose(true)}
+      />
 
       <ConfirmCancelRideModal
         open={confirmClose}

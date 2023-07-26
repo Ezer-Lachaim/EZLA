@@ -13,7 +13,14 @@ const useNavigateUser = () => {
       navigate('/backoffice');
     } else if (actualUser?.role === UserRoleEnum.Driver) {
       if (activeRide) {
-        navigate('/driver/active');
+        if (
+          activeRide.state === RideStateEnum.Booked ||
+          activeRide.state === RideStateEnum.DriverArrived
+        ) {
+          navigate('/driver/active');
+        } else if (activeRide.state === RideStateEnum.Riding) {
+          navigate('/driver/riding');
+        }
       } else {
         navigate('/driver/rides');
       }

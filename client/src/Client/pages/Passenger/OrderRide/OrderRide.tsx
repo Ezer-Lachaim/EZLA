@@ -153,7 +153,8 @@ const OrderRide = () => {
       rideRequester: {
         userId: user?.userId,
         firstName: user?.firstName,
-        lastName: user?.lastName
+        lastName: user?.lastName,
+        cellPhone: user?.cellPhone
       }
     };
     const response = await api.ride.ridesPost({

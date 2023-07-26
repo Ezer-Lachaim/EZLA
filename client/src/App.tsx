@@ -24,6 +24,7 @@ import Logout from './Client/pages/Login/Logout';
 import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide';
 import PassengerActiveRide from './Client/pages/Passenger/ActiveRide/ActiveRide';
 import { initFirebaseCloudMessaging } from './init-firebase.ts';
+import Riding from "./Client/pages/Driver/Riding/Riding.tsx";
 
 function App() {
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
@@ -69,6 +70,7 @@ function App() {
             <Route path="driver" element={<Driver />}>
               <Route path="rides" element={<Rides />} />
               <Route path="active" element={<ActiveRide />} />
+              <Route path="riding" element={<Riding />} />
             </Route>
           </Route>
           <Route path="backoffice" element={<Backoffice />}>
