@@ -25,7 +25,7 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.firstName}
-              {...register('firstName', { required: true })}
+              {...register('firstName', { required: true, minLength: 2 })}
             />
             {errors.firstName && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -40,7 +40,7 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.nationalId}
-              {...register('nationalId', { required: true })}
+              {...register('nationalId', { required: true, minLength: 9, maxLength: 9 })}
             />
             {errors.nationalId && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -57,7 +57,7 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.email}
-              {...register('email', { required: true })}
+              {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
             />
             {errors.email && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -81,14 +81,14 @@ function NewDriverInfo() {
             )}
           </FormControl>
         </div>
-        <div className="flex flex-col gap-4 flex-1">
+        <div className="flex flex-col gap-8 flex-1">
           <FormControl>
             <TextField
               label="שם משפחה"
               variant="outlined"
               fullWidth
               error={!!errors.lastName}
-              {...register('lastName', { required: true })}
+              {...register('lastName', { required: true, minLength: 2 })}
             />
             {errors.lastName && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -103,7 +103,7 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.cellPhone}
-              {...register('cellPhone', { required: true })}
+              {...register('cellPhone', { required: true, pattern: /^05\d-?\d{7}$/ })}
             />
             {errors.cellPhone && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -118,7 +118,7 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.volunteeringArea}
-              {...register('volunteeringArea', { required: true })}
+              {...register('volunteeringArea', { required: true, minLength: 2 })}
             />
             {errors.volunteeringArea && (
               <FormHelperText error className="absolute top-full mr-0">

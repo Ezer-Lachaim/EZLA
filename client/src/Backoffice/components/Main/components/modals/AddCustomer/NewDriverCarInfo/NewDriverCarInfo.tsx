@@ -9,15 +9,15 @@ function NewDriverCarInfo() {
     formState: { errors }
   } = useFormContext<DriverRegistrationFormInputs>();
   return (
-    <div className="flex gap-4 mb-5">
-      <div className="flex flex-col gap-4 flex-1">
+    <div className="flex gap-4 mb-10">
+      <div className="flex flex-col gap-8 flex-1">
         <FormControl>
           <TextField
             label="יצרן"
             variant="outlined"
             fullWidth
             error={!!errors.carManufacturer}
-            {...register('carManufacturer', { required: true })}
+            {...register('carManufacturer', { required: true, minLength: 2 })}
           />
           {errors.carManufacturer && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -32,7 +32,7 @@ function NewDriverCarInfo() {
             variant="outlined"
             fullWidth
             error={!!errors.carColor}
-            {...register('carColor', { required: true })}
+            {...register('carColor', { required: true, minLength: 2 })}
           />
         </FormControl>
         <TextField
@@ -44,7 +44,7 @@ function NewDriverCarInfo() {
           {...register('numOfSeats', { required: true })}
         />
       </div>
-      <div className="flex flex-col gap-4 flex-1">
+      <div className="flex flex-col gap-8 flex-1">
         <TextField
           label="דגם"
           variant="outlined"
