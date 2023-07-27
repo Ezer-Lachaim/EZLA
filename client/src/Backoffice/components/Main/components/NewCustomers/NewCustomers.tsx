@@ -29,8 +29,6 @@ const getNewCustomersColumns = (
       accessorKey: 'signupDate',
       header: 'תאריך הרשמה',
       accessorFn: (data) => {
-        // const date = new Date(data.signupDate);
-        // console.log(date);
         if (!data.signupDate) return '-';
 
         return format(data.signupDate, 'HH:mm - dd/MM/yyyy');
@@ -139,6 +137,7 @@ const getNewCustomersColumns = (
 const NewCustomers = () => {
   const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+
   const columns = getNewCustomersColumns(hospitals);
 
   useEffect(() => {

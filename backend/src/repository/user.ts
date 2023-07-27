@@ -11,6 +11,14 @@ export async function getUserByUid(uid: string): Promise<User> {
   return { ...user } as User;
 }
 
+export async function getUserByEmail(email: string): Promise<User> {
+  const keys = await client.keys('user:*');
+  const users = []
+    .concat(...(await client.json.mGet(keys, '$')))
+    .filter((user) => user.email === email);
+  return users[0];
+}
+
 export async function getAllUsers(state?: string, role?: string): Promise<any> {
   const keys = await client.keys('user:*');
   return []

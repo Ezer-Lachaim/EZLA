@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
-import { api } from '../../../../../Config';
+import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
+import { api } from '../../../../../Config';
 
 const getPassengersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -101,6 +102,7 @@ const Passengers = () => {
   const [passengers, setPassengers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
   const columns = getPassengersColumns(hospitals);
+  const [isAddPassengerModalOpen, setIsAddPassengerModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPassengers = async () => {
@@ -122,9 +124,18 @@ const Passengers = () => {
     <div>
       <PageHeader>
         <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
-        <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
+
+        <PageHeader.ActionButton onClick={() => setIsAddPassengerModalOpen(false)}>
+          הוספת נוסע חדש
+        </PageHeader.ActionButton>
       </PageHeader>
       <Table data={passengers} columns={columns} />
+      {/* Modal not ready for passenger */}
+      <AddCustomerModal
+        customerType="volunteer"
+        open={isAddPassengerModalOpen}
+        handleModal={setIsAddPassengerModalOpen}
+      />
     </div>
   );
 };
