@@ -8,7 +8,7 @@ const UserContext = createContext(
     user: User | null;
     setUser: (user: User) => void;
     activeRide: Ride | null;
-    setActiveRide: (ride: Ride) => void;
+    setActiveRide: (ride: Ride | null) => void;
   }
 );
 
@@ -45,12 +45,14 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   }, []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const activeRideResponse = await api.ride.getActiveRideForUser();
-        setActiveRide(activeRideResponse);
-      } catch (error) {}
-    })();
+    if (didFinishUserInit) {
+      (async () => {
+        try {
+          const activeRideResponse = await api.ride.getActiveRideForUser();
+          setActiveRide(activeRideResponse);
+        } catch (error) {}
+      })();
+    }
   }, [location]);
 
   if (!didFinishUserInit) return null;

@@ -63,10 +63,9 @@ const DriverArrivedModal = ({
       <PassengersMissingModal
         open={isPassengersMissingModalOpen}
         requesterPhone={requesterPhone}
-        onContinue={() => onContinue}
+        onContinue={onContinue}
         onClose={() => setIsPassengersMissingModalOpen(false)}
         onCancel={() => {
-          setIsPassengersMissingModalOpen(false);
           onCancel();
         }}
       />

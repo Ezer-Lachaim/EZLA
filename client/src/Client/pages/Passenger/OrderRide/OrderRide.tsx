@@ -56,7 +56,7 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user, activeRide } = useUserContext();
+  const { user, activeRide: ride, setActiveRide } = useUserContext();
   const {
     register,
     watch,
@@ -87,7 +87,6 @@ const OrderRide = () => {
   const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
     'destination'
   );
-  const [ride, setRide] = React.useState<Ride | null>(null);
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
 
   const rideRequester = user as RideRequester;
@@ -119,14 +118,6 @@ const OrderRide = () => {
   const onSwitchAutofilled = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
-
-  React.useEffect(() => {
-    if (activeRide) {
-      if (activeRide.state === RideStateEnum.WaitingForDriver) {
-        setRide(activeRide);
-      }
-    }
-  }, []);
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
@@ -161,7 +152,7 @@ const OrderRide = () => {
       ride: newRide
     });
     console.log(response);
-    setRide(response);
+    setActiveRide(response);
   };
 
   const onCancelRide = async () => {
@@ -170,7 +161,7 @@ const OrderRide = () => {
       ride: { ...ride, state: RideStateEnum.RequesterCanceled }
     });
 
-    setRide(null);
+    setActiveRide(null);
   };
 
   return (
@@ -311,7 +302,10 @@ const OrderRide = () => {
         </Button>
       </form>
 
-      <SearchingDriverModal open={!!ride} onClose={onCancelRide} />
+      <SearchingDriverModal
+        open={ride?.state === RideStateEnum.WaitingForDriver}
+        onClose={onCancelRide}
+      />
     </div>
   );
 };
