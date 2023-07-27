@@ -3,11 +3,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-
 import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
 import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
-import { Driver } from '../../../../../../api-client';
+import { DriverRegistrationFormInputs } from './AddCustomerModal.types.ts';
+import { api } from '../../../../../../Config.ts';
 
 const style = {
   position: 'absolute' as const,
@@ -28,6 +28,7 @@ const steps = {
   passenger: ['פרטי נוסע', 'פרטים רפואיים'],
   volunteer: ['פרטי מתנדב', 'פרטי רכב']
 };
+
 interface AddCustomerModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
@@ -43,7 +44,7 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
       handleModal(false);
     }
   };
-  const methods = useForm<Driver>();
+  const methods = useForm<DriverRegistrationFormInputs>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -54,35 +55,47 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
       case 0:
         isStepValid = await trigger([
           'firstName',
-          'nationalId',
-          'email',
-          'city',
           'lastName',
+          'nationalId',
           'cellPhone',
-          'volunteeringArea'
+          'email',
+          'volunteeringArea',
+          'address',
+          'isValidLicense',
+          'isValidCarLicense'
         ]);
         break;
       case 1:
         isStepValid = await trigger([
           'carManufacturer',
-          'patient.lastName',
-          'patient.patientId',
-          'patient.hospitalId',
-          'patient.hospitalBuilding',
-          'patient.hospitalDept',
-          'servicePeriod'
+          'carModel',
+          'carColor',
+          'carPlateNumber',
+          'numOfSeats',
+          'carCapabilities'
         ]);
         break;
       default:
         break;
     }
 
-    if (true && activeStepIndex === 0) {
+    if (isStepValid) {
       setActiveStepIndex(activeStepIndex + 1);
+    } else if (activeStepIndex === 2) {
+      await handleSubmit(onSubmit)();
     }
   };
 
-  const onSubmit: SubmitHandler<Driver> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<DriverRegistrationFormInputs> = async (data) => {
+    console.log(data);
+
+    const response = await api.driver.createDriver({
+      driver: { ...data, password: 'initial-password' }
+    });
+
+    console.log('response', response);
+    handleModal(false);
+  };
   return (
     <Modal
       open={open}

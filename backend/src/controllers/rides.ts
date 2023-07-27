@@ -1,5 +1,8 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import { getUserByUid } from '../repository/user';
+import { User } from '../models/user';
+import { sendPushNotification } from '../utils/firebase-config';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -68,7 +71,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   const rideId = uuidv4();
   const ride = req.body as Ride;
   ride.rideId = rideId;
-  ride.requestTimeStamp = new Date().toString();
+  ride.requestTimeStamp = new Date().toISOString();
 
   try {
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as any) });
@@ -83,12 +86,37 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   }
 };
 
+const sendPushByUserId = async (userId: string, title: string, body: string) => {
+  const user: User = await getUserByUid(userId);
+  try {
+    await sendPushNotification(user.fcmToken, {
+      notification: { title, body }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const confirmCompleteRide = async (req: CustomRequest, res: Response): Promise<void> => {
+  const userIdFromToken = req.user.userId;
+
+  try {
+    await redisClient.del(`active_ride:${userIdFromToken}`);
+
+    res.status(200).json({ message: 'Ride completed successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 /**
  * PUT /rides/{rideId}
  * Update an existing ride.
  */
 export const updateRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const { rideId } = req.params;
+  const userIdFromToken = req.user.userId;
   const rideUpdateValues = req.body;
 
   try {
@@ -97,15 +125,76 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       const updatedRide = Object.assign(currentRide, rideUpdateValues);
       await redisClient.json.set(`ride:${rideId}`, '$', { ...updatedRide });
 
-      if (
-        updatedRide.state === RideStateEnum.Canceled ||
-        updatedRide.state === RideStateEnum.Completed
-      ) {
+      if (updatedRide.state === RideStateEnum.DriverCanceled) {
         await redisClient.del(`active_ride:${currentRide.driver?.userId}`);
-        await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'הנסיעה בוטלה על ידי נהג'
+          );
+        }
       }
+
+      if (updatedRide.state === RideStateEnum.RequesterCanceled) {
+        if (updatedRide.driver) {
+          await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+          if (currentRide.driver?.userId) {
+            await sendPushByUserId(
+              currentRide.driver?.userId,
+              'עדכון על הנסיעה',
+              'הנסיעה בוטלה על ידי הנוסע'
+            );
+          }
+        } else {
+          // If canceled before driver accepted then we need to cancel the ride
+          updatedRide.state = RideStateEnum.Canceled;
+        }
+      }
+
+      if (updatedRide.state === RideStateEnum.Canceled) {
+        await redisClient.del(`active_ride:${userIdFromToken}`);
+      }
+
       if (updatedRide.state === RideStateEnum.Booked) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'הנסיעה שלך התקבלה על ידי נהג'
+          );
+        }
+      }
+
+      if (updatedRide.state === RideStateEnum.DriverArrived) {
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'הנהג הגיע לנקודת האיסוף'
+          );
+        }
+      }
+
+      if (updatedRide.state === RideStateEnum.Riding) {
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'נוסעים ליעד'
+          );
+        }
+      }
+
+      if (updatedRide.state === RideStateEnum.Completed) {
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'הגעתם ליעד'
+          );
+        }
       }
       res.status(200).json(updatedRide);
     } else {

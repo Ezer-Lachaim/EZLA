@@ -1,32 +1,31 @@
 import {
   Checkbox,
   FormControl,
+  FormHelperText,
   FormControlLabel,
   FormGroup,
-  FormHelperText,
   TextField
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { Driver } from '../../../../../../../api-client';
+import { DriverRegistrationFormInputs } from '../AddCustomerModal.types.ts';
 
 function NewDriverInfo() {
   const {
     register,
     formState: { errors }
-  } = useFormContext<Driver>();
+  } = useFormContext<DriverRegistrationFormInputs>();
+
   return (
     <>
       <div className="flex gap-4 mb-10">
         <div className="flex flex-col gap-8 flex-1">
           <FormControl>
             <TextField
-              required
               label="שם פרטי"
               variant="outlined"
               fullWidth
-              autoFocus
               error={!!errors.firstName}
-              {...register('firstName', { required: true, minLength: 2 })}
+              {...register('firstName', { required: true })}
             />
             {errors.firstName && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -37,12 +36,11 @@ function NewDriverInfo() {
           </FormControl>
           <FormControl>
             <TextField
-              required
               label="תעודת זהות"
               variant="outlined"
               fullWidth
               error={!!errors.nationalId}
-              {...register('nationalId', { required: true, minLength: 9, maxLength: 9 })}
+              {...register('nationalId', { required: true })}
             />
             {errors.nationalId && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -53,15 +51,13 @@ function NewDriverInfo() {
               </FormHelperText>
             )}
           </FormControl>
-
           <FormControl>
             <TextField
-              required
               label="אימייל"
               variant="outlined"
               fullWidth
               error={!!errors.email}
-              {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
+              {...register('email', { required: true })}
             />
             {errors.email && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -72,12 +68,11 @@ function NewDriverInfo() {
           </FormControl>
           <FormControl>
             <TextField
-              required
               label="עיר מגורים"
               variant="outlined"
               fullWidth
-              error={!!errors.city}
-              {...register('city', { required: true })}
+              error={!!errors.address}
+              {...register('address', { required: true })}
             />
             {errors.city && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -86,15 +81,14 @@ function NewDriverInfo() {
             )}
           </FormControl>
         </div>
-        <div className="flex flex-col gap-8 flex-1">
+        <div className="flex flex-col gap-4 flex-1">
           <FormControl>
             <TextField
-              required
               label="שם משפחה"
               variant="outlined"
               fullWidth
               error={!!errors.lastName}
-              {...register('lastName', { required: true, minLength: 2 })}
+              {...register('lastName', { required: true })}
             />
             {errors.lastName && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -105,12 +99,11 @@ function NewDriverInfo() {
           </FormControl>
           <FormControl>
             <TextField
-              required
               label="טלפון נייד"
               variant="outlined"
               fullWidth
               error={!!errors.cellPhone}
-              {...register('cellPhone', { required: true, pattern: /^05\d-?\d{7}$/ })}
+              {...register('cellPhone', { required: true })}
             />
             {errors.cellPhone && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -121,12 +114,11 @@ function NewDriverInfo() {
           </FormControl>
           <FormControl>
             <TextField
-              required
               label="אזור התנדבות"
               variant="outlined"
               fullWidth
               error={!!errors.volunteeringArea}
-              {...register('volunteeringArea', { required: true, minLength: 2 })}
+              {...register('volunteeringArea', { required: true })}
             />
             {errors.volunteeringArea && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -142,12 +134,22 @@ function NewDriverInfo() {
         <FormGroup className="flex flex-row">
           <FormControlLabel
             className="mb-2 ml-5"
-            control={<Checkbox {...register('isValidLicense')} required />}
+            control={
+              <Checkbox
+                {...register('isValidLicense', { required: true })}
+                sx={errors.isValidLicense ? { color: 'red' } : {}}
+              />
+            }
             label="רישיון נהיגה בתוקף"
           />
           <FormControlLabel
             className="mb-2 "
-            control={<Checkbox {...register('isValidCarLicense')} required />}
+            control={
+              <Checkbox
+                {...register('isValidCarLicense', { required: true })}
+                sx={errors.isValidCarLicense ? { color: 'red' } : {}}
+              />
+            }
             label="רישיון רכב בתוקף"
           />
         </FormGroup>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   Button,
@@ -18,6 +18,8 @@ import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
 import useNavigateUser from '../../hooks/useNavigateUser.ts';
+import { setNotificationsToken } from '../../../init-firebase.ts';
+import { Splash } from '../Splash/Splash.tsx';
 
 type Inputs = {
   email: string;
@@ -25,6 +27,7 @@ type Inputs = {
 };
 
 const Login = () => {
+  const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const { setUser } = useUserContext();
   const {
@@ -36,6 +39,16 @@ const Login = () => {
 
   const { navigateAfterLogin } = useNavigateUser();
 
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setShouldDisplaySplash(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, []);
+
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       const userResponse = (await api.user.loginUser({
@@ -44,16 +57,18 @@ const Login = () => {
       console.log(userResponse.token);
       setToken(userResponse.token);
       setUser(userResponse.user);
+      setNotificationsToken();
       navigateAfterLogin(userResponse.user);
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
+        setError('email', { type: '401' });
         setError('password', { type: '401' }, { shouldFocus: true });
       }
     }
   };
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full max-w-lg">
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1>כניסה למערכת</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -121,6 +136,8 @@ const Login = () => {
         &nbsp;
         <Link to="/first-signup">להרשמה</Link>
       </div>
+
+      {shouldDisplaySplash && <Splash />}
     </div>
   );
 };

@@ -11,6 +11,7 @@ import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import {
   createUser,
   getAllUsers,
+  getUserByEmail,
   getUserByUid,
   updateFcmToken,
   updateIsInitialPass,
@@ -18,6 +19,8 @@ import {
 } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createJwt } from '../utils/jwt-util';
+
+const INITIAL_PASSWORD = 'initial-password';
 
 /**
  * GET /
@@ -48,6 +51,7 @@ export const registerFcmToken = async (req: CustomRequest, res: Response): Promi
       res.status(400).send({ error: 'fcmToken not provided' });
     }
     await updateFcmToken(req.user.userId, fcmToken);
+    res.status(200).send();
   } catch (e) {
     console.log(e);
     res.status(500).send();
@@ -97,6 +101,17 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
       res.status(401).send({ error: 'User is not authorized!' });
     }
   } catch (e) {
+    const user = await getUserByEmail(email);
+    if (user.isInitialPassword) {
+      try {
+        // allow login for users with initial password
+        const userRecord = await firebase.signInWithEmailAndPassword(auth, email, INITIAL_PASSWORD);
+        res.send({ token: await userRecord.user.getIdToken(), user });
+        return;
+      } catch (e2) {
+        // do nothing
+      }
+    }
     console.log(e);
     res.status(401).send({ error: 'wrong username or password' });
   }
@@ -104,15 +119,11 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
 
 export const signup = async (req: CustomRequest, res: Response): Promise<void> => {
   const { user }: { user: User } = req.body;
-  const generatedPass = generator.generate({
-    length: 20,
-    numbers: true
-  });
   try {
     const userRecord = await firebase.createUserWithEmailAndPassword(
       auth,
       user.email,
-      generatedPass
+      INITIAL_PASSWORD
     );
     user.userId = userRecord.user.uid;
     user.role = UserRoleEnum.Requester;
@@ -130,7 +141,8 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
 export const updateUserWithTempToken = async (req: CustomRequest, res: Response): Promise<void> => {
   const userIdFromToken = req.user.userId;
   const userIdFromQuery = req.params.userId;
-  if (userIdFromQuery === userIdFromToken && req.localToken && req.user.isInitialPassword) {
+  // removed req.localToken
+  if (userIdFromQuery === userIdFromToken && req.user.isInitialPassword) {
     if (req.user.registrationState !== UserRegistrationStateEnum.Approved) {
       res.status(401).send({ error: 'User is not approved!' });
     } else {
