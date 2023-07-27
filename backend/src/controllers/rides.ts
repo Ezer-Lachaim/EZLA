@@ -97,12 +97,26 @@ const sendPushByUserId = async (userId: string, title: string, body: string) => 
   }
 };
 
+export const confirmCompleteRide = async (req: CustomRequest, res: Response): Promise<void> => {
+  const userIdFromToken = req.user.userId;
+
+  try {
+    await redisClient.del(`active_ride:${userIdFromToken}`);
+
+    res.status(200).json({ message: 'Ride completed successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 /**
  * PUT /rides/{rideId}
  * Update an existing ride.
  */
 export const updateRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const { rideId } = req.params;
+  const userIdFromToken = req.user.userId;
   const rideUpdateValues = req.body;
 
   try {
@@ -121,6 +135,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
           );
         }
       }
+
       if (updatedRide.state === RideStateEnum.RequesterCanceled) {
         if (updatedRide.driver) {
           await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
@@ -136,13 +151,11 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
           updatedRide.state = RideStateEnum.Canceled;
         }
       }
-      if (
-        updatedRide.state === RideStateEnum.Canceled ||
-        updatedRide.state === RideStateEnum.Completed
-      ) {
-        await redisClient.del(`active_ride:${currentRide.driver?.userId}`);
-        await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+
+      if (updatedRide.state === RideStateEnum.Canceled) {
+        await redisClient.del(`active_ride:${userIdFromToken}`);
       }
+
       if (updatedRide.state === RideStateEnum.Booked) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
         if (currentRide.rideRequester?.userId) {
@@ -153,6 +166,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
           );
         }
       }
+
       if (updatedRide.state === RideStateEnum.DriverArrived) {
         if (currentRide.rideRequester?.userId) {
           await sendPushByUserId(
@@ -162,12 +176,23 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
           );
         }
       }
+
       if (updatedRide.state === RideStateEnum.Riding) {
         if (currentRide.rideRequester?.userId) {
           await sendPushByUserId(
             currentRide.rideRequester?.userId,
             'עדכון על הנסיעה',
             'נוסעים ליעד'
+          );
+        }
+      }
+
+      if (updatedRide.state === RideStateEnum.Completed) {
+        if (currentRide.rideRequester?.userId) {
+          await sendPushByUserId(
+            currentRide.rideRequester?.userId,
+            'עדכון על הנסיעה',
+            'הגעתם ליעד'
           );
         }
       }

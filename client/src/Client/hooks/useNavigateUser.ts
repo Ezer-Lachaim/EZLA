@@ -20,6 +20,8 @@ const useNavigateUser = () => {
           navigate('/driver/active');
         } else if (activeRide.state === RideStateEnum.Riding) {
           navigate('/driver/riding');
+        } else if (activeRide.state === RideStateEnum.Completed) {
+          navigate('/driver/completed');
         }
       } else {
         navigate('/driver/rides');
@@ -31,11 +33,17 @@ const useNavigateUser = () => {
           activeRide.state === RideStateEnum.Canceled
         ) {
           navigate('/passenger/order-ride');
+        } else if (activeRide.state === RideStateEnum.DriverArrived) {
+          navigate('/passenger/driver-arrived');
         } else if (
           activeRide.state === RideStateEnum.Booked ||
           activeRide.state === RideStateEnum.DriverCanceled
         ) {
           navigate('/passenger/active');
+        } else if (activeRide.state === RideStateEnum.Riding) {
+          navigate('/passenger/riding');
+        } else if (activeRide.state === RideStateEnum.Completed) {
+          navigate('/passenger/completed');
         }
       } else {
         navigate('/passenger/order-ride');

@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import mainRoutes from './Backoffice/Routes/MainRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
@@ -19,27 +19,21 @@ import { UserContextProvider } from './context/UserContext/UserContext';
 import FirstSignUp from './Client/pages/FirstSignUp/FirstSignUp';
 import Terms from './Client/pages/Terms/Terms';
 import Privacy from './Client/pages/Privacy/Privacy';
-import { Splash } from './Client/pages/Splash/Splash';
 import Logout from './Client/pages/Login/Logout';
 import ActiveRide from './Client/pages/Driver/ActiveRide/ActiveRide';
 import PassengerActiveRide from './Client/pages/Passenger/ActiveRide/ActiveRide';
 import { initFirebaseCloudMessaging } from './init-firebase.ts';
-import Riding from "./Client/pages/Driver/Riding/Riding.tsx";
+import Riding from './Client/pages/Driver/Riding/Riding';
+import DriverArrived from './Client/pages/Passenger/DriverArrived/DriverArrived';
+import PassengerRiding from './Client/pages/Passenger/Riding/Riding';
+import RideCompleted from './Client/pages/Driver/RideCompleted/RideCompleted';
+import PassengerRideCompleted from './Client/pages/Passenger/RideCompleted/RideCompleted';
 
 function App() {
-  const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
-
   useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout>;
-
-    const timer = () => {
-      timerId = setTimeout(() => {
-        initFirebaseCloudMessaging();
-        setShouldDisplaySplash(false);
-      }, 2 * 1000);
-    };
-
-    timer();
+    const timerId = setTimeout(() => {
+      initFirebaseCloudMessaging();
+    }, 2 * 1000);
 
     return () => {
       clearTimeout(timerId);
@@ -66,18 +60,21 @@ function App() {
             <Route path="passenger" element={<Passenger />}>
               <Route path="order-ride" element={<OrderRide />} />
               <Route path="active" element={<PassengerActiveRide />} />
+              <Route path="driver-arrived" element={<DriverArrived />} />
+              <Route path="riding" element={<PassengerRiding />} />
+              <Route path="completed" element={<PassengerRideCompleted />} />
             </Route>
             <Route path="driver" element={<Driver />}>
               <Route path="rides" element={<Rides />} />
               <Route path="active" element={<ActiveRide />} />
               <Route path="riding" element={<Riding />} />
+              <Route path="completed" element={<RideCompleted />} />
             </Route>
           </Route>
           <Route path="backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
           </Route>
         </Routes>
-        {shouldDisplaySplash && <Splash />}
       </UserContextProvider>
     </BrowserRouter>
   );
