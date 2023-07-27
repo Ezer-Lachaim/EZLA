@@ -9,7 +9,9 @@ const useNavigateUser = () => {
   const navigateAfterLogin = (explicitUser: User | undefined = undefined) => {
     const actualUser = explicitUser || user;
 
-    if (actualUser?.role === 'Admin') {
+    if (actualUser?.isInitialPassword) {
+      navigate('/create-password');
+    } else if (actualUser?.role === 'Admin') {
       navigate('/backoffice');
     } else if (actualUser?.role === UserRoleEnum.Driver) {
       if (activeRide) {
@@ -55,11 +57,7 @@ const useNavigateUser = () => {
     if (user?.registrationState === 'Pending') {
       navigate('/processing-user');
     } else if (user?.registrationState === 'Approved') {
-      if (user?.isInitialPassword) {
-        navigate('/create-password');
-      } else {
-        navigateAfterLogin();
-      }
+      navigateAfterLogin();
     } else {
       navigate('/login');
     }
