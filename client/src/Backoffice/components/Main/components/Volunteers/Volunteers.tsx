@@ -6,6 +6,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Driver } from '../../../../../api-client';
+import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 
 const columns: ColumnDef<Partial<Driver>>[] = [
   {
@@ -32,7 +33,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   {
     accessorKey: 'volunteerArea',
     header: 'אזור התנדבות',
-    accessorFn: (data) => data.volunteerArea
+    accessorFn: (data) => data.volunteerArea || '-'
   },
   {
     accessorKey: 'hasDrivingLicense',
@@ -64,7 +65,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
 
 const Volunteers = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  console.log(drivers);
+  const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
@@ -73,11 +74,20 @@ const Volunteers = () => {
     };
     fetchDrivers();
   }, []);
+
   return (
     <div>
       <PageHeader>
         <PageHeader.Title>מתנדבים ({drivers.length})</PageHeader.Title>
-        <PageHeader.ActionButton>הוספת מתנדב חדש</PageHeader.ActionButton>
+        <PageHeader.ActionButton onClick={() => setIsAddDriverModalOpen(true)}>
+          הוספת מתנדב חדש
+        </PageHeader.ActionButton>
+
+        <AddCustomerModal
+          customerType="volunteer"
+          open={isAddDriverModalOpen}
+          handleModal={setIsAddDriverModalOpen}
+        />
       </PageHeader>
       <Table data={drivers} columns={columns} />
     </div>

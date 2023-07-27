@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Button, Divider, Typography } from '@mui/material';
-import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import { useState } from 'react';
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { Button, Divider, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride, RideStateEnum } from '../../../../api-client';
+import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
+import DriverArrivedModal from './DriverArrivedModal.tsx';
+import RequesterCanceledModal from './RequesterCanceledModal.tsx';
+import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 const ActiveRide = () => {
+  const { activeRide: ride, setActiveRide } = useUserContext();
   const [confirmClose, setConfirmClose] = useState(false);
-  const [ride, setRide] = useState<Ride>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    (async () => {
-      setRide(await api.ride.getActiveRideForUser());
-    })();
-  }, []);
-
   const onArrive = async () => {
+    const newRide = { ...ride, state: RideStateEnum.DriverArrived };
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.DriverArrived }
+      ride: newRide
     });
     console.log('Arrived');
+
+    setActiveRide(newRide);
   };
 
   const onCancel = async () => {
@@ -35,6 +35,25 @@ const ActiveRide = () => {
       ride: { ...ride, state: RideStateEnum.DriverCanceled }
     });
     console.log('Ride canceled');
+
+    navigate('/driver/rides');
+  };
+
+  const onContinue = async () => {
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      ride: { ...ride, state: RideStateEnum.Riding }
+    });
+    console.log('Riding');
+
+    navigate('/driver/riding');
+  };
+
+  const onGotoRides = async () => {
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      ride: { ...ride, state: RideStateEnum.Canceled }
+    });
 
     navigate('/driver/rides');
   };
@@ -112,13 +131,29 @@ const ActiveRide = () => {
           ביטול הנסיעה
         </Button>
       </div>
+
+      <DriverArrivedModal
+        open={ride?.state === RideStateEnum.DriverArrived}
+        requesterPhone={ride?.rideRequester?.cellPhone || ''}
+        onContinue={onContinue}
+        onCancel={() => setConfirmClose(true)}
+      />
+
       <ConfirmCancelRideModal
         open={confirmClose}
         onCancel={onCancel}
         onContinue={() => setConfirmClose(false)}
       />
+
+      <RequesterCanceledModal
+        open={ride?.state === RideStateEnum.RequesterCanceled}
+        onGotoRides={onGotoRides}
+      />
     </div>
   );
 };
 
-export default withLayout(ActiveRide, { title: 'נסיעה פעילה', showLogoutButton: true });
+export default withLayout(ActiveRide, {
+  title: 'נסיעה פעילה',
+  showLogoutButton: true
+});
