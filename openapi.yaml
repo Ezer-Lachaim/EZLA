@@ -390,6 +390,16 @@ paths:
           description: Invalid user ID supplied
         '404':
           description: Active ride not found
+  /rides/confirm_complete:
+    post:
+      tags:
+        - ride
+      summary: Confirm completed ride
+      description: Confirm that the ride was completed
+      operationId: postConfirmRideComplete
+      responses:
+        '200':
+          description: Successful operation
   /rides/{rideId}:
     get:
       tags:

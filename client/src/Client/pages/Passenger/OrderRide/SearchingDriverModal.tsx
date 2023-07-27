@@ -17,7 +17,13 @@ const style = {
   p: 2.5
 };
 
-const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+const SearchingDriverModal = ({
+  open,
+  onClose
+}: {
+  open: boolean;
+  onClose: () => Promise<void>;
+}) => {
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   return (
@@ -52,7 +58,10 @@ const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () =>
 
         <ConfirmCancelRideModal
           open={confirmClose}
-          onCancel={onClose}
+          onCancel={async () => {
+            await onClose();
+            setConfirmClose(false);
+          }}
           onContinue={() => setConfirmClose(false)}
         />
       </>
