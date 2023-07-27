@@ -39,10 +39,10 @@ export interface Ride {
     origin?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Ride
      */
-    cellphone?: number;
+    cellphone?: string;
     /**
      *
      * @type {string}
@@ -97,6 +97,8 @@ export enum RideStateEnum {
     DriverArrived = 'DriverArrived',
     Riding = 'Riding',
     Completed = 'Completed',
+    DriverCanceled = 'DriverCanceled',
+    RequesterCanceled = 'RequesterCanceled',
     Canceled = 'Canceled'
 }
 /**

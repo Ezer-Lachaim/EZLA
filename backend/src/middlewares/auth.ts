@@ -42,7 +42,11 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
   }
 };
 function isSignupRoute(req: CustomRequest) {
-  return req.originalUrl.includes('users') && req.method === 'POST';
+  return (
+    req.originalUrl.includes('users') &&
+    !req.originalUrl.includes('registerFcmToken') &&
+    req.method === 'POST'
+  );
 }
 
 function isLoginRoute(req: CustomRequest) {

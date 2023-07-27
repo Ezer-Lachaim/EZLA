@@ -18,18 +18,15 @@ import { User } from './user';
  * @interface Driver
  */
 export interface Driver extends User {
-    /**
-     * 
-     * @type {string}
-     * @memberof Driver
-     */
-    license?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Driver
-     */
-    licenseExpiryDate?: string;
+    isValidLicense: boolean;
+    isValidCarLicense: boolean;
+    carColor:string;
+    carManufacturer:string;
+    carModel:string;
+    numOfSeats:number;
+    carPlateNumber:string;
+    carCapabilities?: Array<string>;
+    volunteeringArea:string;
 }
 
 

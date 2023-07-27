@@ -1,138 +1,94 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-
 import { useEffect, useState, useCallback } from 'react';
-import Chip from '@mui/material/Chip';
-import { Button } from '@mui/material';
+import { SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import { Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { RideCard } from './RideCard/RideCard.tsx';
+import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
+import { useUserContext } from '../../../../context/UserContext/UserContext';
 
-const specialMap = {
-  [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
-  [RideSpecialRequestEnum.WheelChairStorage]: 'תא מטען מתאים לכסא גלגלים',
-  [RideSpecialRequestEnum.BabyChair]: 'מושב בטיחות לתינוק',
-  [RideSpecialRequestEnum.KidsChair]: 'מושב בטיחות לילדים (3-8)',
-  [RideSpecialRequestEnum.AccessibleCar]: 'רכב גבוה',
-  [RideSpecialRequestEnum.PatientDelivery]: 'משלוחים למאושפז'
-};
-
-const getLabel = (type: RideSpecialRequestEnum): string => specialMap[type];
-
-const RideCard = ({
-  ride,
-  onSelect,
-  selected
-}: {
-  ride: Ride;
-  onSelect: (ride: Ride) => void;
-  selected: boolean;
-}) => {
-  const { user } = useUserContext();
-  const onClickCallback = useCallback(() => {
-    onSelect(ride);
-  }, [onSelect, ride]);
-  return (
-    <Card className="m-3">
-      <CardContent onClick={onClickCallback}>
-        <div className="flex-col">
-          <div className="flex">
-            <div className="flex-row flex-1">
-              <Typography color="GrayText" variant="body2" component="div">
-                איסוף
-              </Typography>
-              <Typography variant="body1" component="div">
-                {ride.origin}
-              </Typography>
-            </div>
-            <div className="flex-row flex-1">
-              <Typography color="GrayText" variant="body2" component="div">
-                יעד
-              </Typography>
-              <Typography variant="body1" component="div">
-                {ride.destination}
-              </Typography>
-            </div>
-          </div>
-          <div>{ride.state}</div>
-          <div className="flex-col">
-            {Array.isArray(ride.specialRequest) &&
-              Array.from(new Set(ride.specialRequest))?.map((req) => (
-                <Chip
-                  key={req}
-                  className="ml-1 mt-1"
-                  label={getLabel(req)}
-                  variant="outlined"
-                  color="primary"
-                />
-              ))}
-          </div>
-          {selected &&
-            (ride.state === RideStateEnum.WaitingForDriver ||
-              ride.state === RideStateEnum.Booked) && (
-              <div className="flex mt-2">
-                <Button className="flex-1 flex-col m-1" variant="outlined">
-                  צרו קשר
-                </Button>
-                <Button
-                  className="flex-1 flex-col m-1"
-                  variant="contained"
-                  onClick={async () => {
-                    if (ride.state === RideStateEnum.WaitingForDriver) {
-                      await api.ride.updateRide({
-                        rideId: ride.rideId || '',
-                        ride: {
-                          ...ride,
-                          state: RideStateEnum.Booked,
-                          driver: { userId: user?.userId }
-                        }
-                      });
-                      console.log('Ride booked');
-                    } else if (ride.state === RideStateEnum.Booked) {
-                      await api.ride.updateRide({
-                        rideId: ride.rideId || '',
-                        ride: { ...ride, state: RideStateEnum.Completed }
-                      });
-                      console.log('Ride completed');
-                    }
-                  }}
-                >
-                  {ride.state === RideStateEnum.WaitingForDriver && 'צאו לדרך'}
-                  {ride.state === RideStateEnum.Booked && 'סיים נסיעה'}
-                </Button>
-              </div>
-            )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-const Rides = () => {
-  const [rides, setRides] = useState<Ride[]>();
-  useEffect(() => {
-    (async () => {
-      setRides(await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }));
-    })();
-  }, []);
+const Rides = ({ rides }: { rides: Ride[] }) => {
   const [selectedRide, setSelectedRide] = useState<Ride>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
   }, []);
+
+  const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
+    if (selectedRide?.state === RideStateEnum.WaitingForDriver) {
+      await api.ride.updateRide({
+        rideId: selectedRide?.rideId || '',
+        ride: {
+          ...selectedRide,
+          state: RideStateEnum.Booked,
+          driver: { userId: user?.userId },
+          destinationArrivalTime: minutesToArrive
+        }
+      });
+
+      setIsModalOpen(false);
+      navigate('/driver/active');
+    }
+  };
+
   return (
-    <div className="w-full h-full absolute top-0 bg-gray-200 overflow-auto">
-      {rides?.map((ride, index) => (
-        <RideCard
-          ride={ride}
-          key={`ride-${index}`}
-          onSelect={onSelectRideCallback}
-          selected={selectedRide === ride}
-        />
-      ))}
-    </div>
+    <>
+      <RideApprovalModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={onSubmitRide}
+      />
+      <div className="w-full flex flex-col gap-5 pb-4">
+        {rides.length > 0 ? (
+          <>
+            <h1 className="m-0 text-center text-black">
+              בחרו נסיעה מתוך {rides.length} קריאות פתוחות
+            </h1>
+            {rides.map((ride, index) => (
+              <RideCard
+                ride={ride}
+                key={`ride-${index}`}
+                onSelect={onSelectRideCallback}
+                selected={selectedRide === ride}
+                onApprovePassenger={() => setIsModalOpen(true)}
+              />
+            ))}
+          </>
+        ) : (
+          <p className="text-center text-black mt-5">
+            כרגע אין קריאות פתוחות, נשלח לך ברגע שתפתח קריאה חדשה.
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 
-export default withLayout(Rides, { title: 'קריאות פתוחות', showLogoutButton: true });
+const RidesHOC = () => {
+  const [rides, setRides] = useState<Ride[]>();
+
+  useEffect(() => {
+    (async () => {
+      setRides(await api.ride.ridesGet());
+    })();
+  }, []);
+
+  const openRides = rides
+    ?.filter((ride) => ride.state === RideStateEnum.WaitingForDriver)
+    ?.sort((a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0));
+
+  const RidesWithLayout = withLayout(() => <Rides rides={openRides || []} />, {
+    title: `קריאות פתוחות (${openRides?.length})`,
+    showLogoutButton: true,
+    backgroundColor: 'bg-gray-100',
+    hideFooter: true
+  });
+
+  return <RidesWithLayout />;
+};
+
+export default RidesHOC;

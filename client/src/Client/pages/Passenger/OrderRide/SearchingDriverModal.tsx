@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Box, Button, IconButton } from '@mui/material';
 import { Cancel, Close } from '@mui/icons-material';
 import car from '../../../../assets/car.png';
-import ConfirmCancelModal from './ConfirmCancelModal.tsx';
+import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 
 const style = {
   position: 'absolute' as const,
@@ -17,7 +17,13 @@ const style = {
   p: 2.5
 };
 
-const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+const SearchingDriverModal = ({
+  open,
+  onClose
+}: {
+  open: boolean;
+  onClose: () => Promise<void>;
+}) => {
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   return (
@@ -50,9 +56,12 @@ const SearchingDriverModal = ({ open, onClose }: { open: boolean; onClose: () =>
           </IconButton>
         </Box>
 
-        <ConfirmCancelModal
+        <ConfirmCancelRideModal
           open={confirmClose}
-          onCancel={onClose}
+          onCancel={async () => {
+            await onClose();
+            setConfirmClose(false);
+          }}
           onContinue={() => setConfirmClose(false)}
         />
       </>
