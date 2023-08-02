@@ -10,47 +10,56 @@ const useNavigateUser = () => {
     const actualUser = explicitUser || user;
 
     if (actualUser?.isInitialPassword) {
-      navigate('/create-password');
-    } else if (actualUser?.role === 'Admin') {
-      navigate('/backoffice');
-    } else if (actualUser?.role === UserRoleEnum.Driver) {
+      return navigate('/create-password');
+    }
+    if (actualUser?.role === 'Admin') {
+      return navigate('/backoffice');
+    }
+    if (actualUser?.role === UserRoleEnum.Driver) {
       if (activeRide) {
         if (
           activeRide.state === RideStateEnum.Booked ||
           activeRide.state === RideStateEnum.DriverArrived
         ) {
-          navigate('/driver/active');
-        } else if (activeRide.state === RideStateEnum.Riding) {
-          navigate('/driver/riding');
-        } else if (activeRide.state === RideStateEnum.Completed) {
-          navigate('/driver/completed');
+          return navigate('/driver/active');
         }
-      } else {
-        navigate('/driver/rides');
+        if (activeRide.state === RideStateEnum.Riding) {
+          return navigate('/driver/riding');
+        }
+        if (activeRide.state === RideStateEnum.Completed) {
+          return navigate('/driver/completed');
+        }
       }
-    } else if (actualUser?.role === UserRoleEnum.Requester) {
+      return navigate('/driver/rides');
+    }
+    if (actualUser?.role === UserRoleEnum.Requester) {
       if (activeRide) {
         if (
           activeRide.state === RideStateEnum.WaitingForDriver ||
           activeRide.state === RideStateEnum.Canceled
         ) {
-          navigate('/passenger/order-ride');
-        } else if (activeRide.state === RideStateEnum.DriverArrived) {
-          navigate('/passenger/driver-arrived');
-        } else if (
+          return navigate('/passenger/order-ride');
+        }
+        if (activeRide.state === RideStateEnum.DriverArrived) {
+          return navigate('/passenger/driver-arrived');
+        }
+        if (
           activeRide.state === RideStateEnum.Booked ||
           activeRide.state === RideStateEnum.DriverCanceled
         ) {
-          navigate('/passenger/active');
-        } else if (activeRide.state === RideStateEnum.Riding) {
-          navigate('/passenger/riding');
-        } else if (activeRide.state === RideStateEnum.Completed) {
-          navigate('/passenger/completed');
+          return navigate('/passenger/active');
         }
-      } else {
-        navigate('/passenger/order-ride');
+        if (activeRide.state === RideStateEnum.Riding) {
+          return navigate('/passenger/riding');
+        }
+        if (activeRide.state === RideStateEnum.Completed) {
+          return navigate('/passenger/completed');
+        }
       }
+      return navigate('/passenger/order-ride');
     }
+    // If user is neither admin, driver nor requester, then it's an error
+    return navigate('404');
   };
 
   const navigateOnRefresh = () => {

@@ -28,6 +28,7 @@ import DriverArrived from './Client/pages/Passenger/DriverArrived/DriverArrived'
 import PassengerRiding from './Client/pages/Passenger/Riding/Riding';
 import RideCompleted from './Client/pages/Driver/RideCompleted/RideCompleted';
 import PassengerRideCompleted from './Client/pages/Passenger/RideCompleted/RideCompleted';
+import NotFound from './Client/pages/NotFound/NotFound.tsx';
 
 function App() {
   useEffect(() => {
@@ -74,6 +75,7 @@ function App() {
           <Route path="backoffice" element={<Backoffice />}>
             {mainRoutes.map((route) => route)}
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </UserContextProvider>
     </BrowserRouter>
