@@ -102,7 +102,7 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
     }
   } catch (e) {
     const user = await getUserByEmail(email);
-    if (user.isInitialPassword) {
+    if (user?.isInitialPassword) {
       try {
         // allow login for users with initial password
         const userRecord = await firebase.signInWithEmailAndPassword(auth, email, INITIAL_PASSWORD);
@@ -134,6 +134,10 @@ export const signup = async (req: CustomRequest, res: Response): Promise<void> =
     res.send({ token: createJwt({ email: user.email, uid: userRecord.user.uid }), user });
   } catch (e) {
     console.log('Something went wrong %s', e);
+    if (e.code === 'auth/email-already-in-use') {
+      res.status(409).send(e);
+      return;
+    }
     res.status(400).send(e);
   }
 };
