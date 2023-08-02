@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
-import { Button } from '@mui/material';
+import { Button, FormHelperText } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
-import { RideRequester } from '../../../api-client/index.ts';
+import { ResponseError, RideRequester } from '../../../api-client/index.ts';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { api, setToken } from '../../../Config.ts';
@@ -19,6 +20,7 @@ const Register = () => {
   const navigation = useNavigate();
   const { activeStepIndex, nextStep } = useRegistrationSteps();
   const methods = useForm<RegistrationFormInputs>();
+  const [submitError, setSubmitError] = useState<number | null>(null);
 
   const { handleSubmit, trigger } = methods;
 
@@ -68,13 +70,20 @@ const Register = () => {
   };
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
-    const { user, token } = await api.user.createUser({
-      createUserRequest: { user: data }
-    });
+    setSubmitError(null);
+    try {
+      const { user, token } = await api.user.createUser({
+        createUserRequest: { user: data }
+      });
 
-    if (user) {
-      setToken(token || '');
-      navigation('/processing-user');
+      if (user) {
+        setToken(token || '');
+        navigation('/processing-user');
+      }
+    } catch (error) {
+      if ((error as ResponseError).response.status === 409) {
+        setSubmitError(409);
+      }
     }
   };
 
@@ -104,6 +113,11 @@ const Register = () => {
             >
               סיום הרשמה
             </Button>
+          )}
+          {submitError === 409 && (
+            <FormHelperText error className="text-center text-lg">
+              כבר קיים משתמש עם אימייל זהה
+            </FormHelperText>
           )}
         </form>
       </FormProvider>
