@@ -102,7 +102,7 @@ export const login = async (req: CustomRequest, res: Response): Promise<void> =>
     }
   } catch (e) {
     const user = await getUserByEmail(email);
-    if (user.isInitialPassword) {
+    if (user?.isInitialPassword) {
       try {
         // allow login for users with initial password
         const userRecord = await firebase.signInWithEmailAndPassword(auth, email, INITIAL_PASSWORD);
