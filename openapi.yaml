@@ -520,9 +520,6 @@ components:
         email:
           type: string
           example: 'moishe@redis.com'
-        password:
-          type: string
-          example: '6Cayaa3KoTEAcbyi'
         role:
           type: string
           enum:
