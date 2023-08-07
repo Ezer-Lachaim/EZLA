@@ -23,7 +23,6 @@ const Riding = () => {
       rideId: ride?.rideId || '',
       ride: { ...ride, state: RideStateEnum.Completed }
     });
-    console.log('Completed');
 
     navigate('/driver/completed');
   };
