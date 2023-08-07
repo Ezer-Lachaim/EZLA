@@ -14,8 +14,8 @@ import { populateRideDetails } from '../repository/ride';
  * can be filtered by state (if given)
  */
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  const isAdmin = req.user.role === UserRoleEnum.Admin;
-  if (isAdmin) {
+  const isEligble = req.user.role === UserRoleEnum.Admin || req.user.role === UserRoleEnum.Driver;
+  if (isEligble) {
     try {
       const keys = await redisClient.keys('ride:*');
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
