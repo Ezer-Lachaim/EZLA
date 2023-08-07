@@ -79,13 +79,13 @@ export interface Ride {
      * @type {Driver}
      * @memberof Ride
      */
-    driver?: Driver;
+    driver?: any;
     /**
      *
      * @type {RideRequester}
      * @memberof Ride
      */
-    rideRequester?: RideRequester;
+    rideRequester?: any
 }
 
 /**

@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import { populateRideDetails } from '../repository/ride';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendPushNotification } from '../utils/firebase-config';
@@ -18,7 +19,12 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
     try {
       const keys = await redisClient.keys('ride:*');
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
-      rides = [].concat(...rides);
+
+      const populatedRides = await Promise.all(
+        [].concat(...rides).map((ride) => populateRideDetails(ride))
+      );
+
+      rides = populatedRides;
       if (req.query.state) {
         rides = rides.filter((item) => item.state === req.query.state);
       }
@@ -41,7 +47,7 @@ export const getActiveRide = async (req: CustomRequest, res: Response): Promise<
     const activeRideId = await redisClient.get(`active_ride:${userIdFromToken}`);
     if (activeRideId) {
       const activeRide = await redisClient.json.get(`ride:${activeRideId}`);
-      res.status(200).json(activeRide);
+      res.status(200).json(populateRideDetails(activeRide));
     } else {
       res.status(404).json({ error: 'Active ride not found' });
     }
