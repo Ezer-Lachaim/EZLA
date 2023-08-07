@@ -21,6 +21,7 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
       driverPayload.role = UserRoleEnum.Driver;
       driverPayload.isInitialPassword = true;
       driverPayload.registrationState = UserRegistrationStateEnum.Approved;
+      driverPayload.signupDate = new Date();
       await createUser(driverPayload.userId, driverPayload);
       res.send({
         driverPayload
