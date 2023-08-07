@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
-import { format, intlFormatDistance } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
+import heLocale from 'date-fns/locale/he';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
@@ -64,10 +65,9 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     header: 'משך התהליך',
     accessorFn: (data) => {
       if (!data.requestTimeStamp || !data.completedTimeStamp) return '-';
-      return intlFormatDistance(data.requestTimeStamp, data.completedTimeStamp, {
-        locale: 'he',
-        style: 'narrow',
-        numeric: 'always'
+
+      return formatDistance(data.completedTimeStamp, data.requestTimeStamp, {
+        locale: heLocale
       });
     }
   },
