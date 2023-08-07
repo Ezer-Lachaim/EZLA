@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "react-hook-form-persist": "^3.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "@tanstack/react-query": "^4.7.1"
   }
 }

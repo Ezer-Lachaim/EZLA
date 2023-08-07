@@ -1,9 +1,15 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useUserContext } from '../../context/UserContext/UserContext.tsx';
 import { RideStateEnum, User, UserRoleEnum } from '../../api-client';
 
 const useNavigateUser = () => {
   const { user, activeRide } = useUserContext();
+
+  useEffect(() => {
+    console.log(activeRide?.state);
+    navigateOnRefresh();
+  }, [activeRide?.state]);
   const navigate = useNavigate();
 
   const navigateAfterLogin = (explicitUser: User | undefined = undefined) => {
@@ -19,7 +25,8 @@ const useNavigateUser = () => {
       if (activeRide) {
         if (
           activeRide.state === RideStateEnum.Booked ||
-          activeRide.state === RideStateEnum.DriverArrived
+          activeRide.state === RideStateEnum.DriverArrived ||
+          activeRide.state === RideStateEnum.RequesterCanceled
         ) {
           return navigate('/driver/active');
         }
