@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Cancel, Phone, AccessTimeFilled } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { Cancel, Phone } from '@mui/icons-material';
+import ClockIcon from '@mui/icons-material/AccessTimeRounded';
+import { Box, Button } from '@mui/material';
+import { format } from 'date-fns';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { ViewField } from '../../../components/ViewField/ViewField.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
   const { activeRide: ride } = useUserContext();
@@ -17,7 +21,7 @@ const ActiveRide = () => {
   const canceledRide = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Canceled }
+      ride: { state: RideStateEnum.Canceled }
     });
   };
 
@@ -29,7 +33,7 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
-    const response = await api.ride.ridesPost({
+    await api.ride.ridesPost({
       ride: {
         ...ride,
         state: RideStateEnum.WaitingForDriver,
@@ -38,8 +42,6 @@ const ActiveRide = () => {
         driver: undefined
       }
     });
-
-    console.log(response);
 
     navigate('/passenger/order-ride');
   };
@@ -53,43 +55,60 @@ const ActiveRide = () => {
     navigate('/passenger/order-ride');
   };
 
+  let destinationTime;
+  if (ride?.destinationArrivalTime) {
+    destinationTime = format(new Date(ride.destinationArrivalTime), 'HH:mm');
+  }
+
   return (
-    <div className="w-full overflow-auto">
-      <div className="bg-yellow-300 text-center rounded-md">
-        <AccessTimeFilled className="fill-orange-600" />
-        <p>המתנדב בדרך אליך</p>
-      </div>
-      <p className="text-center mt-4">{`זמן הגעה משוער ${ride?.destinationArrivalTime}`}</p>
-      <div>
+    <div className="w-full pb-5 h-full flex flex-col">
+      <Box
+        sx={{ background: 'rgba(255, 152, 0, 0.10)' }}
+        className="rounded-md flex items-center flex-col py-4 gap-2"
+      >
+        <ClockIcon sx={{ fill: '#FF9800' }} fontSize="large" />
+        <h1 className="font-medium m-0" style={{ color: '#FF9800' }}>
+          המתנדב בדרך אליך
+        </h1>
+      </Box>
+      {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>}
+      <div className="flex-1">
         <hr />
-        <b className="mt-4">שם המתנדב</b>
-        <p>{`${ride?.driver?.firstName} ${ride?.driver?.lastName}`}</p>
-        <b>סוג רכב</b>
-        <p>
-          {ride?.driver?.carManufacturer} {ride?.driver?.carModel}
-        </p>
-        <b>לוחית זיהוי</b>
-        <p>{ride?.driver?.carPlateNumber}</p>
-        <hr />
-        <b>כתובת איסוף</b>
-        <p>{ride?.origin}</p>
-        <b>כתובת יעד</b>
-        <p>{ride?.destination}</p>
-        <b>בקשות מיוחדות</b>
-        {ride?.specialRequest?.map((specialRequest) => (
-          <p>{specialRequest}</p>
-        ))}
+        <ViewField
+          label="שם המתנדב"
+          value={`${ride?.driver?.firstName} ${ride?.driver?.lastName}`}
+        />
+        <ViewField
+          label="סוג רכב"
+          value={
+            ride?.driver?.carManufacturer
+              ? `${ride?.driver?.carManufacturer} ${ride?.driver?.carModel}`
+              : ''
+          }
+        />
+        <ViewField label="לוחית זיהוי" value={ride?.driver?.carPlateNumber || ''} />
+
+        <hr className="mt-2" />
+        <ViewField label="כתובת איסוף" value={ride?.origin || ''} />
+        <ViewField label="כתובת יעד" value={ride?.destination || ''} />
+
+        <div className="mt-2">
+          <p className=" text-sm text-gray-500">בקשות מיוחדות</p>
+          <SpecialRequestsChips specialRequests={ride?.specialRequest || []} />
+        </div>
       </div>
 
-      <Button variant="outlined" href={`tel:${ride?.driver?.cellPhone}`}>
-        <Phone />
-        צור קשר עם המתנדב
-      </Button>
+      <div className="flex flex-col gap-4 mt-5">
+        <Button variant="outlined" href={`tel:${ride?.driver?.cellPhone}`}>
+          <Phone className="ml-2" />
+          צור קשר עם המתנדב
+        </Button>
 
-      <Button variant="outlined" color="error" onClick={() => setConfirmClose(true)}>
-        <Cancel color="error" />
-        ביטול הנסיעה
-      </Button>
+        <Button variant="outlined" color="error" onClick={() => setConfirmClose(true)}>
+          <Cancel color="error" className="ml-2" />
+          ביטול הנסיעה
+        </Button>
+      </div>
 
       <ConfirmCancelRideModal
         open={confirmClose}

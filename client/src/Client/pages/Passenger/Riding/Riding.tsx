@@ -6,12 +6,12 @@ const Riding = () => {
   const { activeRide: ride } = useUserContext();
 
   return (
-    <div className="w-full overflow-auto">
-      <div className="flex justify-center mb-2">
-        <img src={car} alt="car" className="w-20" />
+    <div className="w-full h-full flex flex-col justify-center gap-10 items-center">
+      <img src={car} alt="car" className="w-20 animate-bounce" />
+      <div>
+        <h1 className="text-center m-0">נוסעים ליעד</h1>
+        <p className="text-center">{ride?.destination}</p>
       </div>
-      <h2 className="text-center text-blue-600">נוסעים ליעד</h2>
-      <p className="text-center">{ride?.destination}</p>
     </div>
   );
 };

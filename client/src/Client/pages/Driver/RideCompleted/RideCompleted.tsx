@@ -13,13 +13,18 @@ const RideCompleted = () => {
   };
 
   return (
-    <div className="w-full overflow-auto">
-      <h2 className="text-center text-blue-600">
+    <div className="w-full h-full flex flex-col justify-center items-center relative">
+      <h1 className="text-center text-blue-600">
         הגעתם ליעד
         <br />
         מודים לך על תרומתך!
-      </h2>
-      <Button variant="contained" color="primary" className="w-full" onClick={confirmComplete}>
+      </h1>
+      <Button
+        variant="contained"
+        color="primary"
+        className="w-full absolute bottom-2"
+        onClick={confirmComplete}
+      >
         סיום נסיעה
       </Button>
     </div>
