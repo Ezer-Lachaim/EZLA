@@ -91,6 +91,7 @@ const Register = ({
 
       if (user) {
         setToken(token || '');
+        sessionStorage.removeItem('activeStepIndex');
         navigation('/processing-user');
       }
     } catch (error) {
