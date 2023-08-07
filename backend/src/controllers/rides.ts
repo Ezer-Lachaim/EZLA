@@ -14,21 +14,26 @@ import { populateRideDetails } from '../repository/ride';
  * can be filtered by state (if given)
  */
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  try {
-    const keys = await redisClient.keys('ride:*');
-    let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
+  const isEligble = req.user.role === UserRoleEnum.Admin || req.user.role === UserRoleEnum.Driver;
+  if (isEligble) {
+    try {
+      const keys = await redisClient.keys('ride:*');
+      let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
 
-    const populatedRides = await Promise.all(
-      [].concat(...rides).map((ride) => populateRideDetails(ride))
-    );
+      const populatedRides = await Promise.all(
+        [].concat(...rides).map((ride) => populateRideDetails(ride))
+      );
 
-    rides = populatedRides;
-    if (req.query.state) {
-      rides = rides.filter((item) => item.state === req.query.state);
+      rides = populatedRides;
+      if (req.query.state) {
+        rides = rides.filter((item) => item.state === req.query.state);
+      }
+      res.status(200).json(rides);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
-    res.status(200).json(rides);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+  } else {
+    res.status(401).send();
   }
 };
 
