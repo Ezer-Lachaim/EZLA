@@ -109,7 +109,7 @@ const Passengers = () => {
         role: 'Requester'
       });
       const sortedResultBySignupDate = result.sort(
-        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+        (a, b) => (b?.signupDate?.getTime() || 0) - (a?.signupDate?.getTime() || 0)
       );
       setPassengers(sortedResultBySignupDate);
     };
@@ -125,7 +125,7 @@ const Passengers = () => {
       <PageHeader>
         <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
 
-        <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
+        <PageHeader.ActionButton disabled>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
       <Table data={passengers} columns={columns} />
     </div>

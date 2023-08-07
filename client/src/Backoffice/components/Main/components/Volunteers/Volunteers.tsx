@@ -94,7 +94,7 @@ const Volunteers = () => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
       const sortedResultBySignupDate = response.sort(
-        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+        (a, b) => (b?.signupDate?.getTime() || 0) - (a?.signupDate?.getTime() || 0)
       );
       setDrivers(sortedResultBySignupDate);
     };
