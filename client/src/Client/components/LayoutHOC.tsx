@@ -13,12 +13,12 @@ const withLayout = <P extends object>(
   Component: React.ComponentType<P>,
   {
     componentProps,
-    hideNavbar,
-    hideFooter,
+    hideNavbar = false,
+    hideFooter = false,
     title,
-    hideBackButton,
+    showBackButton = false,
     onBackClick,
-    showLogoutButton,
+    showLogoutButton = false,
     backgroundColor
   }: LayoutHOCProps<P>
 ) => {
@@ -27,7 +27,7 @@ const withLayout = <P extends object>(
       {!hideNavbar && (
         <NavBar
           title={title || 'עזר לחיים'}
-          hideBackButton={hideBackButton}
+          showBackButton={showBackButton}
           onBackClick={onBackClick}
           showLogoutButton={showLogoutButton}
         />

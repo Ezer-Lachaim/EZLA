@@ -11,18 +11,10 @@ import { RIDE_STATE_MAPPER } from './Rides.constants';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך',
+    header: 'תאריך ושעת הזמנה ',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
-      return format(data.requestTimeStamp, 'dd/MM/yyyy');
-    }
-  },
-  {
-    accessorKey: 'rideId',
-    header: 'שעה',
-    accessorFn: (data) => {
-      if (!data.requestTimeStamp) return '-';
-      return format(data.requestTimeStamp, 'HH:mm');
+      return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
     }
   },
   {

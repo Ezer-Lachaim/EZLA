@@ -16,6 +16,5 @@ const ChangePasswordSuccess = () => {
 
 export default withLayout(ChangePasswordSuccess, {
   title: 'החלפת סיסמא',
-  hideFooter: true,
-  hideBackButton: true
+  hideFooter: true
 });

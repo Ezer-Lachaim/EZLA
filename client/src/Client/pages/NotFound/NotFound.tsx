@@ -10,7 +10,6 @@ const NotFound = () => {
 };
 
 export default withLayout(NotFound, {
-  hideBackButton: true,
   showLogoutButton: true,
   title: 'עמוד לא קיים'
 });
