@@ -1,4 +1,4 @@
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
@@ -10,15 +10,16 @@ import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
 import { useUserContext } from '../../../../context/UserContext/UserContext';
 
-const Rides = ({
-  rides,
-  setSelectedRide,
-  selectedRide = undefined
-}: {
-  rides: Ride[];
-  setSelectedRide: Dispatch<SetStateAction<Ride | undefined>>;
-  selectedRide?: Ride;
-}) => {
+const Rides = () => {
+  const { data: rides = [] } = useQuery({
+    queryKey: ['ridesGet'],
+    queryFn: async () => {
+      const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
+      return res;
+    },
+    refetchInterval: 2000
+  });
+  const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -92,24 +93,8 @@ const Rides = ({
 };
 
 const RidesHOC = () => {
-  const [selectedRide, setSelectedRide] = useState<Ride>();
-
-  const { data: rides } = useQuery({
-    queryKey: ['ridesGet'],
-    queryFn: async () => {
-      const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
-      return res;
-    },
-    refetchInterval: 2000
-  });
-
-  const openRides = rides?.sort(
-    (a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0)
-  );
-
   const RidesWithLayout = withLayout(Rides, {
-    componentProps: { rides: openRides || [], setSelectedRide, selectedRide },
-    title: openRides?.length ? `קריאות פתוחות (${openRides?.length})` : '',
+    title: '',
     showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
     hideFooter: true

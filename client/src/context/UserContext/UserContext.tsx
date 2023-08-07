@@ -1,22 +1,21 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Ride, User } from '../../api-client';
 import { api, getToken, setToken } from '../../Config';
+// import useNavigateUser from '../../Client/hooks/useNavigateUser';
 
 const UserContext = createContext(
   {} as {
     user: User | null;
     setUser: (user: User) => void;
-    activeRide: Ride | null;
-    setActiveRide: (ride: Ride | null) => void;
+    activeRide: Ride | undefined;
   }
 );
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
-  const location = useLocation();
+  // const { navigateOnRefresh } = useNavigateUser();
 
   const { data: activeRide } = useQuery({
     queryKey: ['getActiveRideForUser'],
@@ -25,6 +24,12 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
       return res;
     },
     refetchInterval: 5000
+    // onSuccess: () => {
+    //   console.log(user);
+    //   if (user) {
+    //     navigateOnRefresh();
+    //   }
+    // }
   });
   const values = useMemo(() => ({ user, setUser, activeRide }), [user, activeRide]);
   const getCurrentUser = async () => {
@@ -47,16 +52,16 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (didFinishUserInit) {
-      (async () => {
-        try {
-          const activeRideResponse = await api.ride.getActiveRideForUser();
-          setActiveRide(activeRideResponse);
-        } catch (error) {}
-      })();
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   if (didFinishUserInit) {
+  //     (async () => {
+  //       try {
+  //         const activeRideResponse = await api.ride.getActiveRideForUser();
+  //         setActiveRide(activeRideResponse);
+  //       } catch (error) {}
+  //     })();
+  //   }
+  // }, [location]);
 
   if (!didFinishUserInit) return null;
 
