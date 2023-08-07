@@ -6,8 +6,8 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
 import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
-import { DriverRegistrationFormInputs } from './AddCustomerModal.types.ts';
 import { api } from '../../../../../../Config.ts';
+import { Driver } from '../../../../../../api-client/models/Driver';
 
 const style = {
   position: 'absolute' as const,
@@ -20,22 +20,16 @@ const style = {
   boxShadow: 24,
   p: 2
 };
-const customerOptions = {
-  volunteer: 'מתנדב',
-  passenger: 'נוסע'
-};
-const steps = {
-  passenger: ['פרטי נוסע', 'פרטים רפואיים'],
-  volunteer: ['פרטי מתנדב', 'פרטי רכב']
-};
+
+const steps = ['פרטי מתנדב', 'פרטי רכב'];
 
 interface AddCustomerModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
-  customerType: keyof typeof customerOptions;
 }
-function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalProps) {
+function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const stepBackOrClose = () => {
     if (activeStepIndex > 0) {
       setActiveStepIndex(activeStepIndex - 1);
@@ -44,7 +38,7 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
       handleModal(false);
     }
   };
-  const methods = useForm<DriverRegistrationFormInputs>();
+  const methods = useForm<Driver>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -57,10 +51,10 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
           'firstName',
           'lastName',
           'nationalId',
+          'city',
           'cellPhone',
           'email',
           'volunteeringArea',
-          'address',
           'isValidLicense',
           'isValidCarLicense'
         ]);
@@ -80,21 +74,27 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
     }
 
     if (isStepValid) {
-      setActiveStepIndex(activeStepIndex + 1);
-    } else if (activeStepIndex === 2) {
-      await handleSubmit(onSubmit)();
+      if (activeStepIndex === 1) {
+        await handleSubmit(onSubmit)();
+      } else {
+        setActiveStepIndex(activeStepIndex + 1);
+      }
     }
   };
 
-  const onSubmit: SubmitHandler<DriverRegistrationFormInputs> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Driver> = async (data) => {
+    setIsSubmitting(true);
 
-    const response = await api.driver.createDriver({
-      driver: { ...data, password: 'initial-password' }
-    });
-
-    console.log('response', response);
-    handleModal(false);
+    try {
+      await api.driver.createDriver({
+        driver: { ...data, password: 'initial-password' }
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <Modal
@@ -107,20 +107,17 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
       <Box sx={style}>
         <div className="flex justify-between mb-2">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            {` הוספת ${customerOptions[customerType]} חדש`}
+            הוספת מתנדב חדש
           </Typography>
           <Button color="inherit" onClick={() => handleModal(false)}>
             <ClearIcon />
           </Button>
         </div>
-        <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps[customerType]} />
+        <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* first step driver */}
-            {customerType === 'volunteer' && !activeStepIndex ? <NewDriverInfo /> : null}
-
-            {/* second step driver */}
-            {customerType === 'volunteer' && activeStepIndex ? <NewDriverCarInfo /> : null}
+            {activeStepIndex === 0 ? <NewDriverInfo /> : null}
+            {activeStepIndex === 1 ? <NewDriverCarInfo /> : null}
           </form>
         </FormProvider>
         <Box
@@ -140,6 +137,7 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
             className="text-white"
             endIcon={activeStepIndex === 0 && <ArrowBackIcon />}
             onClick={nextStepHandler}
+            disabled={isSubmitting}
           >
             {activeStepIndex === 0 ? 'לשלב הבא' : 'אישור'}
           </Button>
