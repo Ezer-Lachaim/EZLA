@@ -92,6 +92,7 @@ export interface User {
     signupDate?:Date;
     rejectCause:string;
     fcmToken:string;
+    nationalId:string;
 }
 
 /**
