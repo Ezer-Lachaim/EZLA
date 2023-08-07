@@ -1,7 +1,7 @@
 import { Chip } from '@mui/material';
 import { RideSpecialRequestEnum } from '../../../api-client';
 
-export const specialRequestsMap = {
+const specialRequestsMap = {
   [RideSpecialRequestEnum.WheelChair]: 'התאמה לכסא גלגלים',
   [RideSpecialRequestEnum.WheelChairStorage]: 'תא מטען מתאים לכסא גלגלים',
   [RideSpecialRequestEnum.BabyChair]: 'מושב בטיחות לתינוק',
