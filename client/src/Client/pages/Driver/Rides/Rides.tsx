@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
@@ -51,7 +52,7 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={onSubmitRide}
       />
-      <div className="w-full flex flex-col gap-5 pb-4">
+      <div className="w-full h-full flex flex-col gap-5 pb-4">
         {rides.length > 0 ? (
           <>
             <h1 className="m-0 text-center text-black">
@@ -68,9 +69,14 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
             ))}
           </>
         ) : (
-          <p className="text-center text-black mt-5">
-            כרגע אין קריאות פתוחות, נשלח לך ברגע שתפתח קריאה חדשה.
-          </p>
+          <div className="h-full flex flex-col justify-center items-center gap-4">
+            <p className="text-center text-black">
+              כרגע אין קריאות פתוחות,
+              <br />
+              נשלח לך ברגע שתפתח קריאה חדשה.
+            </p>
+            <HourglassEmptyRoundedIcon fontSize="medium" className="animate-bounce" />
+          </div>
         )}
       </div>
     </>
