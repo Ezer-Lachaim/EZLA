@@ -16,7 +16,7 @@ const withLayout = <P extends object>(
     hideNavbar,
     hideFooter,
     title,
-    hideBackButton,
+    hideBackButton = true,
     onBackClick,
     showLogoutButton,
     backgroundColor
