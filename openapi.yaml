@@ -627,6 +627,9 @@ components:
           type: number
           nullable: true
           example: 30
+        completedTimeStamp: 
+          type: string
+          format: date
         driver:
           $ref: '#/components/schemas/Driver'
         rideRequester:
@@ -676,6 +679,8 @@ components:
         carModel:
           type: string
         numOfSeats:
+          type: number
+        numOfDrives:
           type: number
         carPlateNumber:
           type: string
