@@ -125,7 +125,7 @@ const Passengers = () => {
       <PageHeader>
         <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
 
-        <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
+        <PageHeader.ActionButton disabled>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
       <Table data={passengers} columns={columns} />
     </div>

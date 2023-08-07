@@ -163,7 +163,7 @@ const NewCustomers = () => {
     <div>
       <PageHeader>
         <PageHeader.Title>נרשמים חדשים והארכות תוקף ({pendingUsers.length})</PageHeader.Title>
-        <PageHeader.ActionButton>הוספת נוסע חדש</PageHeader.ActionButton>
+        <PageHeader.ActionButton disabled>הוספת נוסע חדש</PageHeader.ActionButton>
       </PageHeader>
       <Table data={pendingUsers} columns={columns} />
     </div>
