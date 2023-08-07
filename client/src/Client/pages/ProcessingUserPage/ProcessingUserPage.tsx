@@ -10,8 +10,10 @@ const ProcessingUserPage = () => {
           color="secondary"
           className="animate-bounce"
         />
-        <h1 className="m-0 w-48 text-center" style={{ color: '#007DFF' }}>
-          פרטי ההרשמה שלך נמצאים בטיפול...
+        <h1 className="m-0 text-center" style={{ color: '#007DFF' }}>
+          פרטי ההרשמה שלך
+          <br />
+          נמצאים בטיפול...
         </h1>
         <p>ניצור איתך קשר כאשר ההרשמה תאושר</p>
       </div>
