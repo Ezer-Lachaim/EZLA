@@ -19,6 +19,17 @@ const SideBar = () => {
             </ListItemButton>
           </ListItem>
         </Link>
+
+        <Link to="rides">
+          <ListItem disablePadding>
+            <ListItemButton className="text-white">
+              <ListItemIcon className="text-white">
+                <Chair />
+              </ListItemIcon>
+              <ListItemText primary="נסיעות" />
+            </ListItemButton>
+          </ListItem>
+        </Link>
         <Link to="passengers">
           <ListItem disablePadding>
             <ListItemButton className="text-white">

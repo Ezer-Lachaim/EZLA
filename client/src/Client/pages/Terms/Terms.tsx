@@ -5,7 +5,7 @@ const Terms = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <img src={logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-center">תקנון האתר</h1>
+      <h1 className="text-center">תנאי שימוש עזר לחיים</h1>
     </div>
   );
 };

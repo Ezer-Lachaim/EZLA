@@ -1,13 +1,14 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { DriverRegistrationFormInputs } from '../AddCustomerModal.types.ts';
-import { DriverCarCapabilitiesEnum } from '../../../../../../../api-client';
+
+import { Driver } from '../../../../../../../api-client/models/Driver';
+import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
 function NewDriverCarInfo() {
   const {
     register,
     formState: { errors }
-  } = useFormContext<DriverRegistrationFormInputs>();
+  } = useFormContext<Driver>();
   return (
     <div className="flex gap-4 mb-10">
       <div className="flex flex-col gap-8 flex-1">
@@ -61,36 +62,13 @@ function NewDriverCarInfo() {
         />
         <div className="flex flex-col gap-2 mb-9">
           <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
-          <FormControlLabel
-            value={'WheelChair' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="התאמה לכסא גלגלים"
-          />
-          <FormControlLabel
-            value={'BabyChair' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="מושב בטיחות לתינוק"
-          />
-          <FormControlLabel
-            value={'KidsChair' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="מושב בטיחות לילדים (גיל 3-8)"
-          />
-          <FormControlLabel
-            value={'AccessibleCar' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="רכב גבוה"
-          />
-          <FormControlLabel
-            value={'WheelChairStorage' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="תא מטען מתאים לכסא גלגלים"
-          />
-          <FormControlLabel
-            value={'PatientDelivery' as DriverCarCapabilitiesEnum}
-            control={<Checkbox {...register('carCapabilities')} />}
-            label="משלוחים למאושפז"
-          />
+          {DRIVER_CAPABILITIES.map(({ value, label }) => (
+            <FormControlLabel
+              value={value}
+              control={<Checkbox {...register('carCapabilities')} />}
+              label={label}
+            />
+          ))}
         </div>
       </div>
     </div>

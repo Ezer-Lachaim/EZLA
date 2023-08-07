@@ -66,7 +66,8 @@ export interface Ride {
      * @type {string}
      * @memberof Ride
      */
-    requestTimeStamp?: string;
+    requestTimeStamp?: Date;
+    completedTimeStamp?: Date;
     /**
      * 
      * @type {number}
@@ -78,13 +79,13 @@ export interface Ride {
      * @type {Driver}
      * @memberof Ride
      */
-    driver?: Driver;
+    driver?: any;
     /**
      *
      * @type {RideRequester}
      * @memberof Ride
      */
-    rideRequester?: RideRequester
+    rideRequester?: any
 }
 
 /**

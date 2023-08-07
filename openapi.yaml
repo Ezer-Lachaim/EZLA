@@ -520,9 +520,6 @@ components:
         email:
           type: string
           example: 'moishe@redis.com'
-        password:
-          type: string
-          example: '6Cayaa3KoTEAcbyi'
         role:
           type: string
           enum:
@@ -627,6 +624,9 @@ components:
           type: number
           nullable: true
           example: 30
+        completedTimeStamp: 
+          type: string
+          format: date
         driver:
           $ref: '#/components/schemas/Driver'
         rideRequester:
@@ -676,6 +676,8 @@ components:
         carModel:
           type: string
         numOfSeats:
+          type: number
+        numOfDrives:
           type: number
         carPlateNumber:
           type: string

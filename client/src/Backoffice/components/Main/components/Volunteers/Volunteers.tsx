@@ -7,6 +7,7 @@ import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Driver } from '../../../../../api-client';
 import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
+import { DRIVER_CAPABILITIES } from './Volunteers.constants';
 
 const columns: ColumnDef<Partial<Driver>>[] = [
   {
@@ -70,15 +71,25 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   {
     accessorKey: 'carCapabilities',
     header: 'מיוחדים',
-    accessorFn: (data) => data.carCapabilities || 'להשלים-----'
+    accessorFn: (data) => {
+      if (data.carCapabilities?.length) {
+        return data.carCapabilities
+          .map((capability) => {
+            const capabilityItem = DRIVER_CAPABILITIES.find((item) => item.value === capability);
+            return capabilityItem?.label || -'';
+          })
+          .join(', ');
+      }
+      return '-';
+    }
   },
-  { accessorKey: 'numberOfDrives', header: 'נסיעות', accessorFn: (data) => 'להשלים-----' }
+  { accessorKey: 'numOfDrives', header: 'נסיעות', accessorFn: (data) => data.numOfDrives || '-' }
 ];
 
 const Volunteers = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
-  console.log(drivers);
+
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
@@ -96,11 +107,7 @@ const Volunteers = () => {
           הוספת מתנדב חדש
         </PageHeader.ActionButton>
 
-        <AddCustomerModal
-          customerType="volunteer"
-          open={isAddDriverModalOpen}
-          handleModal={setIsAddDriverModalOpen}
-        />
+        <AddCustomerModal open={isAddDriverModalOpen} handleModal={setIsAddDriverModalOpen} />
       </PageHeader>
       <Table data={drivers} columns={columns} />
     </div>

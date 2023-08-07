@@ -15,12 +15,14 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
       const userRecord = await firebase.createUserWithEmailAndPassword(
         auth,
         driverPayload.email,
-        driverPayload.password
+        driverPayload.nationalId
       );
       driverPayload.userId = userRecord.user.uid;
       driverPayload.role = UserRoleEnum.Driver;
       driverPayload.isInitialPassword = true;
       driverPayload.registrationState = UserRegistrationStateEnum.Approved;
+      driverPayload.signupDate = new Date();
+      driverPayload.numOfDrives = 0;
       await createUser(driverPayload.userId, driverPayload);
       res.send({
         driverPayload

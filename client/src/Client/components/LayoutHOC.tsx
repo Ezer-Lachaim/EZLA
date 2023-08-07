@@ -2,15 +2,17 @@ import React from 'react';
 import { NavBar, NavBarProps } from './NavBar/NavBar.tsx';
 import { Footer } from './Footer/Footer.tsx';
 
-interface LayoutHOCProps extends Partial<NavBarProps> {
+interface LayoutHOCProps<P> extends Partial<NavBarProps> {
+  componentProps?: P;
   hideNavbar?: boolean;
   hideFooter?: boolean;
   backgroundColor?: string;
 }
 
-const withLayout = (
-  Component: React.ComponentType,
+const withLayout = <P extends object>(
+  Component: React.ComponentType<P>,
   {
+    componentProps,
     hideNavbar,
     hideFooter,
     title,
@@ -18,7 +20,7 @@ const withLayout = (
     onBackClick,
     showLogoutButton,
     backgroundColor
-  }: LayoutHOCProps
+  }: LayoutHOCProps<P>
 ) => {
   return () => (
     <div className="h-screen flex flex-col m-0">
@@ -32,7 +34,7 @@ const withLayout = (
       )}
       <div className={`relative flex-1 ${backgroundColor || 'bg-white'} max-h-full overflow-auto`}>
         <main className="flex items-center flex-col p-5 box-border h-full">
-          <Component />
+          <Component {...(componentProps as P)} />
         </main>
       </div>
       {!hideFooter && <Footer />}
