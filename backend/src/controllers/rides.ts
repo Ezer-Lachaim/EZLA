@@ -47,7 +47,7 @@ export const getActiveRide = async (req: CustomRequest, res: Response): Promise<
     const activeRideId = await redisClient.get(`active_ride:${userIdFromToken}`);
     if (activeRideId) {
       const activeRide = await redisClient.json.get(`ride:${activeRideId}`);
-      res.status(200).json(populateRideDetails(activeRide as unknown));
+      res.status(200).json(await populateRideDetails(activeRide as unknown));
     } else {
       res.status(404).json({ error: 'Active ride not found' });
     }
