@@ -35,7 +35,7 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
             carColor: driver?.carColor,
             carPlateNumber: driver?.carPlateNumber
           },
-          destinationArrivalTime: minutesToArrive
+          destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
         }
       });
 
