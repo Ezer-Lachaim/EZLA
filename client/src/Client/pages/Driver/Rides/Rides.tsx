@@ -82,13 +82,13 @@ const RidesHOC = () => {
 
   useEffect(() => {
     (async () => {
-      setRides(await api.ride.ridesGet());
+      setRides(await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }));
     })();
   }, []);
 
-  const openRides = rides
-    ?.filter((ride) => ride.state === RideStateEnum.WaitingForDriver)
-    ?.sort((a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0));
+  const openRides = rides?.sort(
+    (a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0)
+  );
 
   const RidesWithLayout = withLayout(() => <Rides rides={openRides || []} />, {
     title: `קריאות פתוחות (${openRides?.length})`,
