@@ -147,7 +147,7 @@ const NewCustomers = () => {
         role: 'Requester'
       });
       const sortedResultBySignupDate = result.sort(
-        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+        (a, b) => (b?.signupDate?.getTime() || 0) - (a?.signupDate?.getTime() || 0)
       );
       setPendingUsers(sortedResultBySignupDate);
     };
