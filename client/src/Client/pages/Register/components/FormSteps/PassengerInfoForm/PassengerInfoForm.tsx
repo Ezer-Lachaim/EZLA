@@ -1,13 +1,20 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
+import useFormPersist from 'react-hook-form-persist';
 import { RideRequesterSpecialRequestEnum } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
 
 export const PassengerInfoForm = () => {
   const {
+    watch,
+    setValue,
     register,
     formState: { errors }
   } = useFormContext<RegistrationFormInputs>();
+
+  useFormPersist('passengerInfoForm', { watch, setValue });
+
+  // console.log(watch('specialRequest')?.includes('WheelChair'));
 
   return (
     <div className="flex flex-col gap-9">
@@ -131,7 +138,13 @@ export const PassengerInfoForm = () => {
         <p className="text-sm text-gray-500">בקשות מיוחדות</p>
         <FormControlLabel
           value={'WheelChair' as RideRequesterSpecialRequestEnum}
-          control={<Checkbox {...register('specialRequest')} />}
+          control={
+            <Checkbox
+              {...register('specialRequest')}
+              // checked={watch('specialRequest')?.includes('WheelChair')}
+            />
+          }
+          // checked={watch('specialRequest')?.includes('WheelChair')}
           label="התאמה לכסא גלגלים"
         />
         <FormControlLabel

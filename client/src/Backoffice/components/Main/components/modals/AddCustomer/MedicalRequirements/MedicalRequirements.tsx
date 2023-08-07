@@ -1,7 +1,8 @@
 import Checkbox from "@mui/material/Checkbox";
-import { useState } from "react";
+import { Dayjs } from 'dayjs';
+import 'dayjs/locale/he';
+import React, { useState } from "react";
 import { FormControlLabel, MenuItem, TextField } from "@mui/material";
-import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -56,7 +57,7 @@ function MedicalRequirements() {
   const [isServiceForSelf, setIsServiceForSelf] = useState(false);
   const [value, setValue] = useState<Dayjs | null>(null);
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'he'}>
       <div className="">
         <FormControlLabel
           control={
