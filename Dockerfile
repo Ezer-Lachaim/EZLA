@@ -36,6 +36,5 @@ COPY --from=builder /app/backend/node_modules /app/backend/node_modules
 
 COPY --from=builder /app/node_modules /app/node_modules
 
-# RUN npm i --omit=dev
 
 ENTRYPOINT [ "npm", "run", "start" ]
