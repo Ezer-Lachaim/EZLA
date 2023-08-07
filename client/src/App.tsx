@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import mainRoutes from './Backoffice/Routes/MainRoutes';
 import Backoffice from './Backoffice/Backoffice';
 import Client from './Client/Client';
@@ -30,6 +31,8 @@ import RideCompleted from './Client/pages/Driver/RideCompleted/RideCompleted';
 import PassengerRideCompleted from './Client/pages/Passenger/RideCompleted/RideCompleted';
 import NotFound from './Client/pages/NotFound/NotFound.tsx';
 
+const queryClient = new QueryClient();
+
 function App() {
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -43,41 +46,43 @@ function App() {
 
   return (
     <BrowserRouter>
-      <UserContextProvider>
-        <Routes>
-          <Route path="" element={<Client />}>
-            <Route path="login" element={<Login />} />
-            <Route path="logout" element={<Logout />} />
-            <Route path="first-signup" element={<FirstSignUp />} />
-            <Route path="terms" element={<Terms />} />
-            <Route path="privacy" element={<Privacy />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="forgot-password/verify" element={<VerificationCode />} />
-            <Route path="forgot-password/change" element={<ChangePassword />} />
-            <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
-            <Route path="register" element={<Register />} />
-            <Route path="processing-user" element={<ProcessingUserPage />} />
-            <Route path="create-password" element={<CreatePassword />} />
-            <Route path="passenger" element={<Passenger />}>
-              <Route path="order-ride" element={<OrderRide />} />
-              <Route path="active" element={<PassengerActiveRide />} />
-              <Route path="driver-arrived" element={<DriverArrived />} />
-              <Route path="riding" element={<PassengerRiding />} />
-              <Route path="completed" element={<PassengerRideCompleted />} />
+      <QueryClientProvider client={queryClient}>
+        <UserContextProvider>
+          <Routes>
+            <Route path="" element={<Client />}>
+              <Route path="login" element={<Login />} />
+              <Route path="logout" element={<Logout />} />
+              <Route path="first-signup" element={<FirstSignUp />} />
+              <Route path="terms" element={<Terms />} />
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="forgot-password/verify" element={<VerificationCode />} />
+              <Route path="forgot-password/change" element={<ChangePassword />} />
+              <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
+              <Route path="register" element={<Register />} />
+              <Route path="processing-user" element={<ProcessingUserPage />} />
+              <Route path="create-password" element={<CreatePassword />} />
+              <Route path="passenger" element={<Passenger />}>
+                <Route path="order-ride" element={<OrderRide />} />
+                <Route path="active" element={<PassengerActiveRide />} />
+                <Route path="driver-arrived" element={<DriverArrived />} />
+                <Route path="riding" element={<PassengerRiding />} />
+                <Route path="completed" element={<PassengerRideCompleted />} />
+              </Route>
+              <Route path="driver" element={<Driver />}>
+                <Route path="rides" element={<Rides />} />
+                <Route path="active" element={<ActiveRide />} />
+                <Route path="riding" element={<Riding />} />
+                <Route path="completed" element={<RideCompleted />} />
+              </Route>
             </Route>
-            <Route path="driver" element={<Driver />}>
-              <Route path="rides" element={<Rides />} />
-              <Route path="active" element={<ActiveRide />} />
-              <Route path="riding" element={<Riding />} />
-              <Route path="completed" element={<RideCompleted />} />
+            <Route path="backoffice" element={<Backoffice />}>
+              {mainRoutes.map((route) => route)}
             </Route>
-          </Route>
-          <Route path="backoffice" element={<Backoffice />}>
-            {mainRoutes.map((route) => route)}
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </UserContextProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </UserContextProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }

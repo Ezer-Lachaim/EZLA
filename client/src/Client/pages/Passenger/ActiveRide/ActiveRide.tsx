@@ -19,10 +19,7 @@ const ActiveRide = () => {
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {
-    await api.ride.updateRide({
-      rideId: ride?.rideId || '',
-      ride: { state: RideStateEnum.Canceled }
-    });
+    await api.ride.postConfirmRideComplete();
   };
 
   const onConfirmCancelRide = async () => {
