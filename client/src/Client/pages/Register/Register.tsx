@@ -26,6 +26,7 @@ const Register = ({
   const navigation = useNavigate();
   const methods = useForm<RegistrationFormInputs>();
   const [submitError, setSubmitError] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { handleSubmit, trigger } = methods;
 
@@ -76,9 +77,16 @@ const Register = ({
 
   const onSubmit: SubmitHandler<RideRequester> = async (data) => {
     setSubmitError(null);
+    setIsSubmitting(true);
     try {
+      const newUser: RideRequester = {
+        ...data,
+        startServiceDate: new Date(data.startServiceDate || ''),
+        endServiceDate: new Date(data.endServiceDate || '')
+      };
+
       const { user, token } = await api.user.createUser({
-        createUserRequest: { user: data }
+        createUserRequest: { user: newUser }
       });
 
       if (user) {
@@ -86,9 +94,13 @@ const Register = ({
         navigation('/processing-user');
       }
     } catch (error) {
-      if ((error as ResponseError).response.status === 409) {
+      if ((error as ResponseError)?.response?.status === 409) {
         setSubmitError(409);
+      } else {
+        setSubmitError(500);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -115,6 +127,7 @@ const Register = ({
               size="large"
               endIcon={<ArrowBackIcon />}
               onClick={handleSubmit(onSubmit)}
+              disabled={isSubmitting}
             >
               סיום הרשמה
             </Button>
@@ -122,6 +135,11 @@ const Register = ({
           {submitError === 409 && (
             <FormHelperText error className="text-center text-lg">
               כבר קיים משתמש עם אימייל זהה
+            </FormHelperText>
+          )}
+          {(submitError === 400 || submitError === 500) && (
+            <FormHelperText error className="text-center text-lg">
+              אירעה שגיאה
             </FormHelperText>
           )}
         </form>
@@ -134,19 +152,17 @@ const RegisterWrapper = () => {
   const { activeStepIndex, nextStep, previousStep } = useRegistrationSteps();
   const navigate = useNavigate();
 
-  const ActualRegister = withLayout(
-    () => <Register activeStepIndex={activeStepIndex} nextStep={nextStep} />,
-    {
-      onBackClick: () => {
-        if (activeStepIndex === 0) {
-          navigate(-1);
-          return;
-        }
-        previousStep();
-      },
-      title: 'הרשמה לשירות ההסעות'
-    }
-  );
+  const ActualRegister = withLayout(Register, {
+    componentProps: { activeStepIndex, nextStep },
+    onBackClick: () => {
+      if (activeStepIndex === 0) {
+        navigate(-1);
+        return;
+      }
+      previousStep();
+    },
+    title: 'הרשמה לשירות ההסעות'
+  });
 
   return <ActualRegister />;
 };

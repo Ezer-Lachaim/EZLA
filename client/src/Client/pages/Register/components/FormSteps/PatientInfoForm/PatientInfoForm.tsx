@@ -192,7 +192,7 @@ export const PatientInfoForm = () => {
                 }}
                 disablePast
                 onChange={(date) => field.onChange(date?.toDate())}
-                value={adapter.date(field.value)}
+                value={field.value && adapter.date(field.value)}
               />
               {errors.startServiceDate && (
                 <FormHelperText error className="absolute top-full mr-0">
@@ -221,11 +221,11 @@ export const PatientInfoForm = () => {
                 }}
                 disablePast
                 onChange={(date) => field.onChange(date?.toDate())}
-                value={adapter.date(field.value)}
+                value={field.value && adapter.date(field.value)}
               />
-              {errors.startServiceDate && (
+              {errors.endServiceDate && (
                 <FormHelperText error className="absolute top-full mr-0">
-                  {errors.startServiceDate.type === 'required' && 'יש להזין תאריך סיום'}
+                  {errors.endServiceDate.type === 'required' && 'יש להזין תאריך סיום'}
                 </FormHelperText>
               )}
             </FormControl>

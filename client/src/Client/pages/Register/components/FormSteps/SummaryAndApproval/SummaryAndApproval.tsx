@@ -1,8 +1,11 @@
 import { useFormContext } from 'react-hook-form';
+import useFormPersist from 'react-hook-form-persist';
 import { RegistrationFormInputs } from '../../../Register.types';
 
 export const SummaryAndApproval = () => {
-  const { watch } = useFormContext<RegistrationFormInputs>();
+  const { watch, setValue } = useFormContext<RegistrationFormInputs>();
+
+  useFormPersist('passengerInfoForm', { watch, setValue });
 
   const { firstName, lastName } = watch();
 

@@ -90,7 +90,8 @@ const RidesHOC = () => {
     (a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0)
   );
 
-  const RidesWithLayout = withLayout(() => <Rides rides={openRides || []} />, {
+  const RidesWithLayout = withLayout(Rides, {
+    componentProps: { rides: openRides || [] },
     title: `קריאות פתוחות (${openRides?.length})`,
     showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
