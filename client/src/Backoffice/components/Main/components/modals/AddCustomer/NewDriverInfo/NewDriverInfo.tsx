@@ -7,13 +7,13 @@ import {
   TextField
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { DriverRegistrationFormInputs } from '../AddCustomerModal.types.ts';
+import { Driver } from '../../../../../../../api-client';
 
 function NewDriverInfo() {
   const {
     register,
     formState: { errors }
-  } = useFormContext<DriverRegistrationFormInputs>();
+  } = useFormContext<Driver>();
 
   return (
     <>
@@ -71,8 +71,8 @@ function NewDriverInfo() {
               label="עיר מגורים"
               variant="outlined"
               fullWidth
-              error={!!errors.address}
-              {...register('address', { required: true })}
+              error={!!errors.city}
+              {...register('city', { required: true })}
             />
             {errors.city && (
               <FormHelperText error className="absolute top-full mr-0">
