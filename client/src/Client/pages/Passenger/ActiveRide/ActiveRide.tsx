@@ -21,7 +21,7 @@ const ActiveRide = () => {
   const canceledRide = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Canceled }
+      ride: { state: RideStateEnum.Canceled }
     });
   };
 

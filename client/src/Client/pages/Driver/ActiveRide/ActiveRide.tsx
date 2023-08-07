@@ -34,7 +34,7 @@ const ActiveRide = () => {
   const onCancel = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.DriverCanceled }
+      ride: { state: RideStateEnum.DriverCanceled }
     });
 
     navigate('/driver/rides');
@@ -43,7 +43,7 @@ const ActiveRide = () => {
   const onContinue = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Riding }
+      ride: { state: RideStateEnum.Riding }
     });
 
     navigate('/driver/riding');
@@ -52,7 +52,7 @@ const ActiveRide = () => {
   const onGotoRides = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Canceled }
+      ride: { state: RideStateEnum.Canceled }
     });
 
     navigate('/driver/rides');
@@ -81,7 +81,9 @@ const ActiveRide = () => {
           label="שם הנוסע"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg">{`${ride?.rideRequester?.firstName} ${ride?.rideRequester?.lastName}`}</p>
+              <p className="text-lg">
+                {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
+              </p>
               <div className="flex bg-green-500 rounded-full text-white items-center px-2 py-1">
                 <p className="px-1 font-medium">{ride?.passengerCount}</p>
                 <EmojiPeopleRoundedIcon className="h-5" />
@@ -118,9 +120,9 @@ const ActiveRide = () => {
         />
 
         <hr className="mt-2" />
-        <p className="text-center p-4 text-sm text-gray-500">אנא עדכנו כאשר הגעתם למקום האיסוף</p>
       </div>
 
+      <p className="text-center p-4 text-sm text-gray-500">אנא עדכנו כאשר הגעתם למקום האיסוף</p>
       <div className="flex flex-col gap-4">
         <Button
           className="flex gap-2 w-full"
