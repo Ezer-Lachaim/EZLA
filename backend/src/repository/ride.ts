@@ -13,6 +13,7 @@ export async function populateRideDetails(ride: Ride) {
       'patient',
       'fcmToken',
       'registrationState',
+      'password',
       'isInitialPassword'
     ]);
   }
@@ -24,6 +25,7 @@ export async function populateRideDetails(ride: Ride) {
       'email',
       'fcmToken',
       'registrationState',
+      'password',
       'isInitialPassword'
     ]);
   }
