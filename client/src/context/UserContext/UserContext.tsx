@@ -1,8 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Ride, User } from '../../api-client';
-import { api, getToken, setToken } from '../../Config';
-// import useNavigateUser from '../../Client/hooks/useNavigateUser';
+import { POLLING_INTERVAL, api, getToken, setToken } from '../../Config';
 
 const UserContext = createContext(
   {} as {
@@ -15,7 +14,6 @@ const UserContext = createContext(
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
-  // const { navigateOnRefresh } = useNavigateUser();
 
   const { data: activeRide } = useQuery({
     queryKey: ['getActiveRideForUser'],
@@ -26,13 +24,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
         return null;
       }
     },
-    refetchInterval: 5000
-    // onSuccess: () => {
-    //   console.log(user);
-    //   if (user) {
-    //     navigateOnRefresh();
-    //   }
-    // }
+    refetchInterval: POLLING_INTERVAL
   });
   const values = useMemo(() => ({ user, setUser, activeRide }), [user, activeRide]);
   const getCurrentUser = async () => {
@@ -54,17 +46,6 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   if (didFinishUserInit) {
-  //     (async () => {
-  //       try {
-  //         const activeRideResponse = await api.ride.getActiveRideForUser();
-  //         setActiveRide(activeRideResponse);
-  //       } catch (error) {}
-  //     })();
-  //   }
-  // }, [location]);
 
   if (!didFinishUserInit) return null;
 

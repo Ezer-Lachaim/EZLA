@@ -7,7 +7,6 @@ const useNavigateUser = () => {
   const { user, activeRide } = useUserContext();
 
   useEffect(() => {
-    console.log(activeRide?.state);
     navigateOnRefresh();
   }, [activeRide?.state]);
   const navigate = useNavigate();

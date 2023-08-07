@@ -5,7 +5,7 @@ import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded
 import { useQuery } from '@tanstack/react-query';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { POLLING_INTERVAL, api } from '../../../../Config.ts';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
 import { useUserContext } from '../../../../context/UserContext/UserContext';
@@ -17,7 +17,7 @@ const Rides = () => {
       const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
       return res;
     },
-    refetchInterval: 2000
+    refetchInterval: POLLING_INTERVAL
   });
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
