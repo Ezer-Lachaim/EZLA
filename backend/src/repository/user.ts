@@ -35,6 +35,10 @@ export async function updateFcmToken(uid: string, fcmToken: string): Promise<voi
   await client.json.set(`user:${uid}`, '$.fcmToken', fcmToken);
 }
 
+export async function incDriverNumOfDrives(uid: string): Promise<void> {
+  await client.json.numIncrBy(`user:${uid}`, '$.numOfDrives', 1);
+}
+
 export async function updateUserByUid(uid: string, user: User): Promise<void> {
   const userFromDB: any = await client.json.get(`user:${uid}`);
   const updated = Object.assign(userFromDB, user);

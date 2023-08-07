@@ -3,7 +3,6 @@ import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createUser, getAllUsers } from '../repository/user';
 import { firebase, getAuthConfig } from '../utils/firebase-config';
-import { Driver } from '../models/driver';
 
 const auth = getAuthConfig();
 
@@ -23,6 +22,7 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
       driverPayload.isInitialPassword = true;
       driverPayload.registrationState = UserRegistrationStateEnum.Approved;
       driverPayload.signupDate = new Date();
+      driverPayload.numOfDrives = 0;
       await createUser(driverPayload.userId, driverPayload);
       res.send({
         driverPayload
