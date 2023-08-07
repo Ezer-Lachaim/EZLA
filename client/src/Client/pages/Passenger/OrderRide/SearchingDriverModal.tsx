@@ -31,10 +31,8 @@ const SearchingDriverModal = ({
       <>
         <Box sx={style}>
           <div className="flex flex-col w-full h-full">
-            <div className="flex flex-col justify-center flex-grow">
-              <div className="flex justify-center mb-2">
-                <img src={car} alt="car" className="w-20" />
-              </div>
+            <div className="flex flex-col justify-center flex-grow items-center">
+              <img src={car} alt="car" className="w-20 animate-bounce" />
               <h1 className="text-center">מחפשים עבורכם מתנדב...</h1>
             </div>
             <Button
