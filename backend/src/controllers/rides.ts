@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getUserByUid } from '../repository/user';
-import { User } from '../models/user';
+import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
+import { User, UserRoleEnum } from '../models/user';
 import { sendPushNotification } from '../utils/firebase-config';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
@@ -13,16 +13,21 @@ import { CustomRequest } from '../middlewares/CustomRequest';
  * can be filtered by state (if given)
  */
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
-  try {
-    const keys = await redisClient.keys('ride:*');
-    let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
-    rides = [].concat(...rides);
-    if (req.query.state) {
-      rides = rides.filter((item) => item.state === req.query.state);
+  const isAdmin = req.user.role === UserRoleEnum.Admin;
+  if (isAdmin) {
+    try {
+      const keys = await redisClient.keys('ride:*');
+      let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
+      rides = [].concat(...rides);
+      if (req.query.state) {
+        rides = rides.filter((item) => item.state === req.query.state);
+      }
+      res.status(200).json(rides);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
-    res.status(200).json(rides);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+  } else {
+    res.status(401).send();
   }
 };
 
@@ -50,16 +55,21 @@ export const getActiveRide = async (req: CustomRequest, res: Response): Promise<
  * Get ride by ID.
  */
 export const getRideById = async (req: CustomRequest, res: Response): Promise<void> => {
-  const { rideId } = req.params;
-  try {
-    const ride: Ride = (await redisClient.json.get(`ride:${rideId}`)) as Ride;
-    if (ride) {
-      res.status(200).json(ride);
-    } else {
-      res.status(404).json({ error: `Ride: ${rideId} not found` });
+  const isAdmin = req.user.role === UserRoleEnum.Admin;
+  if (isAdmin) {
+    const { rideId } = req.params;
+    try {
+      const ride: Ride = (await redisClient.json.get(`ride:${rideId}`)) as Ride;
+      if (ride) {
+        res.status(200).json(ride);
+      } else {
+        res.status(404).json({ error: `Ride: ${rideId} not found` });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
     }
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+  } else {
+    res.status(401);
   }
 };
 
@@ -71,7 +81,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   const rideId = uuidv4();
   const ride = req.body as Ride;
   ride.rideId = rideId;
-  ride.requestTimeStamp = new Date().toISOString();
+  ride.requestTimeStamp = new Date();
 
   try {
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as any) });
@@ -189,6 +199,8 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
 
       if (updatedRide.state === RideStateEnum.Completed) {
         if (currentRide.rideRequester?.userId) {
+          await incDriverNumOfDrives(currentRide.rideRequester?.userId);
+          await redisClient.json.set(`ride:${rideId}`, '$.completedTimeStamp', new Date());
           await sendPushByUserId(
             currentRide.rideRequester?.userId,
             'עדכון על הנסיעה',
