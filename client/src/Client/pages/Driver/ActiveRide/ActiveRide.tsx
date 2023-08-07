@@ -48,10 +48,7 @@ const ActiveRide = () => {
   };
 
   const onGotoRides = async () => {
-    await api.ride.updateRide({
-      rideId: ride?.rideId || '',
-      ride: { state: RideStateEnum.Canceled }
-    });
+    await api.ride.postConfirmRideComplete();
 
     navigate('/driver/rides');
   };

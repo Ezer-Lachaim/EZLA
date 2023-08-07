@@ -7,8 +7,8 @@ import { api, getToken, setToken } from '../../Config';
 const UserContext = createContext(
   {} as {
     user: User | null;
-    setUser: (user: User) => void;
-    activeRide: Ride | undefined;
+    setUser: (user: User | null) => void;
+    activeRide: Ride | null | undefined;
   }
 );
 
@@ -20,8 +20,11 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const { data: activeRide } = useQuery({
     queryKey: ['getActiveRideForUser'],
     queryFn: async () => {
-      const res = await api.ride.getActiveRideForUser();
-      return res;
+      try {
+        return await api.ride.getActiveRideForUser();
+      } catch (e) {
+        return null;
+      }
     },
     refetchInterval: 5000
     // onSuccess: () => {

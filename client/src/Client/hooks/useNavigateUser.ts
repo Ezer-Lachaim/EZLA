@@ -25,7 +25,8 @@ const useNavigateUser = () => {
       if (activeRide) {
         if (
           activeRide.state === RideStateEnum.Booked ||
-          activeRide.state === RideStateEnum.DriverArrived
+          activeRide.state === RideStateEnum.DriverArrived ||
+          activeRide.state === RideStateEnum.RequesterCanceled
         ) {
           return navigate('/driver/active');
         }
