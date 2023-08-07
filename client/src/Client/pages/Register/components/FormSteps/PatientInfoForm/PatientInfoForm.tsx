@@ -261,8 +261,11 @@ export const PatientInfoForm = () => {
             }
             label={
               <p>
-                הנני מאשר/ת כי קראתי את <Link to="/terms">תקנון האתר</Link> ואת{' '}
-                <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
+                הנני מאשר/ת כי קראתי את{' '}
+                <a href="/terms.html" target="_blank">
+                  תקנון האתר
+                </a>{' '}
+                ואת ואת <Link to="/privacy">מדיניות הפרטיות</Link> ומסכים לתנאיהם
               </p>
             }
           />
