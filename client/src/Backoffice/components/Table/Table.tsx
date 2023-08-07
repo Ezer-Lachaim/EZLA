@@ -6,7 +6,8 @@ import {
   TableRow,
   TableBody,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Tooltip
 } from '@mui/material';
 import {
   useReactTable,
@@ -34,9 +35,9 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
     debugTable: true
   });
   return (
-    <Paper elevation={2} >
+    <Paper elevation={2}>
       <TableContainer>
-        <MuiTable >
+        <MuiTable>
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -53,14 +54,30 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
           <TableBody>
             {table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className="whitespace-nowrap px-2 text-ellipsis overflow-hidden max-w-[200px]"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell) => {
+                  const value = cell.getValue();
+                  if (typeof value === 'string') {
+                    return (
+                      <Tooltip title={value} placeholder="top">
+                        <TableCell
+                          key={cell.id}
+                          className="whitespace-nowrap px-2 text-ellipsis overflow-hidden max-w-[200px]"
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      </Tooltip>
+                    );
+                  }
+
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className="whitespace-nowrap px-2 text-ellipsis overflow-hidden max-w-[200px]"
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
