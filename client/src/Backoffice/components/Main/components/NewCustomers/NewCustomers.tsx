@@ -146,8 +146,10 @@ const NewCustomers = () => {
         state: 'Pending',
         role: 'Requester'
       });
-
-      setPendingUsers(result);
+      const sortedResultBySignupDate = result.sort(
+        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+      );
+      setPendingUsers(sortedResultBySignupDate);
     };
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();

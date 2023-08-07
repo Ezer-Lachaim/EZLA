@@ -93,8 +93,10 @@ const Volunteers = () => {
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();
-
-      setDrivers(response);
+      const sortedResultBySignupDate = response.sort(
+        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+      );
+      setDrivers(sortedResultBySignupDate);
     };
     fetchDrivers();
   }, []);

@@ -108,8 +108,10 @@ const Passengers = () => {
         state: 'Approved',
         role: 'Requester'
       });
-
-      setPassengers(result);
+      const sortedResultBySignupDate = result.sort(
+        (a, b) => new Date(b.signupDate!).getTime() - new Date(a.signupDate!).getTime()
+      );
+      setPassengers(sortedResultBySignupDate);
     };
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
