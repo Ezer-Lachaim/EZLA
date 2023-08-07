@@ -16,9 +16,14 @@ import { api, setToken } from '../../../Config.ts';
 // const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
 const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
 
-const Register = () => {
+const Register = ({
+  activeStepIndex,
+  nextStep
+}: {
+  activeStepIndex: number;
+  nextStep: () => void;
+}) => {
   const navigation = useNavigate();
-  const { activeStepIndex, nextStep } = useRegistrationSteps();
   const methods = useForm<RegistrationFormInputs>();
   const [submitError, setSubmitError] = useState<number | null>(null);
 
@@ -125,6 +130,25 @@ const Register = () => {
   );
 };
 
-export default withLayout(Register, {
-  title: 'הרשמה לשירות ההסעות'
-});
+const RegisterWrapper = () => {
+  const { activeStepIndex, nextStep, previousStep } = useRegistrationSteps();
+  const navigate = useNavigate();
+
+  const ActualRegister = withLayout(
+    () => <Register activeStepIndex={activeStepIndex} nextStep={nextStep} />,
+    {
+      onBackClick: () => {
+        if (activeStepIndex === 0) {
+          navigate(-1);
+          return;
+        }
+        previousStep();
+      },
+      title: 'הרשמה לשירות ההסעות'
+    }
+  );
+
+  return <ActualRegister />;
+};
+
+export default RegisterWrapper;
