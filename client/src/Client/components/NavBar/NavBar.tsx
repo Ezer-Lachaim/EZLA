@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 export interface NavBarProps {
   title: string;
-  hideBackButton?: boolean;
+  showBackButton?: boolean;
   onBackClick?: () => void;
   showLogoutButton?: boolean;
 }
 
 export const NavBar = ({
   title,
-  hideBackButton = false,
+  showBackButton = false,
   onBackClick = undefined,
   showLogoutButton = false
 }: NavBarProps) => {
@@ -33,7 +33,7 @@ export const NavBar = ({
           <LogoutIcon className="absolute left-6 cursor-pointer" onClick={onClickLogout} />
         )}
         {title}
-        {!hideBackButton && (
+        {(showBackButton || onBackClick) && (
           <ArrowForwardIosIcon
             className="absolute right-6 cursor-pointer"
             onClick={onBackClick || onClickBackIcon}

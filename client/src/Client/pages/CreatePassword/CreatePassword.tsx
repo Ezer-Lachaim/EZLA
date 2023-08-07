@@ -155,4 +155,4 @@ const CreatePassword = () => {
   );
 };
 
-export default withLayout(CreatePassword, { title: 'כניסה לשירות ההסעות', hideBackButton: true });
+export default withLayout(CreatePassword, { title: 'כניסה לשירות ההסעות' });

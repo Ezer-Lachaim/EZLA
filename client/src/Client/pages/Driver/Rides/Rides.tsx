@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
@@ -94,7 +94,7 @@ const Rides = () => {
 
 const RidesHOC = () => {
   const RidesWithLayout = withLayout(Rides, {
-    title: '',
+    title: 'קריאות פתוחות',
     showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
     hideFooter: true

@@ -10,4 +10,4 @@ const Terms = () => {
   );
 };
 
-export default withLayout(Terms, { title: 'תקנון האתר עזר לחיים' });
+export default withLayout(Terms, { title: 'תקנון האתר עזר לחיים', showBackButton: true });

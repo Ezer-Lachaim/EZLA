@@ -25,4 +25,4 @@ const VerificationCode = () => {
   );
 };
 
-export default withLayout(VerificationCode, { title: 'קוד אימות' });
+export default withLayout(VerificationCode, { title: 'קוד אימות', showBackButton: true });

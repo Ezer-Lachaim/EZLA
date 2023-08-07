@@ -64,4 +64,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default withLayout(ForgotPassword, { title: 'החלפת סיסמא' });
+export default withLayout(ForgotPassword, { title: 'החלפת סיסמא', showBackButton: true });

@@ -22,6 +22,5 @@ const ProcessingUserPage = () => {
 };
 
 export default withLayout(ProcessingUserPage, {
-  title: 'כניסה לשירות ההסעות',
-  hideBackButton: true
+  title: 'כניסה לשירות ההסעות'
 });
