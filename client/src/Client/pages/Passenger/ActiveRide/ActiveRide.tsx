@@ -10,7 +10,7 @@ import { api } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
-import { ViewField } from './components/ViewField/ViewField.tsx';
+import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
@@ -33,7 +33,7 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
-    const response = await api.ride.ridesPost({
+    await api.ride.ridesPost({
       ride: {
         ...ride,
         state: RideStateEnum.WaitingForDriver,
@@ -42,8 +42,6 @@ const ActiveRide = () => {
         driver: undefined
       }
     });
-
-    console.log(response);
 
     navigate('/passenger/order-ride');
   };
