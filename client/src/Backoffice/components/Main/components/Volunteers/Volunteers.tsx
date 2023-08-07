@@ -31,41 +31,54 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
   { accessorKey: 'city', header: 'עיר מגורים', accessorFn: (data) => data.city || '-' },
   {
-    accessorKey: 'volunteerArea',
+    accessorKey: 'volunteeringArea',
     header: 'אזור התנדבות',
-    accessorFn: (data) => data.volunteerArea || '-'
+    accessorFn: (data) => data.volunteeringArea || '-'
   },
   {
-    accessorKey: 'hasDrivingLicense',
+    accessorKey: 'isValidLicense',
     header: 'רשיון נהיגה',
-    accessorFn: (data) => data.hasDrivingLicense,
+    accessorFn: (data) => data.isValidLicense,
     cell: (cell) => {
       return cell.getValue() ? <Check /> : <Clear />;
     }
   },
   {
-    accessorKey: 'hasCarLicense',
+    accessorKey: 'isValidCarLicense',
     header: 'רשיון רכב',
-    accessorFn: (data) => data.hasCarLicense,
+    accessorFn: (data) => data.isValidCarLicense,
     cell: (cell) => {
       return cell.getValue() ? <Check /> : <Clear />;
     }
   },
-  { accessorKey: 'carType', header: 'סוג רכב', accessorFn: (data) => data.carType },
-  { accessorKey: 'carColor', header: 'צבע רכב', accessorFn: (data) => data.carColor },
-  { accessorKey: 'carPlateNumber', header: 'לוחית', accessorFn: (data) => data.carPlateNumber },
-  { accessorKey: 'carSeats', header: 'מספר מושבים', accessorFn: (data) => data.carSeats },
   {
-    accessorKey: 'specialDescription',
-    header: 'מיוחדים',
-    accessorFn: (data) => data.specialDescription
+    accessorKey: 'carManufacturer',
+    header: 'סוג רכב',
+    accessorFn: (data) => data.carManufacturer || '-'
   },
-  { accessorKey: 'numberOfDrives', header: 'נסיעות', accessorFn: (data) => data.numberOfDrives }
+  { accessorKey: 'carColor', header: 'צבע רכב', accessorFn: (data) => data.carColor || '-' },
+  {
+    accessorKey: 'carPlateNumber',
+    header: 'לוחית',
+    accessorFn: (data) => data.carPlateNumber || '-'
+  },
+  {
+    accessorKey: 'numOfSeats',
+    header: 'מספר מושבים',
+    accessorFn: (data) => data.numOfSeats || '-'
+  },
+  {
+    accessorKey: 'carCapabilities',
+    header: 'מיוחדים',
+    accessorFn: (data) => data.carCapabilities || 'להשלים-----'
+  },
+  { accessorKey: 'numberOfDrives', header: 'נסיעות', accessorFn: (data) => 'להשלים-----' }
 ];
 
 const Volunteers = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [isAddDriverModalOpen, setIsAddDriverModalOpen] = useState(false);
+  console.log(drivers);
   useEffect(() => {
     const fetchDrivers = async () => {
       const response = await api.driver.getAllDrivers();

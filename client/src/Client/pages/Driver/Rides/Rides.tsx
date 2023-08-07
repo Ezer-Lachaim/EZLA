@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride, RideStateEnum } from '../../../../api-client';
+import { Driver, Ride, RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
@@ -20,12 +20,21 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
 
   const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
     if (selectedRide?.state === RideStateEnum.WaitingForDriver) {
+      const driver = user as Driver;
       await api.ride.updateRide({
         rideId: selectedRide?.rideId || '',
         ride: {
           ...selectedRide,
           state: RideStateEnum.Booked,
-          driver: { userId: user?.userId },
+          driver: {
+            userId: driver?.userId,
+            firstName: driver?.firstName,
+            lastName: driver?.lastName,
+            carManufacturer: driver?.carManufacturer,
+            carModel: driver?.carModel,
+            carColor: driver?.carColor,
+            carPlateNumber: driver?.carPlateNumber
+          },
           destinationArrivalTime: minutesToArrive
         }
       });

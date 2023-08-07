@@ -3,12 +3,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import SpecialRequirements from './SpecialRequirements/SpecialRequirements';
-import MedicalRequirements from './MedicalRequirements/MedicalRequirements';
 import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
 import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
-import NewPassengerInfo from './NewPassengerInfo/NewPassengerInfo';
 import { DriverRegistrationFormInputs } from './AddCustomerModal.types.ts';
 import { api } from '../../../../../../Config.ts';
 
@@ -37,13 +34,13 @@ interface AddCustomerModalProps {
   handleModal: (shouldOpen: boolean) => void;
   customerType: keyof typeof customerOptions;
 }
-
 function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const stepBackOrClose = () => {
-    if (activeStepIndex) {
+    if (activeStepIndex > 0) {
       setActiveStepIndex(activeStepIndex - 1);
     } else {
+      setActiveStepIndex(0);
       handleModal(false);
     }
   };
@@ -119,13 +116,6 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
         <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps[customerType]} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* first step passenger */}
-            {customerType === 'passenger' && !activeStepIndex ? <NewPassengerInfo /> : null}
-            {customerType === 'passenger' && !activeStepIndex ? <SpecialRequirements /> : null}
-
-            {/* second step passenger */}
-            {customerType === 'passenger' && activeStepIndex ? <MedicalRequirements /> : null}
-
             {/* first step driver */}
             {customerType === 'volunteer' && !activeStepIndex ? <NewDriverInfo /> : null}
 
@@ -148,10 +138,10 @@ function AddCustomerModal({ open, handleModal, customerType }: AddCustomerModalP
             variant="contained"
             color="primary"
             className="text-white"
-            endIcon={<ArrowBackIcon />}
+            endIcon={activeStepIndex === 0 && <ArrowBackIcon />}
             onClick={nextStepHandler}
           >
-            לשלב הבא
+            {activeStepIndex === 0 ? 'לשלב הבא' : 'אישור'}
           </Button>
         </Box>
       </Box>
