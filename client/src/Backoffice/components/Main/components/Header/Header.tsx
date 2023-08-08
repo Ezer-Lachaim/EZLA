@@ -4,8 +4,7 @@ import { IconButton } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { AccountCircle, Notifications } from '@mui/icons-material';
-import Badge from '@mui/material/Badge';
+import { Logout } from '@mui/icons-material';
 
 export default function ButtonAppBar() {
   return (
@@ -15,17 +14,20 @@ export default function ButtonAppBar() {
         <Typography variant="h6" component="div" color="primary" className="flex-grow">
           עזר לחיים - מערכת ניהול
         </Typography>
-        <Badge badgeContent={30} color="error" className="ml-6">
-          <Notifications color="primary" />
-        </Badge>
+        {/* <Badge badgeContent={30} color="error" className="ml-6"> */}
+        {/*  <Notifications color="primary" /> */}
+        {/* </Badge> */}
         <IconButton
           size="small"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          onClick={() => {
+            window.location.href = '/logout';
+          }}
         >
-          <AccountCircle color="primary" />
+          <Logout color="primary" />
         </IconButton>
       </Toolbar>
     </AppBar>

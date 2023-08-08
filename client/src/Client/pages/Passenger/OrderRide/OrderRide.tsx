@@ -56,7 +56,7 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user, activeRide: ride, setActiveRide } = useUserContext();
+  const { user, activeRide: ride } = useUserContext();
   const {
     register,
     watch,
@@ -152,7 +152,6 @@ const OrderRide = () => {
       ride: newRide
     });
     console.log(response);
-    setActiveRide(response);
   };
 
   const onCancelRide = async () => {
@@ -160,8 +159,6 @@ const OrderRide = () => {
       rideId: ride?.rideId || '',
       ride: { ...ride, state: RideStateEnum.RequesterCanceled }
     });
-
-    setActiveRide(null);
   };
 
   return (
@@ -311,7 +308,6 @@ const OrderRide = () => {
 };
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה לביקור חולים',
-  hideBackButton: true,
   hideFooter: true,
   showLogoutButton: true
 });

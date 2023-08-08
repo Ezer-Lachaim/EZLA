@@ -29,7 +29,7 @@ export const initFirebaseCloudMessaging = async () => {
       // Set token in our local storage and send to our server
       onMessage(messaging, (payload) => {
         console.log('Message received.', payload);
-        window.location.reload();
+        // window.location.reload();
       });
     }
   } catch (error) {

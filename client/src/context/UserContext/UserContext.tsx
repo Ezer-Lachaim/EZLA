@@ -1,32 +1,35 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Ride, User } from '../../api-client';
-import { api, getToken, setToken } from '../../Config';
+import { POLLING_INTERVAL, api, getToken, setToken } from '../../Config';
 
 const UserContext = createContext(
   {} as {
     user: User | null;
-    setUser: (user: User) => void;
-    activeRide: Ride | null;
-    setActiveRide: (ride: Ride | null) => void;
+    setUser: (user: User | null) => void;
+    activeRide: Ride | null | undefined;
   }
 );
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [activeRide, setActiveRide] = useState<Ride | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
-  const location = useLocation();
 
-  const values = useMemo(() => ({ user, setUser, activeRide, setActiveRide }), [user, activeRide]);
+  const { data: activeRide } = useQuery({
+    queryKey: ['getActiveRideForUser'],
+    queryFn: async () => {
+      try {
+        return await api.ride.getActiveRideForUser();
+      } catch (e) {
+        return null;
+      }
+    },
+    refetchInterval: POLLING_INTERVAL
+  });
+  const values = useMemo(() => ({ user, setUser, activeRide }), [user, activeRide]);
   const getCurrentUser = async () => {
     try {
-      let activeRideResponse = null;
-      try {
-        activeRideResponse = await api.ride.getActiveRideForUser();
-      } catch (error) {}
       const userResponse = await api.user.getCurrentUser();
-      setActiveRide(activeRideResponse);
       setUser(userResponse);
     } catch (error) {
       setToken(null);
@@ -43,17 +46,6 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (didFinishUserInit) {
-      (async () => {
-        try {
-          const activeRideResponse = await api.ride.getActiveRideForUser();
-          setActiveRide(activeRideResponse);
-        } catch (error) {}
-      })();
-    }
-  }, [location]);
 
   if (!didFinishUserInit) return null;
 

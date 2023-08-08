@@ -1,15 +1,24 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
+import { useQuery } from '@tanstack/react-query';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { POLLING_INTERVAL, api } from '../../../../Config.ts';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
 import { useUserContext } from '../../../../context/UserContext/UserContext';
 
-const Rides = ({ rides }: { rides: Ride[] }) => {
+const Rides = () => {
+  const { data: rides = [] } = useQuery({
+    queryKey: ['ridesGet'],
+    queryFn: async () => {
+      const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
+      return res;
+    },
+    refetchInterval: POLLING_INTERVAL
+  });
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useUserContext();
@@ -58,12 +67,12 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
             <h1 className="m-0 text-center text-black">
               בחרו נסיעה מתוך {rides.length} קריאות פתוחות
             </h1>
-            {rides.map((ride, index) => (
+            {rides.map((ride) => (
               <RideCard
                 ride={ride}
-                key={`ride-${index}`}
+                key={`ride-${ride.rideId}`}
                 onSelect={onSelectRideCallback}
-                selected={selectedRide === ride}
+                selected={selectedRide?.rideId === ride.rideId}
                 onApprovePassenger={() => setIsModalOpen(true)}
               />
             ))}
@@ -84,21 +93,8 @@ const Rides = ({ rides }: { rides: Ride[] }) => {
 };
 
 const RidesHOC = () => {
-  const [rides, setRides] = useState<Ride[]>();
-
-  useEffect(() => {
-    (async () => {
-      setRides(await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }));
-    })();
-  }, []);
-
-  const openRides = rides?.sort(
-    (a, b) => (a?.requestTimeStamp?.getTime() || 0) - (b?.requestTimeStamp?.getTime() || 0)
-  );
-
   const RidesWithLayout = withLayout(Rides, {
-    componentProps: { rides: openRides || [] },
-    title: openRides?.length ? `קריאות פתוחות (${openRides?.length})` : '',
+    title: 'קריאות פתוחות',
     showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
     hideFooter: true
