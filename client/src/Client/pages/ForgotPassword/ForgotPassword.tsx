@@ -40,7 +40,7 @@ const ForgotPassword = () => {
       }
     }
     checkCode();
-  });
+  }, [actionCode, navigate]);
 
   // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
