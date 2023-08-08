@@ -10,6 +10,7 @@ import VerificationCode from './Client/pages/ForgotPassword/VerificationCode/Ver
 import ProcessingUserPage from './Client/pages/ProcessingUserPage/ProcessingUserPage';
 import ChangePassword from './Client/pages/ChangePassword/ChangePassword';
 import ChangePasswordSuccess from './Client/pages/ChangePassword/Success/ChangePasswordSuccess';
+import ChangePasswordError from './Client/pages/ChangePassword/Error/ChangePasswordError';
 import CreatePassword from './Client/pages/CreatePassword/CreatePassword';
 import Passenger from './Client/pages/Passenger/Passenger';
 import OrderRide from './Client/pages/Passenger/OrderRide/OrderRide';
@@ -55,6 +56,7 @@ function App() {
             <Route path="forgot-password/verify" element={<VerificationCode />} />
             <Route path="forgot-password/change" element={<ChangePassword />} />
             <Route path="forgot-password/success" element={<ChangePasswordSuccess />} />
+            <Route path="forgot-password/error" element={<ChangePasswordError />} />
             <Route path="register" element={<Register />} />
             <Route path="processing-user" element={<ProcessingUserPage />} />
             <Route path="create-password" element={<CreatePassword />} />

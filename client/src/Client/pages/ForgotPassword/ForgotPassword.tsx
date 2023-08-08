@@ -1,13 +1,21 @@
 import Button from '@mui/material/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { confirmPasswordReset, checkActionCode, getAuth } from 'firebase/auth';
 import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { api } from '../../../Config.ts';
+import useLocationHash from '../../hooks/useLocationHash';
+import { initFirebaseApp } from '../../../init-firebase';
+import { ChangePasswordForm } from '../ChangePassword/ChangePassword';
 
 type Inputs = {
   email: string;
 };
+
+initFirebaseApp();
+const auth = getAuth();
 
 const ForgotPassword = () => {
   const {
@@ -16,6 +24,23 @@ const ForgotPassword = () => {
     formState: { errors }
   } = useForm<Inputs>();
   const [success, setSuccess] = useState<boolean | null>(null);
+  const [expiredCode, setIsExpiredCode] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+  const actionCode = useLocationHash().oobCode;
+
+  useEffect(() => {
+    async function checkCode() {
+      if (actionCode) {
+        try {
+          await checkActionCode(auth, actionCode);
+          setIsExpiredCode(false);
+        } catch (e) {
+          navigate('error');
+        }
+      }
+    }
+    checkCode();
+  });
 
   // eslint-disable-next-line no-console
   const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
@@ -26,6 +51,23 @@ const ForgotPassword = () => {
       setSuccess(false);
     }
   };
+
+  if (actionCode) {
+    return expiredCode == null ? (
+      <p>טוען...</p>
+    ) : (
+      <ChangePasswordForm
+        onSubmitData={async (data) => {
+          try {
+            await confirmPasswordReset(auth, actionCode, data.password);
+            navigate('success');
+          } catch (e) {
+            navigate('error');
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <>

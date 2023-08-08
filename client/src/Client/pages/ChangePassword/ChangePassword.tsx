@@ -17,7 +17,11 @@ type Inputs = {
   confirmPassword: string;
 };
 
-const ChangePassword = () => {
+export interface ChangePasswordProps {
+  onSubmitData: (data: Inputs) => unknown;
+}
+
+const ChangePassword = (props?: ChangePasswordProps) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [noMatch, setNoMatch] = React.useState(false);
   const {
@@ -33,6 +37,7 @@ const ChangePassword = () => {
     if (data.password !== data.confirmPassword) {
       setNoMatch(true);
     } else {
+      props?.onSubmitData(data);
       setNoMatch(false);
     }
   };
@@ -124,3 +129,4 @@ const ChangePassword = () => {
 };
 
 export default withLayout(ChangePassword, { title: 'החלפת סיסמא' });
+export const ChangePasswordForm = ChangePassword;
