@@ -2,8 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { api } from './Config';
 
-export const initFirebaseCloudMessaging = async () => {
-  // Initialize the Firebase app with the credentials
+export const initFirebaseApp = () => {
   initializeApp({
     apiKey: 'AIzaSyAo5AZ1Na4l0YlfhZAlIr0FaLH_S4_1gfM',
     authDomain: 'ezla-pickup.firebaseapp.com',
@@ -13,7 +12,11 @@ export const initFirebaseCloudMessaging = async () => {
     appId: '1:708652536157:web:53f1739dee1c5453eb58b4',
     measurementId: 'G-EK4J3MGLJ8'
   });
+};
 
+export const initFirebaseCloudMessaging = async () => {
+  // Initialize the Firebase app with the credentials
+  initFirebaseApp();
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();

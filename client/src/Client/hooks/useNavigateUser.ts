@@ -73,7 +73,7 @@ const useNavigateUser = () => {
       navigate('/processing-user');
     } else if (user?.registrationState === 'Approved') {
       navigateAfterLogin();
-    } else {
+    } else if (window.location.pathname === '/') {
       navigate('/login');
     }
   };
