@@ -3,6 +3,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
 import { useQuery } from '@tanstack/react-query';
+import { Stack } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
 import { POLLING_INTERVAL, api } from '../../../../Config.ts';
@@ -67,15 +68,17 @@ const Rides = () => {
             <h1 className="m-0 text-center text-black">
               בחרו נסיעה מתוך {rides.length} קריאות פתוחות
             </h1>
-            {rides.map((ride) => (
-              <RideCard
-                ride={ride}
-                key={`ride-${ride.rideId}`}
-                onSelect={onSelectRideCallback}
-                selected={selectedRide?.rideId === ride.rideId}
-                onApprovePassenger={() => setIsModalOpen(true)}
-              />
-            ))}
+            <Stack spacing={2}>
+              {rides.map((ride) => (
+                <RideCard
+                  ride={ride}
+                  key={`ride-${ride.rideId}`}
+                  onSelect={onSelectRideCallback}
+                  selected={selectedRide?.rideId === ride.rideId}
+                  onApprovePassenger={() => setIsModalOpen(true)}
+                />
+              ))}
+            </Stack>
           </>
         ) : (
           <div className="h-full flex flex-col justify-center items-center gap-4">
