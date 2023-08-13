@@ -2,7 +2,7 @@
 import { Configuration, DriverApi, HospitalApi, RideApi, UserApi } from './api-client/index.ts';
 
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || '';
-export const POLLING_INTERVAL = 5000;
+export const POLLING_INTERVAL = 3000;
 
 export const getToken = () => currentToken || localStorage.getItem('token');
 
