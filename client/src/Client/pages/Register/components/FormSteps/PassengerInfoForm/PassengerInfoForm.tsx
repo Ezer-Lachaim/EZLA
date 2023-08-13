@@ -1,6 +1,7 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import useFormPersist from 'react-hook-form-persist';
+import { useEffect } from 'react';
 import { RideRequesterSpecialRequestEnum } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
 
@@ -9,12 +10,15 @@ export const PassengerInfoForm = () => {
     watch,
     setValue,
     register,
+    reset,
     formState: { errors }
   } = useFormContext<RegistrationFormInputs>();
 
   useFormPersist('passengerInfoForm', { watch, setValue });
 
-  // console.log(watch('specialRequest')?.includes('WheelChair'));
+  useEffect(() => {
+    reset({ specialRequest: [] });
+  }, [reset]);
 
   return (
     <div className="flex flex-col gap-9">
