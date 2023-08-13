@@ -89,6 +89,8 @@ const OrderRide = () => {
   );
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
 
+  const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
+
   const rideRequester = user as RideRequester;
 
   const passenger = user?.firstName || 'נוסע';
@@ -120,6 +122,7 @@ const OrderRide = () => {
   };
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
+    setIsOrderRideLoading(true);
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
       (acc: RideSpecialRequestEnum[], cur) => {
         if (data.specialRequest?.[cur]) {
@@ -148,10 +151,10 @@ const OrderRide = () => {
         cellPhone: user?.cellPhone
       }
     };
-    const response = await api.ride.ridesPost({
+
+    await api.ride.ridesPost({
       ride: newRide
     });
-    console.log(response);
   };
 
   const onCancelRide = async () => {
@@ -159,6 +162,7 @@ const OrderRide = () => {
       rideId: ride?.rideId || '',
       ride: { ...ride, state: RideStateEnum.RequesterCanceled }
     });
+    setIsOrderRideLoading(false);
   };
 
   return (
@@ -294,7 +298,13 @@ const OrderRide = () => {
           />
         </div>
 
-        <Button variant="contained" size="large" className="w-full" type="submit">
+        <Button
+          variant="contained"
+          size="large"
+          className="w-full"
+          type="submit"
+          disabled={isOrderRideLoading}
+        >
           הזמינו נסיעה
         </Button>
       </form>
