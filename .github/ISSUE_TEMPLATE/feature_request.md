@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest a feature for Redis
 title: ''
-labels: ''
+labels: 'enhancement
 assignees: ''
 
 ---

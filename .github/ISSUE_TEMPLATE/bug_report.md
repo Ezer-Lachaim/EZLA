@@ -2,7 +2,7 @@
 name: Bug report
 about: Help us improve EZLA by reporting a bug
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
