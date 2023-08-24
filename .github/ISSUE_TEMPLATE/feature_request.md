@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest a feature for EZLA
 title: ''
-labels: 'enhancement
+labels: 'enhancement'
 assignees: ''
 
 ---
