@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 function useLocationHash() {
-  const getParsedLocationHash = function () {
+  const getParsedLocationHash = () => {
     const hash = window.location.hash.substring(1);
 
     // Parse the location hash into key/val pairs
@@ -10,6 +10,7 @@ function useLocationHash() {
 
     // the filter here prevents a separator at the beginning of the hash string, or two seps together,
     // causing {"": ""} in the return
+    // eslint-disable-next-line no-restricted-syntax,@typescript-eslint/no-shadow
     for (const param of params.filter((param) => param.length > 0)) {
       const eq = param.indexOf('=');
       const pkey = eq < 0 ? param : param.slice(0, eq);

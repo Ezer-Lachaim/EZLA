@@ -2,7 +2,7 @@ import { Step, StepLabel, Stepper } from '@mui/material';
 
 interface Props {
   activeStepIndex: number;
-  steps: string[]
+  steps: string[];
 }
 
 export const RegistrationStepper = ({ activeStepIndex, steps }: Props) => {

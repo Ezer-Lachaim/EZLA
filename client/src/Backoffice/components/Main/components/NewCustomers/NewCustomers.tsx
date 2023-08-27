@@ -78,8 +78,8 @@ const getNewCustomersColumns = (
 
         return (
           <span className="ml-2 whitespace-nowrap">
-            {format(row.original.startServiceDate!, 'dd/MM/yyyy')} -
-            {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+            {row.original.startServiceDate && format(row.original.startServiceDate, 'dd/MM/yyyy')} -
+            {row.original.endServiceDate && format(row.original.endServiceDate, 'dd/MM/yyyy')}
           </span>
         );
       }

@@ -90,7 +90,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   ride.requestTimeStamp = new Date();
 
   try {
-    const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as any) });
+    const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as Ride) });
     await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
     if (result) {
       res.status(200).json(ride);

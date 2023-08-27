@@ -1,41 +1,20 @@
-import Checkbox from "@mui/material/Checkbox";
+import Checkbox from '@mui/material/Checkbox';
 import { Dayjs } from 'dayjs';
 import 'dayjs/locale/he';
-import React, { useState } from "react";
-import { FormControlLabel, MenuItem, TextField } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import React, { useState } from 'react';
+import { FormControlLabel, MenuItem, TextField } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const hospitals = [
-  {
-    value: "IChilov",
-    label: "איכילוב",
-  },
-  {
-    value: "Asaf",
-    label: "אסף הרופא",
-  },
-  {
-    value: "barziali",
-    label: "ברזילאי",
-  },
-  {
-    value: "telShomer",
-    label: "תל השומר",
-  },
-  {
-    value: "hadasa-har-zofim",
-    label: "הדסה הר הצופים",
-  },
-  {
-    value: "hadasa-ein-karam",
-    label: "הדסה עין כרם",
-  },
-  {
-    value: "wolfson",
-    label: "וולפסון",
-  },
+  { value: 'IChilov', label: 'איכילוב' },
+  { value: 'Asaf', label: 'אסף הרופא' },
+  { value: 'barziali', label: 'ברזילאי' },
+  { value: 'telShomer', label: 'תל השומר' },
+  { value: 'hadasa-har-zofim', label: 'הדסה הר הצופים' },
+  { value: 'hadasa-ein-karam', label: 'הדסה עין כרם' },
+  { value: 'wolfson', label: 'וולפסון' }
 ];
 function MedicalRequirements() {
   const [state, setState] = useState({
@@ -44,20 +23,22 @@ function MedicalRequirements() {
     baggageWheelChair: false,
     babyChair: false,
     highCar: false,
-    shipment: false,
+    shipment: false
   });
 
+  // TODO unused function!
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: event.target.checked
     });
   };
 
   const [isServiceForSelf, setIsServiceForSelf] = useState(false);
   const [value, setValue] = useState<Dayjs | null>(null);
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'he'}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="he">
       <div className="">
         <FormControlLabel
           control={
@@ -87,12 +68,7 @@ function MedicalRequirements() {
               fullWidth
               disabled={isServiceForSelf}
             />
-            <TextField
-              id="outlined-basic"
-              label="בניין בביה״ח"
-              variant="outlined"
-              fullWidth
-            />
+            <TextField id="outlined-basic" label="בניין בביה״ח" variant="outlined" fullWidth />
             <DatePicker
               value={value}
               onChange={(newValue) => setValue(newValue)}
@@ -101,8 +77,8 @@ function MedicalRequirements() {
               format="DD/MM/YYYY"
               slotProps={{
                 textField: {
-                  required: true,
-                },
+                  required: true
+                }
               }}
             />
             <TextField
@@ -124,35 +100,25 @@ function MedicalRequirements() {
               fullWidth
               disabled={isServiceForSelf}
             />
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="בית חולים לאיסוף והורדה"
-            >
+            <TextField id="outlined-select-currency" select label="בית חולים לאיסוף והורדה">
               {hospitals.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
-              id="outlined-basic"
-              required
-              label="מחלקה"
-              variant="outlined"
-              fullWidth
-            />
+            <TextField id="outlined-basic" required label="מחלקה" variant="outlined" fullWidth />
             <DatePicker
               value={value}
               onChange={(newValue) => setValue(newValue)}
               label="סיום התקופה בה תזדקקו לשירות ההסעות"
-              views={["year", "month", "day"]}
+              views={['year', 'month', 'day']}
               disablePast
               format="DD/MM/YYYY"
               slotProps={{
                 textField: {
-                  required: true,
-                },
+                  required: true
+                }
               }}
             />
             <FormControlLabel

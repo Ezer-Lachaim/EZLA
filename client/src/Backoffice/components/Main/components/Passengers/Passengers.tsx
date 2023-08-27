@@ -17,7 +17,7 @@ const getPassengersColumns = (
       header: 'תאריך הרשמה',
       accessorFn: (data) => {
         if (!isValid(data.signupDate)) return '-';
-        return format(data.signupDate!, 'dd/MM/yyyy');
+        return data.signupDate && format(data.signupDate, 'dd/MM/yyyy');
       }
     },
     {
@@ -62,8 +62,8 @@ const getPassengersColumns = (
 
         return (
           <span className="ml-2 whitespace-nowrap">
-            {format(row.original.startServiceDate!, 'dd/MM/yyyy')} -
-            {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+            {row.original.startServiceDate && format(row.original.startServiceDate, 'dd/MM/yyyy')} -
+            {row.original.endServiceDate && format(row.original.endServiceDate, 'dd/MM/yyyy')}
           </span>
         );
       }
@@ -73,7 +73,8 @@ const getPassengersColumns = (
       header: 'תוקף עד',
       cell: ({ row }) => {
         if (!isValid(row.original.endServiceDate)) return '-';
-        const isExpired = isBefore(row.original.endServiceDate!, new Date());
+        const isExpired =
+          row.original.endServiceDate && isBefore(row.original.endServiceDate, new Date());
 
         if (isExpired) {
           return (
@@ -88,7 +89,7 @@ const getPassengersColumns = (
           <div>
             {isExpired ? <Flag color="error" /> : <OutlinedFlag color="success" />}
             <span className="mr-4 whitespace-nowrap">
-              {format(row.original.endServiceDate!, 'dd/MM/yyyy')}
+              {row.original.endServiceDate && format(row.original.endServiceDate, 'dd/MM/yyyy')}
             </span>
           </div>
         );

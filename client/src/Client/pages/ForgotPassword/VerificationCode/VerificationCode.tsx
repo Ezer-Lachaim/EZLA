@@ -15,7 +15,6 @@ const VerificationCode = () => {
       <h1>{email}</h1>
       <p>יש להזין את 4 הספרות של קוד האימות</p>
       <div dir="ltr">
-        {/* eslint-disable-next-line no-console */}
         <VerificationInput length={4} placeholder="" onChange={(code) => console.log(code)} />
       </div>
       <p>

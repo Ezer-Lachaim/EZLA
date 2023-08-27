@@ -73,17 +73,14 @@ function RejectCustomerModal({ open, handleModal, userId }: RejectCustomerModalP
             marginTop: '15px'
           }}
         >
-          <Button
-            variant="outlined"
-            onClick={() => handleModal(false)}
-          >
+          <Button variant="outlined" onClick={() => handleModal(false)}>
             ביטול
           </Button>
           <Button
             onClick={handleReject}
             disabled={!reason}
             variant="contained"
-            color='primary'
+            color="primary"
             className="text-white"
           >
             שליחה

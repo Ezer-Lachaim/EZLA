@@ -34,7 +34,6 @@ const CreatePassword = () => {
   } = useForm<Inputs>({ defaultValues: { email: user?.email } });
   const userContext = useUserContext();
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    // eslint-disable-next-line no-console
     console.log(data);
 
     if (data.password !== data.repeatPassword) {
@@ -56,7 +55,9 @@ const CreatePassword = () => {
         } else {
           navigate('/passenger/order-ride');
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
   return (
