@@ -27,3 +27,6 @@ dist-ssr
 api-client
 openapitools.json
 .env.yaml
+
+# Sentry Auth Token
+.env.sentry-build-plugin
