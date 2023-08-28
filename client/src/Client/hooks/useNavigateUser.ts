@@ -6,9 +6,6 @@ import { RideStateEnum, User, UserRoleEnum } from '../../api-client';
 const useNavigateUser = () => {
   const { user, activeRide } = useUserContext();
 
-  useEffect(() => {
-    navigateOnRefresh();
-  }, [activeRide?.state]);
   const navigate = useNavigate();
 
   const navigateAfterLogin = (explicitUser: User | undefined = undefined) => {
@@ -77,6 +74,11 @@ const useNavigateUser = () => {
       navigate('/login');
     }
   };
+
+  useEffect(() => {
+    navigateOnRefresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRide?.state]);
 
   return { navigateAfterLogin, navigateOnRefresh };
 };

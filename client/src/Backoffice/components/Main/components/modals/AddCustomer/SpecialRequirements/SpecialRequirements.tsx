@@ -1,10 +1,10 @@
-import Box from "@mui/material/Box";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { useState } from "react";
+import Box from '@mui/material/Box';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { useState } from 'react';
 
 function SpecialRequirements() {
   const [state, setState] = useState({
@@ -13,27 +13,20 @@ function SpecialRequirements() {
     baggageWheelChair: false,
     babyChair: false,
     highCar: false,
-    shipment: false,
+    shipment: false
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: event.target.checked
     });
   };
 
-  const {
-    wheelChair,
-    smallKidChair,
-    baggageWheelChair,
-    babyChair,
-    highCar,
-    shipment,
-  } = state;
+  const { wheelChair, smallKidChair, baggageWheelChair, babyChair, highCar, shipment } = state;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <FormControl component="fieldset" variant="standard">
         <FormLabel className="mb-2" component="legend">
           בקשות מיוחדות
@@ -42,23 +35,13 @@ function SpecialRequirements() {
           <FormGroup className="mr-2">
             <FormControlLabel
               className="mb-2"
-              control={
-                <Checkbox
-                  checked={wheelChair}
-                  onChange={handleChange}
-                  name="wheelChair"
-                />
-              }
+              control={<Checkbox checked={wheelChair} onChange={handleChange} name="wheelChair" />}
               label="התאמה לכסא גלגלים"
             />
             <FormControlLabel
               className="mb-2"
               control={
-                <Checkbox
-                  checked={smallKidChair}
-                  onChange={handleChange}
-                  name="smallKidChair"
-                />
+                <Checkbox checked={smallKidChair} onChange={handleChange} name="smallKidChair" />
               }
               label="מושב בטיחות לילדים (גיל 3-8)"
             />
@@ -77,35 +60,17 @@ function SpecialRequirements() {
           <FormGroup>
             <FormControlLabel
               className="mb-2"
-              control={
-                <Checkbox
-                  checked={babyChair}
-                  onChange={handleChange}
-                  name="babyChair"
-                />
-              }
+              control={<Checkbox checked={babyChair} onChange={handleChange} name="babyChair" />}
               label="מושב בטיחות לתינוק"
             />
             <FormControlLabel
               className="mb-2"
-              control={
-                <Checkbox
-                  checked={highCar}
-                  onChange={handleChange}
-                  name="highCar"
-                />
-              }
+              control={<Checkbox checked={highCar} onChange={handleChange} name="highCar" />}
               label="רכב גבוה"
             />
             <FormControlLabel
               className="mb-2"
-              control={
-                <Checkbox
-                  checked={shipment}
-                  onChange={handleChange}
-                  name="shipment"
-                />
-              }
+              control={<Checkbox checked={shipment} onChange={handleChange} name="shipment" />}
               label="משלוחים למאושפז"
             />
           </FormGroup>

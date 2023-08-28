@@ -1,12 +1,10 @@
 import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
-import { useFormContext, Controller } from 'react-hook-form';
-import { Driver, RideRequesterSpecialRequestEnum } from '../../../../../../../../api-client';
+import { Controller } from 'react-hook-form';
+import { RideRequesterSpecialRequestEnum } from '../../../../../../../../api-client';
 
 const capabilities = Object.keys(RideRequesterSpecialRequestEnum);
 
 const CarCapabilitiesSelect = () => {
-  const { register, getValues } = useFormContext<Driver>();
-
   return (
     <div>
       <FormControl>

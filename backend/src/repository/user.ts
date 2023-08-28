@@ -19,7 +19,7 @@ export async function getUserByEmail(email: string): Promise<User> {
   return users[0];
 }
 
-export async function getAllUsers(state?: string, role?: string): Promise<any> {
+export async function getAllUsers(state?: string, role?: string): Promise<User[]> {
   const keys = await client.keys('user:*');
   return []
     .concat(...(await client.json.mGet(keys, '$')))
@@ -40,7 +40,7 @@ export async function incDriverNumOfDrives(uid: string): Promise<void> {
 }
 
 export async function updateUserByUid(uid: string, user: User): Promise<void> {
-  const userFromDB: any = await client.json.get(`user:${uid}`);
+  const userFromDB: User = await client.json.get(`user:${uid}`);
   const updated = Object.assign(userFromDB, user);
   await client.json.set(`user:${uid}`, '$', { ...updated });
 }
