@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { api } from './Config';
 
 export const initFirebaseApp = () => {
@@ -12,6 +13,11 @@ export const initFirebaseApp = () => {
     appId: '1:708652536157:web:53f1739dee1c5453eb58b4',
     measurementId: 'G-EK4J3MGLJ8'
   });
+
+  if (import.meta.env.DEV) {
+    const auth = getAuth();
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+  }
 };
 
 export const initFirebaseCloudMessaging = async () => {

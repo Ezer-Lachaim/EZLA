@@ -40,7 +40,7 @@ export async function incDriverNumOfDrives(uid: string): Promise<void> {
 }
 
 export async function updateUserByUid(uid: string, user: User): Promise<void> {
-  const userFromDB: User = await client.json.get(`user:${uid}`);
+  const userFromDB: User = (await client.json.get(`user:${uid}`)) as unknown as User;
   const updated = Object.assign(userFromDB, user);
   await client.json.set(`user:${uid}`, '$', { ...updated });
 }

@@ -1,12 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
+import { App, initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
 import { messaging, credential } from 'firebase-admin';
 
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  connectAuthEmulator
 } from 'firebase/auth';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
@@ -16,7 +17,7 @@ import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
 dotenv.config();
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_TOKEN,
+  apiKey: process.env.FIREBASE_AUTH_EMULATOR_HOST ? 'API_KEY' : process.env.FIREBASE_TOKEN,
   authDomain: 'ezla-pickup.firebaseapp.com',
   projectId: 'ezla-pickup',
   storageBucket: 'ezla-pickup.appspot.com',
@@ -25,14 +26,22 @@ const firebaseConfig = {
   measurementId: 'G-EK4J3MGLJ8'
 };
 
-const serviceAccount: ServiceAccount = {
-  projectId: 'ezla-pickup',
-  privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
-  clientEmail: 'firebase-adminsdk-mkix9@ezla-pickup.iam.gserviceaccount.com'
-};
+let app: App;
 
 initializeApp(firebaseConfig);
-const app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
+
+if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  app = initializeAppAdmin({ credential: credential.applicationDefault() });
+  const auth = getAuth();
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+} else {
+  const serviceAccount: ServiceAccount = {
+    projectId: 'ezla-pickup',
+    privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
+    clientEmail: 'firebase-adminsdk-mkix9@ezla-pickup.iam.gserviceaccount.com'
+  };
+  app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
+}
 
 export function getAuthConfig() {
   return getAuth();

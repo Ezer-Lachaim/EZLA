@@ -7,6 +7,7 @@ import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
 import { usersRouter } from './routes/users';
 import { index } from './routes/index';
 import { ridesRouter } from './routes/rides';
+import { devRouter } from './routes/dev';
 import { authHandler } from './middlewares/auth';
 import { driversRouter } from './routes/drivers';
 
@@ -24,21 +25,15 @@ app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-// if (process.env.NODE_ENV === 'production') {
-// app.use(authHandler);
-// }
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/dev', devRouter);
+}
 
+app.use('/rides', authHandler, ridesRouter);
 app.use('/users', authHandler, usersRouter);
 app.use('/drivers', authHandler, driversRouter);
 app.use('/rides', authHandler, ridesRouter);
 app.use('/', index);
-
-// app.use('/api', () => {
-//   app.use(authHandler);
-//   app.use('/users', usersRouter);
-//   app.use('/rides', ridesRouter);
-//   app.use('/', index);
-// });
 
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
