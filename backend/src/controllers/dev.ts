@@ -11,7 +11,7 @@ const auth = getAuthConfig();
 
 export const initDevData = async (req: CustomRequest, res: Response): Promise<void> => {
   try {
-    const adminRecord = await createUserWithEmailAndPassword(auth, 'admin@ezla.com', 'Admin*1');
+    const adminRecord = await createUserWithEmailAndPassword(auth, 'admin@test.com', 'Admin*1');
     const user = {} as User;
     user.userId = adminRecord.user.uid;
     user.role = UserRoleEnum.Admin;
@@ -22,7 +22,7 @@ export const initDevData = async (req: CustomRequest, res: Response): Promise<vo
     user.signupDate = new Date();
     await createUser(adminRecord.user.uid, user);
 
-    const driverRecord = await createUserWithEmailAndPassword(auth, 'driver@ezla.com', 'Driver*1');
+    const driverRecord = await createUserWithEmailAndPassword(auth, 'driver@test.com', 'Driver*1');
     const driver = {} as Driver;
     driver.userId = driverRecord.user.uid;
     driver.role = UserRoleEnum.Driver;
@@ -36,7 +36,7 @@ export const initDevData = async (req: CustomRequest, res: Response): Promise<vo
 
     const requesterRecord = await createUserWithEmailAndPassword(
       auth,
-      'requester@ezla.com',
+      'requester@test.com',
       'Requester*1'
     );
     const requester = {} as RideRequester;
