@@ -6,9 +6,9 @@ This is a monorepo using npm workspaces
 ```
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-GOOGLE_CLOUD_PROJECT='ezla-pickup'
+GOOGLE_CLOUD_PROJECT=ezla-pickup
 JWT_SECRET=DEV_SECRET
-FIREBASE_AUTH_EMULATOR_HOST="127.0.0.1:9099"
+FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
 ```
 
 ### Run Firebase emulator and Redis locally
@@ -26,6 +26,11 @@ Run redis-stack docker container locally:
 docker run -p 6379:6379 redis/redis-stack:latest
 ```
 
+### Generating open api typescript client
+```
+npm run generate:api:client -w client
+```
+
 ### Start client
 ```
 npm run dev:client
@@ -37,11 +42,9 @@ npm run dev:backend
 ```
 
 ### Create users for local dev
-Call GET request to http://localhost:3000/dev/init which will create 3 users (via Postman or CURL) which will create 3 users:
+Call GET request to http://localhost:3000/dev/init(via Postman or CURL) which will create 3 users:
+```
 admin@test.com, Admin*1
 driver@test.com, Driver*1
 requester@test.com, Requester*1
-### Generating open api typescript client
-```
-npm run generate:api:client -w client
 ```
