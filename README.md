@@ -37,7 +37,7 @@ npm run dev:backend
 ```
 
 ### Create users for local dev
-RUN GET /dev/init to the local backend api which will create 3 users:
+Call GET request to http://localhost:3000/dev/init which will create 3 users (via Postman or CURL) which will create 3 users:
 admin@test.com, Admin*1
 driver@test.com, Driver*1
 requester@test.com, Requester*1
