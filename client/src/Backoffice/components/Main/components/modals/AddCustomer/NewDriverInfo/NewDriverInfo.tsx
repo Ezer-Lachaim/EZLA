@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Checkbox,
   FormControl,
@@ -9,11 +10,18 @@ import {
 import { useFormContext } from 'react-hook-form';
 import { Driver } from '../../../../../../../api-client';
 
-function NewDriverInfo() {
+function NewDriverInfo({ existingEmails = new Set() }: { existingEmails: Set<string> }) {
   const {
     register,
-    formState: { errors }
+    trigger,
+    formState: { errors, isSubmitted }
   } = useFormContext<Driver>();
+
+  useEffect(() => {
+    if (isSubmitted) {
+      trigger('email');
+    }
+  }, [isSubmitted, trigger]);
 
   return (
     <>
@@ -57,12 +65,21 @@ function NewDriverInfo() {
               variant="outlined"
               fullWidth
               error={!!errors.email}
-              {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
+              {...register('email', {
+                required: true,
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                validate: {
+                  isEmailExists(value) {
+                    return value === undefined || !existingEmails.has(value);
+                  }
+                }
+              })}
             />
             {errors.email && (
               <FormHelperText error className="absolute top-full mr-0">
                 {errors.email.type === 'required' && 'חסר אימייל'}
                 {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
+                {errors.email.type === 'isEmailExists' && 'האימייל קיים במערכת'}
               </FormHelperText>
             )}
           </FormControl>
