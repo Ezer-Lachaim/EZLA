@@ -69,7 +69,7 @@ function NewDriverInfo({ existingEmails = new Set() }: { existingEmails: Set<str
                 required: true,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 validate: {
-                  isEmailExists(value) {
+                  isEmailDoesNotExist(value) {
                     return value === undefined || !existingEmails.has(value);
                   }
                 }
@@ -79,7 +79,7 @@ function NewDriverInfo({ existingEmails = new Set() }: { existingEmails: Set<str
               <FormHelperText error className="absolute top-full mr-0">
                 {errors.email.type === 'required' && 'חסר אימייל'}
                 {errors.email.type === 'pattern' && 'יש להקליד כתובת אימייל תקינה'}
-                {errors.email.type === 'isEmailExists' && 'האימייל קיים במערכת'}
+                {errors.email.type === 'isEmailDoesNotExist' && 'האימייל קיים במערכת'}
               </FormHelperText>
             )}
           </FormControl>
