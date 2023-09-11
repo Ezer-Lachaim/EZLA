@@ -8,6 +8,7 @@ import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
 import { api } from '../../../../../../Config.ts';
 import { Driver } from '../../../../../../api-client/models/Driver';
+import { ResponseError } from '../../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
@@ -29,6 +30,7 @@ interface AddCustomerModalProps {
 }
 function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [existingEmails, setExistingEmails] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const stepBackOrClose = () => {
     if (activeStepIndex > 0) {
@@ -91,6 +93,14 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
       });
       window.location.reload();
     } catch (error) {
+      if (error instanceof ResponseError && error.response) {
+        const { code }: { code: string } = await error.response.json();
+        if (code === 'auth/email-already-in-use') {
+          setExistingEmails(new Set([...existingEmails.values(), data.email]) as Set<string>);
+          setActiveStepIndex(0);
+        }
+      }
+
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -116,7 +126,7 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
         <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {activeStepIndex === 0 ? <NewDriverInfo /> : null}
+            {activeStepIndex === 0 ? <NewDriverInfo existingEmails={existingEmails} /> : null}
             {activeStepIndex === 1 ? <NewDriverCarInfo /> : null}
           </form>
         </FormProvider>

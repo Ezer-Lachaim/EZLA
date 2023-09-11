@@ -39,10 +39,10 @@ const DriverCanceledModal = ({
             האם להמשיך לחפש לכם הסעה חלופית?
           </p>
           <Button variant="contained" className="flex gap-2" onClick={onNewRide}>
-            הזמנת נסיעה חדשה
+            כן, המשיכו לחפש הסעה
           </Button>
           <Button variant="outlined" className="flex gap-2" onClick={onCancel}>
-            לא, תודה
+            לא תודה, בטלו נסיעה
           </Button>
         </div>
         <IconButton size="small" className="absolute left-2 top-1" onClick={onCancel}>
