@@ -48,4 +48,3 @@ admin@test.com, Admin*1
 driver@test.com, Driver*1
 requester@test.com, Requester*1
 ```
-slava update
