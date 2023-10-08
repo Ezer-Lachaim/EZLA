@@ -12,9 +12,8 @@ const FirstSignUp = () => {
     <div className="flex flex-col items-center w-full">
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1 className="text-center">
-        <span>שירות הסעות התנדבותי </span>
-        <span className="line-through">למבקרים בבתי חולים</span>
-        <b> לכולם</b>
+        שירות הסעות התנדבותי למבקרים בבתי חולים
+        <b> ולכולם</b>
       </h1>
       <p className="text-center text-sm">
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
@@ -44,7 +43,12 @@ const FirstSignUp = () => {
       </Button>
       <p className="text-xs text-center">
         מחפשים להצטרף לשירותנו כמתדנבים?💪❤️ <br />
-        התקשרו לשירות הלקוחות למטה!
+        למילוי טופס הרשמה הקישו&nbsp;
+        <a href="https://forms.gle/fRAY1H2HLyZrpZAR6">כאן</a>
+        <br />
+        או
+        <br />
+        התקשרו לשירות הלקוחות 033-730440
       </p>
 
       <div className="flex gap-2 absolute bottom-4">
