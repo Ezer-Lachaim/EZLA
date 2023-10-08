@@ -3,10 +3,10 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
+  // InputLabel,
+  // MenuItem,
+  // Select,
+  // SelectChangeEvent,
   TextField
 } from '@mui/material';
 import 'dayjs/locale/he';
@@ -14,18 +14,18 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Controller, FieldError, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFormPersist from 'react-hook-form-persist';
-import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
+// import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
-import { api } from '../../../../../../Config';
+// import { api } from '../../../../../../Config';
 
 const adapter = new AdapterDayjs();
 
 export const PatientInfoForm = () => {
   const [isServiceForMe, setIsServiceForMe] = useState(false);
-  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  // const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
   const {
     register,
@@ -37,21 +37,21 @@ export const PatientInfoForm = () => {
 
   useFormPersist('passengerInfoForm', { watch, setValue });
 
-  useEffect(() => {
-    const fetchHospitals = async () => {
-      const response = await api.hospital.getHospitalList();
+  // useEffect(() => {
+  //   const fetchHospitals = async () => {
+  //     const response = await api.hospital.getHospitalList();
+  //
+  //     if (response) {
+  //       setHospitals(response);
+  //     }
+  //   };
+  //
+  //   fetchHospitals();
+  // }, []);
 
-      if (response) {
-        setHospitals(response);
-      }
-    };
-
-    fetchHospitals();
-  }, []);
-
-  const onSelectHospital = (event: SelectChangeEvent<number>) => {
-    setValue('patient.hospitalId', event.target.value as number);
-  };
+  // const onSelectHospital = (event: SelectChangeEvent<number>) => {
+  //   setValue('patient.hospitalId', event.target.value as number);
+  // };
 
   const serviceForMeHandler = () => {
     if (isServiceForMe) {
@@ -73,11 +73,11 @@ export const PatientInfoForm = () => {
       <div className="flex flex-col gap-9 mb-5">
         <FormControlLabel
           control={<Checkbox onClick={serviceForMeHandler} />}
-          label="השירות מיועד לטיפול עבור עצמי"
+          label="השירות מיועד עבור עצמי"
         />
         <FormControl>
           <TextField
-            label="המטופל שם פרטי"
+            label="שם פרטי"
             fullWidth
             autoFocus
             variant={isServiceForMe ? 'filled' : 'outlined'}
@@ -96,7 +96,7 @@ export const PatientInfoForm = () => {
         </FormControl>
         <FormControl>
           <TextField
-            label="המטופל שם משפחה"
+            label="שם משפחה"
             fullWidth
             required
             variant={isServiceForMe ? 'filled' : 'outlined'}
@@ -114,7 +114,7 @@ export const PatientInfoForm = () => {
         </FormControl>
         <FormControl>
           <TextField
-            label="המטופל תעודת זהות"
+            label="תעודת זהות"
             fullWidth
             required
             variant={isServiceForMe ? 'filled' : 'outlined'}
@@ -133,41 +133,41 @@ export const PatientInfoForm = () => {
             </FormHelperText>
           )}
         </FormControl>
-        <FormControl fullWidth required>
-          <InputLabel id="hospital-label" required>
-            בית החולים לאיסוף והורדה
-          </InputLabel>
-          <Select
-            labelId="hospital-label"
-            defaultValue={hospitals[0]?.id}
-            {...register('patient.hospitalId', { required: true })}
-            label="בית החולים לאיסוף והורדה"
-            placeholder="בחרו בית חולים"
-            onChange={onSelectHospital}
-            error={!!errors.patient?.hospitalId}
-          >
-            {hospitals.map((hospital) => (
-              <MenuItem key={hospital.id} value={hospital.id}>
-                {hospital.name}
-              </MenuItem>
-            ))}
-          </Select>
-          {errors.patient?.hospitalId && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.patient?.hospitalId.type === 'required' && 'יש לבחור בית חולים'}
-            </FormHelperText>
-          )}
-        </FormControl>
+        {/* <FormControl fullWidth required disabled> */}
+        {/*  <InputLabel id="hospital-label" required> */}
+        {/*    בית החולים לאיסוף והורדה */}
+        {/*  </InputLabel> */}
+        {/*  <Select */}
+        {/*    labelId="hospital-label" */}
+        {/*    defaultValue={hospitals[0]?.id} */}
+        {/*    {...register('patient.hospitalId', { required: true })} */}
+        {/*    label="בית החולים לאיסוף והורדה" */}
+        {/*    placeholder="בחרו בית חולים" */}
+        {/*    onChange={onSelectHospital} */}
+        {/*    error={!!errors.patient?.hospitalId} */}
+        {/*  > */}
+        {/*    {hospitals.map((hospital) => ( */}
+        {/*      <MenuItem key={hospital.id} value={hospital.id}> */}
+        {/*        {hospital.name} */}
+        {/*      </MenuItem> */}
+        {/*    ))} */}
+        {/*  </Select> */}
+        {/*  {errors.patient?.hospitalId && ( */}
+        {/*    <FormHelperText error className="absolute top-full mr-0"> */}
+        {/*      {errors.patient?.hospitalId.type === 'required' && 'יש לבחור בית חולים'} */}
+        {/*    </FormHelperText> */}
+        {/*  )} */}
+        {/* </FormControl> */}
         <TextField
-          label="בניין בביה”ח"
+          label="יעד נסיעה"
           fullWidth
           type="text"
-          placeholder="טקסט הסבר"
+          placeholder="ישוב, רחוב, מספר בית"
           error={!!errors.patient?.hospitalBuilding}
           {...register('patient.hospitalBuilding')}
         />
         <TextField
-          label="מחלקה"
+          label="פרטים נוספים"
           fullWidth
           type="text"
           placeholder="טקסט הסבר"

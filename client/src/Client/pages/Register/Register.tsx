@@ -14,7 +14,7 @@ import { api, setToken } from '../../../Config.ts';
 // import { BASE_API_URL } from '../../../Config.ts';
 
 // const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
-const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
+const steps = ['פרטי הנוסע', 'פרטים נוספים', 'סיכום ואישור'];
 
 const Register = ({
   activeStepIndex,

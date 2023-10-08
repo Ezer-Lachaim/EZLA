@@ -11,11 +11,16 @@ const FirstSignUp = () => {
   return (
     <div className="flex flex-col items-center w-full">
       <img src={logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-center">שירות הסעות התנדבותי למבקרים בבתי חולים</h1>
+      <h1 className="text-center">
+        <span>שירות הסעות התנדבותי </span>
+        <span className="line-through">למבקרים בבתי חולים</span>
+        <b> לכולם</b>
+      </h1>
       <p className="text-center text-sm">
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
         ברורה שהעזרה והסיוע מצילים ומוסיפים חיים ונותנים כוח לחולה להתמודד בדרך לבריאות.
       </p>
+      <p className="text-center text-md font-bold">לאור המצב פתחנו את השירות לכל מי שזקוק להסעה.</p>
       <Button
         variant="contained"
         color="secondary"

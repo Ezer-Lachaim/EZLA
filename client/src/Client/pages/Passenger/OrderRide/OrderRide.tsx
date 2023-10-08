@@ -12,7 +12,6 @@ import {
   FormControl,
   MenuItem
 } from '@mui/material';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
@@ -61,6 +60,7 @@ const OrderRide = () => {
     register,
     watch,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<ClientRide>({
     defaultValues: {
@@ -84,10 +84,10 @@ const OrderRide = () => {
       }
     }
   });
-  const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
-    'destination'
-  );
-  const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
+  // const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
+  //   'destination'
+  // );
+  // const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
 
   const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
@@ -97,29 +97,30 @@ const OrderRide = () => {
 
   useEffect(() => {
     const fetchHospitals = async () => {
-      const response = await api.hospital.getHospitalList();
+      // const response = await api.hospital.getHospitalList();
 
-      if (response) {
-        const hospitalName =
-          response.find((hospital) => hospital.id === rideRequester.patient?.hospitalId)?.name ||
-          '';
+      // if (response) {
+      //   const hospitalName =
+      //     response.find((hospital) => hospital.id === rideRequester.patient?.hospitalId)?.name ||
+      //     '';
 
-        setAutofilledAddressValue(
-          getPatientDestination(
-            hospitalName,
-            rideRequester.patient?.hospitalDept || '',
-            rideRequester.patient?.hospitalBuilding || ''
-          )
-        );
-      }
+      setValue(
+        'destination',
+        getPatientDestination(
+          '',
+          rideRequester.patient?.hospitalDept || '',
+          rideRequester.patient?.hospitalBuilding || ''
+        )
+      );
+      // }
     };
 
     fetchHospitals();
   }, [rideRequester]);
 
-  const onSwitchAutofilled = () => {
-    setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
-  };
+  // const onSwitchAutofilled = () => {
+  //   setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
+  // };
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     setIsOrderRideLoading(true);
@@ -135,13 +136,6 @@ const OrderRide = () => {
 
     const newRide = {
       ...data,
-      ...(autofilledAddress === 'destination'
-        ? {
-            destination: autofilledAddressValue
-          }
-        : {
-            origin: autofilledAddressValue
-          }),
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver,
       rideRequester: {
@@ -170,61 +164,48 @@ const OrderRide = () => {
       <h1 className="mt-0">שלום {passenger}! צריך הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
-          {autofilledAddress === 'destination' ? (
-            <FormControl>
-              <TextField
-                label="כתובת איסוף"
-                type="string"
-                placeholder="יש להזין שם רחוב, מספר בית ועיר"
-                required
-                error={!!errors?.origin}
-                {...register('origin', { required: true })}
-              />
-              {errors.origin && (
-                <FormHelperText error className="absolute top-full mr-0">
-                  {errors.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
-                </FormHelperText>
-              )}
-            </FormControl>
-          ) : (
-            <div>
-              <InputLabel>כתובת איסוף</InputLabel>
-              <span>{autofilledAddressValue}</span>
-            </div>
-          )}
-          <div className="flex justify-center m-3">
-            <Button
-              variant="outlined"
-              size="small"
-              className="w-8 min-w-0"
-              onClick={onSwitchAutofilled}
-            >
-              <SwapVertIcon />
-            </Button>
-          </div>
-          {autofilledAddress === 'source' ? (
-            <FormControl>
-              <TextField
-                label="כתובת יעד"
-                type="string"
-                placeholder="יש להזין שם רחוב, מספר בית ועיר"
-                required
-                error={!!errors?.destination}
-                {...register('destination', { required: true })}
-              />
+          <FormControl>
+            <TextField
+              label="כתובת איסוף"
+              type="string"
+              placeholder="יש להזין שם רחוב, מספר בית ועיר"
+              required
+              error={!!errors?.origin}
+              {...register('origin', { required: true })}
+            />
+            {errors.origin && (
+              <FormHelperText error className="absolute top-full mr-0">
+                {errors.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+              </FormHelperText>
+            )}
+          </FormControl>
+          <br />
+          {/* <div className="flex justify-center m-3"> */}
+          {/*  <Button */}
+          {/*    variant="outlined" */}
+          {/*    size="small" */}
+          {/*    className="w-8 min-w-0" */}
+          {/*    onClick={onSwitchAutofilled} */}
+          {/*  > */}
+          {/*    <SwapVertIcon /> */}
+          {/*  </Button> */}
+          {/* </div> */}
+          <FormControl>
+            <TextField
+              label="כתובת יעד"
+              type="string"
+              placeholder="יש להזין שם רחוב, מספר בית ועיר"
+              required
+              error={!!errors?.destination}
+              {...register('destination', { required: true })}
+            />
 
-              {errors.destination && (
-                <FormHelperText error className="absolute top-full mr-0">
-                  {errors.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
-                </FormHelperText>
-              )}
-            </FormControl>
-          ) : (
-            <div>
-              <InputLabel>כתובת יעד</InputLabel>
-              <span>{autofilledAddressValue}</span>
-            </div>
-          )}
+            {errors.destination && (
+              <FormHelperText error className="absolute top-full mr-0">
+                {errors.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+              </FormHelperText>
+            )}
+          </FormControl>
         </div>
         <FormControl>
           <TextField
@@ -233,7 +214,10 @@ const OrderRide = () => {
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
             error={!!errors?.cellphone}
-            {...register('cellphone', { required: true, pattern: /^05\d-?\d{7}$/ })}
+            {...register('cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
           />
           {errors.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -317,7 +301,7 @@ const OrderRide = () => {
   );
 };
 export default withLayout(OrderRide, {
-  title: 'הזמנת הסעה לביקור חולים',
+  title: 'הזמנת הסעה',
   hideFooter: true,
   showLogoutButton: true
 });
