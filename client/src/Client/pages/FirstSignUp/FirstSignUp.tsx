@@ -82,7 +82,7 @@ const FirstSignUp = () => {
       {shouldDisplayInfo && (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
-          className="flex flex-col items-center justify-center w-screen h-screen fixed bg-white z-50 top-0 left-0 bg-contain bg-no-repeat bg-center"
+          className="flex flex-col items-center justify-center w-screen dvh-screen fixed bg-white z-50 top-0 left-0 bg-contain bg-no-repeat bg-center"
           style={{ backgroundImage: `url(${infoImg})` }}
           onClick={onInfoContinue}
         >

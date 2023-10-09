@@ -23,7 +23,7 @@ const withLayout = <P extends object>(
   }: LayoutHOCProps<P>
 ) => {
   return () => (
-    <div className="h-screen flex flex-col m-0">
+    <div className="dvh-screen flex flex-col m-0">
       {!hideNavbar && (
         <NavBar
           title={title || 'עזר לחיים'}
