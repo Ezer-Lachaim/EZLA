@@ -42,7 +42,7 @@ const FirstSignUp = () => {
         כניסה ראשונה כמתנדב
       </Button>
       <p className="text-xs text-center">
-        מחפשים להצטרף לשירותנו כמתדנבים?💪❤️ <br />
+        מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
         למילוי טופס הרשמה הקישו&nbsp;
         <a href="https://forms.gle/fRAY1H2HLyZrpZAR6">כאן</a>
         <br />
