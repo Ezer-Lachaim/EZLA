@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   Button,
@@ -19,7 +19,6 @@ import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
 import useNavigateUser from '../../hooks/useNavigateUser.ts';
 import { setNotificationsToken } from '../../../init-firebase.ts';
-import { Splash } from '../Splash/Splash.tsx';
 
 type Inputs = {
   email: string;
@@ -27,7 +26,6 @@ type Inputs = {
 };
 
 const Login = () => {
-  const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const { setUser } = useUserContext();
   const {
@@ -38,16 +36,6 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const { navigateAfterLogin } = useNavigateUser();
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setShouldDisplaySplash(false);
-    }, 2 * 1000);
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
@@ -81,7 +69,10 @@ const Login = () => {
             error={!!errors.email}
             label="אימייל"
             placeholder="דוגמה: david@gmail.com"
-            {...register('email', { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
+            {...register('email', {
+              required: true,
+              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            })}
           />
           {errors.email && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -136,8 +127,6 @@ const Login = () => {
         &nbsp;
         <Link to="/first-signup">להרשמה</Link>
       </div>
-
-      {shouldDisplaySplash && <Splash />}
     </div>
   );
 };

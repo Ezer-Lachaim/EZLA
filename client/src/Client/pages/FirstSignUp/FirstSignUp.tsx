@@ -1,12 +1,25 @@
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import FaceIcon from '@mui/icons-material/Face';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
+import { Splash } from '../Splash/Splash.tsx';
 
 const FirstSignUp = () => {
   const navigation = useNavigate();
+  const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setShouldDisplaySplash(false);
+    }, 2 * 1000);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -38,7 +51,7 @@ const FirstSignUp = () => {
         כניסה ראשונה כמתנדב
       </Button>
       <p className="text-xs text-center">
-        מחפשים להצטרף לשירותנו כמתדנבים?💪❤️ <br />
+        מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
         התקשרו לשירות הלקוחות למטה!
       </p>
 
@@ -46,6 +59,8 @@ const FirstSignUp = () => {
         <p>משתמש רשום,</p>
         <Link to="/login">כניסה למערכת</Link>
       </div>
+
+      {shouldDisplaySplash && <Splash />}
     </div>
   );
 };

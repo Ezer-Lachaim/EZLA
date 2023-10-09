@@ -349,6 +349,5 @@ const OrderRide = () => {
 };
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה לביקור חולים',
-  hideFooter: true,
   showLogoutButton: true
 });
