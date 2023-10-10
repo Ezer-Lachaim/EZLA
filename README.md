@@ -17,6 +17,7 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 This is a monorepo using npm workspaces
 
 ### Create local .env file with the following props
+The file should be placed in /backend folder
 ```
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
@@ -56,7 +57,7 @@ npm run dev:backend
 ```
 
 ### Create users for local dev
-Call GET request to http://localhost:3000/dev/init(via Postman or CURL) which will create 3 users:
+Call GET request to http://localhost:3000/dev/init (via Postman or CURL) which will create 3 users:
 ```
 admin@test.com, Admin*1
 driver@test.com, Driver*1
