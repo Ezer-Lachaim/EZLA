@@ -1,3 +1,17 @@
+# EZLA Project
+
+This project was created by Redis, and is managed on a voluntary basis.
+
+If you would like to contribute, please send an email to <a href="mailto:guy.korland@redis.com">guy.korland@redis.com</a>.
+
+Tasks are managed in this project: https://github.com/orgs/Ezer-Lachaim/projects/1, and discussions are done on the Google Spaces group.
+
+## Contributing
+
+In order to contribute, please fork this repository, and create a pull request.
+
+If you are unsure how to do this, please follow this guide: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
+
 ## Development
 
 This is a monorepo using npm workspaces
