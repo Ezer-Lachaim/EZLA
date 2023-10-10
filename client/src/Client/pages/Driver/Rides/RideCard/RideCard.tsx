@@ -88,9 +88,6 @@ export const RideCard = ({
                   </Typography>
                 </div>
               </Typography>
-              <Typography variant="body1" component="div">
-                {ride.origin}
-              </Typography>
             </div>
             <div className="flex-row flex-1">
               <Typography color="GrayText" variant="body2" component="div">
