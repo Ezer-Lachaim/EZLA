@@ -42,11 +42,11 @@ const FirstSignUp = () => {
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
         ברורה שהעזרה והסיוע מצילים ומוסיפים חיים ונותנים כוח לחולה להתמודד בדרך לבריאות.
       </p>
-      <p className="text-center text-md font-bold">לאור המצב פתחנו את השירות לכל מי שזקוק להסעה.</p>
+      <p className="text-center text-sm font-bold">לאור המצב פתחנו את השירות לכל מי שזקוק להסעה.</p>
       <Button
         variant="contained"
         color="secondary"
-        className="w-full mb-6 mt-10"
+        className="w-full text-lg mb-6 mt-10"
         size="large"
         endIcon={<FaceIcon />}
         onClick={() => {
@@ -64,7 +64,7 @@ const FirstSignUp = () => {
       {/* > */}
       {/*  כניסה ראשונה כמתנדב */}
       {/* </Button> */}
-      <p className="text-xs text-center">
+      <p className="text-md text-center">
         מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
         למילוי טופס הרשמה הקישו&nbsp;
         <a href="https://forms.gle/fRAY1H2HLyZrpZAR6">כאן</a>
