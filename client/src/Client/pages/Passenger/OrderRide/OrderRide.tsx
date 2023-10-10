@@ -302,6 +302,5 @@ const OrderRide = () => {
 };
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה',
-  hideFooter: true,
   showLogoutButton: true
 });

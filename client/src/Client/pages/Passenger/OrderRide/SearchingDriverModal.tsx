@@ -9,7 +9,7 @@ const style = {
   top: '60px',
   left: '0',
   width: '100vw',
-  height: 'calc(100vh - 60px)',
+  height: 'calc(100vh - 60px - 52px)',
   bgcolor: 'background.paper',
   p: 2.5,
   zIndex: '10'
