@@ -7,7 +7,6 @@ import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
-import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
@@ -17,7 +16,7 @@ import { useUserContext } from '../../../../context/UserContext/UserContext.tsx'
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
-const ActiveRide = () => {
+export const ActiveRide = () => {
   const { activeRide: ride } = useUserContext();
   const [confirmClose, setConfirmClose] = useState(false);
   const navigate = useNavigate();
@@ -117,16 +116,15 @@ const ActiveRide = () => {
         <ViewField
           label="מומלץ ליצור קשר עם הנוסעים לפני היציאה לדרך"
           value={
-            <div className="flex gap-2">
-              <Button
-                variant="outlined"
-                size="large"
-                startIcon={<PhoneIcon />}
-                onClick={() => window.open(`tel:${ride?.cellphone}`)}
-              >
-                צרו קשר
-              </Button>
-            </div>
+            <Button
+              className="flex-1"
+              variant="outlined"
+              size="large"
+              startIcon={<PhoneIcon />}
+              onClick={() => window.open(`tel:${ride?.cellphone}`)}
+            >
+              צרו קשר
+            </Button>
           }
         />
         <hr className="mt-2" />
@@ -174,8 +172,3 @@ const ActiveRide = () => {
     </div>
   );
 };
-
-export default withLayout(ActiveRide, {
-  title: 'נסיעה פעילה',
-  showLogoutButton: true
-});
