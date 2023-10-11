@@ -22,7 +22,7 @@ const ActiveRide = () => {
   const navigate = useNavigate();
 
   const onArrive = async () => {
-    const newRide = { ...ride, state: RideStateEnum.DriverArrived };
+    const newRide = { state: RideStateEnum.DriverArrived };
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
       ride: newRide

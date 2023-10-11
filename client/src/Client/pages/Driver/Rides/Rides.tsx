@@ -36,6 +36,7 @@ const Rides = () => {
         rideId: selectedRide?.rideId || '',
         ride: {
           ...selectedRide,
+          requestTimeStamp: undefined,
           state: RideStateEnum.Booked,
           driver: {
             userId: driver?.userId,
