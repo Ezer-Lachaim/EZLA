@@ -77,7 +77,8 @@ const ActiveRide = () => {
           value={
             <div className="flex items-center justify-between w-full mb-2">
               <p className="text-lg">
-                {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
+                {ride?.firstName || ride?.rideRequester?.firstName}{' '}
+                {ride?.lastName || ride?.rideRequester?.lastName}
                 <span className="px-2 text-sm">
                   {ride?.passengerCount && `(${ride?.passengerCount} נוסעים)`}
                 </span>
@@ -118,6 +119,8 @@ const ActiveRide = () => {
             value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
           />
         )}
+
+        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
 
         <hr className="mt-2" />
       </div>

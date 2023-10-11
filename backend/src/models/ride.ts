@@ -85,7 +85,25 @@ export interface Ride {
      * @type {RideRequester}
      * @memberof Ride
      */
-    rideRequester?: any
+    rideRequester?: any,
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
+    firstName? : string;
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
+    lastName?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
+    comment?: string;
 }
 
 /**
