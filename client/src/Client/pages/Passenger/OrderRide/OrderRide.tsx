@@ -175,7 +175,7 @@ const OrderRide = () => {
               <TextField
                 label="כתובת איסוף"
                 type="string"
-                placeholder="יש להזין כתובת"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
                 required
                 error={!!errors?.origin}
                 {...register('origin', { required: true })}
@@ -207,7 +207,7 @@ const OrderRide = () => {
               <TextField
                 label="כתובת יעד"
                 type="string"
-                placeholder="יש להזין כתובת"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
                 required
                 error={!!errors?.destination}
                 {...register('destination', { required: true })}

@@ -34,15 +34,15 @@ const DriverCanceledModal = ({
             <h1 className="text-red-600 text-center my-3 text-[22px]">נסיעתך בוטלה</h1>
           </div>
           <p className="text-center text-lg text-gray-600">
-            לצערנו המתנדב ביטל את הנסיעה שהזמנתם.
+            לצערנו המתנדב.ת ביטל.ה את הנסיעה שהזמנתם.
             <br />
             האם להמשיך לחפש לכם הסעה חלופית?
           </p>
           <Button variant="contained" className="flex gap-2" onClick={onNewRide}>
-            הזמנת נסיעה חדשה
+            כן, המשיכו לחפש הסעה
           </Button>
           <Button variant="outlined" className="flex gap-2" onClick={onCancel}>
-            לא, תודה
+            לא תודה, בטלו נסיעה
           </Button>
         </div>
         <IconButton size="small" className="absolute left-2 top-1" onClick={onCancel}>
