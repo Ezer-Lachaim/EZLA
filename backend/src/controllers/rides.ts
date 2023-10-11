@@ -91,7 +91,9 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
 
   try {
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as Ride) });
-    await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
+    if (ride.rideRequester?.userId) {
+      await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
+    }
     if (result) {
       res.status(200).json(ride);
     } else {
@@ -154,7 +156,9 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
 
       if (updatedRide.state === RideStateEnum.RequesterCanceled) {
         if (updatedRide.driver) {
-          await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+          if (currentRide.rideRequester?.userId) {
+            await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+          }
           if (currentRide.driver?.userId) {
             await sendPushByUserId(
               currentRide.driver?.userId,
