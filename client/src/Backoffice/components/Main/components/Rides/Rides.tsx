@@ -53,7 +53,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     }
   },
   {
-    accessorKey: 'cellphone',
+    accessorKey: 'period',
     header: 'משך התהליך',
     accessorFn: (data) => {
       if (!data.requestTimeStamp || !data.completedTimeStamp) return '-';
