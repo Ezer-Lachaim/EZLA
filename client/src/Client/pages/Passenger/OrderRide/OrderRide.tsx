@@ -116,7 +116,7 @@ const OrderRide = () => {
     };
 
     fetchHospitals();
-  }, [rideRequester]);
+  }, [rideRequester, setValue]);
 
   // const onSwitchAutofilled = () => {
   //   setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
