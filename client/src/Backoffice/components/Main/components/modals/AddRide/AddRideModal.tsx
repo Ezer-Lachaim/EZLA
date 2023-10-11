@@ -3,9 +3,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { api } from '../../../../../../Config.ts';
-import { Ride, RideStateEnum } from '../../../../../../api-client';
+import { Ride, RideStateEnum, FetchError } from '../../../../../../api-client';
 import NewRideInfo from './NewRideInfo/NewRideInfo.tsx';
-import { FetchError } from '../../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
