@@ -1,22 +1,17 @@
 {
-  "name": "client",
+  "name": "@ezla/client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "start": "cross-env VITE_BASE_API_URL=http://localhost:3000 vite",
     "build": "vite build",
-    "build:native": "cross-env VITE_BASE_API_URL=https://app.ezla.org.il/ npm run build",
-    "android:run": "cap run android",
-    "android:build": "cap build android --keystorepath $KEYSTORE_PATH /home/leibale/Workspace/EZLA/keystore.jks --keystorepass $KEYSTORE_PASS --keystorealias $KEYSTORE_ALIAS --keystorealiaspass $KEYSTORE_ALIAS_PASS",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "generate:api:client": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o src/api-client/ --skip-validate-spec",
     "preview": "vite preview",
     "postinstall": "npm run generate:api:client"
   },
   "dependencies": {
-    "@capacitor/android": "^5.4.2",
-    "@capacitor/core": "^5.4.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
@@ -38,7 +33,6 @@
     "stylis-plugin-rtl": "^2.1.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "^5.4.2",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@types/stylis": "^4.2.0",

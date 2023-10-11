@@ -1,0 +1,18 @@
+{
+  "name": "@ezla/app",
+  "private": true,
+  "scripts": {
+    "build": "cross-env VITE_BASE_API_URL=https://app.ezla.org.il/ npm run -w @ezla/client build",
+    "android:run": "cap run android",
+    "android:build": "cap build android --keystorepath $KEYSTORE_PATH /home/leibale/Workspace/EZLA/keystore.jks --keystorepass $KEYSTORE_PASS --keystorealias $KEYSTORE_ALIAS --keystorealiaspass $KEYSTORE_ALIAS_PASS"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.5.0",
+    "@capacitor/core": "^5.5.0",
+    "@ezla/client": "*"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.5.0",
+    "cross-env": "^7.0.3"
+  }
+}

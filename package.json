@@ -1,7 +1,6 @@
 {
   "name": "ezla",
-  "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "lint": "npm run lint --workspaces --if-present",
@@ -24,9 +23,10 @@
   },
   "homepage": "https://github.com/Ezer-Lachaim/EZLA#readme",
   "workspaces": [
-    "client",
+    "app",
     "backend",
-    "backend-mock"
+    "backend-mock",
+    "client"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.60.0",
