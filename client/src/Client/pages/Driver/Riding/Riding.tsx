@@ -21,7 +21,7 @@ const Riding = () => {
   const onComplete = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Completed }
+      ride: { state: RideStateEnum.Completed }
     });
 
     navigate('/driver/completed');
