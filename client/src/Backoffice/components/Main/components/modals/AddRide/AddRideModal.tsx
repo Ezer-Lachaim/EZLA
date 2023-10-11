@@ -74,7 +74,7 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       <Box sx={style}>
         <div className="flex justify-between mb-2">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            הוספת מתנדב חדש
+            בקשה לנסיעה חדשה
           </Typography>
           <Button color="inherit" onClick={() => handleModal(false)}>
             <ClearIcon />
