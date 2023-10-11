@@ -91,6 +91,18 @@ export interface Ride {
      * @type {string}
      * @memberof Ride
      */
+    firstName? : string;
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
+    lastName?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
     comment?: string;
 }
 

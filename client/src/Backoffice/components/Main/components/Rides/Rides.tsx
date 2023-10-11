@@ -7,6 +7,7 @@ import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
+import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
@@ -30,14 +31,18 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorKey: 'rideRequester.firstName',
     header: 'שם נוסע',
     accessorFn: (data) => {
-      const fullName = `${data.rideRequester?.firstName ?? ''} ${
-        data.rideRequester?.lastName ?? ''
+      const fullName = `${(data.firstName || data.rideRequester?.firstName) ?? ''} ${
+        (data.lastName || data.rideRequester?.lastName) ?? ''
       }`;
       if (!fullName.trim()) return '-';
       return fullName;
     }
   },
-  { accessorKey: 'origin', header: 'כתובת איסוף', accessorFn: (data) => data.origin || '-' },
+  {
+    accessorKey: 'origin',
+    header: 'כתובת איסוף',
+    accessorFn: (data) => data.origin || '-'
+  },
   {
     accessorKey: 'destination',
     header: 'יעד נסיעה',
@@ -80,6 +85,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
 
 const Rides = () => {
   const [rides, setRides] = useState<Ride[]>([]);
+  const [isAddRideModalOpen, setIsAddRideModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchRides = async () => {
@@ -100,6 +106,12 @@ const Rides = () => {
     <div>
       <PageHeader>
         <PageHeader.Title>נסיעות ({rides?.length})</PageHeader.Title>
+
+        <PageHeader.ActionButton onClick={() => setIsAddRideModalOpen(true)}>
+          נסיעה חדשה
+        </PageHeader.ActionButton>
+
+        <AddRideModal open={isAddRideModalOpen} handleModal={setIsAddRideModalOpen} />
       </PageHeader>
       <Table data={rides} columns={columns} />
     </div>
