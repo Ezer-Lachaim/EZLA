@@ -67,6 +67,16 @@ export async function sendPushNotification(registrationToken: string, payload: M
   return messaging().sendToDevice(registrationToken, payload);
 }
 
+export async function sendNewRideNotificationToDrivers() {
+  return messaging().sendToTopic('new-ride', {
+    notification: { title: 'נסיעה חדשה!', body: 'נסיעה חדשה ממתינה לכם במערכת.' }
+  });
+}
+
+export async function subscribeToNewRideNotification(registrationToken: string) {
+  return messaging().subscribeToTopic(registrationToken, 'new-ride');
+}
+
 export const firebase = {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
