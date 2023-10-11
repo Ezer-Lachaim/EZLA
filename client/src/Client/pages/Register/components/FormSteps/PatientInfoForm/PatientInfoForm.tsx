@@ -120,7 +120,7 @@ export const PatientInfoForm = () => {
             variant={isServiceForMe ? 'filled' : 'outlined'}
             disabled={isServiceForMe}
             type="number"
-            placeholder="טקסט הסבר"
+            placeholder="יש להזין 9 ספרות כולל ספרת ביקורת"
             error={!!errors.patient?.nationalId}
             {...register('patient.nationalId', { required: true, minLength: 9 })}
           />
