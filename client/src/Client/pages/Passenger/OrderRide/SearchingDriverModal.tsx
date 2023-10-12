@@ -33,7 +33,11 @@ const SearchingDriverModal = ({
           <div className="flex flex-col w-full h-full">
             <div className="flex flex-col justify-center flex-grow items-center">
               <img src={car} alt="car" className="w-20 animate-bounce" />
-              <h1 className="text-center">מחפשים עבורכם מתנדב...</h1>
+              <h1 className="text-center">פנייתכם נקלטה</h1>
+              <h1 className="text-center">אנא העזרו בסבלנות, זה עשוי לקחת מספר דקות</h1>
+              <h1 className="text-center">
+                במידה ואין מתנדבים זמינים כרגע, אנחנו ניצור אתכם קשר לפני שיצאו לדרך
+              </h1>
             </div>
             <Button
               variant="outlined"

@@ -71,7 +71,7 @@ const useNavigateUser = () => {
     } else if (user?.registrationState === 'Approved') {
       navigateAfterLogin();
     } else if (window.location.pathname === '/') {
-      navigate('/login');
+      navigate('/first-signup');
     }
   };
 

@@ -23,7 +23,7 @@ const withLayout = <P extends object>(
   }: LayoutHOCProps<P>
 ) => {
   return () => (
-    <div className="h-screen flex flex-col m-0">
+    <div className={`dvh-screen flex flex-col m-0 ${backgroundColor || 'bg-white'}`}>
       {!hideNavbar && (
         <NavBar
           title={title || 'עזר לחיים'}
@@ -32,10 +32,12 @@ const withLayout = <P extends object>(
           showLogoutButton={showLogoutButton}
         />
       )}
-      <div className={`relative flex-1 ${backgroundColor || 'bg-white'} max-h-full overflow-auto`}>
-        <main className="flex items-center flex-col p-5 box-border h-full">
-          <Component {...(componentProps as P)} />
-        </main>
+      <div className="max-h-full overflow-auto h-full">
+        <div className="max-w-lg mx-auto w-full h-full">
+          <main className="flex items-center flex-col p-5 box-border h-full">
+            <Component {...(componentProps as P)} />
+          </main>
+        </div>
       </div>
       {!hideFooter && <Footer />}
     </div>
