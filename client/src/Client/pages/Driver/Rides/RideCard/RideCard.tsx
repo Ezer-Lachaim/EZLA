@@ -65,7 +65,8 @@ export const RideCard = ({
               שם:
             </Typography>
             <Typography className="ml-1 mr-1" variant="body1" component="div">
-              {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
+              {ride?.firstName || ride?.rideRequester?.firstName}{' '}
+              {ride?.lastName || ride?.rideRequester?.lastName}
             </Typography>
           </div>
           <div className="flex">
