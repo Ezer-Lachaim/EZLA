@@ -4,6 +4,7 @@ import {
   firebase,
   getAuthConfig,
   sendPasswordResetEmailForUser,
+  subscribeToNewRideNotification,
   updateUserPassword
 } from '../utils/firebase-config';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
@@ -47,6 +48,11 @@ export const registerFcmToken = async (req: CustomRequest, res: Response): Promi
       res.status(400).send({ error: 'fcmToken not provided' });
     }
     await updateFcmToken(req.user.userId, fcmToken);
+
+    if (req.user.role === UserRoleEnum.Driver) {
+      await subscribeToNewRideNotification(fcmToken);
+    }
+
     res.status(200).send();
   } catch (e) {
     console.log(e);
