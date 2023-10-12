@@ -309,7 +309,7 @@ const OrderRide = () => {
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
             checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים למאושפז"
+            label="משלוחים"
           />
         </div>
 
