@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
-import { Phone } from '@mui/icons-material';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
@@ -83,10 +83,6 @@ const ActiveRide = () => {
                   {ride?.passengerCount && `(${ride?.passengerCount} נוסעים)`}
                 </span>
               </p>
-              <Button variant="outlined" href={`tel:${ride?.cellphone}`}>
-                <Phone className="ml-2" />
-                <span className="text-lg">צרו קשר</span>
-              </Button>
             </div>
           }
         />
@@ -119,6 +115,21 @@ const ActiveRide = () => {
             value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
           />
         )}
+        <ViewField
+          label="מומלץ ליצור קשר עם הנוסעים לפני היציאה לדרך"
+          value={
+            <div className="flex gap-2">
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<PhoneIcon />}
+                href={`tel:${ride?.cellphone}`}
+              >
+                <span className="text-lg">צרו קשר</span>
+              </Button>
+            </div>
+          }
+        />
 
         {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
 

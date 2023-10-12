@@ -161,7 +161,7 @@ const OrderRide = () => {
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום {passenger}! צריך הסעה?</h1>
+      <h1 className="mt-0">שלום {passenger}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           <FormControl>
@@ -236,11 +236,19 @@ const OrderRide = () => {
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
           >
+            <MenuItem value={0}>0</MenuItem>
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={6}>6</MenuItem>
+            <MenuItem value={7}>7</MenuItem>
+            <MenuItem value={8}>8</MenuItem>
+            <MenuItem value={9}>9</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={11}>11</MenuItem>
+            <MenuItem value={12}>12</MenuItem>
           </Select>
           {errors.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
