@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
-import { sendPushNotification } from '../utils/firebase-config';
+import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase-config';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -95,6 +95,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
       await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
     }
     if (result) {
+      await sendNewRideNotificationToDrivers();
       res.status(200).json(ride);
     } else {
       res.status(404).json({ error: `Couldn't create new ride` });
