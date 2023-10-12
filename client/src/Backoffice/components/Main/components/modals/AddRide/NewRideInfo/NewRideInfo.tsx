@@ -16,6 +16,7 @@ import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 function NewRideInfo() {
   const {
     register,
+    watch,
     formState: { errors }
   } = useFormContext<Ride>();
   return (
@@ -127,11 +128,19 @@ function NewRideInfo() {
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
           >
+            <MenuItem value={0}>0</MenuItem>
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={6}>6</MenuItem>
+            <MenuItem value={7}>7</MenuItem>
+            <MenuItem value={8}>8</MenuItem>
+            <MenuItem value={9}>9</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={11}>11</MenuItem>
+            <MenuItem value={12}>12</MenuItem>
           </Select>
           {errors.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -142,11 +151,25 @@ function NewRideInfo() {
         <FormControl>
           <TextField
             label="הערה"
-            variant="outlined"
-            fullWidth
-            error={!!errors.comment}
-            {...register('comment')}
+            type="string"
+            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            error={!!errors?.comment}
+            {...register('comment', {
+              maxLength: 50
+            })}
           />
+          <span
+            className={`absolute top-1 left-1 text-xs ${
+              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+            }`}
+          >
+            {watch().comment?.length || 0} / 50
+          </span>
+          {errors.comment && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+            </FormHelperText>
+          )}
         </FormControl>
       </div>
     </div>
