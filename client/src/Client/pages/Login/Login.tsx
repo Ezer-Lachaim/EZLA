@@ -122,7 +122,7 @@ const Login = () => {
 
       <PwaInstall />
 
-      <div className="absolute bottom-4">
+      <div className="absolute bottom-20">
         <span>אין לך חשבון?</span>
         &nbsp;
         <Link to="/first-signup">להרשמה</Link>
