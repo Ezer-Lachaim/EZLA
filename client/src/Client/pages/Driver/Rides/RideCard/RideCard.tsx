@@ -65,7 +65,7 @@ export const RideCard = ({
               שם:
             </Typography>
             <Typography className="ml-1 mr-1" variant="body1" component="div">
-              {ride?.rideRequester?.firstName}
+              {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
             </Typography>
           </div>
           <div className="flex">
@@ -105,6 +105,14 @@ export const RideCard = ({
                 {ride.destination}
               </Typography>
             </div>
+          </div>
+          <div className="flex items-center">
+            <Typography color="GrayText" variant="body2" component="div">
+              הערה:
+            </Typography>
+            <Typography className="ml-1 mr-1" variant="body1" component="div">
+              {ride?.comment}
+            </Typography>
           </div>
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           {selected && (
