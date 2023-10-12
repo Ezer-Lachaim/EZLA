@@ -256,6 +256,29 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+        <FormControl>
+          <TextField
+            label="הערה"
+            type="string"
+            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            error={!!errors?.comment}
+            {...register('comment', {
+              maxLength: 50
+            })}
+          />
+          <span
+            className={`absolute top-1 left-1 text-xs ${
+              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+            }`}
+          >
+            {watch().comment?.length || 0} / 50
+          </span>
+          {errors.comment && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+            </FormHelperText>
+          )}
+        </FormControl>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>
           <FormControlLabel
