@@ -38,7 +38,8 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       'origin',
       'destination',
       'cellphone',
-      'passengerCount'
+      'passengerCount',
+      'comment'
     ]);
 
     if (isStepValid) {

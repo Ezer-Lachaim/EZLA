@@ -2,12 +2,15 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
+import { Button } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
+import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
@@ -79,6 +82,37 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorFn: (data) => {
       if (!data.state) return '-';
       return RIDE_STATE_MAPPER[data.state];
+    }
+  },
+  {
+    accessorKey: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [toggleModal, setToggleModal] = useState(false);
+      const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+
+      if (row.original.state !== 'WaitingForDriver') return null;
+
+      return (
+        <div className="flex gap-1 items-center">
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            style={{ minWidth: 0 }}
+            className="w-7 h-7"
+            onClick={() => handleModal(true)}
+          >
+            <Close fontSize="small" />
+          </Button>
+          <CancelRideModal
+            rideId={row.original.rideId || ''}
+            open={toggleModal}
+            handleModal={handleModal}
+          />
+        </div>
+      );
     }
   }
 ];

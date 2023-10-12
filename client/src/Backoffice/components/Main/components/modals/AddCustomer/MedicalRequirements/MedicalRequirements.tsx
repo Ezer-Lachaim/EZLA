@@ -27,6 +27,8 @@ function MedicalRequirements() {
   });
 
   // TODO unused function!
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState({

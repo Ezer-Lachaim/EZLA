@@ -85,7 +85,7 @@ const getNewCustomersColumns = (
       }
     },
     {
-      accessorKey: 'userId',
+      accessorKey: 'actions',
       header: '',
       cell: ({ row }) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks

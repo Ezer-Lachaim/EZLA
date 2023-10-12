@@ -93,7 +93,7 @@ const OrderRide = () => {
 
   const rideRequester = user as RideRequester;
 
-  const passenger = user?.firstName || 'נוסע';
+  const passenger = user?.firstName;
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -161,7 +161,7 @@ const OrderRide = () => {
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום {passenger}! צריכים הסעה?</h1>
+      <h1 className="mt-0">שלום{passenger && ` ${passenger}`}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           <FormControl>
