@@ -32,10 +32,12 @@ const withLayout = <P extends object>(
           showLogoutButton={showLogoutButton}
         />
       )}
-      <div className="relative flex-1 max-h-full overflow-auto max-w-lg mx-auto w-full">
-        <main className="flex items-center flex-col p-5 box-border h-full">
-          <Component {...(componentProps as P)} />
-        </main>
+      <div className="max-h-full overflow-auto h-full">
+        <div className="max-w-lg mx-auto w-full h-full">
+          <main className="flex items-center flex-col p-5 box-border h-full">
+            <Component {...(componentProps as P)} />
+          </main>
+        </div>
       </div>
       {!hideFooter && <Footer />}
     </div>
