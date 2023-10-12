@@ -1,7 +1,7 @@
 'use client';
 
 import { ListItemButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Chair } from '@mui/icons-material';
+import { VolunteerActivism, DriveEta, PersonAdd, Accessible } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 const SideBar = () => {
@@ -13,7 +13,7 @@ const SideBar = () => {
           <ListItem disablePadding>
             <ListItemButton className="text-white">
               <ListItemIcon className="text-white">
-                <Chair />
+                <PersonAdd />
               </ListItemIcon>
               <ListItemText primary="נרשמים חדשים" />
             </ListItemButton>
@@ -24,7 +24,7 @@ const SideBar = () => {
           <ListItem disablePadding>
             <ListItemButton className="text-white">
               <ListItemIcon className="text-white">
-                <Chair />
+                <DriveEta />
               </ListItemIcon>
               <ListItemText primary="נסיעות" />
             </ListItemButton>
@@ -34,7 +34,7 @@ const SideBar = () => {
           <ListItem disablePadding>
             <ListItemButton className="text-white">
               <ListItemIcon className="text-white">
-                <Chair />
+                <Accessible />
               </ListItemIcon>
               <ListItemText primary="נוסעים" />
             </ListItemButton>
@@ -44,7 +44,7 @@ const SideBar = () => {
           <ListItem disablePadding>
             <ListItemButton className="text-white">
               <ListItemIcon className="text-white">
-                <Chair />
+                <VolunteerActivism />
               </ListItemIcon>
               <ListItemText primary="מתנדבים" />
             </ListItemButton>

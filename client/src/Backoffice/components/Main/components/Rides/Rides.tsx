@@ -49,6 +49,11 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorFn: (data) => data.destination || '-'
   },
   {
+    accessorKey: 'comment',
+    header: 'הערות',
+    accessorFn: (data) => data.comment || '-'
+  },
+  {
     accessorKey: 'completedTimeStamp',
     header: 'זמן סיום',
     accessorFn: (data) => {
