@@ -74,7 +74,7 @@ const FirstSignUp = () => {
         התקשרו לשירות הלקוחות 033-730440
       </p>
 
-      <div className="flex gap-2 absolute bottom-4">
+      <div className="flex gap-2 absolute bottom-20">
         <p>משתמש רשום,</p>
         <Link to="/login">כניסה למערכת</Link>
       </div>
