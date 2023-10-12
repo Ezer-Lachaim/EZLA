@@ -68,8 +68,12 @@ export async function sendPushNotification(registrationToken: string, payload: M
 }
 
 export async function sendNewRideNotificationToDrivers() {
-  return messaging().sendToTopic('new-ride', {
-    notification: { title: 'נסיעה חדשה!', body: 'נסיעה חדשה ממתינה לכם במערכת.' }
+  return messaging().send({
+    notification: {
+      title: 'נסיעה חדשה!',
+      body: 'נסיעה חדשה מחכה לכם במערכת!'
+    },
+    topic: 'new-ride'
   });
 }
 
