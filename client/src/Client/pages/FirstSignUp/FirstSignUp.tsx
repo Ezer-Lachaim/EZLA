@@ -3,7 +3,6 @@ import { Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import FaceIcon from '@mui/icons-material/Face';
-// import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
 import infoImg from '../../../assets/info.png';
@@ -55,15 +54,6 @@ const FirstSignUp = () => {
       >
         הרשמה לשירות ההסעות
       </Button>
-      {/* <Button */}
-      {/*  variant="contained" */}
-      {/*  className="w-full mb-5" */}
-      {/*  size="large" */}
-      {/*  disabled */}
-      {/*  endIcon={<CarIcon />} */}
-      {/* > */}
-      {/*  כניסה ראשונה כמתנדב */}
-      {/* </Button> */}
       <p className="text-md text-center">
         מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
         למילוי טופס הרשמה הקישו&nbsp;

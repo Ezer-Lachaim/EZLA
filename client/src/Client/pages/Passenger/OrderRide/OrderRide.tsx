@@ -85,40 +85,19 @@ const OrderRide = () => {
       }
     }
   });
-  // const [autofilledAddress, setAutofilledAddress] = React.useState<'source' | 'destination'>(
-  //   'destination'
-  // );
-  // const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
   const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
-  const rideRequester = user as RideRequester;
-
   useEffect(() => {
-    const fetchHospitals = async () => {
-      // const response = await api.hospital.getHospitalList();
-
-      // if (response) {
-      //   const hospitalName =
-      //     response.find((hospital) => hospital.id === rideRequester.patient?.hospitalId)?.name ||
-      //     '';
-
-      setValue(
-        'destination',
-        getPatientDestination(
-          '',
-          rideRequester.patient?.hospitalDept || '',
-          rideRequester.patient?.hospitalBuilding || ''
-        )
-      );
-      // }
-    };
-
-    fetchHospitals();
-  }, [rideRequester, setValue]);
-
-  // const onSwitchAutofilled = () => {
-  //   setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
-  // };
+    const rideRequester = user as RideRequester;
+    setValue(
+      'destination',
+      getPatientDestination(
+        '',
+        rideRequester.patient?.hospitalDept || '',
+        rideRequester.patient?.hospitalBuilding || ''
+      )
+    );
+  }, [user, setValue]);
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     setIsOrderRideLoading(true);
@@ -172,16 +151,6 @@ const OrderRide = () => {
             )}
           </FormControl>
           <br />
-          {/* <div className="flex justify-center m-3"> */}
-          {/*  <Button */}
-          {/*    variant="outlined" */}
-          {/*    size="small" */}
-          {/*    className="w-8 min-w-0" */}
-          {/*    onClick={onSwitchAutofilled} */}
-          {/*  > */}
-          {/*    <SwapVertIcon /> */}
-          {/*  </Button> */}
-          {/* </div> */}
           <FormControl>
             <TextField
               label="כתובת יעד"

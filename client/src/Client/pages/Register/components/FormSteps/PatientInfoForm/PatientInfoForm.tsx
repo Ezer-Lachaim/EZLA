@@ -17,15 +17,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFormPersist from 'react-hook-form-persist';
-// import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
-// import { api } from '../../../../../../Config';
 
 const adapter = new AdapterDayjs();
 
 export const PatientInfoForm = () => {
   const [isServiceForMe, setIsServiceForMe] = useState(false);
-  // const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
   const {
     register,
@@ -36,22 +33,6 @@ export const PatientInfoForm = () => {
   } = useFormContext<RegistrationFormInputs>();
 
   useFormPersist('passengerInfoForm', { watch, setValue });
-
-  // useEffect(() => {
-  //   const fetchHospitals = async () => {
-  //     const response = await api.hospital.getHospitalList();
-  //
-  //     if (response) {
-  //       setHospitals(response);
-  //     }
-  //   };
-  //
-  //   fetchHospitals();
-  // }, []);
-
-  // const onSelectHospital = (event: SelectChangeEvent<number>) => {
-  //   setValue('patient.hospitalId', event.target.value as number);
-  // };
 
   const serviceForMeHandler = () => {
     if (isServiceForMe) {
@@ -133,31 +114,6 @@ export const PatientInfoForm = () => {
             </FormHelperText>
           )}
         </FormControl>
-        {/* <FormControl fullWidth required disabled> */}
-        {/*  <InputLabel id="hospital-label" required> */}
-        {/*    בית החולים לאיסוף והורדה */}
-        {/*  </InputLabel> */}
-        {/*  <Select */}
-        {/*    labelId="hospital-label" */}
-        {/*    defaultValue={hospitals[0]?.id} */}
-        {/*    {...register('patient.hospitalId', { required: true })} */}
-        {/*    label="בית החולים לאיסוף והורדה" */}
-        {/*    placeholder="בחרו בית חולים" */}
-        {/*    onChange={onSelectHospital} */}
-        {/*    error={!!errors.patient?.hospitalId} */}
-        {/*  > */}
-        {/*    {hospitals.map((hospital) => ( */}
-        {/*      <MenuItem key={hospital.id} value={hospital.id}> */}
-        {/*        {hospital.name} */}
-        {/*      </MenuItem> */}
-        {/*    ))} */}
-        {/*  </Select> */}
-        {/*  {errors.patient?.hospitalId && ( */}
-        {/*    <FormHelperText error className="absolute top-full mr-0"> */}
-        {/*      {errors.patient?.hospitalId.type === 'required' && 'יש לבחור בית חולים'} */}
-        {/*    </FormHelperText> */}
-        {/*  )} */}
-        {/* </FormControl> */}
         <TextField
           label="יעד נסיעה"
           fullWidth
