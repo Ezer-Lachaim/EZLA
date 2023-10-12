@@ -631,6 +631,9 @@ components:
           $ref: '#/components/schemas/Driver'
         rideRequester:
           $ref: '#/components/schemas/RideRequester'
+        comment:
+          type: string
+          example: 'comment'
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'
