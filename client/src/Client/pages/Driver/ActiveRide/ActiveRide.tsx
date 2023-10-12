@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
-import { Phone } from '@mui/icons-material';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
@@ -83,10 +82,6 @@ const ActiveRide = () => {
                   {ride?.passengerCount && `(${ride?.passengerCount} נוסעים)`}
                 </span>
               </p>
-              <Button variant="outlined" href={`tel:${ride?.cellphone}`}>
-                <Phone className="ml-2" />
-                <span className="text-lg">צרו קשר</span>
-              </Button>
             </div>
           }
         />
@@ -127,9 +122,9 @@ const ActiveRide = () => {
                 variant="outlined"
                 size="large"
                 startIcon={<PhoneIcon />}
-                onClick={() => window.open(`tel:${ride?.cellphone}`)}
+                href={`tel:${ride?.cellphone}`}
               >
-                צרו קשר
+                <span className="text-lg">צרו קשר</span>
               </Button>
             </div>
           }
