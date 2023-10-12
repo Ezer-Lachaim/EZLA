@@ -44,7 +44,7 @@ export const RideCard = ({
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
               <Typography color="GrayText" variant="body2" component="div">
-                המתנה:
+                המתנה לאיסוף:
               </Typography>
               <div className="flex items-center gap-1">
                 <h1
@@ -59,6 +59,14 @@ export const RideCard = ({
               <p className="px-1 font-medium">{ride.passengerCount}</p>
               <EmojiPeopleRoundedIcon className="h-5" />
             </div>
+          </div>
+          <div className="flex items-center">
+            <Typography color="GrayText" variant="body2" component="div">
+              שם:
+            </Typography>
+            <Typography className="ml-1 mr-1" variant="body1" component="div">
+              {ride?.rideRequester?.firstName}
+            </Typography>
           </div>
           <div className="flex">
             <div className="flex-row flex-1">
