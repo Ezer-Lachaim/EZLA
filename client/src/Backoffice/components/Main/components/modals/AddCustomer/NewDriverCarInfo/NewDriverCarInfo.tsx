@@ -42,7 +42,10 @@ function NewDriverCarInfo() {
           fullWidth
           type="number"
           error={!!errors.numOfSeats}
-          {...register('numOfSeats', { required: true })}
+          {...register('numOfSeats', {
+            required: true,
+            min: 1
+          })}
         />
       </div>
       <div className="flex flex-col gap-8 flex-1">
@@ -58,7 +61,13 @@ function NewDriverCarInfo() {
           variant="outlined"
           fullWidth
           error={!!errors.carPlateNumber}
-          {...register('carPlateNumber', { required: true })}
+          {...register('carPlateNumber', {
+            required: true,
+            pattern: {
+              value: /^\d{7}$/,
+              message: 'מספר לוחית רכב צריך לכלול 7 ספרות'
+            }
+          })}
         />
         <div className="flex flex-col gap-2 mb-9">
           <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
