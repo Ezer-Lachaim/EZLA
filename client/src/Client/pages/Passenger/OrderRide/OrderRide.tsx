@@ -13,8 +13,8 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -56,7 +56,8 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user, activeRide: ride } = useUserContext();
+  const { user } = useUserContext();
+  const navigate = useNavigate();
   const {
     register,
     watch,
@@ -88,12 +89,9 @@ const OrderRide = () => {
     'destination'
   );
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
-
   const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
   const rideRequester = user as RideRequester;
-
-  const passenger = user?.firstName;
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -155,19 +153,13 @@ const OrderRide = () => {
     await api.ride.ridesPost({
       ride: newRide
     });
-  };
 
-  const onCancelRide = async () => {
-    await api.ride.updateRide({
-      rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
-    });
-    setIsOrderRideLoading(false);
+    navigate('/passenger/searching-driver');
   };
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום{passenger && ` ${passenger}`}! צריכים הסעה?</h1>
+      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           {autofilledAddress === 'destination' ? (
@@ -233,7 +225,10 @@ const OrderRide = () => {
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
             error={!!errors?.cellphone}
-            {...register('cellphone', { required: true, pattern: /^05\d-?\d{7}$/ })}
+            {...register('cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
           />
           {errors.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -336,14 +331,9 @@ const OrderRide = () => {
           type="submit"
           disabled={isOrderRideLoading}
         >
-          הזמינו נסיעה
+          {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
         </Button>
       </form>
-
-      <SearchingDriverModal
-        open={ride?.state === RideStateEnum.WaitingForDriver}
-        onClose={onCancelRide}
-      />
     </div>
   );
 };

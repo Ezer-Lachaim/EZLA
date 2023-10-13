@@ -31,6 +31,7 @@ import PassengerRiding from './Client/pages/Passenger/Riding/Riding';
 import RideCompleted from './Client/pages/Driver/RideCompleted/RideCompleted';
 import PassengerRideCompleted from './Client/pages/Passenger/RideCompleted/RideCompleted';
 import NotFound from './Client/pages/NotFound/NotFound.tsx';
+import SearchingDriver from './Client/pages/Passenger/SearchingDriver/SearchingDriver.tsx';
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ function App() {
               <Route path="create-password" element={<CreatePassword />} />
               <Route path="passenger" element={<Passenger />}>
                 <Route path="order-ride" element={<OrderRide />} />
+                <Route path="searching-driver" element={<SearchingDriver />} />
                 <Route path="active" element={<PassengerActiveRide />} />
                 <Route path="driver-arrived" element={<DriverArrived />} />
                 <Route path="riding" element={<PassengerRiding />} />
