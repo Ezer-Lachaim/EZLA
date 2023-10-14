@@ -63,7 +63,7 @@ function CancelRideModal({ open, handleModal, rideId }: CancelRideModalProps) {
             סגור
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary" className="text-white">
-            המשך
+            ביטול נסיעה
           </Button>
         </Box>
       </Box>
