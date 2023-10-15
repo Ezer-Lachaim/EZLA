@@ -35,15 +35,32 @@ function NewDriverCarInfo() {
             error={!!errors.carColor}
             {...register('carColor', { required: true, minLength: 2 })}
           />
+          {errors.carColor && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.carColor.type === 'required' && 'יש להזין שם צבע רכב'}
+              {errors.carColor.type === 'minLength' && 'צבע רכב חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
         </FormControl>
-        <TextField
-          label="מספר מושבים ברכב"
-          variant="outlined"
-          fullWidth
-          type="number"
-          error={!!errors.numOfSeats}
-          {...register('numOfSeats', { required: true })}
-        />
+        <FormControl>
+          <TextField
+            label="מספר מושבים ברכב"
+            variant="outlined"
+            fullWidth
+            type="number"
+            error={!!errors.numOfSeats}
+            {...register('numOfSeats', {
+              required: true,
+              min: 1
+            })}
+          />
+          {errors.numOfSeats && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.numOfSeats.type === 'required' && 'יש להזין שם מספר מושבים ברכב'}
+              {errors.numOfSeats.type === 'min' && 'רכב חייב להכיל לפחות מושב אחד'}
+            </FormHelperText>
+          )}
+        </FormControl>
       </div>
       <div className="flex flex-col gap-8 flex-1">
         <TextField
@@ -53,13 +70,24 @@ function NewDriverCarInfo() {
           error={!!errors.carModel}
           {...register('carModel', { required: true })}
         />
-        <TextField
-          label="מספר לוחית רכב"
-          variant="outlined"
-          fullWidth
-          error={!!errors.carPlateNumber}
-          {...register('carPlateNumber', { required: true })}
-        />
+        <FormControl>
+          <TextField
+            label="מספר לוחית רכב"
+            variant="outlined"
+            fullWidth
+            error={!!errors.carPlateNumber}
+            {...register('carPlateNumber', {
+              required: true,
+              pattern: /^\d{7,8}$/
+            })}
+          />
+          {errors.carPlateNumber && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.carPlateNumber.type === 'required' && 'יש להזין שם מספר לוחית רכב'}
+              {errors.carPlateNumber.type === 'pattern' && 'מספר לוחית רכב צריך לכלול 7 או 8 ספרות'}
+            </FormHelperText>
+          )}
+        </FormControl>
         <div className="flex flex-col gap-2 mb-9">
           <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
           {DRIVER_CAPABILITIES.map(({ value, label }) => (
