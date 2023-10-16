@@ -31,7 +31,7 @@ const RequesterCanceledModal = ({
             </div>
             <h1 className="text-red-600 text-center my-3 text-[22px]">נסיעתך בוטלה</h1>
           </div>
-          <p className="text-center text-lg text-gray-600">לצערנו הנוסע ביטל את הנסיעה.</p>
+          <p className="text-center text-lg text-gray-600">לצערנו הנוסע.ת ביטל.ה את הנסיעה.</p>
           <Button variant="contained" className="flex gap-2" onClick={onGotoRides}>
             לקריאות פתוחות
           </Button>

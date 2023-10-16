@@ -27,7 +27,7 @@ export const NavBar = ({
   };
 
   return (
-    <AppBar className="p-4 static" position="static">
+    <AppBar className="p-4 static z-10" position="static">
       <div className="flex items-center justify-center w-full text-xl">
         {showLogoutButton && (
           <LogoutIcon className="absolute left-6 cursor-pointer" onClick={onClickLogout} />

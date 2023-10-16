@@ -21,7 +21,7 @@ const Riding = () => {
   const onComplete = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.Completed }
+      ride: { state: RideStateEnum.Completed }
     });
 
     navigate('/driver/completed');
@@ -46,7 +46,8 @@ const Riding = () => {
           value={
             <div className="flex items-center justify-between w-full mb-2">
               <p className="text-lg">
-                {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
+                {ride?.firstName || ride?.rideRequester?.firstName}{' '}
+                {ride?.lastName || ride?.rideRequester?.lastName}
               </p>
               <div className="flex bg-green-500 rounded-full text-white items-center px-2 py-1">
                 <p className="px-1 font-medium">{ride?.passengerCount}</p>
@@ -79,6 +80,8 @@ const Riding = () => {
             </div>
           }
         />
+
+        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
 
         <ViewField
           label="בקשות מיוחדות"

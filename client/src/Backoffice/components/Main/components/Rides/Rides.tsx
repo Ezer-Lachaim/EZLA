@@ -2,11 +2,15 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
+import { Button } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
 import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
+import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
+import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
@@ -30,18 +34,27 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorKey: 'rideRequester.firstName',
     header: 'שם נוסע',
     accessorFn: (data) => {
-      const fullName = `${data.rideRequester?.firstName ?? ''} ${
-        data.rideRequester?.lastName ?? ''
+      const fullName = `${(data.firstName || data.rideRequester?.firstName) ?? ''} ${
+        (data.lastName || data.rideRequester?.lastName) ?? ''
       }`;
       if (!fullName.trim()) return '-';
       return fullName;
     }
   },
-  { accessorKey: 'origin', header: 'כתובת איסוף', accessorFn: (data) => data.origin || '-' },
+  {
+    accessorKey: 'origin',
+    header: 'כתובת איסוף',
+    accessorFn: (data) => data.origin || '-'
+  },
   {
     accessorKey: 'destination',
     header: 'יעד נסיעה',
     accessorFn: (data) => data.destination || '-'
+  },
+  {
+    accessorKey: 'comment',
+    header: 'הערות',
+    accessorFn: (data) => data.comment || '-'
   },
   {
     accessorKey: 'completedTimeStamp',
@@ -53,7 +66,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     }
   },
   {
-    accessorKey: 'cellphone',
+    accessorKey: 'period',
     header: 'משך התהליך',
     accessorFn: (data) => {
       if (!data.requestTimeStamp || !data.completedTimeStamp) return '-';
@@ -70,11 +83,43 @@ const columns: ColumnDef<Partial<Ride>>[] = [
       if (!data.state) return '-';
       return RIDE_STATE_MAPPER[data.state];
     }
+  },
+  {
+    accessorKey: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [toggleModal, setToggleModal] = useState(false);
+      const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+
+      if (row.original.state !== 'WaitingForDriver') return null;
+
+      return (
+        <div className="flex gap-1 items-center">
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            style={{ minWidth: 0 }}
+            className="w-7 h-7"
+            onClick={() => handleModal(true)}
+          >
+            <Close fontSize="small" />
+          </Button>
+          <CancelRideModal
+            rideId={row.original.rideId || ''}
+            open={toggleModal}
+            handleModal={handleModal}
+          />
+        </div>
+      );
+    }
   }
 ];
 
 const Rides = () => {
   const [rides, setRides] = useState<Ride[]>([]);
+  const [isAddRideModalOpen, setIsAddRideModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchRides = async () => {
@@ -95,6 +140,12 @@ const Rides = () => {
     <div>
       <PageHeader>
         <PageHeader.Title>נסיעות ({rides?.length})</PageHeader.Title>
+
+        <PageHeader.ActionButton onClick={() => setIsAddRideModalOpen(true)}>
+          נסיעה חדשה
+        </PageHeader.ActionButton>
+
+        <AddRideModal open={isAddRideModalOpen} handleModal={setIsAddRideModalOpen} />
       </PageHeader>
       <Table data={rides} columns={columns} />
     </div>

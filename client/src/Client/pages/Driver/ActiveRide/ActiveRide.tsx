@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
-import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
@@ -22,7 +22,7 @@ const ActiveRide = () => {
   const navigate = useNavigate();
 
   const onArrive = async () => {
-    const newRide = { ...ride, state: RideStateEnum.DriverArrived };
+    const newRide = { state: RideStateEnum.DriverArrived };
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
       ride: newRide
@@ -77,12 +77,12 @@ const ActiveRide = () => {
           value={
             <div className="flex items-center justify-between w-full mb-2">
               <p className="text-lg">
-                {ride?.rideRequester?.firstName} {ride?.rideRequester?.lastName}
+                {ride?.firstName || ride?.rideRequester?.firstName}{' '}
+                {ride?.lastName || ride?.rideRequester?.lastName}
+                <span className="px-2 text-sm">
+                  {ride?.passengerCount && `(${ride?.passengerCount} נוסעים)`}
+                </span>
               </p>
-              <div className="flex bg-green-500 rounded-full text-white items-center px-2 py-1">
-                <p className="px-1 font-medium">{ride?.passengerCount}</p>
-                <EmojiPeopleRoundedIcon className="h-5" />
-              </div>
             </div>
           }
         />
@@ -109,10 +109,29 @@ const ActiveRide = () => {
 
         <ViewField label="כתובת יעד" value={ride?.destination || ''} />
 
+        {ride?.specialRequest && ride?.specialRequest?.length > 0 && (
+          <ViewField
+            label="בקשות מיוחדות"
+            value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
+          />
+        )}
         <ViewField
-          label="בקשות מיוחדות"
-          value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
+          label="מומלץ ליצור קשר עם הנוסעים לפני היציאה לדרך"
+          value={
+            <div className="flex gap-2">
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<PhoneIcon />}
+                href={`tel:${ride?.cellphone}`}
+              >
+                <span className="text-lg">צרו קשר</span>
+              </Button>
+            </div>
+          }
         />
+
+        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
 
         <hr className="mt-2" />
       </div>
