@@ -93,6 +93,8 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as Ride) });
     if (ride.rideRequester?.userId) {
       await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
+    } else if (ride.guestToken) {
+      await redisClient.set(`active_ride:${ride.guestToken}`, rideId);
     }
     if (result) {
       await sendNewRideNotificationToDrivers();

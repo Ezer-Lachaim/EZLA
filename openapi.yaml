@@ -640,7 +640,8 @@ components:
         comment:
           type: string
           example: 'comment'
-
+        guestToken:
+          type: string
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'

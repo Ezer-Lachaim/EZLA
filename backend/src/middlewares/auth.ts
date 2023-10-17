@@ -1,11 +1,12 @@
 import { NextFunction, Response } from 'express';
+import { Ride } from '../models/ride';
 import { verifyJwt } from '../utils/jwt-util';
 import { getUserByUid } from '../repository/user';
 import { getAuthConfigAdmin } from '../utils/firebase-config';
 import { CustomRequest } from './CustomRequest';
 
 export const authHandler = (req: CustomRequest, res: Response, next: NextFunction): void => {
-  if (isSignupRoute(req) || isLoginRoute(req)) {
+  if (isSignupRoute(req) || isLoginRoute(req) || isOrderRideRoute(req)) {
     next();
     return;
   }
@@ -52,3 +53,9 @@ function isSignupRoute(req: CustomRequest) {
 function isLoginRoute(req: CustomRequest) {
   return req.originalUrl.includes('users/login') && req.method === 'POST';
 }
+
+const isOrderRideRoute = (req: CustomRequest) => {
+  const ride = req.body as Ride;
+
+  return !!ride.guestToken && req.method === 'POST';
+};
