@@ -307,7 +307,19 @@ const OrderRide = () => {
     </div>
   );
 };
-export default withLayout(OrderRide, {
-  title: 'הזמנת הסעה',
-  showBackButton: true
-});
+
+const OrderRideWrapper = () => {
+  const navigate = useNavigate();
+
+  const OrderRideComponent = withLayout(OrderRide, {
+    onBackClick: () => {
+      navigate('/first-signup');
+    },
+    title: 'הזמנת הסעה',
+    showBackButton: true
+  });
+
+  return <OrderRideComponent />;
+};
+
+export default OrderRideWrapper;
