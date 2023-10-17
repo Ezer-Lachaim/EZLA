@@ -17,6 +17,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
 
   const { data: activeRide } = useQuery({
     queryKey: ['getActiveRideForUser'],
+    enabled: !!user,
     queryFn: async () => {
       try {
         return await api.ride.getActiveRideForUser();
