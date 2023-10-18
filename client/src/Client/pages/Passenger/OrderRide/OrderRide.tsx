@@ -12,7 +12,6 @@ import {
   FormControl,
   MenuItem
 } from '@mui/material';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
@@ -53,6 +52,7 @@ const OrderRide = () => {
     register,
     watch,
     handleSubmit,
+    setValue,
     setValue,
     formState: { errors }
   } = useForm<ClientRide>({
@@ -290,7 +290,7 @@ const OrderRide = () => {
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
             checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים למאושפז"
+            label="משלוחים"
           />
         </div>
 
