@@ -34,3 +34,7 @@ export const setToken = (token: string | null) => {
   currentToken = token;
   api = createApi();
 };
+
+export const getGuestToken = () => {
+  return localStorage.getItem('guestToken');
+};

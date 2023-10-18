@@ -372,13 +372,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ride'
-  /rides/active_ride:
+  /rides/active_ride/{guestToken}:
     get:
       tags:
         - ride
       summary: Get active ride for user
       description: Get the active ride for a specific user
       operationId: getActiveRideForUser
+      parameters:
+        - name: guestToken
+          in: path
+          description: guest token of the user to retrieve the active ride for
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
@@ -390,17 +397,24 @@ paths:
           description: Invalid user ID supplied
         '404':
           description: Active ride not found
-  /rides/confirm_complete:
+  /rides/confirm_complete/{guestToken}:
     post:
       tags:
         - ride
       summary: Confirm completed ride
       description: Confirm that the ride was completed
       operationId: postConfirmRideComplete
+      parameters:
+        - name: guestToken
+          in: path
+          description: guest token of the user to retrieve the active ride for
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
-  /rides/{rideId}:
+  /rides/{rideId}/{guestToken}:
     get:
       tags:
         - ride
@@ -436,6 +450,12 @@ paths:
           in: path
           description: ID of the ride to be updated
           required: true
+          schema:
+            type: string
+        - name: guestToken
+          in: path
+          description: guest token of the user to retrieve the active ride for
+          required: false
           schema:
             type: string
       requestBody:
@@ -640,7 +660,8 @@ components:
         comment:
           type: string
           example: 'comment'
-
+        guestToken:
+          type: string
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'

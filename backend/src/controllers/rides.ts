@@ -42,9 +42,13 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
  * Get active ride for user.
  */
 export const getActiveRide = async (req: CustomRequest, res: Response): Promise<void> => {
-  const userIdFromToken = req.user.userId;
+  let activeRideToken = req.user?.userId;
+  if (!activeRideToken) {
+    const { guestToken } = req.params;
+    activeRideToken = guestToken;
+  }
   try {
-    const activeRideId = await redisClient.get(`active_ride:${userIdFromToken}`);
+    const activeRideId = await redisClient.get(`active_ride:${activeRideToken}`);
     if (activeRideId) {
       const activeRide = await redisClient.json.get(`ride:${activeRideId}`);
       res.status(200).json(await populateRideDetails(activeRide as unknown));
@@ -93,6 +97,8 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
     const result = await redisClient.json.set(`ride:${rideId}`, '$', { ...(ride as Ride) });
     if (ride.rideRequester?.userId) {
       await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
+    } else if (ride.guestToken) {
+      await redisClient.set(`active_ride:${ride.guestToken}`, rideId);
     }
     if (result) {
       await sendNewRideNotificationToDrivers();
@@ -117,10 +123,14 @@ const sendPushByUserId = async (userId: string, title: string, body: string) => 
 };
 
 export const confirmCompleteRide = async (req: CustomRequest, res: Response): Promise<void> => {
-  const userIdFromToken = req.user.userId;
+  let activeRideToken = req.user?.userId;
+  if (!activeRideToken) {
+    const { guestToken } = req.params;
+    activeRideToken = guestToken;
+  }
 
   try {
-    await redisClient.del(`active_ride:${userIdFromToken}`);
+    await redisClient.del(`active_ride:${activeRideToken}`);
 
     res.status(200).json({ message: 'Ride completed successfully' });
   } catch (error) {
@@ -135,7 +145,13 @@ export const confirmCompleteRide = async (req: CustomRequest, res: Response): Pr
  */
 export const updateRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const { rideId } = req.params;
-  const userIdFromToken = req.user.userId;
+
+  let activeRideToken = req.user?.userId;
+  if (!activeRideToken) {
+    const { guestToken } = req.params;
+    activeRideToken = guestToken;
+  }
+
   const rideUpdateValues = req.body;
 
   try {
@@ -157,8 +173,10 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
 
       if (updatedRide.state === RideStateEnum.RequesterCanceled) {
         if (updatedRide.driver) {
-          if (currentRide.rideRequester?.userId) {
-            await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
+          if (currentRide.rideRequester?.userId || currentRide.guestToken) {
+            await redisClient.del(
+              `active_ride:${currentRide.rideRequester?.userId || currentRide.guestToken}`
+            );
           }
           if (currentRide.driver?.userId) {
             await sendPushByUserId(
@@ -174,7 +192,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       }
 
       if (updatedRide.state === RideStateEnum.Canceled) {
-        await redisClient.del(`active_ride:${userIdFromToken}`);
+        await redisClient.del(`active_ride:${activeRideToken}`);
       }
 
       if (updatedRide.state === RideStateEnum.Booked) {

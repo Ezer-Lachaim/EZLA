@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Ride, User } from '../../api-client';
-import { POLLING_INTERVAL, api, getToken, setToken } from '../../Config';
+import { POLLING_INTERVAL, api, getGuestToken, getToken, setToken } from '../../Config';
 
 const UserContext = createContext(
   {} as {
@@ -20,7 +20,8 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     enabled: !!user,
     queryFn: async () => {
       try {
-        return await api.ride.getActiveRideForUser();
+        const guestToken = getGuestToken() || '';
+        return await api.ride.getActiveRideForUser({ guestToken });
       } catch (e) {
         return null;
       }

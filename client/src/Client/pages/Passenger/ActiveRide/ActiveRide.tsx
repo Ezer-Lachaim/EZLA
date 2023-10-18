@@ -6,7 +6,7 @@ import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { api, getGuestToken } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -44,8 +44,10 @@ const ActiveRide = () => {
   };
 
   const onCancelRide = async () => {
+    const guestToken = getGuestToken() || '';
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
+      guestToken,
       ride: { ...ride, state: RideStateEnum.RequesterCanceled }
     });
 

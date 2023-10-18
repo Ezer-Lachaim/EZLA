@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -12,10 +12,12 @@ import {
   FormControl,
   MenuItem
 } from '@mui/material';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../Config.ts';
-import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 interface ClientRide extends Omit<Ride, 'specialRequest'> {
@@ -44,16 +46,6 @@ const getSpecialEnum = (boolName: string): RideSpecialRequestEnum => {
   return specialMap[boolName];
 };
 
-const getPatientDestination = (
-  hospitalName: string,
-  hospitalDept: string,
-  hospitalBuilding: string
-) => {
-  return `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
-    hospitalBuilding && ` / ${hospitalBuilding}`
-  }`;
-};
-
 const OrderRide = () => {
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -65,39 +57,11 @@ const OrderRide = () => {
     formState: { errors }
   } = useForm<ClientRide>({
     defaultValues: {
-      origin: user?.address,
-      cellphone: user?.cellPhone,
-      specialRequest: {
-        isWheelChair: (user as RideRequester)?.specialRequest?.includes(specialMap.isWheelChair),
-        isBabySafetySeat: (user as RideRequester)?.specialRequest?.includes(
-          specialMap.isBabySafetySeat
-        ),
-        isChildSafetySeat: (user as RideRequester)?.specialRequest?.includes(
-          specialMap.isChildSafetySeat
-        ),
-        isHighVehicle: (user as RideRequester)?.specialRequest?.includes(specialMap.isHighVehicle),
-        isWheelChairTrunk: (user as RideRequester)?.specialRequest?.includes(
-          specialMap.isWheelChairTrunk
-        ),
-        isPatientDelivery: (user as RideRequester)?.specialRequest?.includes(
-          specialMap.isPatientDelivery
-        )
-      }
+      cellphone: user?.cellPhone
     }
   });
-  const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
-  useEffect(() => {
-    const rideRequester = user as RideRequester;
-    setValue(
-      'destination',
-      getPatientDestination(
-        '',
-        rideRequester.patient?.hospitalDept || '',
-        rideRequester.patient?.hospitalBuilding || ''
-      )
-    );
-  }, [user, setValue]);
+  const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
   const onSubmit: SubmitHandler<ClientRide> = async (data) => {
     setIsOrderRideLoading(true);
@@ -111,16 +75,14 @@ const OrderRide = () => {
       []
     );
 
-    const newRide = {
+    const rideToken = uuidv4();
+    localStorage.setItem('guestToken', rideToken);
+
+    const newRide: Ride = {
       ...data,
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver,
-      rideRequester: {
-        userId: user?.userId,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        cellPhone: user?.cellPhone
-      }
+      guestToken: rideToken
     };
 
     await api.ride.ridesPost({
@@ -128,6 +90,13 @@ const OrderRide = () => {
     });
 
     navigate('/passenger/searching-driver');
+  };
+
+  const onSwapAddresses = () => {
+    const { origin } = watch();
+    const { destination } = watch();
+    setValue('origin', destination);
+    setValue('destination', origin);
   };
 
   return (
@@ -138,9 +107,11 @@ const OrderRide = () => {
           <FormControl>
             <TextField
               label="כתובת איסוף"
+              autoFocus
               type="string"
               placeholder="יש להזין שם רחוב, מספר בית ועיר"
               required
+              value={watch().origin || ''}
               error={!!errors?.origin}
               {...register('origin', { required: true })}
             />
@@ -150,13 +121,25 @@ const OrderRide = () => {
               </FormHelperText>
             )}
           </FormControl>
-          <br />
+
+          <div className="flex justify-center m-3">
+            <Button
+              variant="outlined"
+              size="small"
+              className="w-8 min-w-0"
+              onClick={onSwapAddresses}
+            >
+              <SwapVertIcon />
+            </Button>
+          </div>
+
           <FormControl>
             <TextField
               label="כתובת יעד"
               type="string"
               placeholder="יש להזין שם רחוב, מספר בית ועיר"
               required
+              value={watch().destination || ''}
               error={!!errors?.destination}
               {...register('destination', { required: true })}
             />
@@ -168,25 +151,6 @@ const OrderRide = () => {
             )}
           </FormControl>
         </div>
-        <FormControl>
-          <TextField
-            label="טלפון ליצירת קשר"
-            type="string"
-            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-            required
-            error={!!errors?.cellphone}
-            {...register('cellphone', {
-              required: true,
-              pattern: /^05\d-?\d{7}$/
-            })}
-          />
-          {errors.cellphone && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
-              {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
-            </FormHelperText>
-          )}
-        </FormControl>
         <FormControl>
           <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
@@ -219,12 +183,14 @@ const OrderRide = () => {
         </FormControl>
         <FormControl>
           <TextField
-            label="הערה"
+            label="מטרת הנסיעה"
             type="string"
+            required
             placeholder="הסבר קצר לגבי מטרת הנסיעה"
             error={!!errors?.comment}
             {...register('comment', {
-              maxLength: 50
+              maxLength: 50,
+              required: true
             })}
           />
           <span
@@ -240,6 +206,60 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+
+        <p className=" -my-4 text-center">פרטי מזמין ההסעה</p>
+        <FormControl>
+          <TextField
+            label="שם פרטי"
+            fullWidth
+            required
+            type="text"
+            error={!!errors.firstName}
+            {...register('firstName', { required: true, minLength: 2 })}
+          />
+          {errors.firstName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.firstName.type === 'required' && 'יש להזין שם פרטי'}
+              {errors.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="שם משפחה"
+            fullWidth
+            required
+            type="text"
+            error={!!errors.lastName}
+            {...register('lastName', { required: true, minLength: 2 })}
+          />
+          {errors.lastName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.lastName.type === 'required' && 'יש להזין שם משפחה'}
+              {errors.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="טלפון ליצירת קשר"
+            type="string"
+            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
+            required
+            error={!!errors?.cellphone}
+            {...register('cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
+          />
+          {errors.cellphone && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+            </FormHelperText>
+          )}
+        </FormControl>
+
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>
           <FormControlLabel
@@ -287,7 +307,19 @@ const OrderRide = () => {
     </div>
   );
 };
-export default withLayout(OrderRide, {
-  title: 'הזמנת הסעה',
-  showLogoutButton: true
-});
+
+const OrderRideWrapper = () => {
+  const navigate = useNavigate();
+
+  const OrderRideComponent = withLayout(OrderRide, {
+    onBackClick: () => {
+      navigate('/first-signup');
+    },
+    title: 'הזמנת הסעה',
+    showBackButton: true
+  });
+
+  return <OrderRideComponent />;
+};
+
+export default OrderRideWrapper;

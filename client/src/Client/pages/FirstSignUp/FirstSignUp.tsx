@@ -48,11 +48,9 @@ const FirstSignUp = () => {
         className="w-full text-lg mb-6 mt-10"
         size="large"
         endIcon={<FaceIcon />}
-        onClick={() => {
-          navigation('/register');
-        }}
+        onClick={() => navigation('/passenger/order-ride')}
       >
-        הרשמה לשירות ההסעות
+        הזמן הסעה חדשה
       </Button>
       <p className="text-md text-center">
         מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
