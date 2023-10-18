@@ -76,7 +76,7 @@ const OrderRide = () => {
     );
 
     const rideToken = uuidv4();
-    localStorage.setItem('rideToken', rideToken);
+    localStorage.setItem('guestToken', rideToken);
 
     const newRide: Ride = {
       ...data,

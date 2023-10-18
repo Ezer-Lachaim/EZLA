@@ -36,5 +36,5 @@ export const setToken = (token: string | null) => {
 };
 
 export const getGuestToken = () => {
-  return localStorage.getItem('rideToken');
+  return localStorage.getItem('guestToken');
 };

@@ -71,10 +71,12 @@ const useNavigateUser = () => {
       navigateAfterLogin();
     } else if (activeRide && !user) {
       navigateAfterLogin();
-    } else if (getGuestToken() && window.location.pathname === '/') {
-      navigate('/passenger/order-ride');
     } else if (window.location.pathname === '/') {
-      navigate('/first-signup');
+      if (getGuestToken()) {
+        navigate('/passenger/order-ride');
+      } else {
+        navigate('/first-signup');
+      }
     }
   };
 
