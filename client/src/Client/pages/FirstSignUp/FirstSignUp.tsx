@@ -55,7 +55,7 @@ const FirstSignUp = () => {
       <p className="text-md text-center">
         מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
         למילוי טופס הרשמה הקישו&nbsp;
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRCoe7WrX1c8M3QqKiDtln_lMYx5EONBqy5NLNP0WgQ-aBdg/viewform">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform">
           כאן
         </a>
         <br />
