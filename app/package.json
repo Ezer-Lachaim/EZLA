@@ -12,6 +12,7 @@
     "@ezla/client": "*"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.1",
     "@capacitor/cli": "^5.5.0",
     "cross-env": "^7.0.3"
   }
