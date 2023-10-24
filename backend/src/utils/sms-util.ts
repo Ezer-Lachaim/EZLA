@@ -7,7 +7,7 @@ const SMS_IS_ON = process.env.SMS_IS_ON === '1';
 const client = new SNSClient({
   region: 'eu-west-2',
   credentials: {
-    accessKeyId: 'AKIA4DOJCDN6PDKX4OOM',
+    accessKeyId: process.env.AWS_SMS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SMS_SECRET_ACCESS_KEY
   }
 });
