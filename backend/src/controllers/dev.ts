@@ -40,7 +40,7 @@ export const initDevData = async (req: CustomRequest, res: Response): Promise<vo
       'Requester*1'
     );
     const requester = {} as RideRequester;
-    requester.userId = driverRecord.user.uid;
+    requester.userId = requesterRecord.user.uid;
     requester.role = UserRoleEnum.Requester;
     requester.firstName = 'נוסע';
     requester.lastName = 'טסט';
