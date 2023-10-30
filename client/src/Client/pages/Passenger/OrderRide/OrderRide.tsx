@@ -13,8 +13,8 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import SearchingDriverModal from './SearchingDriverModal.tsx';
 import { api } from '../../../../Config.ts';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -56,7 +56,8 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user, activeRide: ride } = useUserContext();
+  const { user } = useUserContext();
+  const navigate = useNavigate();
   const {
     register,
     watch,
@@ -88,12 +89,9 @@ const OrderRide = () => {
     'destination'
   );
   const [autofilledAddressValue, setAutofilledAddressValue] = React.useState('');
-
   const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
   const rideRequester = user as RideRequester;
-
-  const passenger = user?.firstName || 'נוסע';
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -155,19 +153,13 @@ const OrderRide = () => {
     await api.ride.ridesPost({
       ride: newRide
     });
-  };
 
-  const onCancelRide = async () => {
-    await api.ride.updateRide({
-      rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
-    });
-    setIsOrderRideLoading(false);
+    navigate('/passenger/searching-driver');
   };
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום {passenger}! צריך הסעה?</h1>
+      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           {autofilledAddress === 'destination' ? (
@@ -233,7 +225,10 @@ const OrderRide = () => {
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
             error={!!errors?.cellphone}
-            {...register('cellphone', { required: true, pattern: /^05\d-?\d{7}$/ })}
+            {...register('cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
           />
           {errors.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -252,15 +247,46 @@ const OrderRide = () => {
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
           >
+            <MenuItem value={0}>0</MenuItem>
             <MenuItem value={1}>1</MenuItem>
             <MenuItem value={2}>2</MenuItem>
             <MenuItem value={3}>3</MenuItem>
             <MenuItem value={4}>4</MenuItem>
             <MenuItem value={5}>5</MenuItem>
+            <MenuItem value={6}>6</MenuItem>
+            <MenuItem value={7}>7</MenuItem>
+            <MenuItem value={8}>8</MenuItem>
+            <MenuItem value={9}>9</MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={11}>11</MenuItem>
+            <MenuItem value={12}>12</MenuItem>
           </Select>
           {errors.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="הערה"
+            type="string"
+            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            error={!!errors?.comment}
+            {...register('comment', {
+              maxLength: 50
+            })}
+          />
+          <span
+            className={`absolute top-1 left-1 text-xs ${
+              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+            }`}
+          >
+            {watch().comment?.length || 0} / 50
+          </span>
+          {errors.comment && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
@@ -305,19 +331,13 @@ const OrderRide = () => {
           type="submit"
           disabled={isOrderRideLoading}
         >
-          הזמינו נסיעה
+          {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
         </Button>
       </form>
-
-      <SearchingDriverModal
-        open={ride?.state === RideStateEnum.WaitingForDriver}
-        onClose={onCancelRide}
-      />
     </div>
   );
 };
 export default withLayout(OrderRide, {
   title: 'הזמנת הסעה לביקור חולים',
-  hideFooter: true,
   showLogoutButton: true
 });

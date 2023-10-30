@@ -37,11 +37,11 @@ const useNavigateUser = () => {
     }
     if (actualUser?.role === UserRoleEnum.Requester) {
       if (activeRide) {
-        if (
-          activeRide.state === RideStateEnum.WaitingForDriver ||
-          activeRide.state === RideStateEnum.Canceled
-        ) {
+        if (activeRide.state === RideStateEnum.Canceled) {
           return navigate('/passenger/order-ride');
+        }
+        if (activeRide.state === RideStateEnum.WaitingForDriver) {
+          return navigate('/passenger/searching-driver');
         }
         if (activeRide.state === RideStateEnum.DriverArrived) {
           return navigate('/passenger/driver-arrived');
@@ -71,7 +71,7 @@ const useNavigateUser = () => {
     } else if (user?.registrationState === 'Approved') {
       navigateAfterLogin();
     } else if (window.location.pathname === '/') {
-      navigate('/login');
+      navigate('/first-signup');
     }
   };
 
