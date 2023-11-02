@@ -1,9 +1,15 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { api } from './Config';
+import { UserApi } from '../api-client';
 
-export const initFirebaseApp = () => {
+let initialized = false;
+
+export function initFirebaseApp() {
+  if (initialized) return;
+
+  initialized = true;
+
   initializeApp({
     apiKey: 'AIzaSyAo5AZ1Na4l0YlfhZAlIr0FaLH_S4_1gfM',
     authDomain: 'ezla-pickup.firebaseapp.com',
@@ -18,11 +24,12 @@ export const initFirebaseApp = () => {
     const auth = getAuth();
     connectAuthEmulator(auth, 'http://127.0.0.1:9099');
   }
-};
+}
 
-export const initFirebaseCloudMessaging = async () => {
+export async function initFirebaseCloudMessaging() {
   // Initialize the Firebase app with the credentials
   initFirebaseApp();
+
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
@@ -41,9 +48,9 @@ export const initFirebaseCloudMessaging = async () => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
-export const setNotificationsToken = async () => {
+export async function setNotificationsToken(userApi: UserApi) {
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
@@ -60,10 +67,10 @@ export const setNotificationsToken = async () => {
       // Set token in our local storage and send to our server
       if (fcmToken) {
         console.log('fcmToken >>', fcmToken);
-        api.user.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
+        await userApi.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
       }
     }
   } catch (error) {
     console.error(error);
   }
-};
+}

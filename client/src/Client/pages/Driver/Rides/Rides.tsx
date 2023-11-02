@@ -5,23 +5,21 @@ import { useQuery } from '@tanstack/react-query';
 import { Stack } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
-import { POLLING_INTERVAL, api } from '../../../../Config.ts';
+import { useApiContext, POLLING_INTERVAL } from '../../../../contexts/ApiContext';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
-import { useUserContext } from '../../../../context/UserContext/UserContext';
+import { useUserContext } from '../../../../contexts/UserContext';
 
 const Rides = () => {
-  const { data: rides = [] } = useQuery({
-    queryKey: ['ridesGet'],
-    queryFn: async () => {
-      const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
-      return res;
-    },
-    refetchInterval: POLLING_INTERVAL
-  });
+  const api = useApiContext();
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, reFetchActiveRide } = useUserContext();
+  const { data: rides = [] } = useQuery({
+    queryKey: ['ridesGet'],
+    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }),
+    refetchInterval: POLLING_INTERVAL
+  });
 
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);

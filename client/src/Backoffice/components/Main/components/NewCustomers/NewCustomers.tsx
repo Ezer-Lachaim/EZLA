@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
-import { api } from '../../../../../Config.ts';
+import { useApiContext } from '../../../../../contexts/ApiContext';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
 const getNewCustomersColumns = (
@@ -89,7 +89,10 @@ const getNewCustomersColumns = (
       header: '',
       cell: ({ row }) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
+        const api = useApiContext();
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const [toggleModal, setToggleModal] = useState(false);
+
         const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
         return (
           <div className="flex gap-1 items-center">
@@ -135,6 +138,7 @@ const getNewCustomersColumns = (
 };
 
 const NewCustomers = () => {
+  const api = useApiContext();
   const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
@@ -151,13 +155,18 @@ const NewCustomers = () => {
       );
       setPendingUsers(sortedResultBySignupDate);
     };
+
+    fetchPendingUsers();
+  }, [api.user]);
+
+  useEffect(() => {
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
-    fetchPendingUsers();
+
     fetchHospitals();
-  }, [setPendingUsers]);
+  }, [api.hospital]);
 
   return (
     <div>

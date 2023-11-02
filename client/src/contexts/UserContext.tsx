@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { Ride, User } from '../../api-client';
-import { POLLING_INTERVAL, api, getToken, setToken } from '../../Config';
+import { Ride, User } from '../api-client';
+import { useAuthContext } from './AuthContext';
+import { POLLING_INTERVAL, useApiContext } from './ApiContext';
 
 const UserContext = createContext(
   {} as {
@@ -14,6 +15,8 @@ const UserContext = createContext(
 );
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const { token, setToken } = useAuthContext();
+  const api = useApiContext();
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
 
@@ -48,20 +51,27 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
       const userResponse = await api.user.getCurrentUser();
       setUser(userResponse);
     } catch (error) {
-      setToken(null);
+      setToken(null); // user will be set to null automatically
     } finally {
       setDidFinishUserInit(true);
     }
   };
 
   useEffect(() => {
-    if (getToken() && !user) {
+    if (token && !user) {
       getCurrentUser();
     } else {
       setDidFinishUserInit(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // make sure to reset the user once the token is reset
+    if (!token && user) {
+      setUser(null);
+    }
+  }, [token, user]);
 
   if (!didFinishUserInit) return null;
 

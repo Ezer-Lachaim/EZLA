@@ -2,7 +2,7 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { api } from '../../../../../../Config.ts';
+import { useApiContext } from '../../../../../../contexts/ApiContext';
 import { Ride, RideStateEnum, FetchError } from '../../../../../../api-client';
 import NewRideInfo from './NewRideInfo/NewRideInfo.tsx';
 
@@ -24,6 +24,7 @@ interface AddCustomerModalProps {
 }
 
 function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
+  const api = useApiContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

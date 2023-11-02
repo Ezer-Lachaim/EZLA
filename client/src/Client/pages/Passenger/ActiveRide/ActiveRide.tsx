@@ -5,14 +5,15 @@ import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { useApiContext } from '../../../../contexts/ApiContext';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useUserContext } from '../../../../contexts/UserContext.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
+  const api = useApiContext();
   const { activeRide: ride, reFetchActiveRide } = useUserContext();
   const [confirmClose, setConfirmClose] = useState(false);
 

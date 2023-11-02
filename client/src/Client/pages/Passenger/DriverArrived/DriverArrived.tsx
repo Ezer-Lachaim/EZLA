@@ -1,7 +1,7 @@
 import { Phone, CheckCircle } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useUserContext } from '../../../../contexts/UserContext.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 

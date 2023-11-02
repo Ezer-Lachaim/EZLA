@@ -4,11 +4,12 @@ import { Cancel, Close } from '@mui/icons-material';
 import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api } from '../../../../Config.ts';
+import { useApiContext } from '../../../../contexts/ApiContext';
 import { RideStateEnum } from '../../../../api-client';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useUserContext } from '../../../../contexts/UserContext.tsx';
 
 const SearchingDriver = () => {
+  const api = useApiContext();
   const { activeRide: ride, reFetchActiveRide } = useUserContext();
   const [confirmClose, setConfirmClose] = React.useState(false);
 

@@ -13,11 +13,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { setToken, api } from '../../../Config.ts';
-import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
+import { useAuthContext } from '../../../contexts/AuthContext';
+import { useApiContext } from '../../../contexts/ApiContext';
+import { useUserContext } from '../../../contexts/UserContext.tsx';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
-import { setNotificationsToken } from '../../../init-firebase.ts';
+import { useSetNotificationsToken } from '../../../hooks/firebase';
 
 type Inputs = {
   email: string;
@@ -25,6 +26,8 @@ type Inputs = {
 };
 
 const Login = () => {
+  const { setToken } = useAuthContext();
+  const api = useApiContext();
   const [showPassword, setShowPassword] = React.useState(false);
   const { setUser } = useUserContext();
   const {
@@ -33,6 +36,7 @@ const Login = () => {
     formState: { errors },
     setError
   } = useForm<Inputs>();
+  const setNotificationsToken = useSetNotificationsToken();
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {

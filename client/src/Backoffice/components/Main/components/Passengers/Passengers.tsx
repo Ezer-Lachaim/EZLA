@@ -6,7 +6,7 @@ import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
-import { api } from '../../../../../Config';
+import { useApiContext } from '../../../../../contexts/ApiContext';
 
 const getPassengersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -99,6 +99,7 @@ const getPassengersColumns = (
 };
 
 const Passengers = () => {
+  const api = useApiContext();
   const [passengers, setPassengers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
   const columns = getPassengersColumns(hospitals);
@@ -114,13 +115,19 @@ const Passengers = () => {
       );
       setPassengers(sortedResultBySignupDate);
     };
+
+    fetchPassengers();
+  }, [api.user]);
+
+  useEffect(() => {
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
-    fetchPassengers();
+
     fetchHospitals();
-  }, [setPassengers]);
+  }, [api.hospital]);
+
   return (
     <div>
       <PageHeader>

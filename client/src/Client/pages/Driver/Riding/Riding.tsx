@@ -2,12 +2,13 @@ import { Box, Button, Typography } from '@mui/material';
 import { Beenhere, DirectionsCarFilled, EmojiPeopleRounded } from '@mui/icons-material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { useApiContext } from '../../../../contexts/ApiContext';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
-import { useUserContext } from '../../../../context/UserContext/UserContext';
+import { useUserContext } from '../../../../contexts/UserContext';
 
 const Riding = () => {
+  const api = useApiContext();
   const { activeRide: ride, reFetchActiveRide } = useUserContext();
 
   const onComplete = async () => {

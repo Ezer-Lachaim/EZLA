@@ -1,6 +1,6 @@
 import withLayout from '../../../components/LayoutHOC.tsx';
 import car from '../../../../assets/car.png';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useUserContext } from '../../../../contexts/UserContext.tsx';
 
 const Riding = () => {
   const { activeRide: ride } = useUserContext();

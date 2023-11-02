@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { api } from '../../../../../../Config.ts';
+import { useApiContext } from '../../../../../../contexts/ApiContext';
 import { RidesGetStateEnum } from '../../../../../../api-client';
 
 const style = {
@@ -20,6 +20,7 @@ interface CancelRideModalProps {
   rideId: string;
 }
 function CancelRideModal({ open, handleModal, rideId }: CancelRideModalProps) {
+  const api = useApiContext();
   const handleSubmit = async () => {
     if (rideId) {
       await api.ride.updateRide({

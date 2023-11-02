@@ -1,9 +1,10 @@
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api } from '../../../../Config.ts';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useApiContext } from '../../../../contexts/ApiContext';
+import { useUserContext } from '../../../../contexts/UserContext.tsx';
 
 const RideCompleted = () => {
+  const api = useApiContext();
   const { reFetchActiveRide } = useUserContext();
 
   const confirmComplete = async () => {

@@ -1,7 +1,7 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-import { api } from '../../../../../../Config.ts';
+import { useApiContext } from '../../../../../../contexts/ApiContext';
 import { GetUsersStateEnum } from '../../../../../../api-client';
 
 const style = {
@@ -21,6 +21,7 @@ interface RejectCustomerModalProps {
   userId: string;
 }
 function RejectCustomerModal({ open, handleModal, userId }: RejectCustomerModalProps) {
+  const api = useApiContext();
   const [reason, setReason] = useState('');
 
   const handleReject = async () => {

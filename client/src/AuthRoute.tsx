@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUserContext } from './context/UserContext/UserContext';
+import { useUserContext } from './contexts/UserContext';
 import { UserRegistrationStateEnum, UserRoleEnum } from './api-client';
 
 export enum AuthRouteLoginAccess {
