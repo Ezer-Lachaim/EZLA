@@ -15,7 +15,7 @@ const client = new SNSClient({
 export class SMSInvalidPhoneNumberError extends Error {}
 
 export async function sendSMS(phoneNumber: string, message: string): Promise<void> {
-  if (!SMS_IS_ON) {
+  if (!SMS_IS_ON || !phoneNumber) {
     return;
   }
 
