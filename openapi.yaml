@@ -141,7 +141,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideRequester'
+                oneOf:
+                  - $ref: '#/components/schemas/RideRequester'
+                  - $ref: '#/components/schemas/Driver'
         '400':
           description: Invalid username supplied
         '404':

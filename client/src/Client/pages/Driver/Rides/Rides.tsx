@@ -35,13 +35,12 @@ const Rides = () => {
       await api.ride.updateRide({
         rideId: selectedRide?.rideId || '',
         ride: {
-          ...selectedRide,
-          requestTimeStamp: undefined,
           state: RideStateEnum.Booked,
           driver: {
             userId: driver?.userId,
             firstName: driver?.firstName,
             lastName: driver?.lastName,
+            cellPhone: driver?.cellPhone,
             carManufacturer: driver?.carManufacturer,
             carModel: driver?.carModel,
             carColor: driver?.carColor,

@@ -48,7 +48,7 @@ const ActiveRide = () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
       guestToken,
-      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
+      ride: { state: RideStateEnum.RequesterCanceled }
     });
 
     navigate('/passenger/order-ride');
