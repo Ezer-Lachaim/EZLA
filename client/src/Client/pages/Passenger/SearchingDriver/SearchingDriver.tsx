@@ -17,7 +17,7 @@ const SearchingDriver = () => {
   const onCancelRide = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
+      ride: { state: RideStateEnum.RequesterCanceled }
     });
 
     navigate('/passenger/order-ride');
