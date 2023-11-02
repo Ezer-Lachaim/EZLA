@@ -16,7 +16,7 @@ const SearchingDriver = () => {
   const onCancelRide = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { ...ride, state: RideStateEnum.RequesterCanceled }
+      ride: { state: RideStateEnum.RequesterCanceled }
     });
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
