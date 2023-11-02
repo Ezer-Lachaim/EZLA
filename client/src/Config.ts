@@ -1,10 +1,20 @@
 /* eslint-disable import/no-mutable-exports */
-import { Configuration, DriverApi, HospitalApi, RideApi, UserApi } from './api-client/index.ts';
+import { Configuration, DriverApi, HospitalApi, RideApi, UserApi } from './api-client';
 
 export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || '';
 export const POLLING_INTERVAL = 3000;
 
+let currentToken: string | null;
 export const getToken = () => currentToken || localStorage.getItem('token');
+
+export const setToken = (token: string | null) => {
+  currentToken = token || '';
+  localStorage.setItem('token', currentToken);
+  api = createApi();
+};
+
+// initialize currentToken
+currentToken = getToken();
 
 const getApiConfiguration = () => {
   return new Configuration({
@@ -25,12 +35,5 @@ const createApi = () => {
   };
 };
 
-let currentToken: string | null;
-
+// initialize api
 export let api = createApi();
-
-export const setToken = (token: string | null) => {
-  localStorage.setItem('token', token || '');
-  currentToken = token;
-  api = createApi();
-};

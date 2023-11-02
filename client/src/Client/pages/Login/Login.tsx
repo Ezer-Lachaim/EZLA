@@ -17,7 +17,6 @@ import { setToken, api } from '../../../Config.ts';
 import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
-import useNavigateUser from '../../hooks/useNavigateUser.ts';
 import { setNotificationsToken } from '../../../init-firebase.ts';
 
 type Inputs = {
@@ -35,8 +34,6 @@ const Login = () => {
     setError
   } = useForm<Inputs>();
 
-  const { navigateAfterLogin } = useNavigateUser();
-
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       const userResponse = (await api.user.loginUser({
@@ -46,7 +43,7 @@ const Login = () => {
       setToken(userResponse.token);
       setUser(userResponse.user);
       setNotificationsToken();
-      navigateAfterLogin(userResponse.user);
+      // navigation will occur automatically in 'AuthRoute' (it re-renders each time a user is set)
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
         setError('email', { type: '401' });

@@ -51,9 +51,9 @@ const CreatePassword = () => {
         setToken(token);
         setUser({ ...user, isInitialPassword: false });
         if (user?.role === 'Driver') {
-          navigate('/driver/rides');
+          navigate('/driver');
         } else {
-          navigate('/passenger/order-ride');
+          navigate('/passenger');
         }
       } catch (error) {
         console.error(error);

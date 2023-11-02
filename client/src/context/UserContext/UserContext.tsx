@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { Ride, User } from '../../api-client';
 import { POLLING_INTERVAL, api, getToken, setToken } from '../../Config';
 
@@ -8,6 +8,8 @@ const UserContext = createContext(
     user: User | null;
     setUser: (user: User | null) => void;
     activeRide: Ride | null | undefined;
+    isFetchingActiveRide: boolean;
+    reFetchActiveRide: () => Promise<UseQueryResult>;
   }
 );
 
@@ -15,7 +17,11 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
 
-  const { data: activeRide } = useQuery({
+  const {
+    data: activeRide,
+    isFetching: isFetchingActiveRide,
+    refetch: reFetchActiveRide
+  } = useQuery({
     queryKey: ['getActiveRideForUser'],
     enabled: !!user,
     queryFn: async () => {
@@ -27,7 +33,16 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     },
     refetchInterval: POLLING_INTERVAL
   });
-  const values = useMemo(() => ({ user, setUser, activeRide }), [user, activeRide]);
+  const values = useMemo(
+    () => ({
+      user,
+      setUser,
+      activeRide,
+      isFetchingActiveRide,
+      reFetchActiveRide
+    }),
+    [user, activeRide, isFetchingActiveRide, reFetchActiveRide]
+  );
   const getCurrentUser = async () => {
     try {
       const userResponse = await api.user.getCurrentUser();

@@ -1,30 +1,22 @@
-import { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Beenhere, DirectionsCarFilled, EmojiPeopleRounded } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Ride, RideStateEnum } from '../../../../api-client';
+import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../Config.ts';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { useUserContext } from '../../../../context/UserContext/UserContext';
 
 const Riding = () => {
-  const [ride, setRide] = useState<Ride>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    (async () => {
-      setRide(await api.ride.getActiveRideForUser());
-    })();
-  }, []);
+  const { activeRide: ride, reFetchActiveRide } = useUserContext();
 
   const onComplete = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.Completed }
     });
-
-    navigate('/driver/completed');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Driver.tsx)
   };
 
   return (

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import { Cancel, Close } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
@@ -10,8 +9,7 @@ import { RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 const SearchingDriver = () => {
-  const { activeRide: ride } = useUserContext();
-  const navigate = useNavigate();
+  const { activeRide: ride, reFetchActiveRide } = useUserContext();
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   const onCancelRide = async () => {
@@ -19,8 +17,8 @@ const SearchingDriver = () => {
       rideId: ride?.rideId || '',
       ride: { ...ride, state: RideStateEnum.RequesterCanceled }
     });
-
-    navigate('/passenger/order-ride');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   return (

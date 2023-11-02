@@ -13,7 +13,6 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../Config.ts';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
@@ -56,8 +55,7 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user } = useUserContext();
-  const navigate = useNavigate();
+  const { user, reFetchActiveRide } = useUserContext();
   const {
     register,
     watch,
@@ -153,8 +151,8 @@ const OrderRide = () => {
     await api.ride.ridesPost({
       ride: newRide
     });
-
-    navigate('/passenger/searching-driver');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   return (
