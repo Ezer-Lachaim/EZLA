@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
 import { useQuery } from '@tanstack/react-query';
 import { Stack } from '@mui/material';
@@ -22,8 +21,7 @@ const Rides = () => {
   });
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useUserContext();
-  const navigate = useNavigate();
+  const { user, reFetchActiveRide } = useUserContext();
 
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
@@ -50,9 +48,10 @@ const Rides = () => {
           destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
         }
       });
+      await reFetchActiveRide();
+      // navigation will occur automatically (in @../Driver.tsx)
 
       setIsModalOpen(false);
-      navigate('/driver/active');
     }
   };
 
