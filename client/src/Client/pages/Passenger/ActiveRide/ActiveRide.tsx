@@ -4,6 +4,7 @@ import { Cancel, Phone } from '@mui/icons-material';
 import ClockIcon from '@mui/icons-material/AccessTimeRounded';
 import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api, getGuestToken } from '../../../../Config.ts';
@@ -20,6 +21,7 @@ const ActiveRide = () => {
 
   const canceledRide = async () => {
     await api.ride.postConfirmRideComplete();
+    localStorage.removeItem('guestToken');
   };
 
   const onConfirmCancelRide = async () => {
@@ -30,17 +32,21 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
+    const rideToken = uuidv4();
+    localStorage.setItem('guestToken', rideToken);
+
     await api.ride.ridesPost({
       ride: {
         ...ride,
         state: RideStateEnum.WaitingForDriver,
         rideId: undefined,
         requestTimeStamp: undefined,
-        driver: undefined
+        driver: undefined,
+        guestToken: rideToken
       }
     });
 
-    navigate('/passenger/order-ride');
+    navigate('/passenger/searching-driver');
   };
 
   const onCancelRide = async () => {
@@ -50,6 +56,7 @@ const ActiveRide = () => {
       guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+    localStorage.removeItem('guestToken');
 
     navigate('/passenger/order-ride');
   };

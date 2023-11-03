@@ -21,6 +21,7 @@ const SearchingDriver = () => {
       guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+    localStorage.removeItem('guestToken');
 
     navigate('/passenger/order-ride');
   };

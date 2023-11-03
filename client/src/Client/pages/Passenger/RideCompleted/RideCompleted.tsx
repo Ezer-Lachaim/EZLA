@@ -9,6 +9,7 @@ const RideCompleted = () => {
   const confirmComplete = async () => {
     const guestToken = getGuestToken() || '';
     await api.ride.postConfirmRideComplete({ guestToken });
+    localStorage.removeItem('guestToken');
 
     navigate('/passenger/order-ride');
   };
