@@ -114,16 +114,12 @@ const Passengers = () => {
       );
       setPassengers(sortedResultBySignupDate);
     };
-
-    fetchPassengers();
-  }, []);
-
-  useEffect(() => {
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
 
+    fetchPassengers();
     fetchHospitals();
   }, []);
 

@@ -152,16 +152,12 @@ const NewCustomers = () => {
       );
       setPendingUsers(sortedResultBySignupDate);
     };
-
-    fetchPendingUsers();
-  }, []);
-
-  useEffect(() => {
     const fetchHospitals = async () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
 
+    fetchPendingUsers();
     fetchHospitals();
   }, []);
 
