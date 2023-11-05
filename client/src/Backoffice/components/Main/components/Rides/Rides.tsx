@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
-import { useApiContext } from '../../../../../contexts/ApiContext';
+import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
@@ -118,7 +118,6 @@ const columns: ColumnDef<Partial<Ride>>[] = [
 ];
 
 const Rides = () => {
-  const api = useApiContext();
   const [rides, setRides] = useState<Ride[]>([]);
   const [isAddRideModalOpen, setIsAddRideModalOpen] = useState(false);
 
@@ -136,7 +135,7 @@ const Rides = () => {
     };
 
     fetchRides();
-  }, [api.ride]);
+  }, []);
 
   return (
     <div>

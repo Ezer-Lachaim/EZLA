@@ -12,8 +12,8 @@ import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC';
-import { useAuthContext } from '../../../contexts/AuthContext';
-import { useApiContext } from '../../../contexts/ApiContext';
+import { useAuthStore } from '../../../services/auth';
+import { api } from '../../../services/api';
 import { useUserContext } from '../../../contexts/UserContext';
 
 type Inputs = {
@@ -23,8 +23,7 @@ type Inputs = {
 };
 
 const CreatePassword = () => {
-  const { setToken } = useAuthContext();
-  const api = useApiContext();
+  const setToken = useAuthStore((state) => state.setToken);
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const navigate = useNavigate();

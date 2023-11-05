@@ -6,7 +6,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
 import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
-import { useApiContext } from '../../../../../../contexts/ApiContext';
+import { api } from '../../../../../../services/api';
 import { Driver, ResponseError } from '../../../../../../api-client';
 
 const style = {
@@ -28,7 +28,6 @@ interface AddCustomerModalProps {
   handleModal: (shouldOpen: boolean) => void;
 }
 function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
-  const api = useApiContext();
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [existingEmails, setExistingEmails] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -9,8 +9,8 @@ import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
 import { ResponseError, RideRequester } from '../../../api-client';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
-import { useAuthContext } from '../../../contexts/AuthContext';
-import { useApiContext } from '../../../contexts/ApiContext';
+import { useAuthStore } from '../../../services/auth';
+import { api } from '../../../services/api';
 import { useUserContext } from '../../../contexts/UserContext';
 
 const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
@@ -22,8 +22,7 @@ const Register = ({
   activeStepIndex: number;
   nextStep: () => void;
 }) => {
-  const { setToken } = useAuthContext();
-  const api = useApiContext();
+  const setToken = useAuthStore((state) => state.setToken);
   const { setUser } = useUserContext();
   const navigation = useNavigate();
   const methods = useForm<RegistrationFormInputs>();

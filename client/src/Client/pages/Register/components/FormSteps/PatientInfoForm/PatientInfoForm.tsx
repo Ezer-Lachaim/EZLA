@@ -19,12 +19,11 @@ import { Link } from 'react-router-dom';
 import useFormPersist from 'react-hook-form-persist';
 import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
-import { useApiContext } from '../../../../../../contexts/ApiContext';
+import { api } from '../../../../../../services/api';
 
 const adapter = new AdapterDayjs();
 
 export const PatientInfoForm = () => {
-  const api = useApiContext();
   const [isServiceForMe, setIsServiceForMe] = useState(false);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
@@ -48,7 +47,7 @@ export const PatientInfoForm = () => {
     };
 
     fetchHospitals();
-  }, [api.hospital]);
+  }, []);
 
   const onSelectHospital = (event: SelectChangeEvent<number>) => {
     setValue('patient.hospitalId', event.target.value as number);

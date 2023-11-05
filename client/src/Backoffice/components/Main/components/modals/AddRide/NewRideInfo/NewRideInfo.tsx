@@ -9,7 +9,6 @@ import {
   TextField
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 

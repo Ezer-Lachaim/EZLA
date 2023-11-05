@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { useApiContext } from '../../../../contexts/ApiContext';
+import { api } from '../../../../services/api';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../contexts/UserContext.tsx';
 
@@ -55,7 +55,6 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const api = useApiContext();
   const { user, reFetchActiveRide } = useUserContext();
   const {
     register,
@@ -112,7 +111,7 @@ const OrderRide = () => {
     };
 
     fetchHospitals();
-  }, [rideRequester, api.hospital]);
+  }, [rideRequester]);
 
   const onSwitchAutofilled = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');

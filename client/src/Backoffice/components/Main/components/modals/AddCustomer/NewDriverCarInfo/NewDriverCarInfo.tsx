@@ -1,7 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-
-import { Driver } from '../../../../../../../api-client/models/Driver';
+import { Driver } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
 function NewDriverCarInfo() {

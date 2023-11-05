@@ -5,7 +5,7 @@ import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/mat
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { useApiContext } from '../../../contexts/ApiContext';
+import { api } from '../../../services/api';
 import useLocationHash from '../../hooks/useLocationHash';
 import { initFirebaseApp } from '../../../services/firebase';
 import { ChangePasswordForm } from '../ChangePassword/ChangePassword';
@@ -18,7 +18,6 @@ initFirebaseApp();
 const auth = getAuth();
 
 const ForgotPassword = () => {
-  const api = useApiContext();
   const {
     register,
     handleSubmit,

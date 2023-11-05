@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
+import { api } from '../../../../../services/api';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
-import { useApiContext } from '../../../../../contexts/ApiContext';
 
 const getPassengersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -99,7 +99,6 @@ const getPassengersColumns = (
 };
 
 const Passengers = () => {
-  const api = useApiContext();
   const [passengers, setPassengers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
   const columns = getPassengersColumns(hospitals);
@@ -117,7 +116,7 @@ const Passengers = () => {
     };
 
     fetchPassengers();
-  }, [api.user]);
+  }, []);
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -126,7 +125,7 @@ const Passengers = () => {
     };
 
     fetchHospitals();
-  }, [api.hospital]);
+  }, []);
 
   return (
     <div>

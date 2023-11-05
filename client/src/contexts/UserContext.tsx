@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useAuthStore } from '../services/auth';
+import { api, POLLING_INTERVAL } from '../services/api';
 import { Ride, User } from '../api-client';
-import { useAuthContext } from './AuthContext';
-import { POLLING_INTERVAL, useApiContext } from './ApiContext';
 
 const UserContext = createContext(
   {} as {
@@ -15,8 +15,8 @@ const UserContext = createContext(
 );
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const { token, setToken } = useAuthContext();
-  const api = useApiContext();
+  const token = useAuthStore((state) => state.token);
+  const setToken = useAuthStore((state) => state.setToken);
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
 

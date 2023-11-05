@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { UserApi } from '../api-client';
+import { api } from './api';
 
 let initialized = false;
 
@@ -50,7 +50,7 @@ export async function initFirebaseCloudMessaging() {
   }
 }
 
-export async function setNotificationsToken(userApi: UserApi) {
+export async function setNotificationsToken() {
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
@@ -67,7 +67,7 @@ export async function setNotificationsToken(userApi: UserApi) {
       // Set token in our local storage and send to our server
       if (fcmToken) {
         console.log('fcmToken >>', fcmToken);
-        await userApi.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
+        await api.user.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
       }
     }
   } catch (error) {

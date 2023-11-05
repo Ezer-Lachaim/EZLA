@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
-import { useApiContext } from '../../../../../contexts/ApiContext';
+import { api } from '../../../../../services/api';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
 const getNewCustomersColumns = (
@@ -89,8 +89,6 @@ const getNewCustomersColumns = (
       header: '',
       cell: ({ row }) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        const api = useApiContext();
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         const [toggleModal, setToggleModal] = useState(false);
 
         const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
@@ -138,7 +136,6 @@ const getNewCustomersColumns = (
 };
 
 const NewCustomers = () => {
-  const api = useApiContext();
   const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
   const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
 
@@ -157,7 +154,7 @@ const NewCustomers = () => {
     };
 
     fetchPendingUsers();
-  }, [api.user]);
+  }, []);
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -166,7 +163,7 @@ const NewCustomers = () => {
     };
 
     fetchHospitals();
-  }, [api.hospital]);
+  }, []);
 
   return (
     <div>

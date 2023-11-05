@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAuthContext } from '../../../contexts/AuthContext';
+import { useAuthStore } from '../../../services/auth';
 
 const Logout = () => {
-  const { setToken } = useAuthContext();
+  const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
   useEffect(() => {
