@@ -14,10 +14,22 @@ const UserContext = createContext(
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [didFinishUserInit, setDidFinishUserInit] = useState(false);
+  const [hasGuestToken, setHasGuestToken] = useState(false);
+
+  useEffect(() => {
+    // this is a temporary solution until auth context is merged in
+    const intervalId = setInterval(() => {
+      setHasGuestToken(!!getGuestToken());
+    }, 300);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   const { data: activeRide } = useQuery({
     queryKey: ['getActiveRideForUser'],
-    enabled: !!user,
+    enabled: !!user || hasGuestToken,
     queryFn: async () => {
       try {
         const guestToken = getGuestToken() || '';
