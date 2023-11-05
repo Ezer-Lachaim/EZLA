@@ -21,7 +21,6 @@ const ActiveRide = () => {
 
   const canceledRide = async () => {
     await api.ride.postConfirmRideComplete();
-    localStorage.removeItem('guestToken');
   };
 
   const onConfirmCancelRide = async () => {
@@ -56,7 +55,6 @@ const ActiveRide = () => {
       guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
-    localStorage.removeItem('guestToken');
 
     navigate('/passenger/order-ride');
   };
