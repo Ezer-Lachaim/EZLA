@@ -6,10 +6,10 @@ import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/C
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { RideStateEnum } from '../../../../api-client';
-import { useUserContext } from '../../../../contexts/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const SearchingDriver = () => {
-  const { activeRide: ride, reFetchActiveRide } = useUserContext();
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   const onCancelRide = async () => {

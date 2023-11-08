@@ -11,7 +11,6 @@ import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { useAuthStore } from '../../../services/auth';
 import { api } from '../../../services/api';
-import { useUserContext } from '../../../contexts/UserContext';
 
 const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
 
@@ -23,7 +22,6 @@ const Register = ({
   nextStep: () => void;
 }) => {
   const setToken = useAuthStore((state) => state.setToken);
-  const { setUser } = useUserContext();
   const navigation = useNavigate();
   const methods = useForm<RegistrationFormInputs>();
   const [submitError, setSubmitError] = useState<number | null>(null);
@@ -91,8 +89,7 @@ const Register = ({
       });
 
       if (user) {
-        setUser(user);
-        setToken(token || null); // in case of null user will be set to null automatically
+        setToken(token || null, user);
         sessionStorage.removeItem('activeStepIndex');
         navigation('/processing-user');
       }

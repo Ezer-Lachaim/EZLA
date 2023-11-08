@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUserContext } from './contexts/UserContext';
+import { useAuthStore } from './services/auth';
 import { UserRegistrationStateEnum, UserRoleEnum } from './api-client';
 
 export enum AuthRouteLoginAccess {
@@ -26,7 +26,7 @@ export const AuthRoute = ({
   AuthRegistrationState?: UserRegistrationStateEnum;
   children: ReactNode;
 }) => {
-  const { user } = useUserContext();
+  const user = useAuthStore((state) => state.user);
 
   // handle login access guard
   if (AuthLoginAccess === AuthRouteLoginAccess.LoggedIn && !user) {

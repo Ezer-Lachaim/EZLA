@@ -1,23 +1,34 @@
 import { create } from 'zustand';
-import { addPreMiddleware, addPostMiddleware } from './api';
+import { api, addPreMiddleware, addPostMiddleware } from './api';
+import { User } from '../api-client';
 
 const TOKEN_LOCAL_STORAGE_KEY = 'token';
 
 type AuthStore = {
   token: string | null;
-  setToken: (token: string | null) => void;
+  user: User | null;
+  isUserInitiated: boolean;
+  setToken: (token: string | null, user?: User | null) => void;
+  setUser: (user: User | null) => void;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>((set, get) => ({
   token: localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) || null,
-  setToken: (token) => {
+  user: null,
+  isUserInitiated: false,
+  setToken: (token, user) => {
+    set({ token });
+
     if (token) {
       localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, token);
+      get().setUser(user ?? null);
     } else {
       localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
+      get().setUser(null);
     }
-
-    set({ token });
+  },
+  setUser: (user) => {
+    set({ user, isUserInitiated: true });
   }
 }));
 
@@ -42,4 +53,19 @@ export function initAuthMiddlewares() {
       useAuthStore.getState().setToken(null); // user will be set to null automatically
     }
   });
+}
+
+export async function initUser() {
+  const { token, setUser } = useAuthStore.getState();
+
+  if (!token) {
+    setUser(null);
+    return;
+  }
+
+  try {
+    setUser(await api.user.getCurrentUser());
+  } catch (e) {
+    setUser(null);
+  }
 }

@@ -15,8 +15,9 @@ import {
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
-import { useUserContext } from '../../../../contexts/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 interface ClientRide extends Omit<Ride, 'specialRequest'> {
   specialRequest: {
@@ -55,7 +56,8 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const { user, reFetchActiveRide } = useUserContext();
+  const user = useAuthStore((state) => state.user);
+  const { reFetch: reFetchActiveRide } = useActiveRide();
   const {
     register,
     watch,

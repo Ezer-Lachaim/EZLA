@@ -16,7 +16,6 @@ import withLayout from '../../components/LayoutHOC.tsx';
 import { api } from '../../../services/api';
 import { useAuthStore } from '../../../services/auth';
 import { setNotificationsToken } from '../../../services/firebase';
-import { useUserContext } from '../../../contexts/UserContext.tsx';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
 
@@ -28,7 +27,6 @@ type Inputs = {
 const Login = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const [showPassword, setShowPassword] = React.useState(false);
-  const { setUser } = useUserContext();
   const {
     register,
     handleSubmit,
@@ -42,8 +40,7 @@ const Login = () => {
         loginUserRequest: { email, password }
       })) as unknown as { token: string; user: User };
       console.log(userResponse.token);
-      setToken(userResponse.token);
-      setUser(userResponse.user);
+      setToken(userResponse.token, userResponse.user);
       setNotificationsToken();
       // navigation will occur automatically in 'AuthRoute' (it re-renders each time a user is set)
     } catch (e) {

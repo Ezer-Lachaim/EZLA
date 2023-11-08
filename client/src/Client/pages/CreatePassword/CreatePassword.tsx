@@ -14,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC';
 import { useAuthStore } from '../../../services/auth';
 import { api } from '../../../services/api';
-import { useUserContext } from '../../../contexts/UserContext';
 
 type Inputs = {
   email: string;
@@ -24,17 +23,17 @@ type Inputs = {
 
 const CreatePassword = () => {
   const setToken = useAuthStore((state) => state.setToken);
+  const user = useAuthStore((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const navigate = useNavigate();
-  const { user, setUser } = useUserContext();
 
   const {
     handleSubmit,
     formState: { errors, isValid },
     register
   } = useForm<Inputs>({ defaultValues: { email: user?.email } });
-  const userContext = useUserContext();
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
 
@@ -46,12 +45,11 @@ const CreatePassword = () => {
     if (isValid && !noMatch) {
       try {
         const { token = null } = await api.user.updateInitialPassword({
-          userId: userContext.user?.userId || '',
+          userId: user?.userId || '',
           updateInitialPasswordRequest: { password: data.password }
         });
 
-        setToken(token);
-        setUser({ ...user, isInitialPassword: false });
+        setToken(token, { ...user, isInitialPassword: false });
         if (user?.role === 'Driver') {
           navigate('/driver');
         } else {

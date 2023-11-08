@@ -1,12 +1,12 @@
 import { Phone, CheckCircle } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { useUserContext } from '../../../../contexts/UserContext.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const DriverArrived = () => {
-  const { activeRide: ride } = useUserContext();
+  const { activeRide: ride } = useActiveRide();
 
   return (
     <div className="w-full pb-5 h-full flex flex-col">

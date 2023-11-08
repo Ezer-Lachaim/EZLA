@@ -5,10 +5,10 @@ import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
-import { useUserContext } from '../../../../contexts/UserContext';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const Riding = () => {
-  const { activeRide: ride, reFetchActiveRide } = useUserContext();
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
 
   const onComplete = async () => {
     await api.ride.updateRide({

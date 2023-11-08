@@ -6,14 +6,16 @@ import { Stack } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
 import { api, POLLING_INTERVAL } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
-import { useUserContext } from '../../../../contexts/UserContext';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const Rides = () => {
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, reFetchActiveRide } = useUserContext();
+  const user = useAuthStore((state) => state.user);
+  const { reFetch: reFetchActiveRide } = useActiveRide();
   const { data: rides = [] } = useQuery({
     queryKey: ['ridesGet'],
     queryFn: () => api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }),

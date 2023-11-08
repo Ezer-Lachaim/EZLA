@@ -6,14 +6,14 @@ import { format } from 'date-fns';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
-import { useUserContext } from '../../../../contexts/UserContext.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
-  const { activeRide: ride, reFetchActiveRide } = useUserContext();
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {

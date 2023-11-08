@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { RideStateEnum } from '../../../api-client';
-import { useUserContext } from '../../../contexts/UserContext';
+import { useActiveRide } from '../../../hooks/useActiveRide';
 
 const Passenger = () => {
-  const { activeRide } = useUserContext();
+  const { activeRide } = useActiveRide();
   const location = useLocation();
   const navigate = useNavigate();
 
