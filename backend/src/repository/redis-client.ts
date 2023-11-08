@@ -2,7 +2,6 @@ import { createClient } from 'redis';
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log(process.env.REDIS_CA_CERT);
 const client = createClient({
   socket: {
     host: process.env.REDIS_HOST || 'localhost',
