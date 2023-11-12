@@ -15,6 +15,13 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 ## Development
 
 This is a monorepo using npm workspaces
+### Install thsese packages in your local repo
+```
+npm install --save-dev cross-env
+```
+```
+npm install --save-dev vite
+```
 
 ### Create local .env file with the following props
 The file should be placed in /backend folder
