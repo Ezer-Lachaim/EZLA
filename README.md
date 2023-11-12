@@ -15,7 +15,7 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 ## Development
 
 This is a monorepo using npm workspaces
-### Install thsese packages in your local repo
+### Install these packages in your local repo
 ```
 npm install --save-dev cross-env
 ```
