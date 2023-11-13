@@ -16,6 +16,17 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 
 This is a monorepo using npm workspaces
 
+### Git Branches
+Currently, we have 2 main branches:
+- `master` - The system is available only for the sick
+- `feat/open-to-all` - The system is available for everyone because of the current situation
+
+When pushing your changes, please make sure to push to the correct branch. 
+If it is a bugfix, or a feature that is relevant to both situations, please open the PR to `master` branch.
+On the other hand, if it is a feature that is relevant only for the current situation, please open the PR to `feat/open-to-all` branch.
+
+If you are unsure, please ask in the Google Spaces chatroom.
+
 ### Create local .env file with the following props
 The file should be placed in /backend folder
 ```
