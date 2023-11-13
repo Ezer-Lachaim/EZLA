@@ -55,8 +55,7 @@ function EditRideModal({ open, handleModal, ride }: EditRideModalProps) {
     const updatedRide = {
       ...data,
       state: ride.state,
-      rideId: ride.rideId,
-      requestTimeStamp: ride.requestTimeStamp
+      rideId: ride.rideId
     };
 
     try {
