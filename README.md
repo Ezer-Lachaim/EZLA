@@ -15,12 +15,9 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 ## Development
 
 This is a monorepo using npm workspaces
-### Install these packages in your local repo
+### Install dependencies
 ```
-npm install --save-dev cross-env
-```
-```
-npm install --save-dev vite
+npm install
 ```
 
 ### Create local .env file with the following props
