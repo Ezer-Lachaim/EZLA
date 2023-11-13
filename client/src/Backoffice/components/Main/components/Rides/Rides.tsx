@@ -42,7 +42,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     }
   },
   {
-    accessorKey: 'requestCellphone',
+    accessorKey: 'cellphone',
     header: 'טלפון',
     accessorFn: (data) => data.cellphone || '-'
   },
@@ -57,8 +57,8 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorFn: (data) => data.destination || '-'
   },
   {
-    accessorKey: 'requestPassengerCount',
-    header: 'מספר נוסעים',
+    accessorKey: 'passengerCount',
+    header: "מס' נוסעים",
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
