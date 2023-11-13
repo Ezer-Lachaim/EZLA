@@ -68,13 +68,18 @@ export async function sendPushNotification(registrationToken: string, payload: M
 }
 
 export async function sendNewRideNotificationToDrivers() {
-  return messaging().send({
-    notification: {
-      title: 'נסיעה חדשה!',
-      body: 'נסיעה חדשה מחכה לכם במערכת!'
-    },
-    topic: 'new-ride'
-  });
+  try {
+    return await messaging().send({
+      notification: {
+        title: 'נסיעה חדשה!',
+        body: 'נסיעה חדשה מחכה לכם במערכת!'
+      },
+      topic: 'new-ride'
+    });
+  } catch (e) {
+    console.log('Failed to send notification', e);
+    return Promise.resolve();
+  }
 }
 
 export async function subscribeToNewRideNotification(registrationToken: string) {
