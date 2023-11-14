@@ -56,6 +56,7 @@ export const getActiveRide = async (req: CustomRequest, res: Response): Promise<
       res.status(404).json({ error: 'Active ride not found' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -108,6 +109,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Couldn't create new ride` });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -260,6 +262,7 @@ export const deleteRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride: ${rideId} not found` });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
