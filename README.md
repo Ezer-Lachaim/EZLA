@@ -15,6 +15,10 @@ If you are unsure how to do this, please follow this guide: https://docs.github.
 ## Development
 
 This is a monorepo using npm workspaces
+### Install dependencies
+```
+npm install
+```
 
 ### Git Branches
 Currently, we have 2 main branches:

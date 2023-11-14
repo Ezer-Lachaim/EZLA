@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Edit } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../Config';
@@ -11,6 +11,7 @@ import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
+import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
@@ -92,6 +93,35 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorFn: (data) => {
       if (!data.state) return '-';
       return RIDE_STATE_MAPPER[data.state];
+    }
+  },
+  {
+    accessorKey: 'actions2',
+    header: '',
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [toggleModal, setToggleModal] = useState(false);
+      const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+
+      const ride = row.original;
+
+      if (row.original.state !== 'WaitingForDriver') return null;
+
+      return (
+        <div className="flex gap-1 items-center">
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            style={{ minWidth: 0 }}
+            className="w-7 h-7"
+            onClick={() => handleModal(true)}
+          >
+            <Edit fontSize="small" />
+          </Button>
+          <EditRideModal open={toggleModal} handleModal={handleModal} ride={ride} />
+        </div>
+      );
     }
   },
   {
