@@ -50,7 +50,7 @@ const FirstSignUp = () => {
         endIcon={<FaceIcon />}
         onClick={() => navigation('/passenger/order-ride')}
       >
-        הזמן הסעה חדשה
+        הזמנת נסיעה
       </Button>
       <p className="text-md text-center">
         מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
