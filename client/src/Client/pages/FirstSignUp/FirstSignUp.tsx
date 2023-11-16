@@ -55,7 +55,7 @@ const FirstSignUp = () => {
       </Button>
       <Button
         variant="contained"
-        className="w-full mb-5"
+        className="w-full text-lg mb-5"
         size="large"
         endIcon={<CarIcon />}
         onClick={() => {
