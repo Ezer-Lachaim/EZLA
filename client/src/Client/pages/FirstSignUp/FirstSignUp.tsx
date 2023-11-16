@@ -3,6 +3,7 @@ import { Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import FaceIcon from '@mui/icons-material/Face';
+import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
 import infoImg from '../../../assets/info.png';
@@ -52,16 +53,25 @@ const FirstSignUp = () => {
       >
         הזמנת נסיעה
       </Button>
+      <Button
+        variant="contained"
+        className="w-full text-lg mb-5"
+        size="large"
+        endIcon={<CarIcon />}
+        onClick={() => {
+          navigation('/login?driverFirstLogin=1');
+        }}
+      >
+        כניסה ראשונה כמתנדב
+      </Button>
       <p className="text-md text-center">
-        מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
-        למילוי טופס הרשמה הקישו&nbsp;
+        מחפשים להצטרף לקהילת המתדנבים?💪❤️ <br />
+        למילוי טופס הצטרפות הקישו&nbsp;
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform">
           כאן
         </a>
         <br />
-        או
-        <br />
-        התקשרו לשירות הלקוחות 033-730440
+        או התקשרו לשירות הלקוחות 033-730440
       </p>
 
       <div className="flex gap-2 absolute bottom-20">
