@@ -19,7 +19,8 @@ import { api } from '../../../../Config.ts';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
-interface ClientRide extends Omit<Ride, 'specialRequest'> {
+interface OrderRideFormData {
+  ride: Ride;
   specialRequest: {
     isWheelChair: boolean;
     isBabySafetySeat: boolean;
@@ -63,10 +64,12 @@ const OrderRide = () => {
     watch,
     handleSubmit,
     formState: { errors }
-  } = useForm<ClientRide>({
+  } = useForm<OrderRideFormData>({
     defaultValues: {
-      origin: user?.address,
-      cellphone: user?.cellPhone,
+      ride: {
+        origin: user?.address,
+        cellphone: user?.cellPhone
+      },
       specialRequest: {
         isWheelChair: (user as RideRequester)?.specialRequest?.includes(specialMap.isWheelChair),
         isBabySafetySeat: (user as RideRequester)?.specialRequest?.includes(
@@ -119,7 +122,7 @@ const OrderRide = () => {
     setAutofilledAddress(autofilledAddress === 'source' ? 'destination' : 'source');
   };
 
-  const onSubmit: SubmitHandler<ClientRide> = async (data) => {
+  const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
       (acc: RideSpecialRequestEnum[], cur) => {
@@ -132,7 +135,7 @@ const OrderRide = () => {
     );
 
     const newRide = {
-      ...data,
+      ...data.ride,
       ...(autofilledAddress === 'destination'
         ? {
             destination: autofilledAddressValue
@@ -169,12 +172,12 @@ const OrderRide = () => {
                 type="string"
                 placeholder="יש להזין שם רחוב, מספר בית ועיר"
                 required
-                error={!!errors?.origin}
-                {...register('origin', { required: true })}
+                error={!!errors?.ride?.origin}
+                {...register('ride.origin', { required: true })}
               />
-              {errors.origin && (
+              {errors.ride?.origin && (
                 <FormHelperText error className="absolute top-full mr-0">
-                  {errors.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                  {errors.ride?.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
                 </FormHelperText>
               )}
             </FormControl>
@@ -201,13 +204,13 @@ const OrderRide = () => {
                 type="string"
                 placeholder="יש להזין שם רחוב, מספר בית ועיר"
                 required
-                error={!!errors?.destination}
-                {...register('destination', { required: true })}
+                error={!!errors?.ride?.destination}
+                {...register('ride.destination', { required: true })}
               />
 
-              {errors.destination && (
+              {errors.ride?.destination && (
                 <FormHelperText error className="absolute top-full mr-0">
-                  {errors.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                  {errors.ride?.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
                 </FormHelperText>
               )}
             </FormControl>
@@ -224,16 +227,16 @@ const OrderRide = () => {
             type="string"
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
-            error={!!errors?.cellphone}
-            {...register('cellphone', {
+            error={!!errors?.ride?.cellphone}
+            {...register('ride.cellphone', {
               required: true,
               pattern: /^05\d-?\d{7}$/
             })}
           />
-          {errors.cellphone && (
+          {errors.ride?.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
-              {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+              {errors.ride?.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.ride?.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
             </FormHelperText>
           )}
         </FormControl>
@@ -244,8 +247,8 @@ const OrderRide = () => {
           <Select
             id="passengerCount"
             label="מספר נוסעים"
-            error={!!errors?.passengerCount}
-            {...register('passengerCount', { required: true })}
+            error={!!errors?.ride?.passengerCount}
+            {...register('ride.passengerCount', { required: true })}
           >
             <MenuItem value={0}>0</MenuItem>
             <MenuItem value={1}>1</MenuItem>
@@ -261,7 +264,7 @@ const OrderRide = () => {
             <MenuItem value={11}>11</MenuItem>
             <MenuItem value={12}>12</MenuItem>
           </Select>
-          {errors.passengerCount?.type === 'required' && (
+          {errors.ride?.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
             </FormHelperText>
@@ -272,21 +275,21 @@ const OrderRide = () => {
             label="הערה"
             type="string"
             placeholder="הסבר קצר לגבי מטרת הנסיעה"
-            error={!!errors?.comment}
-            {...register('comment', {
+            error={!!errors?.ride?.comment}
+            {...register('ride.comment', {
               maxLength: 50
             })}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
-              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+              (watch().ride?.comment?.length || 0) >= 50 ? 'text-red-500' : ''
             }`}
           >
-            {watch().comment?.length || 0} / 50
+            {watch().ride?.comment?.length || 0} / 50
           </span>
-          {errors.comment && (
+          {errors.ride?.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.ride?.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
