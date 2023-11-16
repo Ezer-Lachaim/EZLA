@@ -13,7 +13,7 @@ import {
   MenuItem
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../Config.ts';
@@ -22,6 +22,7 @@ import { useUserContext } from '../../../../context/UserContext/UserContext.tsx'
 
 interface OrderRideFormData {
   ride: Ride;
+  isApproveTerms: boolean;
   specialRequest: {
     isWheelChair: boolean;
     isBabySafetySeat: boolean;
@@ -296,6 +297,37 @@ const OrderRide = () => {
             label="משלוחים"
           />
         </div>
+
+        {!user && (
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...register('isApproveTerms', { required: true })}
+                  sx={errors.isApproveTerms ? { color: 'red' } : {}}
+                />
+              }
+              label={
+                <p>
+                  הנני מאשר/ת כי קראתי את{' '}
+                  <a href="/terms.html" target="_blank">
+                    תקנון האתר
+                  </a>{' '}
+                  ואת ואת{' '}
+                  <Link to="/privacy" target="_blank">
+                    מדיניות הפרטיות
+                  </Link>{' '}
+                  ומסכים לתנאיהם
+                </p>
+              }
+            />
+            {errors.isApproveTerms && (
+              <FormHelperText error>
+                {errors.isApproveTerms.type === 'required' && 'יש לאשר קריאת תקנון האתר'}
+              </FormHelperText>
+            )}
+          </div>
+        )}
 
         <Button
           variant="contained"
