@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   Button,
@@ -10,7 +10,7 @@ import {
   OutlinedInput
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { useAuthContext } from '../../../contexts/AuthContext';
@@ -26,9 +26,11 @@ type Inputs = {
 };
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const { setToken } = useAuthContext();
   const api = useApiContext();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isDriverFirstLogin] = useState(searchParams.has('driverFirstLogin'));
   const { setUser } = useUserContext();
   const {
     register,
@@ -69,7 +71,7 @@ const Login = () => {
             id="email"
             error={!!errors.email}
             label="אימייל"
-            placeholder="דוגמה: david@gmail.com"
+            placeholder={isDriverFirstLogin ? 'האימייל שנרשמתם איתו' : 'דוגמה: david@gmail.com'}
             {...register('email', {
               required: true,
               pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -91,7 +93,7 @@ const Login = () => {
             error={!!errors.password}
             type={showPassword ? 'text' : 'password'}
             label="סיסמא"
-            placeholder="יש להקליד סיסמה"
+            placeholder={isDriverFirstLogin ? 'הזינו את מספר תעודת הזהות שלכם' : 'יש להקליד סיסמה'}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -126,7 +128,7 @@ const Login = () => {
       <div className="absolute bottom-20">
         <span>אין לך חשבון?</span>
         &nbsp;
-        <Link to="/first-signup">להרשמה</Link>
+        <Link to="/first-signup">חזרה למסך הפתיחה</Link>
       </div>
     </div>
   );

@@ -67,8 +67,8 @@ const CreatePassword = () => {
     <div className="flex flex-col items-center w-full">
       <h1 className="m-0">צרו שם משתמש וסיסמה</h1>
       <p className="text-center">
-        הסיסמה חייבת לכלול לפחות 8 תווים ולהכיל: אותיות גדולות, אותיות קטנות, מספרים וסימנים כגון
-        !@#?*
+        הסיסמה חייבת לכלול לפחות 8 תווים ולהכיל לפחות שניים מהבאים: אותיות גדולות, אותיות קטנות,
+        מספרים וסימנים כגון !@#?*
       </p>
       <form
         className="flex mt-7 flex-col gap-9 w-full"
