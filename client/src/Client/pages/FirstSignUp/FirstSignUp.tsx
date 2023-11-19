@@ -32,7 +32,7 @@ const FirstSignUp = () => {
       <Button
         variant="contained"
         color="secondary"
-        className="w-full mb-6 mt-10"
+        className="w-full text-lg mb-6 mt-10"
         size="large"
         endIcon={<FaceIcon />}
         onClick={() => {
@@ -43,7 +43,7 @@ const FirstSignUp = () => {
       </Button>
       <Button
         variant="contained"
-        className="w-full mb-5"
+        className="w-full text-lg mb-5"
         size="large"
         endIcon={<CarIcon />}
         onClick={() => {
