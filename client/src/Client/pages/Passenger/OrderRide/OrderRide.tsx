@@ -20,7 +20,8 @@ import { api } from '../../../../Config.ts';
 import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
-interface ClientRide extends Omit<Ride, 'specialRequest'> {
+interface OrderRideFormData {
+  ride: Ride;
   specialRequest: {
     isWheelChair: boolean;
     isBabySafetySeat: boolean;
@@ -55,15 +56,17 @@ const OrderRide = () => {
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm<ClientRide>({
+  } = useForm<OrderRideFormData>({
     defaultValues: {
-      cellphone: user?.cellPhone
+      ride: {
+        cellphone: user?.cellPhone
+      }
     }
   });
 
   const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
 
-  const onSubmit: SubmitHandler<ClientRide> = async (data) => {
+  const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
       (acc: RideSpecialRequestEnum[], cur) => {
@@ -79,7 +82,7 @@ const OrderRide = () => {
     localStorage.setItem('guestToken', rideToken);
 
     const newRide: Ride = {
-      ...data,
+      ...data.ride,
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver,
       guestToken: rideToken
@@ -93,10 +96,10 @@ const OrderRide = () => {
   };
 
   const onSwapAddresses = () => {
-    const { origin } = watch();
-    const { destination } = watch();
-    setValue('origin', destination);
-    setValue('destination', origin);
+    const { origin } = watch().ride;
+    const { destination } = watch().ride;
+    setValue('ride.origin', destination);
+    setValue('ride.destination', origin);
   };
 
   return (
@@ -111,13 +114,13 @@ const OrderRide = () => {
               type="string"
               placeholder="יש להזין שם רחוב, מספר בית ועיר"
               required
-              value={watch().origin || ''}
-              error={!!errors?.origin}
-              {...register('origin', { required: true })}
+              value={watch().ride?.origin || ''}
+              error={!!errors?.ride?.origin}
+              {...register('ride.origin', { required: true })}
             />
-            {errors.origin && (
+            {errors.ride?.origin && (
               <FormHelperText error className="absolute top-full mr-0">
-                {errors.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                {errors.ride.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
               </FormHelperText>
             )}
           </FormControl>
@@ -139,14 +142,14 @@ const OrderRide = () => {
               type="string"
               placeholder="יש להזין שם רחוב, מספר בית ועיר"
               required
-              value={watch().destination || ''}
-              error={!!errors?.destination}
-              {...register('destination', { required: true })}
+              value={watch().ride?.destination || ''}
+              error={!!errors?.ride?.destination}
+              {...register('ride.destination', { required: true })}
             />
 
-            {errors.destination && (
+            {errors.ride?.destination && (
               <FormHelperText error className="absolute top-full mr-0">
-                {errors.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                {errors.ride.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
               </FormHelperText>
             )}
           </FormControl>
@@ -158,8 +161,8 @@ const OrderRide = () => {
           <Select
             id="passengerCount"
             label="מספר נוסעים"
-            error={!!errors?.passengerCount}
-            {...register('passengerCount', { required: true })}
+            error={!!errors?.ride?.passengerCount}
+            {...register('ride.passengerCount', { required: true })}
           >
             <MenuItem value={0}>0</MenuItem>
             <MenuItem value={1}>1</MenuItem>
@@ -175,7 +178,7 @@ const OrderRide = () => {
             <MenuItem value={11}>11</MenuItem>
             <MenuItem value={12}>12</MenuItem>
           </Select>
-          {errors.passengerCount?.type === 'required' && (
+          {errors.ride?.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
             </FormHelperText>
@@ -187,22 +190,22 @@ const OrderRide = () => {
             type="string"
             required
             placeholder="הסבר קצר לגבי מטרת הנסיעה"
-            error={!!errors?.comment}
-            {...register('comment', {
+            error={!!errors?.ride?.comment}
+            {...register('ride.comment', {
               maxLength: 50,
               required: true
             })}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
-              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+              (watch().ride?.comment?.length || 0) >= 50 ? 'text-red-500' : ''
             }`}
           >
-            {watch().comment?.length || 0} / 50
+            {watch().ride?.comment?.length || 0} / 50
           </span>
-          {errors.comment && (
+          {errors.ride?.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.ride.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
@@ -214,13 +217,13 @@ const OrderRide = () => {
             fullWidth
             required
             type="text"
-            error={!!errors.firstName}
-            {...register('firstName', { required: true, minLength: 2 })}
+            error={!!errors.ride?.firstName}
+            {...register('ride.firstName', { required: true, minLength: 2 })}
           />
-          {errors.firstName && (
+          {errors.ride?.firstName && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.firstName.type === 'required' && 'יש להזין שם פרטי'}
-              {errors.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+              {errors.ride.firstName.type === 'required' && 'יש להזין שם פרטי'}
+              {errors.ride.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
             </FormHelperText>
           )}
         </FormControl>
@@ -230,13 +233,13 @@ const OrderRide = () => {
             fullWidth
             required
             type="text"
-            error={!!errors.lastName}
-            {...register('lastName', { required: true, minLength: 2 })}
+            error={!!errors.ride?.lastName}
+            {...register('ride.lastName', { required: true, minLength: 2 })}
           />
-          {errors.lastName && (
+          {errors.ride?.lastName && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.lastName.type === 'required' && 'יש להזין שם משפחה'}
-              {errors.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+              {errors.ride.lastName.type === 'required' && 'יש להזין שם משפחה'}
+              {errors.ride.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
             </FormHelperText>
           )}
         </FormControl>
@@ -246,16 +249,16 @@ const OrderRide = () => {
             type="string"
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
-            error={!!errors?.cellphone}
-            {...register('cellphone', {
+            error={!!errors?.ride?.cellphone}
+            {...register('ride.cellphone', {
               required: true,
               pattern: /^05\d-?\d{7}$/
             })}
           />
-          {errors.cellphone && (
+          {errors.ride?.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
-              {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+              {errors.ride.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.ride.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
             </FormHelperText>
           )}
         </FormControl>
