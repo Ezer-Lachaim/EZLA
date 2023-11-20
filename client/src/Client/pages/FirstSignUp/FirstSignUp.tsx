@@ -32,7 +32,7 @@ const FirstSignUp = () => {
       <Button
         variant="contained"
         color="secondary"
-        className="w-full mb-6 mt-10"
+        className="w-full text-lg mb-6 mt-10"
         size="large"
         endIcon={<FaceIcon />}
         onClick={() => {
@@ -43,16 +43,21 @@ const FirstSignUp = () => {
       </Button>
       <Button
         variant="contained"
-        className="w-full mb-5"
+        className="w-full text-lg mb-5"
         size="large"
-        disabled
         endIcon={<CarIcon />}
+        onClick={() => {
+          navigation('/login?driverFirstLogin=1');
+        }}
       >
         כניסה ראשונה כמתנדב
       </Button>
-      <p className="text-xs text-center">
-        מחפשים להצטרף לשירותנו כמתנדבים?💪❤️ <br />
-        התקשרו לשירות הלקוחות למטה!
+      <p className="text-md text-center">
+        מחפשים להצטרף לקהילת המתדנבים?💪❤️ <br />
+        למילוי טופס הצטרפות הקישו&nbsp;
+        <a href="https://forms.gle/fRAY1H2HLyZrpZAR6">כאן</a>
+        <br />
+        או התקשרו לשירות הלקוחות 033-730440
       </p>
 
       <div className="flex gap-2 absolute bottom-20">

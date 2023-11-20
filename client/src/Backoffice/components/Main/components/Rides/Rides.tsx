@@ -42,6 +42,11 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     }
   },
   {
+    accessorKey: 'cellphone',
+    header: 'טלפון',
+    accessorFn: (data) => data.cellphone || '-'
+  },
+  {
     accessorKey: 'origin',
     header: 'כתובת איסוף',
     accessorFn: (data) => data.origin || '-'
@@ -50,6 +55,11 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorKey: 'destination',
     header: 'יעד נסיעה',
     accessorFn: (data) => data.destination || '-'
+  },
+  {
+    accessorKey: 'passengerCount',
+    header: "מס' נוסעים",
+    accessorFn: (data) => data.passengerCount || '-'
   },
   {
     accessorKey: 'comment',

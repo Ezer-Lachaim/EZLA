@@ -3,10 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase-config';
+import { sendSMS } from '../utils/sms-util';
+import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { populateRideDetails } from '../repository/ride';
+
+const SUPPORT_PHONE_NUMBER = '033-730440';
 
 /**
  * GET /rides
@@ -52,6 +56,7 @@ export const getActiveRide = async (req: CustomRequest, res: Response): Promise<
       res.status(404).json({ error: 'Active ride not found' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -95,12 +100,16 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
       await redisClient.set(`active_ride:${ride.rideRequester.userId}`, rideId);
     }
     if (result) {
-      await sendNewRideNotificationToDrivers();
+      await Promise.all([
+        sendNewRideNotificationToDrivers(),
+        sendSMS(ride.cellphone, getNewRidePassengerSMSMessage(ride))
+      ]);
       res.status(200).json(ride);
     } else {
       res.status(404).json({ error: `Couldn't create new ride` });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -146,13 +155,15 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
 
       if (updatedRide.state === RideStateEnum.DriverCanceled) {
         await redisClient.del(`active_ride:${currentRide.driver?.userId}`);
-        if (currentRide.rideRequester?.userId) {
-          await sendPushByUserId(
-            currentRide.rideRequester?.userId,
-            'עדכון על הנסיעה',
-            'הנסיעה בוטלה על ידי נהג'
-          );
-        }
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'הנסיעה בוטלה על ידי נהג'
+            ),
+          sendSMS(updatedRide.cellphone, getRideCanceledPassengerSMSMessage(updatedRide))
+        ]);
       }
 
       if (updatedRide.state === RideStateEnum.RequesterCanceled) {
@@ -160,12 +171,15 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
           if (currentRide.rideRequester?.userId) {
             await redisClient.del(`active_ride:${currentRide.rideRequester?.userId}`);
           }
-          if (currentRide.driver?.userId) {
-            await sendPushByUserId(
-              currentRide.driver?.userId,
-              'עדכון על הנסיעה',
-              'הנסיעה בוטלה על ידי הנוסע'
-            );
+          if (updatedRide.driver?.userId) {
+            await Promise.all([
+              sendPushByUserId(
+                updatedRide.driver?.userId,
+                'עדכון על הנסיעה',
+                'הנסיעה בוטלה על ידי הנוסע'
+              ),
+              sendSMS(updatedRide.driver.cellPhone, getRideCanceledDriverSMSMessage(updatedRide))
+            ]);
           }
         } else {
           // If canceled before driver accepted then we need to cancel the ride
@@ -179,23 +193,27 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
 
       if (updatedRide.state === RideStateEnum.Booked) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
-        if (currentRide.rideRequester?.userId) {
-          await sendPushByUserId(
-            currentRide.rideRequester?.userId,
-            'עדכון על הנסיעה',
-            'הנסיעה שלך התקבלה על ידי נהג'
-          );
-        }
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'הנסיעה שלך התקבלה על ידי נהג'
+            ),
+          sendSMS(updatedRide.cellphone, getRideBookedPassengerSMSMessage(updatedRide))
+        ]);
       }
 
       if (updatedRide.state === RideStateEnum.DriverArrived) {
-        if (currentRide.rideRequester?.userId) {
-          await sendPushByUserId(
-            currentRide.rideRequester?.userId,
-            'עדכון על הנסיעה',
-            'הנהג הגיע לנקודת האיסוף'
-          );
-        }
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'הנהג הגיע לנקודת האיסוף'
+            ),
+          sendSMS(updatedRide.cellphone, getRideDriverArrivedPassengerSMSMessage(updatedRide))
+        ]);
       }
 
       if (updatedRide.state === RideStateEnum.Riding) {
@@ -244,6 +262,54 @@ export const deleteRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride: ${rideId} not found` });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+function getNewRidePassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName || ride.rideRequester?.firstName} שלום, פנייתכם התקבלה בהצלחה.\n` +
+    `נקודת איסוף ${ride.origin}.\n` +
+    `אנחנו נעדכן אתכם כאשר יימצא מתנדב פנוי.\n` +
+    `ליצירת קשר עם המוקד הקישו כאן ${SUPPORT_PHONE_NUMBER}. צוות עזר לחיים`
+  );
+}
+
+function getRideBookedPassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName || ride.rideRequester?.firstName} שלום, ` +
+    `${ride.driver.firstName} המתנדב.ת בדרך אליכם. ` +
+    `זמן הגעה משוער ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
+    `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
+    `מספר רכב ${ride.driver.carPlateNumber}.\n` +
+    `נקודת איסוף ${ride.origin}.\n` +
+    `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
+  );
+}
+
+function getRideDriverArrivedPassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName || ride.rideRequester?.firstName} שלום, ` +
+    `${ride.driver.firstName} המתנדב.ת ממתינ.ה לכם בנקודת האיסוף ${ride.origin}. ` +
+    `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
+    `מספר רכב ${ride.driver.carPlateNumber}.\n` +
+    `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
+  );
+}
+
+function getRideCanceledPassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName || ride.rideRequester?.firstName} שלום,\n` +
+    `לצערנו המתנדב.ת ביטל.ה את הנסיעה שהזמנתם. אנחנו מחפשים עבורכם הסעה חלופית.\n` +
+    `ליצירת קשר עם המוקד הקישו כאן ${SUPPORT_PHONE_NUMBER}. צוות עזר לחיים`
+  );
+}
+
+function getRideCanceledDriverSMSMessage(ride: Ride): string {
+  return (
+    `${ride.driver.firstName} שלום,\n` +
+    `לצערנו הנוסע.ת ביטל.ה את הנסיעה.\n` +
+    `כנסו לאפליקציה לצפייה ברשימת בקשות להסעה. צוות עזר לחיים`
+  );
+}
