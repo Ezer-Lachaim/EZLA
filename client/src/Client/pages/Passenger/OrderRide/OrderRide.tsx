@@ -121,7 +121,7 @@ const OrderRide = () => {
             />
             {errors.ride?.origin && (
               <FormHelperText error className="absolute top-full mr-0">
-                {errors.ride?.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                {errors.ride.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
               </FormHelperText>
             )}
           </FormControl>
@@ -150,7 +150,7 @@ const OrderRide = () => {
 
             {errors.ride?.destination && (
               <FormHelperText error className="absolute top-full mr-0">
-                {errors.ride?.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                {errors.ride.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
               </FormHelperText>
             )}
           </FormControl>
@@ -206,7 +206,7 @@ const OrderRide = () => {
           </span>
           {errors.ride?.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride?.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.ride.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
@@ -223,8 +223,8 @@ const OrderRide = () => {
           />
           {errors.ride?.firstName && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride?.firstName.type === 'required' && 'יש להזין שם פרטי'}
-              {errors.ride?.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+              {errors.ride.firstName.type === 'required' && 'יש להזין שם פרטי'}
+              {errors.ride.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
             </FormHelperText>
           )}
         </FormControl>
@@ -239,8 +239,8 @@ const OrderRide = () => {
           />
           {errors.ride?.lastName && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride?.lastName.type === 'required' && 'יש להזין שם משפחה'}
-              {errors.ride?.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+              {errors.ride.lastName.type === 'required' && 'יש להזין שם משפחה'}
+              {errors.ride.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
             </FormHelperText>
           )}
         </FormControl>
@@ -258,8 +258,8 @@ const OrderRide = () => {
           />
           {errors.ride?.cellphone && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride?.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
-              {errors.ride?.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+              {errors.ride.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.ride.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
             </FormHelperText>
           )}
         </FormControl>
