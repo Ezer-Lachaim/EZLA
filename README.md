@@ -12,6 +12,8 @@ In order to contribute, please fork this repository, and create a pull request.
 
 If you are unsure how to do this, please follow this guide: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
 
+To get an overview of the system and setting up development you can watch https://youtube.com/playlist?list=PLU1beXqUCOTbyVJecmcfb1OJ3keJYzvrg&si=fvVNoURtIlvR4NKg
+
 ## Development
 
 This is a monorepo using npm workspaces
