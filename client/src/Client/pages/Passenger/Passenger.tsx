@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { RideStateEnum } from '../../../api-client';
 import { useUserContext } from '../../../contexts/UserContext';
+import RideCanceledModal from './RideCanceledModal';
 
 const Passenger = () => {
   const { activeRide } = useUserContext();
@@ -37,7 +38,12 @@ const Passenger = () => {
     }
   }, [activeRide, location, navigate]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <RideCanceledModal />
+    </>
+  );
 };
 
 export default Passenger;
