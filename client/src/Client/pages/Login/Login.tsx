@@ -71,7 +71,7 @@ const Login = () => {
             id="email"
             error={!!errors.email}
             label="אימייל"
-            placeholder={isDriverFirstLogin ? 'האימייל שנרשמתם איתו' : 'דוגמה: david@gmail.com'}
+            placeholder={isDriverFirstLogin ? 'האימייל שאיתו נרשמתם' : 'דוגמה: david@gmail.com'}
             {...register('email', {
               required: true,
               pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
