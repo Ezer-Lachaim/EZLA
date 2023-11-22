@@ -20,7 +20,8 @@ const ActiveRide = () => {
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {
-    await api.ride.postConfirmRideComplete();
+    const guestToken = getGuestToken() || '';
+    await api.ride.postConfirmRideComplete({ guestToken });
   };
 
   const onConfirmCancelRide = async () => {
