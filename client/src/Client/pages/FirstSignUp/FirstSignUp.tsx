@@ -65,7 +65,7 @@ const FirstSignUp = () => {
         כניסה ראשונה כמתנדב
       </Button>
       <p className="text-md text-center">
-        מחפשים להצטרף לקהילת המתדנבים?💪❤️ <br />
+        מחפשים להצטרף לקהילת המתנדבים?💪❤️ <br />
         למילוי טופס הצטרפות הקישו&nbsp;
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform">
           כאן
