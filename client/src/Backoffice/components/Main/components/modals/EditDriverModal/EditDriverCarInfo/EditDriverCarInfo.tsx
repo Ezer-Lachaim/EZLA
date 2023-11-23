@@ -1,21 +1,13 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { useEffect } from 'react';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 import { DriverCarCapabilitiesEnum, Driver } from '../../../../../../../api-client/models/Driver';
 
 function EditDriverCarInfo({ driver }: { driver: Driver }) {
   const {
     register,
-    setValue,
     formState: { errors }
   } = useFormContext<Driver>();
-
-  useEffect(() => {
-    setValue('firstName', driver.firstName || '');
-    setValue('lastName', driver.lastName || '');
-    setValue('nationalId', driver.nationalId || '');
-  }, [driver, setValue]);
 
   const isSpecialRequestAvailable = (value: DriverCarCapabilitiesEnum) => {
     const res = driver.carCapabilities?.includes(value) || false;
