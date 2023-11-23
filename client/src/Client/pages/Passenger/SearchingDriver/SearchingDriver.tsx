@@ -6,7 +6,7 @@ import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/C
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { RideStateEnum } from '../../../../api-client';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const SearchingDriver = () => {
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();

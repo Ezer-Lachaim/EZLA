@@ -5,7 +5,7 @@ import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const Riding = () => {
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();

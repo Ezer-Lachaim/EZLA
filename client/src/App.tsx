@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AuthRoute, AuthRouteLoginAccess } from './AuthRoute';
 import { UserRoleEnum } from './api-client';
-import { useAuthStore, initAuthMiddlewares, initUser } from './services/auth';
-import { initFirebaseCloudMessaging } from './services/firebase';
+import { initFirebaseCloudMessaging, initAuthApiMiddlewares } from './services/firebase';
+import { useInitUser } from './hooks/user';
 import Backoffice from './Backoffice/Backoffice';
 import backOfficeRoutes from './Backoffice/Routes';
 import Client from './Client/Client';
@@ -11,11 +11,10 @@ import clientRoutes from './Client/Routes';
 import NotFound from './Client/pages/NotFound/NotFound.tsx';
 
 function App() {
-  const isUserInitiated = useAuthStore((state) => state.isUserInitiated);
+  const isUserInitiated = useInitUser();
 
   useEffect(() => {
-    initAuthMiddlewares();
-    initUser();
+    initAuthApiMiddlewares();
 
     const timerId = setTimeout(() => {
       initFirebaseCloudMessaging();

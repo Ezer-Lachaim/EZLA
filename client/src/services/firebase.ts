@@ -1,7 +1,19 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { api } from './api';
+import {
+  Auth,
+  getAuth as firebaseGetAuth,
+  connectAuthEmulator,
+  createUserWithEmailAndPassword,
+  deleteUser,
+  signInWithEmailAndPassword,
+  signOut,
+  getIdToken,
+  sendPasswordResetEmail,
+  checkActionCode,
+  confirmPasswordReset
+} from 'firebase/auth';
+import { addPostMiddleware, addPreMiddleware, api } from './api';
 
 let initialized = false;
 
@@ -21,9 +33,77 @@ export function initFirebaseApp() {
   });
 
   if (import.meta.env.DEV) {
-    const auth = getAuth();
+    const auth = firebaseGetAuth();
     connectAuthEmulator(auth, 'http://127.0.0.1:9099');
   }
+}
+
+export function getAuth() {
+  initFirebaseApp();
+  return firebaseGetAuth();
+}
+
+export async function authCreateUser(email: string, password: string) {
+  return createUserWithEmailAndPassword(getAuth(), email, password);
+}
+
+export { deleteUser as authDeleteUser };
+
+export async function authSignIn(email: string, password: string) {
+  return signInWithEmailAndPassword(getAuth(), email, password);
+}
+
+export async function authSignOut() {
+  return signOut(getAuth());
+}
+
+export function onAuthStateChanged(...args: Parameters<Auth['onAuthStateChanged']>) {
+  const auth = getAuth();
+  return auth.onAuthStateChanged(...args);
+}
+
+export async function authSendPasswordResetEmail(email: string) {
+  return sendPasswordResetEmail(getAuth(), email);
+}
+
+export async function authCheckActionCode(oobCode: string) {
+  return checkActionCode(getAuth(), oobCode);
+}
+
+export async function authConfirmPasswordReset(oobCode: string, newPassword: string) {
+  return confirmPasswordReset(getAuth(), oobCode, newPassword);
+}
+
+export async function getAuthUserToken() {
+  const auth = getAuth();
+  if (!auth.currentUser) {
+    return null;
+  }
+
+  return getIdToken(auth.currentUser);
+}
+
+export function initAuthApiMiddlewares() {
+  // add token header to all api requests
+  addPreMiddleware(async (params) => {
+    return {
+      ...params,
+      init: {
+        ...params?.init,
+        headers: {
+          ...params.init.headers,
+          token: (await getAuthUserToken()) || ''
+        }
+      }
+    };
+  });
+
+  // empty the token in case of an unauthorized status
+  addPostMiddleware(async (context) => {
+    if (context.response.status === 401) {
+      await authSignOut();
+    }
+  });
 }
 
 export async function initFirebaseCloudMessaging() {

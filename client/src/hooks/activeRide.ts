@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAuthState } from './firebase';
 import { api, POLLING_INTERVAL } from '../services/api';
-import { useAuthStore } from '../services/auth';
 
 export function useActiveRide() {
-  const token = useAuthStore((state) => state.token);
+  const [user] = useAuthState();
 
   const {
     data: activeRide,
@@ -11,7 +11,7 @@ export function useActiveRide() {
     refetch: reFetch
   } = useQuery({
     queryKey: ['getActiveRideForUser'],
-    enabled: !!token,
+    enabled: !!user,
     queryFn: async () => {
       try {
         return await api.ride.getActiveRideForUser();

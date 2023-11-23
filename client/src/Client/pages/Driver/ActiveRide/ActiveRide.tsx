@@ -11,7 +11,7 @@ import { api } from '../../../../services/api';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 

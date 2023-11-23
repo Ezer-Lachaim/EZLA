@@ -15,9 +15,9 @@ import {
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
-import { useAuthStore } from '../../../../services/auth';
+import { useUserStore } from '../../../../services/user';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -57,7 +57,7 @@ const getPatientDestination = (
 };
 
 const OrderRide = () => {
-  const user = useAuthStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
   const { reFetch: reFetchActiveRide } = useActiveRide();
   const {
     register,

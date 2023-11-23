@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { RideStateEnum } from '../../../api-client';
-import { useActiveRide } from '../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../hooks/activeRide';
 import RideCanceledModal from './RideCanceledModal';
 
 const Passenger = () => {
