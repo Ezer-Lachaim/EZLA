@@ -19,8 +19,8 @@ dotenv.config();
 
 let app: App;
 const env = process.env.ENV || 'production';
-console.log(firebaseConfig[`${env}`]);
-initializeApp(firebaseConfig[`${env}`]);
+console.log(firebaseConfig[env]);
+initializeApp(firebaseConfig[env]);
 
 if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
   app = initializeAppAdmin({ credential: credential.applicationDefault() });
@@ -28,9 +28,9 @@ if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
   connectAuthEmulator(auth, 'http://127.0.0.1:9099');
 } else {
   const serviceAccount: ServiceAccount = {
-    projectId: firebaseConfig[`${env}`].projectId,
+    projectId: firebaseConfig[env].projectId,
     privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
-    clientEmail: firebaseConfig[`${env}`].clientEmail
+    clientEmail: firebaseConfig[env].clientEmail
   };
   app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
 }
@@ -56,10 +56,16 @@ export async function getUser(email: string) {
 }
 
 export async function sendPushNotification(registrationToken: string, payload: MessagingPayload) {
+  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    return Promise.resolve();
+  }
   return messaging().sendToDevice(registrationToken, payload);
 }
 
 export async function sendNewRideNotificationToDrivers() {
+  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    return Promise.resolve();
+  }
   return messaging().send({
     notification: {
       title: 'נסיעה חדשה!',
@@ -70,6 +76,9 @@ export async function sendNewRideNotificationToDrivers() {
 }
 
 export async function subscribeToNewRideNotification(registrationToken: string) {
+  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    return Promise.resolve();
+  }
   return messaging().subscribeToTopic(registrationToken, 'new-ride');
 }
 
