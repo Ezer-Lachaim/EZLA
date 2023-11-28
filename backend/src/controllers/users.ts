@@ -6,7 +6,7 @@ import {
   sendPasswordResetEmailForUser,
   subscribeToNewRideNotification,
   updateUserPassword
-} from '../utils/firebase-config';
+} from '../utils/firebase';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import {
   createUser,
