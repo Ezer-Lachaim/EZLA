@@ -3,7 +3,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config: {
-  [key: string]: any;
+  [key: string]: {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
+    measurementId: string;
+    clientEmail: string;
+  };
 } = {
   production: {
     apiKey: process.env.FIREBASE_AUTH_EMULATOR_HOST ? 'API_KEY' : process.env.FIREBASE_TOKEN,

@@ -5,7 +5,7 @@ import { api } from './Config';
 import firebaseConfig from './firebase-config';
 
 export const initFirebaseApp = () => {
-  initializeApp(firebaseConfig[`${import.meta.env.MODE}`].options);
+  initializeApp(firebaseConfig[import.meta.env.MODE].options);
 
   if (import.meta.env.DEV) {
     const auth = getAuth();
@@ -46,7 +46,7 @@ export const setNotificationsToken = async () => {
       const messaging = getMessaging();
       // console.log(messaging);
       const fcmToken = await getToken(messaging, {
-        vapidKey: firebaseConfig[`${import.meta.env.MODE}`].vapidKey
+        vapidKey: firebaseConfig[import.meta.env.MODE].vapidKey
       });
 
       // Set token in our local storage and send to our server

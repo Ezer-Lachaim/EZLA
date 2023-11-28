@@ -28,6 +28,19 @@ export const config: {
     },
     vapidKey:
       'BAtO3frbblZyJmmC4fySOQBDcZmOM_W1oaCe1VEa_MFAXNA69T5keU3LEN8DinWPHvkaZCntxQESBV2aHVwIZBs'
+  },
+  development: {
+    options: {
+      apiKey: 'AIzaSyAkPBVn0C7aoJpbxp5L-gzauxpF3D4Jy9Q',
+      authDomain: 'ezla-pickup-staging.firebaseapp.com',
+      projectId: 'ezla-pickup-staging',
+      storageBucket: 'ezla-pickup-staging.appspot.com',
+      messagingSenderId: '208094481469',
+      appId: '1:208094481469:web:285463c84661e85f87ae54',
+      measurementId: 'G-BD5EC5L3ZM'
+    },
+    vapidKey:
+      'BAtO3frbblZyJmmC4fySOQBDcZmOM_W1oaCe1VEa_MFAXNA69T5keU3LEN8DinWPHvkaZCntxQESBV2aHVwIZBs'
   }
 };
 
