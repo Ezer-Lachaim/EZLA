@@ -16,7 +16,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api } from '../../../../Config.ts';
+import { api, setGuestToken } from '../../../../Config.ts';
 import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
@@ -80,7 +80,7 @@ const OrderRide = () => {
     );
 
     const rideToken = uuidv4();
-    localStorage.setItem('guestToken', rideToken);
+    setGuestToken(rideToken);
 
     const newRide: Ride = {
       ...data.ride,

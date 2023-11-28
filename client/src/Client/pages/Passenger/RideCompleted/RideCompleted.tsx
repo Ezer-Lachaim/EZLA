@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api, getGuestToken } from '../../../../Config.ts';
+import { api, clearGuestToken, getGuestToken } from '../../../../Config.ts';
 
 const RideCompleted = () => {
   const navigate = useNavigate();
@@ -9,6 +9,8 @@ const RideCompleted = () => {
   const confirmComplete = async () => {
     const guestToken = getGuestToken() || '';
     await api.ride.postConfirmRideComplete({ guestToken });
+
+    clearGuestToken();
 
     navigate('/passenger/order-ride');
   };

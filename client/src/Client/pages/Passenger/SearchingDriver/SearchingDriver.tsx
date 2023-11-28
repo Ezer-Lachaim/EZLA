@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api, getGuestToken } from '../../../../Config.ts';
+import { api, clearGuestToken, getGuestToken } from '../../../../Config.ts';
 import { RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
@@ -21,6 +21,8 @@ const SearchingDriver = () => {
       guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+
+    clearGuestToken();
 
     navigate('/passenger/order-ride');
   };
