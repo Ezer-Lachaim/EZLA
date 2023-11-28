@@ -28,6 +28,23 @@ const ActiveRide = () => {
     navigate('/passenger/order-ride');
   };
 
+  const onUpdateRide = async () => {
+    const updatedRide = {
+      ...ride,
+      state: RideStateEnum.WaitingForDriver,
+      driver: undefined,
+      destinationArrivalTime: undefined
+    };
+
+    await api.ride.updateRide({
+      rideId: ride?.rideId || '',
+      guestToken: getGuestToken() || undefined,
+      ride: updatedRide
+    });
+
+    navigate('/passenger/searching-driver');
+  };
+
   const onOrderNewRide = async () => {
     await canceledRide();
 
@@ -122,7 +139,7 @@ const ActiveRide = () => {
 
       <DriverCanceledModal
         open={ride?.state === RideStateEnum.DriverCanceled}
-        onNewRide={onOrderNewRide}
+        onNewRide={onUpdateRide}
         onCancel={onConfirmCancelRide}
       />
     </div>
