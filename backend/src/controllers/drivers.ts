@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createUser, getAllUsers } from '../repository/user';
-import { firebase, getAuthConfig } from '../utils/firebase-config';
+import { firebase, getAuthConfig } from '../utils/firebase';
 
 const auth = getAuthConfig();
 
