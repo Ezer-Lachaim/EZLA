@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { subscribeToNewRideNotification, updateUserPassword } from '../utils/firebase-config';
+import { subscribeToNewRideNotification, updateUserPassword } from '../utils/firebase';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import {
   createUser,

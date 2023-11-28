@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Driver } from '../models/driver';
 import { RideRequester } from '../models/ride-requester';
-import { createUser as createFirebaseUser } from '../utils/firebase-config';
+import { createUser as createFirebaseUser } from '../utils/firebase';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { createUser } from '../repository/user';

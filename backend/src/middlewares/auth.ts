@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { getUserByUid } from '../repository/user';
-import { getAuthConfigAdmin } from '../utils/firebase-config';
+import { getAuthConfigAdmin } from '../utils/firebase';
 import { CustomRequest } from './CustomRequest';
 import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 

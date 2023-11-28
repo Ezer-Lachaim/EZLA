@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { createUser, getAllUsers } from '../repository/user';
-import { createUser as createFirebaseUser } from '../utils/firebase-config';
+import { createUser as createFirebaseUser } from '../utils/firebase';
 
 export const create = async (req: CustomRequest, res: Response): Promise<void> => {
   const userRole = req.user.role;
