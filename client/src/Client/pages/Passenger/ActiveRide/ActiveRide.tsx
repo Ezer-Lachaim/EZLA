@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api, getGuestToken } from '../../../../Config.ts';
+import { api, clearGuestToken, getGuestToken, setGuestToken } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -33,7 +33,7 @@ const ActiveRide = () => {
     await canceledRide();
 
     const rideToken = uuidv4();
-    localStorage.setItem('guestToken', rideToken);
+    setGuestToken(rideToken);
 
     await api.ride.ridesPost({
       ride: {
@@ -56,6 +56,8 @@ const ActiveRide = () => {
       guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+
+    clearGuestToken();
 
     navigate('/passenger/order-ride');
   };

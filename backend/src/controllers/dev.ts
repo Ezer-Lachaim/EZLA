@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { Driver } from '../models/driver';
 import { RideRequester } from '../models/ride-requester';
-import { getAuthConfig } from '../utils/firebase-config';
+import { getAuthConfig } from '../utils/firebase';
 import { CustomRequest } from '../middlewares/CustomRequest';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { createUser } from '../repository/user';
