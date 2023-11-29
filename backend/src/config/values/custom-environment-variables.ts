@@ -1,10 +1,6 @@
 export default {
   env: 'NODE_ENV',
   port: 'PORT',
-  allowGuestRideMode: {
-    __name: 'ALLOW_GUEST_RIDE_MODE',
-    __format: 'boolean'
-  },
   jwtSecret: 'JWT_SECRET',
   firebase: {
     apiKey: 'FIREBASE_TOKEN',

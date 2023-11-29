@@ -3,7 +3,6 @@ import IConfig from '../iConfig';
 export default {
   env: 'default',
   port: 3000,
-  allowGuestRideMode: false,
   jwtSecret: 'DEV_SECRET',
   firebase: {
     apiKey: 'API_KEY',
