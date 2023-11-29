@@ -310,6 +310,27 @@ paths:
                 $ref: '#/components/schemas/Driver'
         '400':
           description: Invalid request body
+    put:
+      tags:
+        - driver
+      summary: Update a driver
+      description: Updates a driver.
+      operationId: updateDriver
+      requestBody:
+        description: Driver object to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+      responses:
+        '201':
+          description: Driver created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Invalid request body
     get:
       tags:
         - driver
