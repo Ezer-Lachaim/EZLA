@@ -34,3 +34,15 @@ export const setToken = (token: string | null) => {
   currentToken = token;
   api = createApi();
 };
+
+export const getGuestToken = () => {
+  return localStorage.getItem('guestToken');
+};
+
+export const setGuestToken = (token: string) => {
+  localStorage.setItem('guestToken', token);
+};
+
+export const clearGuestToken = () => {
+  localStorage.removeItem('guestToken');
+};

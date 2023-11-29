@@ -3,7 +3,7 @@ import { Modal, Box, Button } from '@mui/material';
 import { Cancel } from '@mui/icons-material';
 import { useUserContext } from '../../../context/UserContext/UserContext';
 import { RideStateEnum } from '../../../api-client';
-import { api } from '../../../Config';
+import { api, getGuestToken } from '../../../Config';
 
 const style = {
   position: 'absolute' as const,
@@ -26,7 +26,8 @@ const RideCanceledModal = () => {
   }, [ride]);
 
   async function onClose() {
-    await api.ride.postConfirmRideComplete();
+    const guestToken = getGuestToken() || '';
+    await api.ride.postConfirmRideComplete({ guestToken });
     setIsClosed(true);
   }
 

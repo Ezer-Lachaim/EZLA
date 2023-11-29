@@ -4,9 +4,10 @@ import { Cancel, Phone } from '@mui/icons-material';
 import ClockIcon from '@mui/icons-material/AccessTimeRounded';
 import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { api, clearGuestToken, getGuestToken, setGuestToken } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -19,7 +20,8 @@ const ActiveRide = () => {
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {
-    await api.ride.postConfirmRideComplete();
+    const guestToken = getGuestToken() || '';
+    await api.ride.postConfirmRideComplete({ guestToken });
   };
 
   const onConfirmCancelRide = async () => {
@@ -30,24 +32,32 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
+    const rideToken = uuidv4();
+    setGuestToken(rideToken);
+
     await api.ride.ridesPost({
       ride: {
         ...ride,
         state: RideStateEnum.WaitingForDriver,
         rideId: undefined,
         requestTimeStamp: undefined,
-        driver: undefined
+        driver: undefined,
+        guestToken: rideToken
       }
     });
 
-    navigate('/passenger/order-ride');
+    navigate('/passenger/searching-driver');
   };
 
   const onCancelRide = async () => {
+    const guestToken = getGuestToken() || '';
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
+      guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+
+    clearGuestToken();
 
     navigate('/passenger/order-ride');
   };

@@ -38,6 +38,10 @@ export const authHandler = (req: CustomRequest, res: Response, next: NextFunctio
         }
       });
   } else {
+    if (isRideRoutes(req)) {
+      next();
+      return;
+    }
     res.status(401).send({ error: 'User is not authorized' });
   }
 };
@@ -52,3 +56,7 @@ function isSignupRoute(req: CustomRequest) {
 function isLoginRoute(req: CustomRequest) {
   return req.originalUrl.includes('users/login') && req.method === 'POST';
 }
+
+const isRideRoutes = (req: CustomRequest) => {
+  return req.originalUrl.includes('rides');
+};
