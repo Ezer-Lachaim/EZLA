@@ -11,26 +11,29 @@ import {
 } from 'firebase/auth';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
-import dotenv from 'dotenv';
 import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
-import { config as firebaseConfig } from './firebase-config';
-
-dotenv.config();
+import config from '../config';
 
 let app: App;
-const env = process.env.ENV || 'production';
-console.log(firebaseConfig[env]);
-initializeApp(firebaseConfig[env]);
+initializeApp({
+  apiKey: config.firebase.apiKey,
+  authDomain: config.firebase.authDomain,
+  projectId: config.firebase.projectId,
+  storageBucket: config.firebase.storageBucket,
+  messagingSenderId: config.firebase.messagingSenderId,
+  appId: config.firebase.appId,
+  measurementId: config.firebase.measurementId
+});
 
-if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+if (config.firebase.authEmulatorHost) {
   app = initializeAppAdmin({ credential: credential.applicationDefault() });
   const auth = getAuth();
   connectAuthEmulator(auth, 'http://127.0.0.1:9099');
 } else {
   const serviceAccount: ServiceAccount = {
-    projectId: firebaseConfig[env].projectId,
-    privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
-    clientEmail: firebaseConfig[env].clientEmail
+    projectId: config.firebase.projectId,
+    privateKey: config.firebase.privateKey.replace(/\\n/g, '\n'),
+    clientEmail: config.firebase.clientEmail
   };
   app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
 }
@@ -56,16 +59,18 @@ export async function getUser(email: string) {
 }
 
 export async function sendPushNotification(registrationToken: string, payload: MessagingPayload) {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().sendToDevice(registrationToken, payload);
 }
 
 export async function sendNewRideNotificationToDrivers() {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().send({
     notification: {
       title: 'נסיעה חדשה!',
@@ -76,9 +81,10 @@ export async function sendNewRideNotificationToDrivers() {
 }
 
 export async function subscribeToNewRideNotification(registrationToken: string) {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().subscribeToTopic(registrationToken, 'new-ride');
 }
 

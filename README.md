@@ -37,10 +37,6 @@ npm install
 ### Create local .env file with the following props
 The file should be placed in /backend folder
 ```
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-GOOGLE_CLOUD_PROJECT=ezla-pickup
-JWT_SECRET=DEV_SECRET
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
 ```
 

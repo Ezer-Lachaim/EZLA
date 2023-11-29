@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
 import { app } from './app';
 import { connect } from './repository/redis-client';
-
-dotenv.config();
 
 const port = app.get('port');
 
