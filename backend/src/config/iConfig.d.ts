@@ -1,7 +1,6 @@
 export default interface IConfig {
   env: string; // ENV | NODE_ENV
   port: number; // PORT
-  allowGuestRideMode: boolean; // ALLOW_GUEST_RIDE_MODE
   jwtSecret?: string; // JWT_SECRET
   firebase: {
     apiKey: string; // FIREBASE_TOKEN default 'API_KEY'
