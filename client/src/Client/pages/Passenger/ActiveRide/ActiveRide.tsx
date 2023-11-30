@@ -15,7 +15,7 @@ import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
-  const { activeRide: ride } = useUserContext();
+  const { activeRide: ride, user } = useUserContext();
   const navigate = useNavigate();
   const [confirmClose, setConfirmClose] = useState(false);
 
@@ -31,7 +31,9 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
-    setGuestToken(uuidv4());
+    if (!user) {
+      setGuestToken(uuidv4());
+    }
 
     await api.ride.ridesPost({
       ride: {

@@ -121,7 +121,9 @@ const OrderRide = () => {
       []
     );
 
-    setGuestToken(uuidv4());
+    if (!user) {
+      setGuestToken(uuidv4());
+    }
 
     const newRide: Ride = {
       ...data.ride,
