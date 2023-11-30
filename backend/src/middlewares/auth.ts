@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { verifyJwt } from '../utils/jwt-util';
 import { getUserByUid } from '../repository/user';
-import { getAuthConfigAdmin } from '../utils/firebase-config';
+import { getAuthConfigAdmin } from '../utils/firebase';
 import { CustomRequest } from './CustomRequest';
 
 export const authHandler = (req: CustomRequest, res: Response, next: NextFunction): void => {

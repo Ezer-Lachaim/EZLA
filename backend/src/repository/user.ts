@@ -5,6 +5,12 @@ export async function createUser(uid: string, user: User) {
   return client.json.set(`user:${uid}`, '$', { ...user });
 }
 
+export async function updateUserByUid(uid: string, user: User): Promise<void> {
+  const userFromDB: User = (await client.json.get(`user:${uid}`)) as unknown as User;
+  const updated = Object.assign(userFromDB, user);
+  await client.json.set(`user:${uid}`, '$', { ...updated });
+}
+
 export async function getUserByUid(uid: string): Promise<User> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user: any = await client.json.get(`user:${uid}`);
@@ -37,10 +43,4 @@ export async function updateFcmToken(uid: string, fcmToken: string): Promise<voi
 
 export async function incDriverNumOfDrives(uid: string): Promise<void> {
   await client.json.numIncrBy(`user:${uid}`, '$.numOfDrives', 1);
-}
-
-export async function updateUserByUid(uid: string, user: User): Promise<void> {
-  const userFromDB: User = (await client.json.get(`user:${uid}`)) as unknown as User;
-  const updated = Object.assign(userFromDB, user);
-  await client.json.set(`user:${uid}`, '$', { ...updated });
 }

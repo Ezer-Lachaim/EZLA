@@ -1,8 +1,9 @@
 import { Response } from 'express';
 import { UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
-import { createUser, getAllUsers } from '../repository/user';
-import { firebase, getAuthConfig } from '../utils/firebase-config';
+
+import { createUser, getAllUsers, updateUserByUid } from '../repository/user';
+import { firebase, getAuthConfig } from '../utils/firebase';
 
 const auth = getAuthConfig();
 
@@ -24,6 +25,24 @@ export const create = async (req: CustomRequest, res: Response): Promise<void> =
       driverPayload.signupDate = new Date();
       driverPayload.numOfDrives = 0;
       await createUser(driverPayload.userId, driverPayload);
+      res.send({
+        driverPayload
+      });
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  } else {
+    res.status(401).send();
+  }
+};
+
+export const update = async (req: CustomRequest, res: Response): Promise<void> => {
+  const userRole = req.user.role;
+  const driverPayload = req.body;
+
+  if (userRole === UserRoleEnum.Admin) {
+    try {
+      await updateUserByUid(driverPayload.userId, driverPayload);
       res.send({
         driverPayload
       });

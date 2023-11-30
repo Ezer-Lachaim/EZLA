@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
-import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase-config';
+import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
 import { sendSMS } from '../utils/sms-util';
 import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
