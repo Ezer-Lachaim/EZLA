@@ -37,6 +37,7 @@ npm install
 ### Create local .env file with the following props
 The file should be placed in /backend folder
 ```
+GOOGLE_CLOUD_PROJECT=ezla-pickup
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
 ```
 

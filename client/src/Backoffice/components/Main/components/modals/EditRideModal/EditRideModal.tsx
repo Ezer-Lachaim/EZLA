@@ -2,7 +2,7 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { api, getGuestToken } from '../../../../../../Config.ts';
+import { api } from '../../../../../../Config.ts';
 import { Ride, FetchError } from '../../../../../../api-client';
 import EditRideInfo from './EditRideInfo/EditRideInfo.tsx';
 
@@ -61,7 +61,6 @@ function EditRideModal({ open, handleModal, ride }: EditRideModalProps) {
     try {
       await api.ride.updateRide({
         rideId: ride.rideId || '',
-        guestToken: getGuestToken() || undefined,
         ride: updatedRide
       });
       window.location.reload();

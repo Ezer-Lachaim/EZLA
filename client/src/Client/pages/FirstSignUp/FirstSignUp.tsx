@@ -5,12 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import FaceIcon from '@mui/icons-material/Face';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import logo from '../../../assets/logo.png';
+import useServerEnvSettings from '../../../hooks/serverEnvSettings';
 import withLayout from '../../components/LayoutHOC.tsx';
 import infoImg from '../../../assets/info.png';
 import { Splash } from '../Splash/Splash.tsx';
 
 const FirstSignUp = () => {
   const navigation = useNavigate();
+  const serverEnvSettings = useServerEnvSettings();
   const [shouldDisplaySplash, setShouldDisplaySplash] = useState(true);
   const [shouldDisplayInfo, setShouldDisplayInfo] = useState(true);
 
@@ -34,10 +36,18 @@ const FirstSignUp = () => {
     localStorage.setItem('info-displayed', 'true');
   };
 
+  // render the page only once the env settings are fetched
+  if (!serverEnvSettings) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
       <img src={logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-center">שירות הסעות התנדבותי</h1>
+      <h1 className="text-center">
+        שירות הסעות התנדבותי
+        {serverEnvSettings?.allowGuestRideMode ? '' : 'למבקרים בבית חולים'}
+      </h1>
       <p className="text-center text-sm">
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
         ברורה שהעזרה והסיוע מצילים ומוסיפים חיים ונותנים כוח לחולה להתמודד בדרך לבריאות.
@@ -49,9 +59,11 @@ const FirstSignUp = () => {
         className="w-full text-lg mb-6 mt-10"
         size="large"
         endIcon={<FaceIcon />}
-        onClick={() => navigation('/passenger/order-ride')}
+        onClick={() =>
+          navigation(serverEnvSettings?.allowGuestRideMode ? '/passenger/order-ride' : '/register')
+        }
       >
-        הזמנת נסיעה
+        {serverEnvSettings?.allowGuestRideMode ? 'הזמנת נסיעה' : 'הרשמה לשירות ההסעות'}
       </Button>
       <Button
         variant="contained"
@@ -67,7 +79,13 @@ const FirstSignUp = () => {
       <p className="text-md text-center">
         מחפשים להצטרף לקהילת המתנדבים?💪❤️ <br />
         למילוי טופס הצטרפות הקישו&nbsp;
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform">
+        <a
+          href={
+            serverEnvSettings?.allowGuestRideMode
+              ? 'https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform'
+              : 'https://forms.gle/fRAY1H2HLyZrpZAR6'
+          }
+        >
           כאן
         </a>
         <br />
@@ -79,7 +97,7 @@ const FirstSignUp = () => {
         <Link to="/login">כניסה למערכת</Link>
       </div>
 
-      {shouldDisplayInfo && (
+      {serverEnvSettings?.allowGuestRideMode && shouldDisplayInfo && (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
         <div
           className="flex flex-col items-center justify-center w-screen dvh-screen fixed bg-white z-50 top-0 left-0 bg-contain bg-no-repeat bg-center"

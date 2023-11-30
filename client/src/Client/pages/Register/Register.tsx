@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
-import { ResponseError, RideRequester } from '../../../api-client/index.ts';
+import { ResponseError, RideRequester } from '../../../api-client';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { api, setToken } from '../../../Config.ts';
@@ -14,7 +14,7 @@ import { api, setToken } from '../../../Config.ts';
 // import { BASE_API_URL } from '../../../Config.ts';
 
 // const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
-const steps = ['פרטי הנוסע', 'פרטים נוספים', 'סיכום ואישור'];
+const steps = ['פרטי הנוסע', 'פרטים רפואיים', 'סיכום ואישור'];
 
 const Register = ({
   activeStepIndex,

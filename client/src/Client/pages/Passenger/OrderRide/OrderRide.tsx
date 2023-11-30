@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -17,7 +16,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api, setGuestToken } from '../../../../Config.ts';
-import { Ride, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 
 interface OrderRideFormData {
@@ -34,7 +33,9 @@ interface OrderRideFormData {
   };
 }
 
-const specialMap = {
+const specialMap: {
+  [key: string]: RideSpecialRequestEnum;
+} = {
   isWheelChair: RideSpecialRequestEnum.WheelChair,
   isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
@@ -43,14 +44,18 @@ const specialMap = {
   isPatientDelivery: RideSpecialRequestEnum.PatientDelivery
 };
 
-const getSpecialEnum = (boolName: string): RideSpecialRequestEnum => {
-  // @ts-ignore
-  return specialMap[boolName];
-};
+enum DestinationSourceEnum {
+  Destination,
+  Source
+}
 
 const OrderRide = () => {
-  const { user } = useUserContext();
+  const { user } = useUserContext() as { user: RideRequester };
   const navigate = useNavigate();
+  const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
+    DestinationSourceEnum.Destination
+  );
+  const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
     watch,
@@ -60,33 +65,68 @@ const OrderRide = () => {
   } = useForm<OrderRideFormData>({
     defaultValues: {
       ride: {
+        origin: user?.address,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
         cellphone: user?.cellPhone
+      },
+      specialRequest: {
+        isWheelChair: user?.specialRequest?.includes(specialMap.isWheelChair),
+        isBabySafetySeat: user?.specialRequest?.includes(specialMap.isBabySafetySeat),
+        isChildSafetySeat: user?.specialRequest?.includes(specialMap.isChildSafetySeat),
+        isHighVehicle: user?.specialRequest?.includes(specialMap.isHighVehicle),
+        isWheelChairTrunk: user?.specialRequest?.includes(specialMap.isWheelChairTrunk),
+        isPatientDelivery: user?.specialRequest?.includes(specialMap.isPatientDelivery)
       }
     }
   });
 
-  const [isOrderRideLoading, setIsOrderRideLoading] = React.useState(false);
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    (async () => {
+      const hospitals = await api.hospital.getHospitalList();
+
+      if (hospitals) {
+        const hospitalName =
+          hospitals.find((hospital) => hospital.id === user.patient?.hospitalId)?.name || '';
+        const hospitalDept = user.patient?.hospitalDept || '';
+        const hospitalBuilding = user.patient?.hospitalBuilding || '';
+
+        const value = `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
+          hospitalBuilding && ` / ${hospitalBuilding}`
+        }`;
+        if (autofilledAddress === DestinationSourceEnum.Destination) {
+          setValue('ride.destination', value);
+        } else {
+          setValue('ride.origin', value);
+        }
+      }
+    })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
     const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
       (acc: RideSpecialRequestEnum[], cur) => {
         if (data.specialRequest?.[cur]) {
-          acc.push(getSpecialEnum(cur));
+          acc.push(specialMap[cur]);
         }
         return acc;
       },
       []
     );
 
-    const rideToken = uuidv4();
-    setGuestToken(rideToken);
+    setGuestToken(uuidv4());
 
     const newRide: Ride = {
       ...data.ride,
       specialRequest: specialRequestsArray,
-      state: RideStateEnum.WaitingForDriver,
-      guestToken: rideToken
+      state: RideStateEnum.WaitingForDriver
     };
 
     await api.ride.ridesPost({
@@ -97,10 +137,15 @@ const OrderRide = () => {
   };
 
   const onSwapAddresses = () => {
-    const { origin } = watch().ride;
-    const { destination } = watch().ride;
+    const { origin, destination } = watch().ride;
     setValue('ride.origin', destination);
     setValue('ride.destination', origin);
+
+    setAutofilledAddress(
+      autofilledAddress === DestinationSourceEnum.Source
+        ? DestinationSourceEnum.Destination
+        : DestinationSourceEnum.Source
+    );
   };
 
   return (
@@ -108,23 +153,30 @@ const OrderRide = () => {
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
-          <FormControl>
-            <TextField
-              label="כתובת איסוף"
-              autoFocus
-              type="string"
-              placeholder="יש להזין שם רחוב, מספר בית ועיר"
-              required
-              value={watch().ride?.origin || ''}
-              error={!!errors?.ride?.origin}
-              {...register('ride.origin', { required: true })}
-            />
-            {errors.ride?.origin && (
-              <FormHelperText error className="absolute top-full mr-0">
-                {errors.ride.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
-              </FormHelperText>
-            )}
-          </FormControl>
+          {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
+            <FormControl>
+              <TextField
+                label="כתובת איסוף"
+                autoFocus
+                type="string"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
+                required
+                value={watch().ride?.origin || ''}
+                error={!!errors?.ride?.origin}
+                {...register('ride.origin', { required: true })}
+              />
+              {errors.ride?.origin && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.ride.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                </FormHelperText>
+              )}
+            </FormControl>
+          ) : (
+            <div>
+              <InputLabel>כתובת איסוף</InputLabel>
+              <span>{watch().ride?.origin || ''}</span>
+            </div>
+          )}
 
           <div className="flex justify-center m-3">
             <Button
@@ -137,24 +189,32 @@ const OrderRide = () => {
             </Button>
           </div>
 
-          <FormControl>
-            <TextField
-              label="כתובת יעד"
-              type="string"
-              placeholder="יש להזין שם רחוב, מספר בית ועיר"
-              required
-              value={watch().ride?.destination || ''}
-              error={!!errors?.ride?.destination}
-              {...register('ride.destination', { required: true })}
-            />
+          {!user || autofilledAddress === DestinationSourceEnum.Source ? (
+            <FormControl>
+              <TextField
+                label="כתובת יעד"
+                type="string"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
+                required
+                value={watch().ride?.destination || ''}
+                error={!!errors?.ride?.destination}
+                {...register('ride.destination', { required: true })}
+              />
 
-            {errors.ride?.destination && (
-              <FormHelperText error className="absolute top-full mr-0">
-                {errors.ride.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
-              </FormHelperText>
-            )}
-          </FormControl>
+              {errors.ride?.destination && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.ride.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                </FormHelperText>
+              )}
+            </FormControl>
+          ) : (
+            <div>
+              <InputLabel>כתובת יעד</InputLabel>
+              <span>{watch().ride?.destination || ''}</span>
+            </div>
+          )}
         </div>
+
         <FormControl>
           <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
@@ -187,14 +247,14 @@ const OrderRide = () => {
         </FormControl>
         <FormControl>
           <TextField
-            label="מטרת הנסיעה"
+            label={user ? 'הערה' : 'מטרת הנסיעה'}
             type="string"
-            required
+            required={!user}
             placeholder="הסבר קצר לגבי מטרת הנסיעה"
             error={!!errors?.ride?.comment}
             {...register('ride.comment', {
               maxLength: 50,
-              required: true
+              required: !user
             })}
           />
           <span
@@ -206,60 +266,8 @@ const OrderRide = () => {
           </span>
           {errors.ride?.comment && (
             <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.comment.type === 'required' && 'יש להזין את מטרת הנסיעה'}
               {errors.ride.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
-            </FormHelperText>
-          )}
-        </FormControl>
-
-        <p className=" -my-4 text-center">פרטי מזמין ההסעה</p>
-        <FormControl>
-          <TextField
-            label="שם פרטי"
-            fullWidth
-            required
-            type="text"
-            error={!!errors.ride?.firstName}
-            {...register('ride.firstName', { required: true, minLength: 2 })}
-          />
-          {errors.ride?.firstName && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride.firstName.type === 'required' && 'יש להזין שם פרטי'}
-              {errors.ride.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl>
-          <TextField
-            label="שם משפחה"
-            fullWidth
-            required
-            type="text"
-            error={!!errors.ride?.lastName}
-            {...register('ride.lastName', { required: true, minLength: 2 })}
-          />
-          {errors.ride?.lastName && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride.lastName.type === 'required' && 'יש להזין שם משפחה'}
-              {errors.ride.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControl>
-          <TextField
-            label="טלפון ליצירת קשר"
-            type="string"
-            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
-            required
-            error={!!errors?.ride?.cellphone}
-            {...register('ride.cellphone', {
-              required: true,
-              pattern: /^05\d-?\d{7}$/
-            })}
-          />
-          {errors.ride?.cellphone && (
-            <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
-              {errors.ride.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
             </FormHelperText>
           )}
         </FormControl>
@@ -297,6 +305,61 @@ const OrderRide = () => {
             label="משלוחים"
           />
         </div>
+
+        <p className=" -my-4 text-center">פרטי מזמין ההסעה</p>
+        <FormControl>
+          <TextField
+            label="שם פרטי"
+            fullWidth
+            required
+            disabled={!!user}
+            type="text"
+            error={!!errors.ride?.firstName}
+            {...register('ride.firstName', { required: true, minLength: 2 })}
+          />
+          {errors.ride?.firstName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.firstName.type === 'required' && 'יש להזין שם פרטי'}
+              {errors.ride.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="שם משפחה"
+            fullWidth
+            required
+            disabled={!!user}
+            type="text"
+            error={!!errors.ride?.lastName}
+            {...register('ride.lastName', { required: true, minLength: 2 })}
+          />
+          {errors.ride?.lastName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.lastName.type === 'required' && 'יש להזין שם משפחה'}
+              {errors.ride.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="טלפון ליצירת קשר"
+            type="string"
+            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
+            required
+            error={!!errors?.ride?.cellphone}
+            {...register('ride.cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
+          />
+          {errors.ride?.cellphone && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.ride.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+            </FormHelperText>
+          )}
+        </FormControl>
 
         {!user && (
           <div>
@@ -345,14 +408,23 @@ const OrderRide = () => {
 
 const OrderRideWrapper = () => {
   const navigate = useNavigate();
+  const { user } = useUserContext();
 
-  const OrderRideComponent = withLayout(OrderRide, {
-    onBackClick: () => {
-      navigate('/first-signup');
-    },
-    title: 'הזמנת הסעה',
-    showBackButton: true
-  });
+  const OrderRideComponent = withLayout(
+    OrderRide,
+    user
+      ? {
+          title: 'הזמנת הסעה לביקור חולים',
+          showLogoutButton: true
+        }
+      : {
+          title: 'הזמנת הסעה',
+          showBackButton: true,
+          onBackClick: () => {
+            navigate('/first-signup');
+          }
+        }
+  );
 
   return <OrderRideComponent />;
 };

@@ -4,6 +4,7 @@ export default {
   env: 'default',
   port: 3000,
   jwtSecret: 'DEV_SECRET',
+  allowGuestRideMode: false,
   firebase: {
     apiKey: 'API_KEY',
     authDomain: 'ezla-pickup-staging.firebaseapp.com',

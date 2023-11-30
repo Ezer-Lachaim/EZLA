@@ -6,11 +6,12 @@ import config from './config';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
 import { authHandler } from './middlewares/auth';
 // Routes
-import { usersRouter } from './routes/users';
-import { index } from './routes';
-import { ridesRouter } from './routes/rides';
 import { devRouter } from './routes/dev';
+import { envRouter } from './routes/env';
+import { usersRouter } from './routes/users';
 import { driversRouter } from './routes/drivers';
+import { ridesRouter } from './routes/rides';
+import { index } from './routes';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -30,10 +31,10 @@ if (config.env !== 'production') {
   app.use('/dev', devRouter);
 }
 
-app.use('/rides', authHandler, ridesRouter);
-app.use('/users', authHandler, usersRouter);
-app.use('/drivers', authHandler, driversRouter);
-app.use('/rides', authHandler, ridesRouter);
+app.use('/env', envRouter);
+app.use('/users', authHandler(), usersRouter);
+app.use('/drivers', authHandler(), driversRouter);
+app.use('/rides', ridesRouter);
 app.use('/', index);
 
 app.use('*', (req, res) => {

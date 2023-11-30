@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api, clearGuestToken, getGuestToken, setGuestToken } from '../../../../Config.ts';
+import { api, clearGuestToken, setGuestToken } from '../../../../Config.ts';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
@@ -20,8 +20,7 @@ const ActiveRide = () => {
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {
-    const guestToken = getGuestToken() || '';
-    await api.ride.postConfirmRideComplete({ guestToken });
+    await api.ride.postConfirmRideComplete();
   };
 
   const onConfirmCancelRide = async () => {
@@ -32,8 +31,7 @@ const ActiveRide = () => {
   const onOrderNewRide = async () => {
     await canceledRide();
 
-    const rideToken = uuidv4();
-    setGuestToken(rideToken);
+    setGuestToken(uuidv4());
 
     await api.ride.ridesPost({
       ride: {
@@ -41,8 +39,7 @@ const ActiveRide = () => {
         state: RideStateEnum.WaitingForDriver,
         rideId: undefined,
         requestTimeStamp: undefined,
-        driver: undefined,
-        guestToken: rideToken
+        driver: undefined
       }
     });
 
@@ -50,10 +47,8 @@ const ActiveRide = () => {
   };
 
   const onCancelRide = async () => {
-    const guestToken = getGuestToken() || '';
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      guestToken,
       ride: { state: RideStateEnum.RequesterCanceled }
     });
 

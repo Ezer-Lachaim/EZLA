@@ -17,7 +17,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const [hasGuestToken, setHasGuestToken] = useState(false);
 
   useEffect(() => {
-    // this is a temporary solution until auth context is merged in
+    // this is a temporary solution until auth service is merged in
     const intervalId = setInterval(() => {
       setHasGuestToken(!!getGuestToken());
     }, 300);
@@ -32,8 +32,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
     enabled: !!user || hasGuestToken,
     queryFn: async () => {
       try {
-        const guestToken = getGuestToken() || '';
-        return await api.ride.getActiveRideForUser({ guestToken });
+        return await api.ride.getActiveRideForUser();
       } catch (e) {
         return null;
       }

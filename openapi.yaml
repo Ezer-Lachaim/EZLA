@@ -395,20 +395,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Ride'
-  /rides/active_ride/{guestToken}:
+  /rides/active_ride:
     get:
       tags:
         - ride
       summary: Get active ride for user
       description: Get the active ride for a specific user
       operationId: getActiveRideForUser
-      parameters:
-        - name: guestToken
-          in: path
-          description: guest token of the user to retrieve the active ride for
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
@@ -420,24 +413,17 @@ paths:
           description: Invalid user ID supplied
         '404':
           description: Active ride not found
-  /rides/confirm_complete/{guestToken}:
+  /rides/confirm_complete:
     post:
       tags:
         - ride
       summary: Confirm completed ride
       description: Confirm that the ride was completed
       operationId: postConfirmRideComplete
-      parameters:
-        - name: guestToken
-          in: path
-          description: guest token of the user to retrieve the active ride for
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
-  /rides/{rideId}/{guestToken}:
+  /rides/{rideId}:
     get:
       tags:
         - ride
@@ -473,12 +459,6 @@ paths:
           in: path
           description: ID of the ride to be updated
           required: true
-          schema:
-            type: string
-        - name: guestToken
-          in: path
-          description: guest token of the user to retrieve the active ride for
-          required: false
           schema:
             type: string
       requestBody:
@@ -532,14 +512,22 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'תל השומר'
+                  $ref: '#/components/schemas/Hospital'
+
+  /env/settings:
+    get:
+      tags:
+        - env
+      summary: Get the env settings
+      operationId: getEnvSettings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvSettings'
+
 components:
   schemas:
     User:
@@ -803,6 +791,25 @@ components:
           example: 'מחלקת שיקום'
         message:
           type: string
+
+    Hospital:
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'תל השומר'
+      required:
+        - id
+        - name
+
+    EnvSettings:
+      properties:
+        allowGuestRideMode:
+          type: boolean
+      required:
+        - allowGuestRideMode
 
   requestBodies:
     UserArray:
