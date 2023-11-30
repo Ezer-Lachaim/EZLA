@@ -1,14 +1,12 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
-import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
-import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
 import { api } from '../../../../../../Config.ts';
-import { Driver } from '../../../../../../api-client/models/Driver';
-import { ResponseError } from '../../../../../../api-client';
+import { Ride, FetchError } from '../../../../../../api-client';
+import EditDriverCarInfo from './EditDriverCarInfo/EditDriverCarInfo.tsx';
+import EditDriverInfo from './EditDriverInfo/EditDriverInfo.tsx';
+import { Driver } from '../../../../../../api-client/models/Driver.ts';
 
 const style = {
   position: 'absolute' as const,
@@ -22,16 +20,36 @@ const style = {
   p: 2
 };
 
-const steps = ['פרטי מתנדב', 'פרטי רכב'];
-
-interface AddCustomerModalProps {
+interface EditDriverModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
+  driver: Driver;
 }
-function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
-  const [activeStepIndex, setActiveStepIndex] = useState(0);
-  const [existingEmails, setExistingEmails] = useState<Set<string>>(new Set());
+
+function EditDriverModal({ open, handleModal, driver }: EditDriverModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+
+  const methods = useForm<Driver>({
+    defaultValues: {
+      firstName: driver.firstName,
+      lastName: driver.lastName,
+      nationalId: driver.nationalId,
+      city: driver.city,
+      cellPhone: driver.cellPhone,
+      email: driver.email,
+      volunteeringArea: driver.volunteeringArea,
+      carColor: driver.carColor,
+      carManufacturer: driver.carManufacturer,
+      carModel: driver.carModel,
+      numOfSeats: driver.numOfSeats,
+      carPlateNumber: driver.carPlateNumber,
+      carCapabilities: driver.carCapabilities
+    }
+  });
+
+  const { handleSubmit, trigger } = methods;
   const stepBackOrClose = () => {
     if (activeStepIndex > 0) {
       setActiveStepIndex(activeStepIndex - 1);
@@ -40,14 +58,6 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
       handleModal(false);
     }
   };
-  const methods = useForm<Driver>({
-    defaultValues: {
-      carCapabilities: []
-    }
-  });
-
-  const { handleSubmit, trigger } = methods;
-
   const nextStepHandler = async () => {
     let isStepValid = false;
 
@@ -71,8 +81,7 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
           'carModel',
           'carColor',
           'carPlateNumber',
-          'numOfSeats',
-          'carCapabilities'
+          'numOfSeats'
         ]);
         break;
       default:
@@ -80,36 +89,36 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
     }
 
     if (isStepValid) {
-      if (activeStepIndex === 1) {
-        await handleSubmit(onSubmit)();
-      } else {
-        setActiveStepIndex(activeStepIndex + 1);
+      switch (activeStepIndex) {
+        case 0:
+          setActiveStepIndex((prev) => prev + 1);
+          break;
+        case 1:
+          await handleSubmit(onSubmit)();
+          break;
+        default:
+          break;
       }
     }
   };
 
-  const onSubmit: SubmitHandler<Driver> = async (data) => {
+  const onSubmit: SubmitHandler<Ride> = async (data) => {
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     try {
-      await api.driver.createDriver({
-        driver: { ...data, password: 'initial-password' }
+      await api.driver.updateDriver({
+        driver: { ...data, userId: driver.userId || '' }
       });
       window.location.reload();
     } catch (error) {
-      if (error instanceof ResponseError && error.response) {
-        const { code }: { code: string } = await error.response.json();
-        if (code === 'auth/email-already-in-use') {
-          setExistingEmails(new Set([...existingEmails.values(), data.email]) as Set<string>);
-          setActiveStepIndex(0);
-        }
-      }
-
+      setErrorMessage((error as FetchError).message);
       console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
     <Modal
       open={open}
@@ -121,17 +130,16 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
       <Box sx={style}>
         <div className="flex justify-between mb-2">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            הוספת מתנדב חדש
+            עריכת מתנדב
           </Typography>
           <Button color="inherit" onClick={() => handleModal(false)}>
             <ClearIcon />
           </Button>
         </div>
-        <RegistrationStepper activeStepIndex={activeStepIndex} steps={steps} />
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {activeStepIndex === 0 ? <NewDriverInfo existingEmails={existingEmails} /> : null}
-            {activeStepIndex === 1 ? <NewDriverCarInfo /> : null}
+            {activeStepIndex === 0 && <EditDriverInfo driver={driver} />}
+            {activeStepIndex === 1 && <EditDriverCarInfo driver={driver} />}
           </form>
         </FormProvider>
         <Box
@@ -139,9 +147,11 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
             display: 'flex',
             justifyContent: 'end',
             gap: '10px',
-            marginTop: '15px'
+            marginTop: '15px',
+            alignItems: 'center'
           }}
         >
+          {errorMessage && <p className="text-red-500">אירעה שגיאה: {errorMessage}</p>}
           <Button variant="outlined" color="primary" onClick={stepBackOrClose}>
             {activeStepIndex > 0 ? 'חזור' : 'ביטול'}
           </Button>
@@ -149,7 +159,6 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
             variant="contained"
             color="primary"
             className="text-white"
-            endIcon={activeStepIndex === 0 && <ArrowBackIcon />}
             onClick={nextStepHandler}
             disabled={isSubmitting}
           >
@@ -161,4 +170,4 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
   );
 }
 
-export default AddCustomerModal;
+export default EditDriverModal;
