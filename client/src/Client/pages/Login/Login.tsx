@@ -37,7 +37,7 @@ const Login = () => {
     setError
   } = useForm<Inputs>();
 
-  const { navigateAfterLogin } = useNavigateUser();
+  const { navigateOnUser } = useNavigateUser();
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
@@ -48,7 +48,7 @@ const Login = () => {
       setToken(userResponse.token);
       setUser(userResponse.user);
       setNotificationsToken();
-      navigateAfterLogin(userResponse.user);
+      navigateOnUser(userResponse.user);
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
         setError('email', { type: '401' });

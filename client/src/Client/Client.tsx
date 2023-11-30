@@ -1,14 +1,16 @@
-import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import useNavigateUser from './hooks/useNavigateUser.ts';
+import { useUserContext } from '../context/UserContext/UserContext';
 
 const Client = () => {
-  const { navigateOnRefresh } = useNavigateUser();
+  const { activeRide } = useUserContext();
+  const { navigateOnUser } = useNavigateUser();
 
   useEffect(() => {
-    navigateOnRefresh();
+    navigateOnUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeRide?.state]);
 
   return <Outlet />;
 };

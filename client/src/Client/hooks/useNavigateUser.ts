@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useUserContext } from '../../context/UserContext/UserContext.tsx';
-import { RideStateEnum, User, UserRoleEnum } from '../../api-client';
+import { RideStateEnum, User, UserRoleEnum, UserRegistrationStateEnum } from '../../api-client';
 import { getGuestToken } from '../../Config.ts';
 
 const useNavigateUser = () => {
@@ -9,15 +8,29 @@ const useNavigateUser = () => {
 
   const navigate = useNavigate();
 
-  const navigateAfterLogin = (explicitUser: User | undefined = undefined) => {
+  const navigateOnUser = (explicitUser: User | undefined = undefined) => {
     const actualUser = explicitUser || user;
 
+    if (actualUser?.registrationState === UserRegistrationStateEnum.Pending) {
+      navigate('/processing-user');
+      return;
+    }
+
+    if (actualUser && actualUser.registrationState !== UserRegistrationStateEnum.Approved) {
+      navigate('/logout');
+      return;
+    }
+
     if (actualUser?.isInitialPassword) {
-      return navigate('/create-password');
+      navigate('/create-password');
+      return;
     }
+
     if (actualUser?.role === UserRoleEnum.Admin) {
-      return navigate('/backoffice');
+      navigate('/backoffice');
+      return;
     }
+
     if (actualUser?.role === UserRoleEnum.Driver) {
       if (activeRide) {
         if (
@@ -25,65 +38,70 @@ const useNavigateUser = () => {
           activeRide.state === RideStateEnum.DriverArrived ||
           activeRide.state === RideStateEnum.RequesterCanceled
         ) {
-          return navigate('/driver/active');
+          navigate('/driver/active');
+          return;
         }
         if (activeRide.state === RideStateEnum.Riding) {
-          return navigate('/driver/riding');
+          navigate('/driver/riding');
+          return;
         }
         if (activeRide.state === RideStateEnum.Completed) {
-          return navigate('/driver/completed');
+          navigate('/driver/completed');
+          return;
         }
       }
-      return navigate('/driver/rides');
+
+      navigate('/driver/rides');
+      return;
     }
 
-    if (actualUser?.role === UserRoleEnum.Requester || getGuestToken()) {
+    if (actualUser?.role === UserRoleEnum.Requester || (!actualUser && getGuestToken())) {
       if (activeRide) {
         if (activeRide.state === RideStateEnum.Canceled) {
-          return navigate('/passenger/order-ride');
+          navigate('/passenger/order-ride');
+          return;
         }
         if (activeRide.state === RideStateEnum.WaitingForDriver) {
-          return navigate('/passenger/searching-driver');
+          navigate('/passenger/searching-driver');
+          return;
         }
         if (activeRide.state === RideStateEnum.DriverArrived) {
-          return navigate('/passenger/driver-arrived');
+          navigate('/passenger/driver-arrived');
+          return;
         }
         if (
           activeRide.state === RideStateEnum.Booked ||
           activeRide.state === RideStateEnum.DriverCanceled
         ) {
-          return navigate('/passenger/active');
+          navigate('/passenger/active');
+          return;
         }
         if (activeRide.state === RideStateEnum.Riding) {
-          return navigate('/passenger/riding');
+          navigate('/passenger/riding');
+          return;
         }
         if (activeRide.state === RideStateEnum.Completed) {
-          return navigate('/passenger/completed');
+          navigate('/passenger/completed');
+          return;
         }
       }
 
-      return navigate('/passenger/order-ride');
+      navigate('/passenger/order-ride');
+      return;
     }
-    // If user is neither admin, driver nor requester, then it's an error
-    return navigate('404');
-  };
 
-  const navigateOnRefresh = () => {
-    if (user?.registrationState === 'Pending') {
-      navigate('/processing-user');
-    } else if (user?.registrationState === 'Approved' || (getGuestToken() && !user)) {
-      navigateAfterLogin();
-    } else if (window.location.pathname === '/') {
+    if (window.location.pathname === '/') {
       navigate('/first-signup');
+      return;
+    }
+
+    // if user is approved but is neither admin, driver nor requester, then it's an error
+    if (actualUser) {
+      navigate('/404');
     }
   };
 
-  useEffect(() => {
-    navigateOnRefresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeRide?.state]);
-
-  return { navigateAfterLogin, navigateOnRefresh };
+  return { navigateOnUser };
 };
 
 export default useNavigateUser;
