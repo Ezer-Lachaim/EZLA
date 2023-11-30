@@ -14,15 +14,7 @@ const style = {
   p: 2.5
 };
 
-const DriverCanceledModal = ({
-  open,
-  onCancel,
-  onNewRide
-}: {
-  open: boolean;
-  onCancel: () => void;
-  onNewRide: () => void;
-}) => {
+const DriverCanceledModal = ({ open, onApprove }: { open: boolean; onApprove: () => void }) => {
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
       <Box sx={style}>
@@ -36,16 +28,13 @@ const DriverCanceledModal = ({
           <p className="text-center text-lg text-gray-600">
             לצערנו המתנדב.ת ביטל.ה את הנסיעה שהזמנתם.
             <br />
-            האם להמשיך לחפש לכם הסעה חלופית?
+            אנחנו מחפשים עבורכם הסעה חלופית.
           </p>
-          <Button variant="contained" className="flex gap-2" onClick={onNewRide}>
-            הזמנת נסיעה חדשה
-          </Button>
-          <Button variant="outlined" className="flex gap-2" onClick={onCancel}>
-            לא, תודה
+          <Button variant="contained" className="flex gap-2" onClick={onApprove}>
+            תודה, הבנתי
           </Button>
         </div>
-        <IconButton size="small" className="absolute left-2 top-1" onClick={onCancel}>
+        <IconButton size="small" className="absolute left-2 top-1" onClick={onApprove}>
           <Close />
         </IconButton>
       </Box>
