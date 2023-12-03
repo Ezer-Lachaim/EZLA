@@ -1,21 +1,21 @@
 import parsePhoneNumber from 'libphonenumber-js';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import config from '../config';
 
 const PHONE_NUMBER_COUNTRY = 'IL';
-const SMS_IS_ON = process.env.SMS_IS_ON === '1';
 
 const client = new SNSClient({
   region: 'eu-west-2',
   credentials: {
-    accessKeyId: process.env.AWS_SMS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SMS_SECRET_ACCESS_KEY
+    accessKeyId: config.sms.awsAccessKeyId,
+    secretAccessKey: config.sms.awsSecretAccessKey
   }
 });
 
 export class SMSInvalidPhoneNumberError extends Error {}
 
 export async function sendSMS(phoneNumber: string, message: string): Promise<void> {
-  if (!SMS_IS_ON || !phoneNumber) {
+  if (!config.sms.isOn || !phoneNumber) {
     return;
   }
 

@@ -1,23 +1,17 @@
 import { App, initializeApp as initializeAppAdmin, ServiceAccount } from 'firebase-admin/app';
 import { messaging, credential } from 'firebase-admin';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
-import dotenv from 'dotenv';
 import { MessagingPayload } from 'firebase-admin/lib/messaging/messaging-api';
-import { config as firebaseConfig } from './firebase-config';
-
-dotenv.config();
+import config from '../config';
 
 let app: App;
-if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+if (config.firebase.authEmulatorHost) {
   app = initializeAppAdmin({ credential: credential.applicationDefault() });
 } else {
-  const envFirebaseConfig = firebaseConfig[process.env.ENV || 'production'];
-  console.log(envFirebaseConfig);
-
   const serviceAccount: ServiceAccount = {
-    projectId: envFirebaseConfig.projectId,
-    privateKey: process.env.FIREBASE_ADMIN_AUTH.replace(/\\n/g, '\n'),
-    clientEmail: envFirebaseConfig.clientEmail
+    projectId: config.firebase.projectId,
+    privateKey: config.firebase.privateKey.replace(/\\n/g, '\n'),
+    clientEmail: config.firebase.clientEmail
   };
   app = initializeAppAdmin({ credential: credential.cert(serviceAccount) });
 }
@@ -39,16 +33,18 @@ export async function createUser(email: string, password: string) {
 }
 
 export async function sendPushNotification(registrationToken: string, payload: MessagingPayload) {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().sendToDevice(registrationToken, payload);
 }
 
 export async function sendNewRideNotificationToDrivers() {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().send({
     notification: {
       title: 'נסיעה חדשה!',
@@ -59,8 +55,9 @@ export async function sendNewRideNotificationToDrivers() {
 }
 
 export async function subscribeToNewRideNotification(registrationToken: string) {
-  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+  if (config.firebase.authEmulatorHost) {
     return Promise.resolve();
   }
+
   return messaging().subscribeToTopic(registrationToken, 'new-ride');
 }

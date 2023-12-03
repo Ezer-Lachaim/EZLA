@@ -2,13 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
+import config from './config';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
+import { authHandler } from './middlewares/auth';
 // Routes
 import { usersRouter } from './routes/users';
-import { index } from './routes/index';
+import { index } from './routes';
 import { ridesRouter } from './routes/rides';
 import { devRouter } from './routes/dev';
-import { authHandler } from './middlewares/auth';
 import { driversRouter } from './routes/drivers';
 
 export const app = express();
@@ -17,7 +18,7 @@ app.use(express.json()); // Notice express.json middleware
 app.use(cors());
 
 // Express configuration
-app.set('port', process.env.PORT || 3000);
+app.set('port', config.port);
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 
@@ -25,7 +26,7 @@ app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-if (process.env.NODE_ENV !== 'production') {
+if (config.env !== 'production') {
   app.use('/dev', devRouter);
 }
 
