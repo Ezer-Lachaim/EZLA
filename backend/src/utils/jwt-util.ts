@@ -1,4 +1,5 @@
 import njwt from 'njwt';
+import config from '../config';
 
 export interface Claims {
   email: string;
@@ -6,11 +7,11 @@ export interface Claims {
 }
 
 export function createJwt(claims: Claims) {
-  const token = njwt.create({ ...claims }, process.env.JWT_SECRET);
+  const token = njwt.create({ ...claims }, config.jwtSecret);
   token.setExpiration(null);
   return token.compact();
 }
 
 export function verifyJwt(token: string): njwt.Jwt {
-  return njwt.verify(token, process.env.JWT_SECRET);
+  return njwt.verify(token, config.jwtSecret);
 }
