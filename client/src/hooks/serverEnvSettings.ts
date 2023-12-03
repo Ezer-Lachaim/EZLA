@@ -7,7 +7,7 @@ export default function useServerEnvSettings() {
     staleTime: Infinity,
     queryFn: async () => {
       try {
-        return api.env.getEnvSettings();
+        return await api.env.getEnvSettings();
       } catch (e) {
         return null;
       }
