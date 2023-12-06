@@ -6,14 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
-import { ResponseError, RideRequester } from '../../../api-client/index.ts';
+import { ResponseError, RideRequester } from '../../../api-client';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
-import { api, setToken } from '../../../Config.ts';
-// import { Configuration, UserApi } from '../../../api-client/index.ts';
-// import { BASE_API_URL } from '../../../Config.ts';
+import { useAuthStore } from '../../../services/auth';
+import { api } from '../../../services/api';
 
-// const userApi = new UserApi(new Configuration({ basePath: BASE_API_URL }));
 const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
 
 const Register = ({
@@ -23,6 +21,7 @@ const Register = ({
   activeStepIndex: number;
   nextStep: () => void;
 }) => {
+  const setToken = useAuthStore((state) => state.setToken);
   const navigation = useNavigate();
   const methods = useForm<RegistrationFormInputs>();
   const [submitError, setSubmitError] = useState<number | null>(null);
@@ -90,7 +89,7 @@ const Register = ({
       });
 
       if (user) {
-        setToken(token || '');
+        setToken(token || null, user);
         sessionStorage.removeItem('activeStepIndex');
         navigation('/processing-user');
       }

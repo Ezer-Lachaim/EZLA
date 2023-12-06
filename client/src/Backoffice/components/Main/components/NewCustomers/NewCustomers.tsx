@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
-import { api } from '../../../../../Config.ts';
+import { api } from '../../../../../services/api';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
 
 const getNewCustomersColumns = (
@@ -90,6 +90,7 @@ const getNewCustomersColumns = (
       cell: ({ row }) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const [toggleModal, setToggleModal] = useState(false);
+
         const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
         return (
           <div className="flex gap-1 items-center">
@@ -155,9 +156,10 @@ const NewCustomers = () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
+
     fetchPendingUsers();
     fetchHospitals();
-  }, [setPendingUsers]);
+  }, []);
 
   return (
     <div>

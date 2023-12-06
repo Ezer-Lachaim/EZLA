@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
-import { api } from '../../../../../Config';
+import { api } from '../../../../../services/api';
 import { Driver } from '../../../../../api-client';
 import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 import { DRIVER_CAPABILITIES } from './Volunteers.constants';
@@ -98,6 +98,7 @@ const Volunteers = () => {
       );
       setDrivers(sortedResultBySignupDate);
     };
+
     fetchDrivers();
   }, []);
 

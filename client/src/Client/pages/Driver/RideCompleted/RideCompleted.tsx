@@ -1,15 +1,15 @@
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const RideCompleted = () => {
-  const navigate = useNavigate();
+  const { reFetch: reFetchActiveRide } = useActiveRide();
 
   const confirmComplete = async () => {
     await api.ride.postConfirmRideComplete();
-
-    navigate('/driver/rides');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Driver.tsx)
   };
 
   return (

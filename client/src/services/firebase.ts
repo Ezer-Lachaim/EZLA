@@ -1,21 +1,28 @@
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { api } from './Config';
-import firebaseConfig from './firebase-config';
+import { api } from './api';
+import firebaseConfig from '../firebase-config';
 
-export const initFirebaseApp = () => {
+let initialized = false;
+
+export function initFirebaseApp() {
+  if (initialized) return;
+
+  initialized = true;
+
   initializeApp(firebaseConfig[import.meta.env.MODE].options);
 
   if (import.meta.env.DEV) {
     const auth = getAuth();
     connectAuthEmulator(auth, 'http://127.0.0.1:9099');
   }
-};
+}
 
-export const initFirebaseCloudMessaging = async () => {
+export async function initFirebaseCloudMessaging() {
   // Initialize the Firebase app with the credentials
   initFirebaseApp();
+
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
@@ -34,9 +41,9 @@ export const initFirebaseCloudMessaging = async () => {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
-export const setNotificationsToken = async () => {
+export async function setNotificationsToken() {
   try {
     // Request the push notification permission from browser
     const status = await Notification.requestPermission();
@@ -52,10 +59,10 @@ export const setNotificationsToken = async () => {
       // Set token in our local storage and send to our server
       if (fcmToken) {
         console.log('fcmToken >>', fcmToken);
-        api.user.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
+        await api.user.registerFcmToken({ registerFcmTokenRequest: { fcmToken } });
       }
     }
   } catch (error) {
     console.error(error);
   }
-};
+}

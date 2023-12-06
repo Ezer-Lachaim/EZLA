@@ -3,23 +3,21 @@ import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
-  const { activeRide: ride } = useUserContext();
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = useState(false);
-  const navigate = useNavigate();
 
   const onArrive = async () => {
     const newRide = { state: RideStateEnum.DriverArrived };
@@ -34,8 +32,8 @@ const ActiveRide = () => {
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.DriverCanceled }
     });
-
-    navigate('/driver/rides');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Driver.tsx)
   };
 
   const onContinue = async () => {
@@ -43,14 +41,14 @@ const ActiveRide = () => {
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.Riding }
     });
-
-    navigate('/driver/riding');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Driver.tsx)
   };
 
   const onGotoRides = async () => {
     await api.ride.postConfirmRideComplete();
-
-    navigate('/driver/rides');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Driver.tsx)
   };
 
   let destinationTime;

@@ -1,30 +1,29 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Cancel, Phone } from '@mui/icons-material';
 import ClockIcon from '@mui/icons-material/AccessTimeRounded';
 import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
-import { api } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
-  const { activeRide: ride } = useUserContext();
-  const navigate = useNavigate();
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = useState(false);
 
   const canceledRide = async () => {
     await api.ride.postConfirmRideComplete();
+    await reFetchActiveRide();
   };
 
   const onConfirmCancelRide = async () => {
     await canceledRide();
-    navigate('/passenger/order-ride');
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   const onOrderNewRide = async () => {
@@ -39,8 +38,8 @@ const ActiveRide = () => {
         driver: undefined
       }
     });
-
-    navigate('/passenger/order-ride');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   const onCancelRide = async () => {
@@ -48,8 +47,8 @@ const ActiveRide = () => {
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.RequesterCanceled }
     });
-
-    navigate('/passenger/order-ride');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   let destinationTime;

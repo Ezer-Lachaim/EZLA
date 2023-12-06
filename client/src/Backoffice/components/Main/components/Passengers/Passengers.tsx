@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
+import { api } from '../../../../../services/api';
 import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
-import { api } from '../../../../../Config';
 
 const getPassengersColumns = (
   hospitals: GetHospitalList200ResponseInner[]
@@ -118,9 +118,11 @@ const Passengers = () => {
       const result = await api.hospital.getHospitalList();
       setHospitals(result);
     };
+
     fetchPassengers();
     fetchHospitals();
-  }, [setPassengers]);
+  }, []);
+
   return (
     <div>
       <PageHeader>

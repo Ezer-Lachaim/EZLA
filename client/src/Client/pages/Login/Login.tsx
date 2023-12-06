@@ -13,12 +13,11 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { setToken, api } from '../../../Config.ts';
-import { useUserContext } from '../../../context/UserContext/UserContext.tsx';
+import { api } from '../../../services/api';
+import { useAuthStore } from '../../../services/auth';
+import { setNotificationsToken } from '../../../services/firebase';
 import { User, ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
-import useNavigateUser from '../../hooks/useNavigateUser.ts';
-import { setNotificationsToken } from '../../../init-firebase.ts';
 
 type Inputs = {
   email: string;
@@ -27,9 +26,9 @@ type Inputs = {
 
 const Login = () => {
   const [searchParams] = useSearchParams();
+  const setToken = useAuthStore((state) => state.setToken);
   const [showPassword, setShowPassword] = useState(false);
   const [isDriverFirstLogin] = useState(searchParams.has('driverFirstLogin'));
-  const { setUser } = useUserContext();
   const {
     register,
     handleSubmit,
@@ -37,18 +36,15 @@ const Login = () => {
     setError
   } = useForm<Inputs>();
 
-  const { navigateAfterLogin } = useNavigateUser();
-
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
       const userResponse = (await api.user.loginUser({
         loginUserRequest: { email, password }
       })) as unknown as { token: string; user: User };
       console.log(userResponse.token);
-      setToken(userResponse.token);
-      setUser(userResponse.user);
+      setToken(userResponse.token, userResponse.user);
       setNotificationsToken();
-      navigateAfterLogin(userResponse.user);
+      // navigation will occur automatically in 'AuthRoute' (it re-renders each time a user is set)
     } catch (e) {
       if ((e as ResponseError).response?.status === 401) {
         setError('email', { type: '401' });

@@ -1,7 +1,7 @@
 import { Box, Button, Modal, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-import { api } from '../../../../../../Config.ts';
+import { api } from '../../../../../../services/api';
 import { GetUsersStateEnum } from '../../../../../../api-client';
 
 const style = {

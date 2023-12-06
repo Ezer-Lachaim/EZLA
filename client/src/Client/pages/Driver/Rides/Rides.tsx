@@ -1,29 +1,26 @@
 import { useState, useCallback } from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import HourglassEmptyRoundedIcon from '@mui/icons-material/HourglassEmptyRounded';
 import { useQuery } from '@tanstack/react-query';
 import { Stack } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
-import { POLLING_INTERVAL, api } from '../../../../Config.ts';
+import { api, POLLING_INTERVAL } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
-import { useUserContext } from '../../../../context/UserContext/UserContext';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const Rides = () => {
-  const { data: rides = [] } = useQuery({
-    queryKey: ['ridesGet'],
-    queryFn: async () => {
-      const res = await api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver });
-      return res;
-    },
-    refetchInterval: POLLING_INTERVAL
-  });
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useUserContext();
-  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const { reFetch: reFetchActiveRide } = useActiveRide();
+  const { data: rides = [] } = useQuery({
+    queryKey: ['ridesGet'],
+    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }),
+    refetchInterval: POLLING_INTERVAL
+  });
 
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
@@ -49,9 +46,10 @@ const Rides = () => {
           destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
         }
       });
+      await reFetchActiveRide();
+      // navigation will occur automatically (in @../Driver.tsx)
 
       setIsModalOpen(false);
-      navigate('/driver/active');
     }
   };
 

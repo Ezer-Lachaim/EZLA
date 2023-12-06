@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import useFormPersist from 'react-hook-form-persist';
 import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
 import { RegistrationFormInputs } from '../../../Register.types';
-import { api } from '../../../../../../Config';
+import { api } from '../../../../../../services/api';
 
 const adapter = new AdapterDayjs();
 
