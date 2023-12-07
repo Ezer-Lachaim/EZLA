@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
-import { api } from '../../../../../Config';
+import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
 import { RIDE_STATE_MAPPER } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
@@ -173,6 +173,7 @@ const Rides = () => {
       });
       setRides(sortedRides);
     };
+
     fetchRides();
   }, []);
 

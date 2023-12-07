@@ -1,17 +1,17 @@
 import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import { Cancel, Close } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api, clearGuestToken } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
 import { RideStateEnum } from '../../../../api-client';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const SearchingDriver = () => {
-  const { activeRide: ride } = useUserContext();
-  const navigate = useNavigate();
+  const setGuestToken = useAuthStore((state) => state.setGuestToken);
+  const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = React.useState(false);
 
   const onCancelRide = async () => {
@@ -20,9 +20,10 @@ const SearchingDriver = () => {
       ride: { state: RideStateEnum.RequesterCanceled }
     });
 
-    clearGuestToken();
+    setGuestToken(null);
 
-    navigate('/passenger/order-ride');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   return (

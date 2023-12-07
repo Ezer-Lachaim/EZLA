@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/he';
 import { Hospital } from '../../../../../../api-client';
-import { api } from '../../../../../../Config';
+import { api } from '../../../../../../services/api';
 import { RegistrationFormInputs } from '../../../Register.types';
 
 const adapter = new AdapterDayjs();

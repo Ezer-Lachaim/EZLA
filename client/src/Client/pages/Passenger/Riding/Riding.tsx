@@ -1,9 +1,9 @@
 import withLayout from '../../../components/LayoutHOC.tsx';
 import car from '../../../../assets/car.png';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const Riding = () => {
-  const { activeRide: ride } = useUserContext();
+  const { activeRide: ride } = useActiveRide();
 
   return (
     <div className="w-full h-full flex flex-col justify-center gap-10 items-center">

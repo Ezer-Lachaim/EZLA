@@ -1,17 +1,20 @@
 import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api, clearGuestToken } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 const RideCompleted = () => {
-  const navigate = useNavigate();
+  const setGuestToken = useAuthStore((state) => state.setGuestToken);
+  const { reFetch: reFetchActiveRide } = useActiveRide();
 
   const confirmComplete = async () => {
     await api.ride.postConfirmRideComplete();
 
-    clearGuestToken();
+    setGuestToken(null);
 
-    navigate('/passenger/order-ride');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   return (

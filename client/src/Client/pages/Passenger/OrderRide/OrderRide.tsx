@@ -15,9 +15,10 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { api, setGuestToken } from '../../../../Config.ts';
+import { api } from '../../../../services/api';
+import { useAuthStore } from '../../../../services/auth';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
-import { useUserContext } from '../../../../context/UserContext/UserContext.tsx';
+import { useActiveRide } from '../../../../hooks/useActiveRide';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -50,8 +51,9 @@ enum DestinationSourceEnum {
 }
 
 const OrderRide = () => {
-  const { user } = useUserContext() as { user: RideRequester };
-  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user) as RideRequester;
+  const setGuestToken = useAuthStore((state) => state.setGuestToken);
+  const { reFetch: reFetchActiveRide } = useActiveRide();
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
   );
@@ -134,8 +136,8 @@ const OrderRide = () => {
     await api.ride.ridesPost({
       ride: newRide
     });
-
-    navigate('/passenger/searching-driver');
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
   };
 
   const onSwapAddresses = () => {
@@ -410,7 +412,7 @@ const OrderRide = () => {
 
 const OrderRideWrapper = () => {
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const user = useAuthStore((state) => state.user);
 
   const OrderRideComponent = withLayout(
     OrderRide,

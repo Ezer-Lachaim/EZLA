@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Modal, Box, Button } from '@mui/material';
 import { Cancel } from '@mui/icons-material';
-import { useUserContext } from '../../../context/UserContext/UserContext';
+import { api } from '../../../services/api';
+import { useActiveRide } from '../../../hooks/useActiveRide';
 import { RideStateEnum } from '../../../api-client';
-import { api } from '../../../Config';
 
 const style = {
   position: 'absolute' as const,
@@ -18,7 +18,7 @@ const style = {
 };
 
 const RideCanceledModal = () => {
-  const { activeRide: ride } = useUserContext();
+  const { activeRide: ride } = useActiveRide();
   const [isClosed, setIsClosed] = useState(false);
 
   useEffect(() => {

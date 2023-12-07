@@ -1,5 +1,6 @@
 'use client';
 
+import { useNavigate } from 'react-router-dom';
 import { IconButton } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import { Logout } from '@mui/icons-material';
 
 export default function ButtonAppBar() {
+  const navigate = useNavigate();
+
   return (
     <AppBar position="static" className="bg-white drop-shadow-md" sx={{ backgroundColor: 'white' }}>
       <Toolbar>
@@ -23,9 +26,7 @@ export default function ButtonAppBar() {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
-          onClick={() => {
-            window.location.href = '/logout';
-          }}
+          onClick={() => navigate('/logout')}
         >
           <Logout color="primary" />
         </IconButton>

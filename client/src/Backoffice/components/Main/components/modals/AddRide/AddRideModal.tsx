@@ -2,7 +2,7 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { api } from '../../../../../../Config.ts';
+import { api } from '../../../../../../services/api';
 import { Ride, RideStateEnum, FetchError } from '../../../../../../api-client';
 import NewRideInfo from './NewRideInfo/NewRideInfo.tsx';
 

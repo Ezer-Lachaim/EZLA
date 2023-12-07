@@ -2,11 +2,10 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { api } from '../../../../../../Config.ts';
-import { Ride, FetchError } from '../../../../../../api-client';
+import { api } from '../../../../../../services/api';
+import { Ride, Driver, FetchError } from '../../../../../../api-client';
 import EditDriverCarInfo from './EditDriverCarInfo/EditDriverCarInfo.tsx';
 import EditDriverInfo from './EditDriverInfo/EditDriverInfo.tsx';
-import { Driver } from '../../../../../../api-client/models/Driver.ts';
 
 const style = {
   position: 'absolute' as const,

@@ -1,6 +1,6 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { api } from '../../../../../../Config.ts';
+import { api } from '../../../../../../services/api';
 import { RidesGetStateEnum } from '../../../../../../api-client';
 
 const style = {

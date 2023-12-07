@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../Config';
+import { api } from '../services/api';
 
 export default function useServerEnvSettings() {
   const { data: settings } = useQuery({

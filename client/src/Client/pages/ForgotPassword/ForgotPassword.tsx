@@ -5,9 +5,9 @@ import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/mat
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { api } from '../../../Config.ts';
+import { api } from '../../../services/api';
 import useLocationHash from '../../hooks/useLocationHash';
-import { initFirebaseApp } from '../../../init-firebase';
+import { initFirebaseApp } from '../../../services/firebase';
 import { ChangePasswordForm } from '../ChangePassword/ChangePassword';
 
 type Inputs = {

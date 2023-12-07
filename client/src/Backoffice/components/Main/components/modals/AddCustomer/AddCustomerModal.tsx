@@ -6,9 +6,8 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { RegistrationStepper } from '../../../../../../Client/pages/Register/components/RegistrationStepper/RegistrationStepper';
 import NewDriverInfo from './NewDriverInfo/NewDriverInfo';
 import NewDriverCarInfo from './NewDriverCarInfo/NewDriverCarInfo';
-import { api } from '../../../../../../Config.ts';
-import { Driver } from '../../../../../../api-client/models/Driver';
-import { ResponseError } from '../../../../../../api-client';
+import { api } from '../../../../../../services/api';
+import { Driver, ResponseError } from '../../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
