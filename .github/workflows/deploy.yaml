@@ -15,9 +15,9 @@ jobs:
         with:
           create_credentials_file: 'true'
           workload_identity_provider: 'projects/708652536157/locations/global/workloadIdentityPools/ezla-identity-pool/providers/github'
-          service_account: 'cloudbuild@ezla-pickup.iam.gserviceaccount.com'
+          service_account: 'test-wif@ezla-pickup.iam.gserviceaccount.com'
       - id: 'gcloud'
         name: 'gcloud'
         run: |-
           gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud services list --project=ezla-pickup
+          gcloud services list
