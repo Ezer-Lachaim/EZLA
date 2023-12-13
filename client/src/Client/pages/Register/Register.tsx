@@ -1,21 +1,18 @@
 import { useState } from 'react';
-import { UserCredential, AuthError } from 'firebase/auth';
+import { AuthError } from 'firebase/auth';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { Button, FormHelperText } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import generator from 'generate-password-browser';
 import withLayout from '../../components/LayoutHOC.tsx';
 import { RegistrationStepper } from './components/RegistrationStepper/RegistrationStepper.tsx';
 import { useRegistrationSteps } from './hooks/useRegistrationSteps.ts';
 import { RideRequester } from '../../../api-client';
 import { RegistrationFormInputs } from './Register.types.ts';
 import { FormSteps } from './components/FormSteps/FormSteps.tsx';
-import { authCreateUser, authDeleteUser } from '../../../services/firebase';
-import { useUserStore } from '../../../services/user';
-import { api } from '../../../services/api';
+import { createUser } from '../../../services/auth/user';
 
-const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
+const steps = ['פרטי הנוסע', 'פרטים רפואיים', 'סיכום ואישור'];
 
 const Register = ({
   activeStepIndex,
@@ -24,7 +21,6 @@ const Register = ({
   activeStepIndex: number;
   nextStep: () => void;
 }) => {
-  const setUser = useUserStore((state) => state.setUser);
   const navigation = useNavigate();
   const methods = useForm<RegistrationFormInputs>();
   const [submitError, setSubmitError] = useState<number | null>(null);
@@ -85,39 +81,19 @@ const Register = ({
     setSubmitError(null);
     setIsSubmitting(true);
 
-    let firebaseUser: UserCredential | undefined;
     try {
-      // create a firebase user with a temporary password
-      const generatedPass = generator.generate({
-        length: 20,
-        numbers: true
+      const user = await createUser({
+        ...data,
+        startServiceDate: new Date(data.startServiceDate || ''),
+        endServiceDate: new Date(data.endServiceDate || '')
       });
-      firebaseUser = await authCreateUser(data.email, generatedPass);
+      if (!user) {
+        return;
+      }
 
-      // set the user data on the db
-      const { user } = await api.user.createUser({
-        createUserRequest: {
-          user: {
-            ...data,
-            startServiceDate: new Date(data.startServiceDate || ''),
-            endServiceDate: new Date(data.endServiceDate || '')
-          }
-        }
-      });
-
-      setUser(user);
       sessionStorage.removeItem('activeStepIndex');
       navigation('/processing-user');
     } catch (error) {
-      // try to delete the created firebase user in case of an error in saving the user to the db
-      if (firebaseUser) {
-        try {
-          await authDeleteUser(firebaseUser.user);
-        } catch (e) {
-          /* empty */
-        }
-      }
-
       if ((error as AuthError)?.code === 'auth/email-already-in-use') {
         setSubmitError(409);
       } else {

@@ -6,11 +6,9 @@ import { format, isValid, isBefore } from 'date-fns';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
-import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
+import { Hospital, RideRequester } from '../../../../../api-client';
 
-const getPassengersColumns = (
-  hospitals: GetHospitalList200ResponseInner[]
-): ColumnDef<Partial<RideRequester>>[] => {
+const getPassengersColumns = (hospitals: Hospital[]): ColumnDef<Partial<RideRequester>>[] => {
   return [
     {
       accessorKey: 'signupDate',
@@ -100,7 +98,7 @@ const getPassengersColumns = (
 
 const Passengers = () => {
   const [passengers, setPassengers] = useState<RideRequester[]>([]);
-  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const columns = getPassengersColumns(hospitals);
 
   useEffect(() => {

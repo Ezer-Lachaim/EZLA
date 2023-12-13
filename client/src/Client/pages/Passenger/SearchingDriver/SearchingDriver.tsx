@@ -5,6 +5,7 @@ import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
 
@@ -17,6 +18,9 @@ const SearchingDriver = () => {
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+
+    setGuestToken(null);
+
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
   };

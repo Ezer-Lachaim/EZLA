@@ -28,9 +28,22 @@ export const initDevData = async (req: CustomRequest, res: Response): Promise<vo
     driver.isInitialPassword = false;
     driver.firstName = 'נהג';
     driver.lastName = 'טסט';
+    driver.nationalId = '123456789';
+    driver.city = 'tel-aviv';
+    driver.cellPhone = '0501234567';
+    driver.email = 'a@a.com';
+    driver.volunteeringArea = 'center district';
+    driver.isValidLicense = true;
+    driver.isValidCarLicense = true;
+    driver.carManufacturer = 'hyundai';
+    driver.carModel = 'i20';
+    driver.carColor = 'white';
+    driver.carPlateNumber = '1122233';
+    driver.numOfSeats = 5;
     driver.registrationState = UserRegistrationStateEnum.Approved;
     driver.signupDate = new Date();
     driver.numOfDrives = 0;
+    driver.carCapabilities = ['WheelChair', 'BabyChair'];
     await createUser(driverRecord.uid, driver);
 
     const requester = {} as RideRequester;

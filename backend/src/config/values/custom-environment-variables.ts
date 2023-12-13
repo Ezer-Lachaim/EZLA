@@ -1,6 +1,10 @@
 export default {
   env: 'NODE_ENV',
   port: 'PORT',
+  allowGuestRideMode: {
+    __name: 'ALLOW_GUEST_RIDE_MODE',
+    __format: 'boolean'
+  },
   firebase: {
     authEmulatorHost: 'FIREBASE_AUTH_EMULATOR_HOST',
     privateKey: 'FIREBASE_ADMIN_AUTH'

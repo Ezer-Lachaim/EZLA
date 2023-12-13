@@ -6,7 +6,7 @@ import { Stack } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
 import { api, POLLING_INTERVAL } from '../../../../services/api';
-import { useUserStore } from '../../../../services/user';
+import { useUserStore } from '../../../../services/auth/user';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
 import { useActiveRide } from '../../../../hooks/activeRide';

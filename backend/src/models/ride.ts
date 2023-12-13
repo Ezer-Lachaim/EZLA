@@ -104,6 +104,12 @@ export interface Ride {
      * @memberof Ride
      */
     comment?: string;
+    /**
+     *
+     * @type {string}
+     * @memberof Ride
+     */
+    guestToken?: string;
 }
 
 /**

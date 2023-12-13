@@ -13,8 +13,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../../assets/logo.png';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { fetchUser } from '../../../services/user';
-import { setNotificationsToken, authSignIn } from '../../../services/firebase';
+import { signIn } from '../../../services/auth/user';
+import { setNotificationsToken } from '../../../services/messaging';
 import { ResponseError } from '../../../api-client';
 import PwaInstall from '../../components/PwaInstall/PwaInstall';
 
@@ -36,8 +36,7 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     try {
-      await authSignIn(email, password);
-      await fetchUser();
+      await signIn(email, password);
       // navigation will occur automatically in 'AuthRoute' (it re-renders each time a user is set)
 
       setNotificationsToken();

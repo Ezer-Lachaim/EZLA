@@ -3,9 +3,12 @@ import { Cancel, Phone } from '@mui/icons-material';
 import ClockIcon from '@mui/icons-material/AccessTimeRounded';
 import { Box, Button } from '@mui/material';
 import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
+import { useUserStore } from '../../../../services/auth/user';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
@@ -13,6 +16,7 @@ import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
+  const user = useUserStore((state) => state.user);
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = useState(false);
 
@@ -28,6 +32,10 @@ const ActiveRide = () => {
 
   const onOrderNewRide = async () => {
     await canceledRide();
+
+    if (!user) {
+      setGuestToken(uuidv4());
+    }
 
     await api.ride.ridesPost({
       ride: {
@@ -47,6 +55,9 @@ const ActiveRide = () => {
       rideId: ride?.rideId || '',
       ride: { state: RideStateEnum.RequesterCanceled }
     });
+
+    setGuestToken(null);
+
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
   };

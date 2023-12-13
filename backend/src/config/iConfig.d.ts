@@ -1,6 +1,7 @@
 export default interface IConfig {
-  env: string; // ENV | NODE_ENV
+  env: string; // NODE_ENV
   port: number; // PORT
+  allowGuestRideMode: boolean; // ALLOW_GUEST_RIDE_MODE
   firebase: {
     projectId: string;
     clientEmail: string;

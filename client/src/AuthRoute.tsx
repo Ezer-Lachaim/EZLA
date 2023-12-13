@@ -1,11 +1,13 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUserStore } from './services/user';
+import { useUserStore } from './services/auth/user';
+import { useStore as useGuestAuthStore } from './services/auth/guest';
 import { UserRegistrationStateEnum, UserRoleEnum } from './api-client';
 
 export enum AuthRouteLoginAccess {
   LoggedIn,
-  NotLoggedIn
+  NotLoggedIn,
+  GuestAllowed // both logged in and not logged in are allowed
 }
 
 export enum AuthRouteInitialPasswordAccess {
@@ -27,12 +29,13 @@ export const AuthRoute = ({
   children: ReactNode;
 }) => {
   const user = useUserStore((state) => state.user);
+  const guestToken = useGuestAuthStore((state) => state.token);
 
   // handle login access guard
   if (AuthLoginAccess === AuthRouteLoginAccess.LoggedIn && !user) {
     return <Navigate to="/first-signup" replace />;
   }
-  if (AuthLoginAccess === AuthRouteLoginAccess.NotLoggedIn && user) {
+  if (AuthLoginAccess === AuthRouteLoginAccess.NotLoggedIn && (user || guestToken)) {
     return <Navigate to={getDefaultUserPage()} replace />;
   }
 
@@ -68,6 +71,10 @@ export const AuthRoute = ({
   }
 
   function getDefaultUserPage(): string {
+    if (!user && guestToken) {
+      return '/passenger';
+    }
+
     switch (user?.role) {
       case UserRoleEnum.Admin:
         return '/backoffice';

@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { useActiveRide } from '../../../../hooks/activeRide';
 
 const RideCompleted = () => {
@@ -8,6 +9,9 @@ const RideCompleted = () => {
 
   const confirmComplete = async () => {
     await api.ride.postConfirmRideComplete();
+
+    setGuestToken(null);
+
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
   };

@@ -11,9 +11,7 @@ import { useState } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useUserStore } from '../../../services/user';
-import { api } from '../../../services/api';
-import { authSignIn } from '../../../services/firebase';
+import { useUserStore, updateUserInitialPassword } from '../../../services/auth/user';
 import withLayout from '../../components/LayoutHOC';
 
 type Inputs = {
@@ -24,7 +22,6 @@ type Inputs = {
 
 const CreatePassword = () => {
   const user = useUserStore((state) => state.user);
-  const setUser = useUserStore((state) => state.setUser);
   const [showPassword, setShowPassword] = useState(false);
   const [noMatch, setNoMatch] = useState(false);
   const navigate = useNavigate();
@@ -46,15 +43,7 @@ const CreatePassword = () => {
 
     if (isValid && !noMatch && data.email) {
       try {
-        // update user and password in db and firebase
-        await api.user.updateInitialPassword({
-          userId: user?.userId || '',
-          updateInitialPasswordRequest: { password: data.password }
-        });
-        // re-signin to refresh the firebase refreshToken
-        await authSignIn(data.email, data.password);
-        // set flag on local user once a password has been initiated
-        setUser({ ...user, isInitialPassword: false });
+        await updateUserInitialPassword(data.email, data.password);
 
         if (user?.role === 'Driver') {
           navigate('/driver');

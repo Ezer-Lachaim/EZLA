@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
 import useLocationHash from '../../hooks/useLocationHash';
 import {
-  authCheckActionCode,
-  authConfirmPasswordReset,
-  authSendPasswordResetEmail
-} from '../../../services/firebase';
+  checkActionCode,
+  confirmPasswordReset,
+  sendPasswordResetEmail
+} from '../../../services/auth/user';
 import { ChangePasswordForm } from '../ChangePassword/ChangePassword';
 
 type Inputs = {
@@ -31,7 +31,7 @@ const ForgotPassword = () => {
     async function checkCode() {
       if (actionCode) {
         try {
-          await authCheckActionCode(actionCode);
+          await checkActionCode(actionCode);
           setIsExpiredCode(false);
         } catch (e) {
           navigate('error');
@@ -43,7 +43,7 @@ const ForgotPassword = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
     try {
-      await authSendPasswordResetEmail(email);
+      await sendPasswordResetEmail(email);
       setSuccess(true);
     } catch (e) {
       setSuccess(false);
@@ -57,7 +57,7 @@ const ForgotPassword = () => {
       <ChangePasswordForm
         onSubmitData={async (data) => {
           try {
-            await authConfirmPasswordReset(actionCode, data.password);
+            await confirmPasswordReset(actionCode, data.password);
             navigate('success');
           } catch (e) {
             navigate('error');
