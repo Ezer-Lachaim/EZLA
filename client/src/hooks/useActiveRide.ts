@@ -4,6 +4,7 @@ import { useAuthStore } from '../services/auth';
 
 export function useActiveRide() {
   const token = useAuthStore((state) => state.token);
+  const guestToken = useAuthStore((state) => state.guestToken);
 
   const {
     data: activeRide,
@@ -11,7 +12,7 @@ export function useActiveRide() {
     refetch: reFetch
   } = useQuery({
     queryKey: ['getActiveRideForUser'],
-    enabled: !!token,
+    enabled: !!token || !!guestToken,
     queryFn: async () => {
       try {
         return await api.ride.getActiveRideForUser();

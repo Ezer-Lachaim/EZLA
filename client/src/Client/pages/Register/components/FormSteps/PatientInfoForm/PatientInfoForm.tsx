@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Controller, FieldError, useFormContext } from 'react-hook-form';
+import useFormPersist from 'react-hook-form-persist';
 import {
   Checkbox,
   FormControl,
@@ -9,23 +13,19 @@ import {
   SelectChangeEvent,
   TextField
 } from '@mui/material';
-import 'dayjs/locale/he';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Controller, FieldError, useFormContext } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import useFormPersist from 'react-hook-form-persist';
-import { GetHospitalList200ResponseInner } from '../../../../../../api-client';
-import { RegistrationFormInputs } from '../../../Register.types';
+import 'dayjs/locale/he';
+import { Hospital } from '../../../../../../api-client';
 import { api } from '../../../../../../services/api';
+import { RegistrationFormInputs } from '../../../Register.types';
 
 const adapter = new AdapterDayjs();
 
 export const PatientInfoForm = () => {
   const [isServiceForMe, setIsServiceForMe] = useState(false);
-  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
 
   const {
     register,
@@ -38,15 +38,13 @@ export const PatientInfoForm = () => {
   useFormPersist('passengerInfoForm', { watch, setValue });
 
   useEffect(() => {
-    const fetchHospitals = async () => {
+    (async () => {
       const response = await api.hospital.getHospitalList();
 
       if (response) {
         setHospitals(response);
       }
-    };
-
-    fetchHospitals();
+    })();
   }, []);
 
   const onSelectHospital = (event: SelectChangeEvent<number>) => {

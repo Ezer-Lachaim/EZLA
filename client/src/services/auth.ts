@@ -3,17 +3,21 @@ import { api, addPreMiddleware, addPostMiddleware } from './api';
 import { User } from '../api-client';
 
 const TOKEN_LOCAL_STORAGE_KEY = 'token';
+const GUEST_TOKEN_LOCAL_STORAGE_KEY = 'guestToken';
 
 type AuthStore = {
   token: string | null;
+  guestToken: string | null;
   user: User | null;
   isUserInitiated: boolean;
   setToken: (token: string | null, user?: User | null) => void;
   setUser: (user: User | null) => void;
+  setGuestToken: (guestToken: string | null) => void;
 };
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   token: localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY) || null,
+  guestToken: localStorage.getItem(GUEST_TOKEN_LOCAL_STORAGE_KEY) || null,
   user: null,
   isUserInitiated: false,
   setToken: (token, user) => {
@@ -29,20 +33,42 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
   setUser: (user) => {
     set({ user, isUserInitiated: true });
+  },
+  setGuestToken: (guestToken) => {
+    set({ guestToken });
+
+    if (guestToken) {
+      localStorage.setItem(GUEST_TOKEN_LOCAL_STORAGE_KEY, guestToken);
+    } else {
+      localStorage.removeItem(GUEST_TOKEN_LOCAL_STORAGE_KEY);
+    }
   }
 }));
 
 export function initAuthMiddlewares() {
   // add token header to all api requests
   addPreMiddleware(async (params) => {
+    const headers = (params?.init?.headers || {}) as HeadersInit & {
+      token?: string;
+      ['guest-token']?: string;
+    };
+    const authStoreState = useAuthStore.getState();
+
+    const token = authStoreState.token || '';
+    if (token) {
+      headers.token = token;
+    } else {
+      const guestToken = authStoreState.guestToken || '';
+      if (guestToken) {
+        headers['guest-token'] = guestToken;
+      }
+    }
+
     return {
       ...params,
       init: {
         ...params?.init,
-        headers: {
-          ...params.init.headers,
-          token: useAuthStore.getState().token || ''
-        }
+        headers
       }
     };
   });

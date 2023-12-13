@@ -310,6 +310,27 @@ paths:
                 $ref: '#/components/schemas/Driver'
         '400':
           description: Invalid request body
+    put:
+      tags:
+        - driver
+      summary: Update a driver
+      description: Updates a driver.
+      operationId: updateDriver
+      requestBody:
+        description: Driver object to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+      responses:
+        '201':
+          description: Driver created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Invalid request body
     get:
       tags:
         - driver
@@ -491,14 +512,22 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'תל השומר'
+                  $ref: '#/components/schemas/Hospital'
+
+  /env/settings:
+    get:
+      tags:
+        - env
+      summary: Get the env settings
+      operationId: getEnvSettings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvSettings'
+
 components:
   schemas:
     User:
@@ -642,7 +671,8 @@ components:
         comment:
           type: string
           example: 'comment'
-
+        guestToken:
+          type: string
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'
@@ -761,6 +791,25 @@ components:
           example: 'מחלקת שיקום'
         message:
           type: string
+
+    Hospital:
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'תל השומר'
+      required:
+        - id
+        - name
+
+    EnvSettings:
+      properties:
+        allowGuestRideMode:
+          type: boolean
+      required:
+        - allowGuestRideMode
 
   requestBodies:
     UserArray:

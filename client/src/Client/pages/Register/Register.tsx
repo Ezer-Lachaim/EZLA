@@ -12,7 +12,7 @@ import { FormSteps } from './components/FormSteps/FormSteps.tsx';
 import { useAuthStore } from '../../../services/auth';
 import { api } from '../../../services/api';
 
-const steps = ['פרטי הנוסע', 'פרטיים רפואיים', 'סיכום ואישור'];
+const steps = ['פרטי הנוסע', 'פרטים רפואיים', 'סיכום ואישור'];
 
 const Register = ({
   activeStepIndex,

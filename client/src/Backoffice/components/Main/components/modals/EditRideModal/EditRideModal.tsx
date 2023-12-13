@@ -3,8 +3,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { api } from '../../../../../../services/api';
-import { Ride, RideStateEnum, FetchError } from '../../../../../../api-client';
-import NewRideInfo from './NewRideInfo/NewRideInfo.tsx';
+import { Ride, FetchError } from '../../../../../../api-client';
+import EditRideInfo from './EditRideInfo/EditRideInfo.tsx';
 
 const style = {
   position: 'absolute' as const,
@@ -18,20 +18,17 @@ const style = {
   p: 2
 };
 
-interface AddCustomerModalProps {
+interface EditRideModalProps {
   open: boolean;
   handleModal: (shouldOpen: boolean) => void;
+  ride: Ride;
 }
 
-function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
+function EditRideModal({ open, handleModal, ride }: EditRideModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const methods = useForm<Ride>({
-    defaultValues: {
-      specialRequest: []
-    }
-  });
+  const methods = useForm<Ride>();
 
   const { handleSubmit, trigger } = methods;
 
@@ -55,9 +52,16 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    const updatedRide = {
+      ...data,
+      state: ride.state,
+      rideId: ride.rideId
+    };
+
     try {
-      await api.ride.ridesPost({
-        ride: { ...data, state: RideStateEnum.WaitingForDriver }
+      await api.ride.updateRide({
+        rideId: ride.rideId || '',
+        ride: updatedRide
       });
       window.location.reload();
     } catch (error) {
@@ -67,6 +71,7 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       setIsSubmitting(false);
     }
   };
+
   return (
     <Modal
       open={open}
@@ -78,7 +83,7 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       <Box sx={style}>
         <div className="flex justify-between mb-2">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            בקשה לנסיעה חדשה
+            עריכת נסיעה
           </Typography>
           <Button color="inherit" onClick={() => handleModal(false)}>
             <ClearIcon />
@@ -86,7 +91,7 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
         </div>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <NewRideInfo />
+            <EditRideInfo ride={ride} />
           </form>
         </FormProvider>
         <Box
@@ -117,4 +122,4 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
   );
 }
 
-export default AddRideModal;
+export default EditRideModal;
