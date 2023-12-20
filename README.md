@@ -1,18 +1,16 @@
 # EZLA Project
 
-This project was created by Redis, and is managed on a voluntary basis.
+This project was initialy created by Redis as a community out-reach project for "Ezer Le Zion" foundation, the system goal is to manage all voluntry activites of the foundation.
 
-If you would like to contribute, please send an email to <a href="mailto:guy.korland@redis.com">guy.korland@redis.com</a>.
+Maintainance and on-going development of the system and is done on a voluntary basis. If you would like to contribute, please send an email to <a href="mailto:yitshak.yrom@gmail.com">yitshak.yarom@gmail.com</a>.
 
 Tasks are managed in this project: https://github.com/orgs/Ezer-Lachaim/projects/1, and discussions are done on the Google Spaces group.
 
+To get an overview of the system and setting up development you can watch https://youtube.com/playlist?list=PLU1beXqUCOTbyVJecmcfb1OJ3keJYzvrg&si=fvVNoURtIlvR4NKg
+
 ## Contributing
 
-In order to contribute, please fork this repository, and create a pull request.
-
-If you are unsure how to do this, please follow this guide: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
-
-To get an overview of the system and setting up development you can watch https://youtube.com/playlist?list=PLU1beXqUCOTbyVJecmcfb1OJ3keJYzvrg&si=fvVNoURtIlvR4NKg
+In order to contribute, please fork this repository, and create a pull request. If you are unsure how to do this, please follow this guide: https://docs.github.com/en/get-started/quickstart/contributing-to-projects
 
 ## Development
 
