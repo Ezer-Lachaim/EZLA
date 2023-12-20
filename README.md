@@ -40,6 +40,16 @@ The file should be placed in /backend folder
 GOOGLE_CLOUD_PROJECT=ezla-pickup
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
 ```
+For allowing guest ride mode (war mode) add the following env variable to your local .env file
+```
+ALLOW_GUEST_RIDE_MODE=true
+```
+For turning sending SMS messages on add the following env variables to your local .env file
+```
+SMS_IS_ON=true
+AWS_SMS_ACCESS_KEY_ID={access_key_id}
+AWS_SMS_SECRET_ACCESS_KEY={secret_access_key}
+```
 
 ### Run Firebase emulator and Redis locally
 Install Firebase tools:
