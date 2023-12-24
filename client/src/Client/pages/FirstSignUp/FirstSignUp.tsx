@@ -46,7 +46,7 @@ const FirstSignUp = () => {
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1 className="text-center">
         שירות הסעות התנדבותי
-        {serverEnvSettings?.allowGuestRideMode ? '' : ' למבקרים בבית חולים ' }
+        {serverEnvSettings?.allowGuestRideMode ? '' : 'למבקרים בבית חולים' }
       </h1>
       <p className="text-center text-sm">
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
