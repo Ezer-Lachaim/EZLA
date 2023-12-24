@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const SideBar = () => {
   return (
-    <nav className="bg-blue-600 w-250">
+    <nav className="bg-blue-600 w-250 mt-16">
       <List>
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <Link to="">
