@@ -22,6 +22,12 @@ const Rides = () => {
     refetchInterval: POLLING_INTERVAL
   });
 
+  const sortedRides = [...rides].sort((a, b) => {
+    const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
+    const waitingTimeB = b.requestTimeStamp?.getTime() || 0;
+    return waitingTimeA - waitingTimeB;
+  });
+
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
   }, []);
@@ -61,13 +67,13 @@ const Rides = () => {
         onSubmit={onSubmitRide}
       />
       <div className="w-full h-full flex flex-col gap-5 pb-4">
-        {rides.length > 0 ? (
+        {sortedRides.length > 0 ? (
           <>
             <h1 className="m-0 text-center text-black">
-              בחרו נסיעה מתוך {rides.length} קריאות פתוחות
+              בחרו נסיעה מתוך {sortedRides.length} קריאות פתוחות
             </h1>
             <Stack spacing={2}>
-              {rides.map((ride) => (
+              {sortedRides.map((ride) => (
                 <RideCard
                   ride={ride}
                   key={`ride-${ride.rideId}`}

@@ -46,7 +46,7 @@ const FirstSignUp = () => {
       <img src={logo} alt="logo" className="mb-2.5" />
       <h1 className="text-center">
         שירות הסעות התנדבותי
-        {serverEnvSettings?.allowGuestRideMode ? '' : 'למבקרים בבית חולים'}
+        {serverEnvSettings?.allowGuestRideMode ? '' : ' למבקרים בבית חולים'}
       </h1>
       <p className="text-center text-sm">
         מרכז &#39;עזר לחיים&#39; נוסד במטרה להקל ולהוריד מסבלם של החולים ובני משפחתם מתוך ידיעה
@@ -82,7 +82,7 @@ const FirstSignUp = () => {
         <a
           href={
             serverEnvSettings?.allowGuestRideMode
-              ? 'https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform'
+              ? 'https://docs.google.com/forms/d/e/1FAIpQLSc_ZQfja7JKlKIR-_URVnqXc0uyE3L9oSMnV0mv5sWngvBwaw/viewform'
               : 'https://forms.gle/fRAY1H2HLyZrpZAR6'
           }
         >
