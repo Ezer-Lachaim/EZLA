@@ -71,7 +71,7 @@ function SpecialRequirements() {
             <FormControlLabel
               className="mb-2"
               control={<Checkbox checked={shipment} onChange={handleChange} name="shipment" />}
-              label="משלוחים למאושפז"
+              label="משלוחים"
             />
           </FormGroup>
         </div>
