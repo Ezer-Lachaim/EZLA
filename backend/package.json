@@ -30,6 +30,7 @@
         "@types/lodash": "^4.14.196",
         "config": "^3.3.9",
         "cors": "^2.8.5",
+        "date-fns": "^2.30.0",
         "date-fns-tz": "^2.0.0",
         "dotenv": "^16.3.1",
         "express": "^4.16.2",
