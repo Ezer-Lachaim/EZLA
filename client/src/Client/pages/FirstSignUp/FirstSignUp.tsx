@@ -82,7 +82,7 @@ const FirstSignUp = () => {
         <a
           href={
             serverEnvSettings?.allowGuestRideMode
-              ? 'https://docs.google.com/forms/d/e/1FAIpQLSdjJ5XnpOe4NsFZjuCfm-Ksz3RjYidoOvoiTmf1cv4BvxaacQ/viewform'
+              ? 'https://docs.google.com/forms/d/e/1FAIpQLSc_ZQfja7JKlKIR-_URVnqXc0uyE3L9oSMnV0mv5sWngvBwaw/viewform'
               : 'https://forms.gle/fRAY1H2HLyZrpZAR6'
           }
         >

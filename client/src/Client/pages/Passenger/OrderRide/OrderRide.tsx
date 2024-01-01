@@ -310,7 +310,7 @@ const OrderRide = () => {
           />
         </div>
 
-        <p className=" -my-4 text-center">פרטי מזמין ההסעה</p>
+        <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
           <TextField
             label="שם פרטי"
