@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import {BrowserView, MobileView} from 'react-device-detect';
 import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
@@ -87,13 +88,29 @@ export const RideCard = ({
                   </svg>
 
                   <Typography variant="body1" component="div" className="mb-2">
-                    <a
-                      href={`https://waze.com/ul?q=${ride?.origin}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {ride?.origin}
-                    </a>
+                    
+                    <BrowserView>
+                      <a
+                        href={`https://waze.com/ul?q=${ride?.origin}`} /* https://www.waze.com/live-map/directions/?navigate=yes&to=place.ChIJH3w7GaZMHRURkD-WwKJy-8E */
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {ride?.origin}
+                      </a>                 
+                    </BrowserView>
+
+
+                  <MobileView>
+                      <a
+                        href={`https://waze.com/ul?q=${ride?.origin}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {ride?.origin}
+                      </a>                    
+                  </MobileView>
+
+                  
                   </Typography>
                 </div>
               </Typography>
