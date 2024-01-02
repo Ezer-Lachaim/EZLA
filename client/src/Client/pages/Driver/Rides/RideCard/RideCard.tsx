@@ -88,7 +88,7 @@ export const RideCard = ({
 
                   <Typography variant="body1" component="div" className="mb-2">
                     <a
-                      href={`https://waze.com/ul?q=${ride?.origin}`}
+                      href={`https://waze.com/ul?q=${ride?.origin}&navigate=yes`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -127,7 +127,7 @@ export const RideCard = ({
                   startIcon={<PhoneIcon />}
                   onClick={() => window.open(`tel:${ride?.cellphone}`)}
                 >
-                  צרו קשר
+                  {ride?.cellphone}
                 </Button>
                 <Button
                   className="flex-1"
