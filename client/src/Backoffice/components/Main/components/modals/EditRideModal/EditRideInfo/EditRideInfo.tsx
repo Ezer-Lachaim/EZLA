@@ -180,15 +180,15 @@ function EditRideInfo({ ride }: { ride: Ride }) {
             placeholder="הסבר קצר לגבי מטרת הנסיעה"
             error={!!errors?.comment}
             {...register('comment', {
-              maxLength: 50
+              maxLength: 100
             })}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
-              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+              (watch().comment?.length || 0) >= 100 ? 'text-red-500' : ''
             }`}
           >
-            {watch().comment?.length || 0} / 50
+            {watch().comment?.length || 0} / 100
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
