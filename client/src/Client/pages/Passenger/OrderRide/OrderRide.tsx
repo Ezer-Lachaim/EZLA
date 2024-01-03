@@ -9,7 +9,9 @@ import {
   Select,
   FormHelperText,
   FormControl,
-  MenuItem
+  MenuItem,
+  Theme,
+  styled
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,6 +35,16 @@ interface OrderRideFormData {
     [indexer: string]: boolean;
   };
 }
+
+const CustomFontSizeContainer = styled('div')(({  }: { theme: Theme }) => ({
+  fontSize: 20,
+  '& .MuiInputBase-input': {
+    fontSize: 20,
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: 20,
+  },
+}));
 
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
@@ -153,7 +165,7 @@ const OrderRide = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pb-5">
+<CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
@@ -161,6 +173,7 @@ const OrderRide = () => {
             <FormControl>
               <TextField
                 label="כתובת איסוף"
+                style={{ fontSize: '20px' }}
                 autoFocus
                 type="string"
                 placeholder="יש להזין שם רחוב, מספר בית ועיר"
@@ -220,12 +233,14 @@ const OrderRide = () => {
         </div>
 
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
+          <InputLabel htmlFor="passengerCount" required style={{ fontSize: '20px' }}>
             מספר נוסעים
           </InputLabel>
           <Select
             id="passengerCount"
             label="מספר נוסעים"
+            style={{ fontSize: '20px' }}
+            required
             error={!!errors?.ride?.passengerCount}
             {...register('ride.passengerCount', { required: true })}
           >
@@ -320,6 +335,7 @@ const OrderRide = () => {
             type="text"
             error={!!errors.ride?.firstName}
             {...register('ride.firstName', { required: true, minLength: 2 })}
+            InputLabelProps={{ style: { fontSize: '20px' } }}
           />
           {errors.ride?.firstName && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -337,6 +353,7 @@ const OrderRide = () => {
             type="text"
             error={!!errors.ride?.lastName}
             {...register('ride.lastName', { required: true, minLength: 2 })}
+            InputLabelProps={{ style: { fontSize: '20px' } }}
           />
           {errors.ride?.lastName && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -352,6 +369,7 @@ const OrderRide = () => {
             placeholder="יש להזין 10 ספרות של הטלפון הנייד"
             required
             error={!!errors?.ride?.cellphone}
+            InputLabelProps={{ style: { fontSize: '20px' } }}
             {...register('ride.cellphone', {
               required: true,
               pattern: /^05\d-?\d{7}$/
@@ -406,7 +424,7 @@ const OrderRide = () => {
           {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
         </Button>
       </form>
-    </div>
+    </CustomFontSizeContainer>
   );
 };
 

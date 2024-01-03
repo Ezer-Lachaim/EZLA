@@ -36,7 +36,7 @@ const theme = createTheme({
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          fontSize: 14
+          fontSize: 18
         },
         root: {
           margin: 0
@@ -47,7 +47,16 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           padding: 0,
-          marginRight: 8
+          marginRight: 8,
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          legend: {
+            fontSize: 15
+          }
         }
       }
     }
