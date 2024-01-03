@@ -88,7 +88,7 @@ export const RideCard = ({
 
                   <Typography variant="body1" component="div" className="mb-2">
                     <a
-                      href={`https://waze.com/ul?q=${ride?.origin}&navigate=yes`}
+                      href={`https://waze.com/ul?q=${ride?.origin}`}
                       target="_blank"
                       rel="noreferrer"
                     >
