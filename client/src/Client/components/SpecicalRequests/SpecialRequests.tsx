@@ -7,7 +7,7 @@ const specialRequestsMap = {
   [RideSpecialRequestEnum.BabyChair]: 'מושב בטיחות לתינוק',
   [RideSpecialRequestEnum.KidsChair]: 'מושב בטיחות לילדים (3-8)',
   [RideSpecialRequestEnum.AccessibleCar]: 'רכב גבוה',
-  [RideSpecialRequestEnum.PatientDelivery]: 'משלוחים למאושפז'
+  [RideSpecialRequestEnum.PatientDelivery]: 'משלוחים'
 };
 
 const getLabel = (type: RideSpecialRequestEnum): string => specialRequestsMap[type];

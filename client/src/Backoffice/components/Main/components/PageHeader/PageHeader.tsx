@@ -2,7 +2,7 @@ import { Typography, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
 const PageHeader = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex justify-between mb-3.5">{children}</div>;
+  return <div className="flex justify-between mb-3.5 my-20">{children}</div>;
 };
 
 const Title = ({ children }: { children: React.ReactNode }) => {

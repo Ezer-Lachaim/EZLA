@@ -174,7 +174,7 @@ export const PassengerInfoForm = () => {
         <FormControlLabel
           value={'PatientDelivery' as RideRequesterSpecialRequestEnum}
           control={<Checkbox {...register('specialRequest')} />}
-          label="משלוחים למאושפז"
+          label="משלוחים"
         />
       </div>
     </div>
