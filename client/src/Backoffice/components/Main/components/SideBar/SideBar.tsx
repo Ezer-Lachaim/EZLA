@@ -12,67 +12,35 @@ const SideBar = () => {
     setActiveLink(path);
   };
 
+  const propsItem = [
+    { to: '', text: 'נרשמים חדשים', id: 1 },
+    { to: 'rides', text: 'נסיעות', id: 2 },
+    { to: 'passengers', text: 'נוסעים', id: 3 },
+    { to: 'volunteers', text: 'מתנדבים', id: 4 }
+  ];
+
   return (
     <nav className="bg-blue-600 w-250 mt-16">
       <List>
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <Link to="">
-          <ListItem disablePadding>
-            <ListItemButton
-              className={activeLink === 'נרשמים חדשים' ? 'bg-blue-600' : 'text-white'}
-              style={{ backgroundColor: activeLink === 'נרשמים חדשים' ? 'white' : '' }}
-              onClick={() => handleClick('נרשמים חדשים')}
-            >
-              <ListItemIcon className={activeLink === 'נרשמים חדשים' ? '#007DFF' : 'text-white'}>
-                <PersonAdd />
-              </ListItemIcon>
-              <ListItemText primary="נרשמים חדשים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-
-        <Link to="rides">
-          <ListItem disablePadding>
-            <ListItemButton
-              className={activeLink === 'נסיעות' ? 'bg-blue-600' : 'text-white'}
-              style={{ backgroundColor: activeLink === 'נסיעות' ? 'white' : '' }}
-              onClick={() => handleClick('נסיעות')}
-            >
-              <ListItemIcon className={activeLink === 'נסיעות' ? '#007DFF' : 'text-white'}>
-                <DriveEta />
-              </ListItemIcon>
-              <ListItemText primary="נסיעות" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        <Link to="passengers">
-          <ListItem disablePadding>
-            <ListItemButton
-              className={activeLink === 'נוסעים' ? 'bg-blue-600' : 'text-white'}
-              style={{ backgroundColor: activeLink === 'נוסעים' ? 'white' : '' }}
-              onClick={() => handleClick('נוסעים')}
-            >
-              <ListItemIcon className={activeLink === 'נוסעים' ? '#007DFF' : 'text-white'}>
-                <Accessible />
-              </ListItemIcon>
-              <ListItemText primary="נוסעים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        <Link to="volunteers">
-          <ListItem disablePadding>
-            <ListItemButton
-              className={activeLink === 'מתנדבים' ? 'bg-blue-600' : 'text-white'}
-              style={{ backgroundColor: activeLink === 'מתנדבים' ? 'white' : '' }}
-              onClick={() => handleClick('מתנדבים')}
-            >
-              <ListItemIcon className={activeLink === 'מתנדבים' ? '#007DFF' : 'text-white'}>
-                <VolunteerActivism />
-              </ListItemIcon>
-              <ListItemText primary="מתנדבים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+        {propsItem.map((item) => (
+          <Link to={item.to} key={item.id}>
+            <ListItem disablePadding>
+              <ListItemButton
+                className={activeLink === item.text ? 'bg-blue-600' : 'text-white'}
+                style={{ backgroundColor: activeLink === item.text ? 'white' : '' }}
+                onClick={() => handleClick(item.text)}
+              >
+                <ListItemIcon className={activeLink === item.text ? '#007DFF' : 'text-white'}>
+                  {item.text === 'נרשמים חדשים' && <PersonAdd />}
+                  {item.text === 'נסיעות' && <DriveEta />}
+                  {item.text === 'נוסעים' && <Accessible />}
+                  {item.text === 'מתנדבים' && <VolunteerActivism />}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
       </List>
     </nav>
   );
