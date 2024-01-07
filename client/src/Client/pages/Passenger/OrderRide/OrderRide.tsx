@@ -46,6 +46,10 @@ const CustomFontSizeContainer = styled('div')(({  }: { theme: Theme }) => ({
   },
 }));
 
+const CustomFontSizeButton = styled(Button)(({ }: { theme: Theme }) => ({
+  fontSize: 20,
+}));
+
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
 } = {
@@ -233,13 +237,12 @@ const OrderRide = () => {
         </div>
 
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required style={{ fontSize: '20px' }}>
+          <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
           </InputLabel>
           <Select
             id="passengerCount"
             label="מספר נוסעים"
-            style={{ fontSize: '20px' }}
             required
             error={!!errors?.ride?.passengerCount}
             {...register('ride.passengerCount', { required: true })}
@@ -335,7 +338,6 @@ const OrderRide = () => {
             type="text"
             error={!!errors.ride?.firstName}
             {...register('ride.firstName', { required: true, minLength: 2 })}
-            InputLabelProps={{ style: { fontSize: '20px' } }}
           />
           {errors.ride?.firstName && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -353,7 +355,6 @@ const OrderRide = () => {
             type="text"
             error={!!errors.ride?.lastName}
             {...register('ride.lastName', { required: true, minLength: 2 })}
-            InputLabelProps={{ style: { fontSize: '20px' } }}
           />
           {errors.ride?.lastName && (
             <FormHelperText error className="absolute top-full mr-0">
@@ -414,7 +415,7 @@ const OrderRide = () => {
           </div>
         )}
 
-        <Button
+        <CustomFontSizeButton
           variant="contained"
           size="large"
           className="w-full"
@@ -422,7 +423,8 @@ const OrderRide = () => {
           disabled={isOrderRideLoading}
         >
           {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
-        </Button>
+        </CustomFontSizeButton>
+
       </form>
     </CustomFontSizeContainer>
   );
