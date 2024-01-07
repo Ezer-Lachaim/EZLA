@@ -7,7 +7,7 @@ import {
   FormGroup
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { Driver } from '../../../../../../../api-client/models/Driver';
+import { Driver } from '../../../../../../../api-client';
 
 function EditDriverInfo({ driver }: { driver: Driver }) {
   const {

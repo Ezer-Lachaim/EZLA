@@ -1,29 +1,19 @@
 import { Response } from 'express';
-import generator from 'generate-password';
-import {
-  firebase,
-  getAuthConfig,
-  sendPasswordResetEmailForUser,
-  subscribeToNewRideNotification,
-  updateUserPassword
-} from '../utils/firebase';
+import { subscribeToNewRideNotification, updateUserPassword } from '../utils/firebase';
 import { User, UserRegistrationStateEnum, UserRoleEnum } from '../models/user';
 import {
   createUser,
   getAllUsers,
-  getUserByUid,
   updateFcmToken,
   updateIsInitialPass,
   updateUserByUid
 } from '../repository/user';
 import { CustomRequest } from '../middlewares/CustomRequest';
-import { createJwt } from '../utils/jwt-util';
 
 /**
  * GET /
  * Home page.
  */
-const auth = getAuthConfig();
 export const getAll = async (req: CustomRequest, res: Response): Promise<void> => {
   try {
     const isAdmin = req.user.role === UserRoleEnum.Admin;
@@ -64,18 +54,6 @@ export const get = async (req: CustomRequest, res: Response): Promise<void> => {
   res.send(req.user);
 };
 
-export const getResetPasswordLinkForUser = async (
-  req: CustomRequest,
-  res: Response
-): Promise<void> => {
-  try {
-    await sendPasswordResetEmailForUser(req.body.email);
-    res.status(200).send();
-  } catch (e) {
-    res.status(500).send();
-  }
-};
-
 export const validateStatus = async (req: CustomRequest, res: Response): Promise<void> => {
   res.send({ status: req.user.registrationState });
 };
@@ -85,59 +63,28 @@ export const deleteOne = async (req: CustomRequest, res: Response): Promise<void
   res.send({ hello: 'world' });
 };
 
-export const login = async (req: CustomRequest, res: Response): Promise<void> => {
-  const { email } = req.body;
-  const { password } = req.body;
-  try {
-    const userRecord = await firebase.signInWithEmailAndPassword(auth, email, password);
-    const user: User = await getUserByUid(userRecord.user.uid);
-    if (user.role === UserRoleEnum.Requester) {
-      if (user.registrationState === UserRegistrationStateEnum.Approved) {
-        res.send({ token: await userRecord.user.getIdToken(), user });
-      } else {
-        res.status(401).send({ error: 'User status is not approved!' });
-      }
-    } else if (user.role === UserRoleEnum.Admin || user.role === UserRoleEnum.Driver) {
-      res.send({ token: await userRecord.user.getIdToken(), user });
-    } else {
-      res.status(401).send({ error: 'User is not authorized!' });
-    }
-  } catch (e) {
-    console.log(e);
-    res.status(401).send({ error: 'wrong username or password' });
-  }
-};
-
-export const signup = async (req: CustomRequest, res: Response): Promise<void> => {
+export const createRequester = async (req: CustomRequest, res: Response): Promise<void> => {
   const { user }: { user: User } = req.body;
-  const generatedPass = generator.generate({
-    length: 20,
-    numbers: true
-  });
+
   try {
-    const userRecord = await firebase.createUserWithEmailAndPassword(
-      auth,
-      user.email,
-      generatedPass
-    );
-    user.userId = userRecord.user.uid;
+    user.userId = req.token.uid;
+    user.email = req.token.email;
     user.role = UserRoleEnum.Requester;
     user.isInitialPassword = true;
     user.registrationState = UserRegistrationStateEnum.Pending;
     user.signupDate = new Date();
-    await createUser(userRecord.user.uid, user);
-    res.send({ token: createJwt({ email: user.email, uid: userRecord.user.uid }), user });
+    await createUser(req.token.uid, user);
+    res.send({ user });
   } catch (e) {
     console.log('Something went wrong %s', e);
-    if (e.code === 'auth/email-already-in-use') {
-      res.status(409).send(e);
-      return;
-    }
     res.status(400).send(e);
   }
 };
 
-export const updateUserWithTempToken = async (req: CustomRequest, res: Response): Promise<void> => {
+export const updateUserInitialPassword = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   const userIdFromToken = req.user.userId;
   const userIdFromQuery = req.params.userId;
 
@@ -150,12 +97,7 @@ export const updateUserWithTempToken = async (req: CustomRequest, res: Response)
           const newPassword = req.body.password;
           await updateUserPassword(req.user.userId, newPassword);
           await updateIsInitialPass(req.user.userId, false);
-          const userRecord = await firebase.signInWithEmailAndPassword(
-            auth,
-            req.user.email,
-            newPassword
-          );
-          res.status(202).send({ token: await userRecord.user.getIdToken() });
+          res.status(202).send();
         } else {
           res.status(400).send({ error: 'Missing password' });
         }

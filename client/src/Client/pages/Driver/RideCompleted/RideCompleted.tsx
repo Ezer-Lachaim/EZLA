@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const RideCompleted = () => {
   const { reFetch: reFetchActiveRide } = useActiveRide();

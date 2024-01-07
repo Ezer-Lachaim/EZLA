@@ -7,16 +7,16 @@ import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
-import { useAuthStore } from '../../../../services/auth';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useUserStore } from '../../../../services/auth/user';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
+import { useActiveRide } from '../../../../hooks/activeRide';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
-  const user = useAuthStore((state) => state.user);
-  const setGuestToken = useAuthStore((state) => state.setGuestToken);
+  const user = useUserStore((state) => state.user);
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = useState(false);
 

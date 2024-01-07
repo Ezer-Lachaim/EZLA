@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Modal, Box, Button } from '@mui/material';
 import { Cancel } from '@mui/icons-material';
 import { api } from '../../../services/api';
-import { useActiveRide } from '../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../hooks/activeRide';
 import { RideStateEnum } from '../../../api-client';
 
 const style = {

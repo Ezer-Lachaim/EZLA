@@ -10,9 +10,8 @@ import {
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
-import { Ride } from '../../../../../../../api-client';
+import { DriverCarCapabilitiesEnum, Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
-import { DriverCarCapabilitiesEnum } from '../../../../../../../api-client/models/Driver';
 
 function EditRideInfo({ ride }: { ride: Ride }) {
   const {
@@ -32,8 +31,7 @@ function EditRideInfo({ ride }: { ride: Ride }) {
   }, [ride, setValue]);
 
   const isSpecialRequestNeeded = (value: DriverCarCapabilitiesEnum) => {
-    const res = ride.specialRequest?.includes(value) || false;
-    return res;
+    return ride.specialRequest?.includes(value) || false;
   };
 
   return (
