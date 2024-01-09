@@ -78,7 +78,7 @@ const ActiveRide = () => {
           המתנדב בדרך אליך
         </h1>
       </Box>
-      {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>}
+      {/* {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>} */}
       <div className="flex-1">
         <hr />
         <ViewField

@@ -31,7 +31,7 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     //
-    initialState: { pagination: { pageSize: 15 } },
+    initialState: { pagination: { pageSize: 100 } },
     debugTable: true
   });
   return (
@@ -83,7 +83,7 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
           </TableBody>
         </MuiTable>
         <TablePagination
-          rowsPerPageOptions={[5, 15, 50]}
+          rowsPerPageOptions={[20, 50, 100]}
           component="div"
           count={data.length}
           rowsPerPage={table.getState().pagination.pageSize}
