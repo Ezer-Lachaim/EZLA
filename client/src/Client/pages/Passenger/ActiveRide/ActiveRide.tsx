@@ -62,10 +62,10 @@ const ActiveRide = () => {
     // navigation will occur automatically (in @../Passenger.tsx)
   };
 
-  let destinationTime;
+  /*   let destinationTime;
   if (ride?.destinationArrivalTime) {
     destinationTime = format(new Date(ride.destinationArrivalTime), 'HH:mm');
-  }
+  } */
 
   return (
     <div className="w-full pb-5 h-full flex flex-col">
