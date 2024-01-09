@@ -3,7 +3,7 @@ import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
@@ -51,7 +51,7 @@ const ActiveRide = () => {
     // navigation will occur automatically (in @../Driver.tsx)
   };
 
-/*   let destinationTime;
+  /*   let destinationTime;
   if (ride?.destinationArrivalTime) {
     destinationTime = format(new Date(ride.destinationArrivalTime), 'HH:mm');
   } */
