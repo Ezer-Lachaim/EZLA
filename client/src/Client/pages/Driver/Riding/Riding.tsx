@@ -73,7 +73,7 @@ const Riding = () => {
           }
         />
 
-        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
+        {ride?.comment && <ViewField label="תיאור הנסיעה" value={ride?.comment || ''} />}
 
         <ViewField
           label="בקשות מיוחדות"

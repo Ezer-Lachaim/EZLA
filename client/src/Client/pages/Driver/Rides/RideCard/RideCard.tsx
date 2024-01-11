@@ -107,10 +107,10 @@ export const RideCard = ({
               </Typography>
             </div>
           </div>
-          <div className="flex items-start"> 
+         {ride?.comment &&  <div className="flex items-start"> 
       <div className="mr-2"> 
         <Typography className="ml-2" color="GrayText" variant="body2" component="div">
-          הערה:
+          תיאור הנסיעה:
         </Typography>
       </div>
       <div style={{ width: '85%' }}>
@@ -118,7 +118,7 @@ export const RideCard = ({
           {ride?.comment}
         </Typography>
       </div>
-    </div>
+    </div> }
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           {selected && (
             <>

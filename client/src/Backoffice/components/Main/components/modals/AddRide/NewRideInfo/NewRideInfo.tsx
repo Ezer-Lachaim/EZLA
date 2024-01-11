@@ -149,9 +149,11 @@ function NewRideInfo() {
         </FormControl>
         <FormControl>
           <TextField
-            label="הערה"
+            label="תיאור הנסיעה"
             type="string"
-            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            multiline
+            maxRows={3}
             error={!!errors?.comment}
             {...register('comment', {
               maxLength: 100
@@ -166,7 +168,7 @@ function NewRideInfo() {
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>

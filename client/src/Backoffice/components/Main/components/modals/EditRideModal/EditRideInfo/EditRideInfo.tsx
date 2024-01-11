@@ -175,9 +175,11 @@ function EditRideInfo({ ride }: { ride: Ride }) {
         </FormControl>
         <FormControl>
           <TextField
-            label="הערה"
+            label="תיאור הנסיעה"
             type="string"
-            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            multiline
+            maxRows={3}
             error={!!errors?.comment}
             {...register('comment', {
               maxLength: 100
