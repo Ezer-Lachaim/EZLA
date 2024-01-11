@@ -29,6 +29,9 @@ On the other hand, if it is a feature that is relevant only for the current situ
 
 If you are unsure, please ask in the Google Spaces chatroom.
 
+### Install Java
+To run the project, you need to have Java version 17 or later installed. You can download it from [Java Downloads](https://www.oracle.com/java/technologies/downloads/#jdk17-mac).
+
 ### Install dependencies
 ```
 npm install
@@ -39,6 +42,7 @@ The file should be placed in /backend folder
 ```
 GOOGLE_CLOUD_PROJECT=ezla-pickup
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
+ALLOW_GUEST_RIDE_MODE=true
 ```
 For allowing guest ride mode (war mode) add the following env variable to your local .env file
 ```

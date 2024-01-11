@@ -131,7 +131,7 @@ export const RideCard = ({
                   startIcon={<PhoneIcon />}
                   onClick={() => window.open(`tel:${ride?.cellphone}`)}
                 >
-                  צרו קשר
+                  {ride?.cellphone}
                 </Button>
                 <Button
                   className="flex-1"
