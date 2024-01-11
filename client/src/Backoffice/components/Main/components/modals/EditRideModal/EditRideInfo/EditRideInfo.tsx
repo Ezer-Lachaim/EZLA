@@ -194,7 +194,7 @@ function EditRideInfo({ ride }: { ride: Ride }) {
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
