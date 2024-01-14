@@ -63,7 +63,7 @@ firebase emulators:start --only auth
 
 Run redis-stack-server docker container locally:
 ```
-docker run -p 6379:6379 redis/redis-stack-server:latest
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
 ### Generating open api typescript client
