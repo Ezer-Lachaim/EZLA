@@ -251,7 +251,7 @@ const OrderRide = () => {
           </FormControl>
         <FormControl>
           <TextField
-            label={user && 'תיאור הנסיעה'}
+            label={'תיאור הנסיעה'}
             type="string"
             required={!user}
             placeholder="הסבר קצר לגבי תיאור הנסיעה"

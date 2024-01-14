@@ -107,18 +107,25 @@ export const RideCard = ({
               </Typography>
             </div>
           </div>
-          {ride?.comment &&  <div className="flex items-start"> 
-      <div className="mr-2"> 
-        <Typography className="ml-2" color="GrayText" variant="body2" component="div">
-          תיאור הנסיעה:
-        </Typography>
-          </div>
-          <div style={{ width: '85%' }}>
-              <Typography className="mt-0" variant="body1" component="div" sx={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
-              {ride?.comment}
-              </Typography>
-          </div>
-          </div> }
+          {ride?.comment && (
+            <div className="flex items-start">
+              <div className="mr-2">
+                <Typography className="ml-2" color="GrayText" variant="body2" component="div">
+                  תיאור הנסיעה:
+                </Typography>
+              </div>
+              <div style={{ width: '85%' }}>
+                <Typography
+                  className="mt-0"
+                  variant="body1"
+                  component="div"
+                  sx={{ maxWidth: '100%', overflowWrap: 'break-word' }}
+                >
+                  {ride?.comment}
+                </Typography>
+              </div>
+            </div>
+          )}
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           {selected && (
             <>

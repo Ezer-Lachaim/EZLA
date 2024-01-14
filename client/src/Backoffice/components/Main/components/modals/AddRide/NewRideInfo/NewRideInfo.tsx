@@ -149,11 +149,11 @@ function NewRideInfo() {
         </FormControl>
         <FormControl>
           <TextField
-           label="תיאור הנסיעה"
-           type="string"
-           placeholder="הסבר קצר לגבי תיאור הנסיעה"
-           multiline
-           maxRows={3}
+            label="תיאור הנסיעה"
+            type="string"
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            multiline
+            maxRows={3}
             error={!!errors?.comment}
             {...register('comment', {
               maxLength: 100
