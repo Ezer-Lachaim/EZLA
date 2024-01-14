@@ -12,6 +12,7 @@ import { usersRouter } from './routes/users';
 import { driversRouter } from './routes/drivers';
 import { ridesRouter } from './routes/rides';
 import { index } from './routes';
+import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -34,6 +35,7 @@ if (config.env !== 'production') {
 app.use('/env', envRouter);
 app.use('/users', authHandler(), usersRouter);
 app.use('/drivers', authHandler(), driversRouter);
+app.use('/signup', signupDriversRoutes);
 app.use('/rides', ridesRouter);
 app.use('/', index);
 
