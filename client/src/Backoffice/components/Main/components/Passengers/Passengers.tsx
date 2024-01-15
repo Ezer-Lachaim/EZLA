@@ -122,7 +122,7 @@ const Passengers = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>נוסעים ({passengers.length})</PageHeader.Title>
 

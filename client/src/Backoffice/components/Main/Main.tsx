@@ -8,7 +8,7 @@ const Main = () => {
       <Header />
       <div className="flex flex-1">
         <SideBar />
-        <main className="flex flex-1 flex-col px-5 py-4">
+        <main className="flex overflow-hidden flex-1 flex-col px-5 py-4">
           <Outlet />
         </main>
       </div>

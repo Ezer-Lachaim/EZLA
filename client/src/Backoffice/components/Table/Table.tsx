@@ -35,8 +35,8 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
     debugTable: true
   });
   return (
-    <Paper elevation={2}>
-      <TableContainer>
+    <Paper elevation={2} className="flex flex-col flex-grow">
+      <TableContainer className="flex-grow">
         <MuiTable>
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -98,6 +98,21 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
           }}
         />
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 15, 50]}
+        component="div"
+        count={data.length}
+        rowsPerPage={table.getState().pagination.pageSize}
+        page={table.getState().pagination.pageIndex}
+        onPageChange={(_, newPage) => {
+          table.setPageIndex(newPage);
+        }}
+        onRowsPerPageChange={(e) => table.setPageSize(Number(e.target.value))}
+        labelRowsPerPage="שורות בעמוד"
+        labelDisplayedRows={(state) => {
+          return `${state.from}-${state.to} מתוך ${state.count}`;
+        }}
+      />
     </Paper>
   );
 };

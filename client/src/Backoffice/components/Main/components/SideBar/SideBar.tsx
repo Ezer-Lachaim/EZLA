@@ -20,7 +20,7 @@ const SideBar = () => {
   ];
 
   return (
-    <nav className="bg-blue-600 w-250 mt-16">
+    <nav className="bg-blue-600 shrink-0 w-250 mt-16">
       <List>
         {propsItem.map((item) => (
           <Link to={item.to} key={item.id}>
