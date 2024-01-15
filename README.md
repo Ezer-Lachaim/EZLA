@@ -19,7 +19,9 @@ To get an overview of the system and setting up development you can watch https:
 This is a monorepo using npm workspaces
 
 ### Git Branches
+
 Currently, we have 2 main branches:
+
 - `master` - The system is available only for the sick
 - `feat/open-to-all` - The system is available for everyone because of the current situation
 
@@ -30,21 +32,28 @@ On the other hand, if it is a feature that is relevant only for the current situ
 If you are unsure, please ask in the Google Spaces chatroom.
 
 ### Install dependencies
+
 ```
 npm install
 ```
 
 ### Create local .env file with the following props
+
 The file should be placed in /backend folder
+
 ```
 GOOGLE_CLOUD_PROJECT=ezla-pickup
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
 ```
+
 For allowing guest ride mode (war mode) add the following env variable to your local .env file
+
 ```
 ALLOW_GUEST_RIDE_MODE=true
 ```
+
 For turning sending SMS messages on add the following env variables to your local .env file
+
 ```
 SMS_IS_ON=true
 AWS_SMS_ACCESS_KEY_ID={access_key_id}
@@ -52,37 +61,47 @@ AWS_SMS_SECRET_ACCESS_KEY={secret_access_key}
 ```
 
 ### Run Firebase emulator and Redis locally
+
 Install Firebase tools:
+
 ```
 curl -sL firebase.tools | bash
 ```
+
 Run Firebase auth emulator:
+
 ```
 firebase emulators:start --only auth
 ```
 
 Run redis-stack-server docker container locally:
+
 ```
 docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
 
 ### Generating open api typescript client
+
 ```
 npm run generate:api:client -w client
 ```
 
 ### Start client
+
 ```
 npm run dev:client
 ```
 
 ### Start backend
+
 ```
 npm run dev:backend
 ```
 
 ### Create users for local dev
+
 Call GET request to http://localhost:3000/dev/init (via Postman or CURL) which will create 3 users:
+
 ```
 admin@test.com, Admin*1
 driver@test.com, Driver*1

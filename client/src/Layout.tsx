@@ -47,7 +47,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           padding: 0,
-          marginRight: 8,
+          marginRight: 8
         }
       }
     },
@@ -55,7 +55,7 @@ const theme = createTheme({
       styleOverrides: {
         notchedOutline: {
           legend: {
-            fontSize: 15
+            fontSize: 11
           }
         }
       }

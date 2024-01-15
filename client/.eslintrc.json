@@ -11,16 +11,11 @@
   ],
   "plugins": ["@typescript-eslint", "prettier"],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": [
-    "coverage/**/*",
-    "dist/**/*",
-    "temp/**/*",
-    "src/api-client/**/*"
-  ],
+  "ignorePatterns": ["coverage/**/*", "dist/**/*", "temp/**/*", "src/api-client/**/*"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "**/tsconfig.json"
+    "project": "./tsconfig.json"
   },
   "rules": {
     "react/no-array-index-key": "off",
@@ -38,12 +33,15 @@
         "functions": "defaultArguments"
       }
     ],
-    "prettier/prettier": ["error", {
-      "printWidth": 100,
-      "singleQuote": true,
-      "arrowParens": "always",
-      "trailingComma": "none",
-      "endOfLine": "auto"
-    }]
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 100,
+        "singleQuote": true,
+        "arrowParens": "always",
+        "trailingComma": "none",
+        "endOfLine": "auto"
+      }
+    ]
   }
 }

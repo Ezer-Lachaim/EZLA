@@ -23,6 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vscode/settings.json
 
 api-client
 openapitools.json
