@@ -43,10 +43,10 @@ export const RideCard = ({
         <div className="flex flex-col gap-2">
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
-              <Typography color="GrayText" variant="body2" component="div">
+              <Typography color="GrayText" variant="body2" component="div" className="hidden">
                 המתנה לאיסוף:
               </Typography>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 hidden">
                 <h1
                   className={`m-0 ${isWaitingTimeTooLong ? 'text-red-500' : 'text-black'} text-lg`}
                 >

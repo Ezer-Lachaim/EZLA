@@ -132,7 +132,7 @@ const Volunteers = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>מתנדבים ({drivers.length})</PageHeader.Title>
         <PageHeader.ActionButton onClick={() => setIsAddDriverModalOpen(true)}>
