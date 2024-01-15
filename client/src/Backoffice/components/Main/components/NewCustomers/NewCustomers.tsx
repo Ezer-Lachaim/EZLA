@@ -160,7 +160,7 @@ const NewCustomers = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>נרשמים חדשים והארכות תוקף ({pendingUsers.length})</PageHeader.Title>
         <PageHeader.ActionButton disabled>הוספת נוסע חדש</PageHeader.ActionButton>

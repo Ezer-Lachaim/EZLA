@@ -178,7 +178,7 @@ const Rides = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>נסיעות ({rides?.length})</PageHeader.Title>
 
