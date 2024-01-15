@@ -149,24 +149,26 @@ function NewRideInfo() {
         </FormControl>
         <FormControl>
           <TextField
-            label="הערה"
+            label="תיאור הנסיעה"
             type="string"
-            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            multiline
+            maxRows={3}
             error={!!errors?.comment}
             {...register('comment', {
-              maxLength: 50
+              maxLength: 100
             })}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
-              (watch().comment?.length || 0) >= 50 ? 'text-red-500' : ''
+              (watch().comment?.length || 0) >= 100 ? 'text-red-500' : ''
             }`}
           >
-            {watch().comment?.length || 0} / 50
+            {watch().comment?.length || 0} / 100
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>

@@ -72,9 +72,18 @@ const Riding = () => {
             </div>
           }
         />
-
-        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
-
+        <Box sx={{ width: '95%' }}>
+          {ride?.comment && (
+            <ViewField
+              label="תיאור הנסיעה:"
+              value={
+                <Box style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                  {ride?.comment || ''}
+                </Box>
+              }
+            />
+          )}
+        </Box>
         <ViewField
           label="בקשות מיוחדות"
           value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
