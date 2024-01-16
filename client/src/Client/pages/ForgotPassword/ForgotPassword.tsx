@@ -1,21 +1,20 @@
 import Button from '@mui/material/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { confirmPasswordReset, checkActionCode, getAuth } from 'firebase/auth';
 import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import withLayout from '../../components/LayoutHOC.tsx';
-import { api } from '../../../services/api';
 import useLocationHash from '../../hooks/useLocationHash';
-import { initFirebaseApp } from '../../../services/firebase';
+import {
+  checkActionCode,
+  confirmPasswordReset,
+  sendPasswordResetEmail
+} from '../../../services/auth/user';
 import { ChangePasswordForm } from '../ChangePassword/ChangePassword';
 
 type Inputs = {
   email: string;
 };
-
-initFirebaseApp();
-const auth = getAuth();
 
 const ForgotPassword = () => {
   const {
@@ -32,7 +31,7 @@ const ForgotPassword = () => {
     async function checkCode() {
       if (actionCode) {
         try {
-          await checkActionCode(auth, actionCode);
+          await checkActionCode(actionCode);
           setIsExpiredCode(false);
         } catch (e) {
           navigate('error');
@@ -44,7 +43,7 @@ const ForgotPassword = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email }) => {
     try {
-      await api.user.sendResetPasswordEmail({ resetPasswordRequest: { email } });
+      await sendPasswordResetEmail(email);
       setSuccess(true);
     } catch (e) {
       setSuccess(false);
@@ -58,7 +57,7 @@ const ForgotPassword = () => {
       <ChangePasswordForm
         onSubmitData={async (data) => {
           try {
-            await confirmPasswordReset(auth, actionCode, data.password);
+            await confirmPasswordReset(actionCode, data.password);
             navigate('success');
           } catch (e) {
             navigate('error');

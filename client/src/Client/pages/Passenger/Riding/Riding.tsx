@@ -1,6 +1,6 @@
 import withLayout from '../../../components/LayoutHOC.tsx';
 import car from '../../../../assets/car.png';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const Riding = () => {
   const { activeRide: ride } = useActiveRide();
