@@ -44,7 +44,7 @@ const CustomFontSizeContainer = styled('div')(({}: { theme: Theme }) => ({
   '& .MuiInputLabel-root': {
     fontSize: 20
   },
-  '& .MuiTypography-root': {
+  '& .MuiButtonBase-root': {
     fontSize: 20
   },
   '& .MuiOutlinedInput-root': {
@@ -54,10 +54,6 @@ const CustomFontSizeContainer = styled('div')(({}: { theme: Theme }) => ({
       }
     }
   }
-}));
-
-const CustomFontSizeButton = styled(Button)(({}: { theme: Theme }) => ({
-  fontSize: 20
 }));
 
 const specialMap: {
@@ -108,6 +104,20 @@ const OrderRide = () => {
       }
     }
   });
+
+  const renderStyledFormControlLabel = ({
+    labelText,
+    registerName
+  }: {
+    labelText: string;
+    registerName: string;
+  }) => (
+    <FormControlLabel
+      control={<Checkbox {...register(`specialRequest.${registerName}`)} />}
+      checked={watch().specialRequest?.[registerName]}
+      label={<span style={{ fontSize: '20px' }}>{labelText}</span>}
+    />
+  );
 
   useEffect(() => {
     if (!user) {
@@ -305,37 +315,28 @@ const OrderRide = () => {
         </FormControl>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">בקשות מיוחדות</p>
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChair')} />}
-            checked={watch().specialRequest?.isWheelChair}
-            label="התאמה לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
-            checked={watch().specialRequest?.isBabySafetySeat}
-            label="מושב בטיחות לתינוק"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
-            checked={watch().specialRequest?.isChildSafetySeat}
-            label="מושב בטיחות לילדים (גיל 3-8)"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
-            checked={watch().specialRequest?.isHighVehicle}
-            label="רכב גבוה"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
-            checked={watch().specialRequest?.isWheelChairTrunk}
-            label="תא מטען מתאים לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
-            checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים"
-          />
+          <p className="text-lg text-gray-500">בקשות מיוחדות</p>
+          {renderStyledFormControlLabel({
+            labelText: 'התאמה לכסא גלגלים',
+            registerName: 'isWheelChair'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לתינוק',
+            registerName: 'isBabySafetySeat'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לילדים (גיל 3-8)',
+            registerName: 'isChildSafetySeat'
+          })}
+          {renderStyledFormControlLabel({ labelText: 'רכב גבוה', registerName: 'isHighVehicle' })}
+          {renderStyledFormControlLabel({
+            labelText: 'תא מטען מתאים לכסא גלגלים',
+            registerName: 'isWheelChairTrunk'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'משלוחים',
+            registerName: 'isPatientDelivery'
+          })}
         </div>
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
@@ -425,7 +426,7 @@ const OrderRide = () => {
           </div>
         )}
 
-        <CustomFontSizeButton
+        <Button
           variant="contained"
           size="large"
           className="w-full"
@@ -433,7 +434,7 @@ const OrderRide = () => {
           disabled={isOrderRideLoading}
         >
           {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
-        </CustomFontSizeButton>
+        </Button>
       </form>
     </CustomFontSizeContainer>
   );
