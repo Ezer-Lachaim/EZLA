@@ -27,7 +27,7 @@ import { useActiveRide } from '../../../../hooks/activeRide';
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
-  selectedSpecialRequests: string[]; // Use array for selected special requests
+  selectedSpecialRequests: RideSpecialRequestEnum[];
 }
 
 const specialRequestLabels: { [key: string]: string } = {
@@ -36,11 +36,7 @@ const specialRequestLabels: { [key: string]: string } = {
   isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
   isHighVehicle: 'רכב גבוה',
   isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים',
-  isPatientDelivery: 'משלוחים',
 };
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
@@ -79,8 +75,7 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone
       },
-      selectedSpecialRequests: [], // Set default value for selectedSpecialRequests as an empty array
-
+      selectedSpecialRequests: [], 
     }
   });
 
@@ -98,14 +93,6 @@ const OrderRide = () => {
     );
   };
 
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
   useEffect(() => {
     if (!user) {
       return;
@@ -136,15 +123,6 @@ const OrderRide = () => {
 
   const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
-    // const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
-    //   (acc: RideSpecialRequestEnum[], cur) => {
-    //     if (data.specialRequest?.[cur]) {
-    //       acc.push(specialMap[cur]);
-    //     }
-    //     return acc;
-    //   },
-    //   []
-    // );
 
     const specialRequestsArray = selectedSpecialRequests.map(
       (request) => specialMap[request]
@@ -309,57 +287,22 @@ const OrderRide = () => {
         <FormControl className="flex flex-col gap-2">
         <InputLabel id="demo-multiple-checkbox-label">בקשות מיוחדות</InputLabel>
         <Select
-  labelId="demo-multiple-checkbox-label"
-  id="demo-multiple-checkbox"
-  multiple
-  value={selectedSpecialRequests}
-  onChange={handleSpecialRequestsChange}
-  input={<OutlinedInput label="בקשות מיוחדות" />}
-  renderValue={(selected) => selected.join(', ')}
-  MenuProps={MenuProps}
->
-  {Object.keys(specialRequestLabels).map((key) => (
-    <MenuItem key={key} value={key}>
-      <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
-      <ListItemText primary={specialRequestLabels[key]} />
-    </MenuItem>
-  ))}
-</Select>
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={selectedSpecialRequests}
+          onChange={handleSpecialRequestsChange}
+          input={<OutlinedInput label="בקשות מיוחדות" />}
+          renderValue={(selected) => selected.join(', ')}
+        >
+          {Object.keys(specialRequestLabels).map((key) => (
+            <MenuItem key={key} value={key}>
+              <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
+              <ListItemText primary={specialRequestLabels[key]} />
+            </MenuItem>
+          ))}
+        </Select>
       </FormControl>
-
-        {/* <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">בקשות מיוחדות</p>
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChair')} />}
-            checked={watch().specialRequest?.isWheelChair}
-            label="התאמה לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
-            checked={watch().specialRequest?.isBabySafetySeat}
-            label="מושב בטיחות לתינוק"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
-            checked={watch().specialRequest?.isChildSafetySeat}
-            label="מושב בטיחות לילדים (גיל 3-8)"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
-            checked={watch().specialRequest?.isHighVehicle}
-            label="רכב גבוה"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
-            checked={watch().specialRequest?.isWheelChairTrunk}
-            label="תא מטען מתאים לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
-            checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים"
-          />
-        </div> */}
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
