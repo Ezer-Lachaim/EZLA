@@ -9,7 +9,10 @@ import {
   Select,
   FormHelperText,
   FormControl,
-  MenuItem
+  MenuItem,
+  OutlinedInput,
+  ListItemText,
+  SelectChangeEvent
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,16 +27,20 @@ import { useActiveRide } from '../../../../hooks/activeRide';
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
-  specialRequest: {
-    isWheelChair: boolean;
-    isBabySafetySeat: boolean;
-    isChildSafetySeat: boolean;
-    isHighVehicle: boolean;
-    isWheelChairTrunk: boolean;
-    isPatientDelivery: boolean;
-    [indexer: string]: boolean;
-  };
+  selectedSpecialRequests: string[]; // Use array for selected special requests
 }
+
+const specialRequestLabels: { [key: string]: string } = {
+  isWheelChair: 'התאמה לכסא גלגלים',
+  isBabySafetySeat: 'מושב בטיחות לתינוק',
+  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+  isHighVehicle: 'רכב גבוה',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים',
+  isPatientDelivery: 'משלוחים',
+};
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
@@ -72,17 +79,33 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone
       },
-      specialRequest: {
-        isWheelChair: user?.specialRequest?.includes(specialMap.isWheelChair),
-        isBabySafetySeat: user?.specialRequest?.includes(specialMap.isBabySafetySeat),
-        isChildSafetySeat: user?.specialRequest?.includes(specialMap.isChildSafetySeat),
-        isHighVehicle: user?.specialRequest?.includes(specialMap.isHighVehicle),
-        isWheelChairTrunk: user?.specialRequest?.includes(specialMap.isWheelChairTrunk),
-        isPatientDelivery: user?.specialRequest?.includes(specialMap.isPatientDelivery)
-      }
+      selectedSpecialRequests: [], // Set default value for selectedSpecialRequests as an empty array
+
     }
   });
 
+  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
+
+  const handleSpecialRequestsChange = (
+    event: SelectChangeEvent<typeof selectedSpecialRequests>
+  ) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedSpecialRequests(
+      // On autofill, we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
   useEffect(() => {
     if (!user) {
       return;
@@ -113,15 +136,20 @@ const OrderRide = () => {
 
   const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
-    const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
-      (acc: RideSpecialRequestEnum[], cur) => {
-        if (data.specialRequest?.[cur]) {
-          acc.push(specialMap[cur]);
-        }
-        return acc;
-      },
-      []
+    // const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
+    //   (acc: RideSpecialRequestEnum[], cur) => {
+    //     if (data.specialRequest?.[cur]) {
+    //       acc.push(specialMap[cur]);
+    //     }
+    //     return acc;
+    //   },
+    //   []
+    // );
+
+    const specialRequestsArray = selectedSpecialRequests.map(
+      (request) => specialMap[request]
     );
+    
 
     if (!user) {
       setGuestToken(uuidv4());
@@ -130,12 +158,14 @@ const OrderRide = () => {
     const newRide: Ride = {
       ...data.ride,
       specialRequest: specialRequestsArray,
-      state: RideStateEnum.WaitingForDriver
+      state: RideStateEnum.WaitingForDriver,
     };
 
-    await api.ride.ridesPost({
+    await api.ride.ridesPost({    
       ride: newRide
     });
+    console.log(newRide);
+
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
   };
@@ -276,7 +306,28 @@ const OrderRide = () => {
           )}
         </FormControl>
 
-        <div className="flex flex-col gap-2">
+        <FormControl className="flex flex-col gap-2">
+        <InputLabel id="demo-multiple-checkbox-label">בקשות מיוחדות</InputLabel>
+        <Select
+  labelId="demo-multiple-checkbox-label"
+  id="demo-multiple-checkbox"
+  multiple
+  value={selectedSpecialRequests}
+  onChange={handleSpecialRequestsChange}
+  input={<OutlinedInput label="בקשות מיוחדות" />}
+  renderValue={(selected) => selected.join(', ')}
+  MenuProps={MenuProps}
+>
+  {Object.keys(specialRequestLabels).map((key) => (
+    <MenuItem key={key} value={key}>
+      <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
+      <ListItemText primary={specialRequestLabels[key]} />
+    </MenuItem>
+  ))}
+</Select>
+      </FormControl>
+
+        {/* <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>
           <FormControlLabel
             control={<Checkbox {...register('specialRequest.isWheelChair')} />}
@@ -308,7 +359,7 @@ const OrderRide = () => {
             checked={watch().specialRequest?.isPatientDelivery}
             label="משלוחים"
           />
-        </div>
+        </div> */}
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
