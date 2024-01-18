@@ -6,10 +6,8 @@ import {
   Checkbox,
   Button,
   InputLabel,
-  Select,
   FormHelperText,
-  FormControl,
-  MenuItem
+  FormControl
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -220,51 +218,20 @@ const OrderRide = () => {
           )}
         </div>
 
-        {/* <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
-            מספר נוסעים
-          </InputLabel>
-          <Select
+        <FormControl>
+          <InputLabel htmlFor="passengerCount" />
+          <QuantityInput
             id="passengerCount"
             label="מספר נוסעים"
             error={!!errors?.ride?.passengerCount}
-            {...register('ride.passengerCount', { required: true })}
-          >
-            <MenuItem value={0}>0</MenuItem>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={11}>11</MenuItem>
-            <MenuItem value={12}>12</MenuItem>
-          </Select>
+            onChange={(value) => setValue('ride.passengerCount', value)}
+          />
           {errors.ride?.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
             </FormHelperText>
           )}
-        </FormControl> */}
-
-<FormControl>
-  <InputLabel htmlFor="passengerCount" />
-  <QuantityInput
-    id="passengerCount"
-    label="מספר נוסעים"
-    error={!!errors?.ride?.passengerCount}
-    onChange={(value) => setValue('ride.passengerCount', value)}
-  />
-  {errors.ride?.passengerCount?.type === 'required' && (
-    <FormHelperText error className="absolute top-full mr-0">
-      יש לבחור מספר נוסעים
-    </FormHelperText>
-  )}
-</FormControl>
+        </FormControl>
 
         <FormControl>
           <TextField
