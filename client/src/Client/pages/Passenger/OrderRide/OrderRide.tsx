@@ -20,6 +20,7 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
+import QuantityInput from './PassengerCountSelector.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -219,7 +220,7 @@ const OrderRide = () => {
           )}
         </div>
 
-        <FormControl>
+        {/* <FormControl>
           <InputLabel htmlFor="passengerCount" required>
             מספר נוסעים
           </InputLabel>
@@ -248,7 +249,23 @@ const OrderRide = () => {
               יש לבחור מספר נוסעים
             </FormHelperText>
           )}
-        </FormControl>
+        </FormControl> */}
+
+<FormControl>
+  <InputLabel htmlFor="passengerCount" />
+  <QuantityInput
+    id="passengerCount"
+    label="מספר נוסעים"
+    error={!!errors?.ride?.passengerCount}
+    onChange={(value) => setValue('ride.passengerCount', value)}
+  />
+  {errors.ride?.passengerCount?.type === 'required' && (
+    <FormHelperText error className="absolute top-full mr-0">
+      יש לבחור מספר נוסעים
+    </FormHelperText>
+  )}
+</FormControl>
+
         <FormControl>
           <TextField
             label="תיאור הנסיעה"

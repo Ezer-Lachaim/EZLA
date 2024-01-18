@@ -7,8 +7,8 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p dev:firebase dev:docker dev:backend dev:client-generate",
-    "dev:firebase" : "firebase emulators:start --only auth",
-    "dev:docker" : "docker run -p 6379:6379 redis/redis-stack:latest",
+    "dev:firebase": "firebase emulators:start --only auth",
+    "dev:docker": "docker run -p 6379:6379 redis/redis-stack:latest",
     "dev:backend": "npm run dev -w backend",
     "dev:client": "npm run start -w client",
     "generate:api:client": "npm run generate:api:client -w client",
@@ -45,6 +45,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
+    "@mui/base": "^5.0.0-beta.32",
     "@sentry/react": "^7.64.0",
     "@sentry/vite-plugin": "^2.7.0",
     "@tanstack/react-query": "^4.7.1",
