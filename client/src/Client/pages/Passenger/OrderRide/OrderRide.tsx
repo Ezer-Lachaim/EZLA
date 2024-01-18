@@ -11,7 +11,6 @@ import {
   FormControl,
   MenuItem,
   styled,
-  Theme
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -37,7 +36,7 @@ interface OrderRideFormData {
   };
 }
 
-const CustomFontSizeContainer = styled('div')(({}: { theme: Theme }) => ({
+const CustomFontSizeContainer = styled('div')(() => ({
   fontSize: 20,
   '& .MuiInputBase-input': {
     fontSize: 20
