@@ -46,7 +46,6 @@ const specialMap: {
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
   isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
   isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
-  isPatientDelivery: RideSpecialRequestEnum.PatientDelivery
 };
 
 enum DestinationSourceEnum {
@@ -88,7 +87,6 @@ const OrderRide = () => {
       target: { value },
     } = event;
     setSelectedSpecialRequests(
-      // On autofill, we get a stringified value.
       typeof value === 'string' ? value.split(',') : value
     );
   };
@@ -142,7 +140,6 @@ const OrderRide = () => {
     await api.ride.ridesPost({    
       ride: newRide
     });
-    console.log(newRide);
 
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
@@ -293,7 +290,12 @@ const OrderRide = () => {
           value={selectedSpecialRequests}
           onChange={handleSpecialRequestsChange}
           input={<OutlinedInput label="בקשות מיוחדות" />}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => {
+            if (Array.isArray(selected)) {
+              return selected.map((value) => specialRequestLabels[value]).join(', ');
+            }
+            return specialRequestLabels[selected];
+          }}
         >
           {Object.keys(specialRequestLabels).map((key) => (
             <MenuItem key={key} value={key}>
