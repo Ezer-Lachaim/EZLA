@@ -10,7 +10,7 @@ import {
   FormHelperText,
   FormControl,
   MenuItem,
-  styled,
+  styled
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -104,8 +104,8 @@ const OrderRide = () => {
     }
   });
 
-    const renderStyledFormControlLabel = ({
-    labelText,
+  const renderStyledFormControlLabel = ({
+  labelText,
     registerName
   }: {
     labelText: string;
