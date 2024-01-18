@@ -105,7 +105,7 @@ const OrderRide = () => {
   });
 
   const renderStyledFormControlLabel = ({
-  labelText,
+    labelText,
     registerName
   }: {
     labelText: string;
