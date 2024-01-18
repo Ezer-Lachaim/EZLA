@@ -82,24 +82,9 @@ const Table = <TData extends object>({ data, columns }: TableProps<TData>) => {
             ))}
           </TableBody>
         </MuiTable>
-        <TablePagination
-          rowsPerPageOptions={[20, 50, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={table.getState().pagination.pageSize}
-          page={table.getState().pagination.pageIndex}
-          onPageChange={(_, newPage) => {
-            table.setPageIndex(newPage);
-          }}
-          onRowsPerPageChange={(e) => table.setPageSize(Number(e.target.value))}
-          labelRowsPerPage="שורות בעמוד"
-          labelDisplayedRows={(state) => {
-            return `${state.from}-${state.to} מתוך ${state.count}`;
-          }}
-        />
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 15, 50]}
+        rowsPerPageOptions={[20, 50, 100]}
         component="div"
         count={data.length}
         rowsPerPage={table.getState().pagination.pageSize}
