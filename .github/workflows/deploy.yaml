@@ -18,5 +18,6 @@ jobs:
           service_account: 'test-wif@ezla-pickup.iam.gserviceaccount.com'
       - id: 'gcloud'
         name: 'gcloud'
-        run: |-
-          gcloud services list --project=ezla-pickup
+        run: |
+          gcloud config set project ezla-pickup
+          gcloud services list
