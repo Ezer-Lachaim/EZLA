@@ -19,5 +19,4 @@ jobs:
       - id: 'gcloud'
         name: 'gcloud'
         run: |
-          gcloud config set project ezla-pickup
-          gcloud services list
+          gcloud auth list
