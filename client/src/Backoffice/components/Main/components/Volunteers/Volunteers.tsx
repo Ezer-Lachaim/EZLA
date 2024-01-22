@@ -1,13 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, Clear } from '@mui/icons-material';
+import { Check, Clear, Edit } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { Button } from '@mui/material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
 import { Driver } from '../../../../../api-client';
 import AddCustomerModal from '../modals/AddCustomer/AddCustomerModal';
 import { DRIVER_CAPABILITIES } from './Volunteers.constants';
+import EditDriverModal from '../modals/EditDriverModal/EditDriverModal';
 
 const columns: ColumnDef<Partial<Driver>>[] = [
   {
@@ -83,7 +85,34 @@ const columns: ColumnDef<Partial<Driver>>[] = [
       return '-';
     }
   },
-  { accessorKey: 'numOfDrives', header: 'נסיעות', accessorFn: (data) => data.numOfDrives || '-' }
+  { accessorKey: 'numOfDrives', header: 'נסיעות', accessorFn: (data) => data.numOfDrives || '-' },
+  {
+    accessorKey: 'actionEdit',
+    header: '',
+    cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [toggleModal, setToggleModal] = useState(false);
+      const handleModal = (shouldOpen: boolean) => setToggleModal(shouldOpen);
+
+      const driver = row.original;
+
+      return (
+        <div className="flex gap-1 items-center">
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            style={{ minWidth: 0 }}
+            className="w-7 h-7"
+            onClick={() => handleModal(true)}
+          >
+            <Edit fontSize="small" />
+          </Button>
+          <EditDriverModal open={toggleModal} handleModal={handleModal} driver={driver} />
+        </div>
+      );
+    }
+  }
 ];
 
 const Volunteers = () => {
@@ -103,7 +132,7 @@ const Volunteers = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>מתנדבים ({drivers.length})</PageHeader.Title>
         <PageHeader.ActionButton onClick={() => setIsAddDriverModalOpen(true)}>

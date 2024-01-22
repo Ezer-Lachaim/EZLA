@@ -54,14 +54,14 @@ const RideApprovalModal = ({
             <CarIcon sx={{ fontSize: 48 }} color="secondary" />
             <h1 className="text-center m-0 text-blue-500">יוצאים לדרך</h1>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4" hidden>
             <p className="text-center">עדכנו את זמן המתנה המשוער שיוצג לנוסע/ים.</p>
             <FormControl>
               <TextField
                 label="זמן המתנה בדקות"
                 type="number"
                 placeholder="זמן המתנה שיוצג לנוסע בדקות"
-                required
+                value="0"
                 className="w-full"
                 error={!!errors?.minutesToArrive}
                 {...register('minutesToArrive', { required: true })}

@@ -5,3 +5,4 @@ export const driversRouter = Router();
 
 driversRouter.post('/', controller.create);
 driversRouter.get('/', controller.getAll);
+driversRouter.put('/', controller.update);

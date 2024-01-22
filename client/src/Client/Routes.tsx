@@ -103,7 +103,7 @@ const routes = [
     path="passenger"
     element={
       <AuthRoute
-        AuthLoginAccess={AuthRouteLoginAccess.LoggedIn}
+        AuthLoginAccess={AuthRouteLoginAccess.GuestAllowed}
         AuthRoleAccess={UserRoleEnum.Requester}
       >
         <Passenger />

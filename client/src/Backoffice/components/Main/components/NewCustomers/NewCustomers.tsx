@@ -7,11 +7,9 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import RejectCustomerModal from '../modals/RejectCustomerModal/RejectCustomerModal';
 import { api } from '../../../../../services/api';
-import { GetHospitalList200ResponseInner, RideRequester } from '../../../../../api-client';
+import { Hospital, RideRequester } from '../../../../../api-client';
 
-const getNewCustomersColumns = (
-  hospitals: GetHospitalList200ResponseInner[]
-): ColumnDef<Partial<RideRequester>>[] => {
+const getNewCustomersColumns = (hospitals: Hospital[]): ColumnDef<Partial<RideRequester>>[] => {
   return [
     {
       accessorKey: 'pendingTime',
@@ -137,7 +135,7 @@ const getNewCustomersColumns = (
 
 const NewCustomers = () => {
   const [pendingUsers, setPendingUsers] = useState<RideRequester[]>([]);
-  const [hospitals, setHospitals] = useState<GetHospitalList200ResponseInner[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
 
   const columns = getNewCustomersColumns(hospitals);
 
@@ -162,7 +160,7 @@ const NewCustomers = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-col flex-grow">
       <PageHeader>
         <PageHeader.Title>נרשמים חדשים והארכות תוקף ({pendingUsers.length})</PageHeader.Title>
         <PageHeader.ActionButton disabled>הוספת נוסע חדש</PageHeader.ActionButton>

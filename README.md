@@ -23,16 +23,36 @@ Currently, we have 2 main branches:
 - `master` - The system is available only for the sick
 - `feat/open-to-all` - The system is available for everyone because of the current situation
 
-When pushing your changes, please make sure to push to the correct branch. 
+When pushing your changes, please make sure to push to the correct branch.
 If it is a bugfix, or a feature that is relevant to both situations, please open the PR to `master` branch.
 On the other hand, if it is a feature that is relevant only for the current situation, please open the PR to `feat/open-to-all` branch.
 
 If you are unsure, please ask in the Google Spaces chatroom.
 
+### Install Java
+To run the project, you need to have Java version 17 or later installed. You can download it from [Java Downloads](https://www.oracle.com/java/technologies/downloads/#jdk17-mac).
+
+### Install dependencies
+```
+npm install
+```
+
 ### Create local .env file with the following props
 The file should be placed in /backend folder
 ```
+GOOGLE_CLOUD_PROJECT=ezla-pickup
 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
+ALLOW_GUEST_RIDE_MODE=true
+```
+For allowing guest ride mode (war mode) add the following env variable to your local .env file
+```
+ALLOW_GUEST_RIDE_MODE=true
+```
+For turning sending SMS messages on add the following env variables to your local .env file
+```
+SMS_IS_ON=true
+AWS_SMS_ACCESS_KEY_ID={access_key_id}
+AWS_SMS_SECRET_ACCESS_KEY={secret_access_key}
 ```
 
 ### Run Firebase emulator and Redis locally

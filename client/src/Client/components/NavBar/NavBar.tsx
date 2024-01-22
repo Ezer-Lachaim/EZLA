@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '../../../services/auth/user';
 
 export interface NavBarProps {
   title: string;
@@ -17,6 +18,7 @@ export const NavBar = ({
   showLogoutButton = false
 }: NavBarProps) => {
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
 
   const onClickBackIcon = () => {
     navigate(-1);
@@ -29,7 +31,7 @@ export const NavBar = ({
   return (
     <AppBar className="p-4 static z-10" position="static">
       <div className="flex items-center justify-center w-full text-xl">
-        {showLogoutButton && (
+        {showLogoutButton && user && (
           <LogoutIcon className="absolute left-6 cursor-pointer" onClick={onClickLogout} />
         )}
         {title}

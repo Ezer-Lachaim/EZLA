@@ -27,7 +27,11 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const methods = useForm<Ride>();
+  const methods = useForm<Ride>({
+    defaultValues: {
+      specialRequest: []
+    }
+  });
 
   const { handleSubmit, trigger } = methods;
 

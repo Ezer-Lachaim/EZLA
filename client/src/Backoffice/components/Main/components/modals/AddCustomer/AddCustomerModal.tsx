@@ -39,7 +39,11 @@ function AddCustomerModal({ open, handleModal }: AddCustomerModalProps) {
       handleModal(false);
     }
   };
-  const methods = useForm<Driver>();
+  const methods = useForm<Driver>({
+    defaultValues: {
+      carCapabilities: []
+    }
+  });
 
   const { handleSubmit, trigger } = methods;
 

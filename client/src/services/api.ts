@@ -5,6 +5,7 @@ import {
   HospitalApi,
   RideApi,
   UserApi,
+  EnvApi,
   RequestContext,
   FetchParams
 } from '../api-client';
@@ -46,7 +47,8 @@ export const api = {
   user: new UserApi(configuration),
   ride: new RideApi(configuration),
   hospital: new HospitalApi(configuration),
-  driver: new DriverApi(configuration)
+  driver: new DriverApi(configuration),
+  env: new EnvApi(configuration)
 };
 
 export function addPreMiddleware(...middleware: PreMiddleware[]) {

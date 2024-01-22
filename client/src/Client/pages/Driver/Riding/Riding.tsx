@@ -5,7 +5,7 @@ import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const Riding = () => {
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
@@ -72,9 +72,18 @@ const Riding = () => {
             </div>
           }
         />
-
-        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
-
+        <Box sx={{ width: '95%' }}>
+          {ride?.comment && (
+            <ViewField
+              label="תיאור הנסיעה:"
+              value={
+                <Box style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                  {ride?.comment || ''}
+                </Box>
+              }
+            />
+          )}
+        </Box>
         <ViewField
           label="בקשות מיוחדות"
           value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}

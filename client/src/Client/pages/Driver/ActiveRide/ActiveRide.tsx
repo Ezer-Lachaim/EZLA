@@ -3,7 +3,7 @@ import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
@@ -11,7 +11,7 @@ import { api } from '../../../../services/api';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
@@ -51,10 +51,10 @@ const ActiveRide = () => {
     // navigation will occur automatically (in @../Driver.tsx)
   };
 
-  let destinationTime;
+  /*   let destinationTime;
   if (ride?.destinationArrivalTime) {
     destinationTime = format(new Date(ride.destinationArrivalTime), 'HH:mm');
-  }
+  } */
 
   return (
     <div className="w-full pb-5 h-full flex flex-col">
@@ -67,7 +67,7 @@ const ActiveRide = () => {
           נוסעים לאסוף את הנוסעים
         </h1>
       </Box>
-      {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>}
+      {/* {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>} */}
       <div className="flex-1">
         <hr />
         <ViewField
@@ -128,9 +128,18 @@ const ActiveRide = () => {
             </div>
           }
         />
-
-        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
-
+        <Box sx={{ width: '95%' }}>
+          {ride?.comment && (
+            <ViewField
+              label="תיאור הנסיעה:"
+              value={
+                <Box style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                  {ride?.comment || ''}
+                </Box>
+              }
+            />
+          )}
+        </Box>
         <hr className="mt-2" />
       </div>
 

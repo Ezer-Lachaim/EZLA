@@ -3,53 +3,44 @@
 import { ListItemButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { VolunteerActivism, DriveEta, PersonAdd, Accessible } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const SideBar = () => {
-  return (
-    <nav className="bg-blue-600 w-250">
-      <List>
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <Link to="">
-          <ListItem disablePadding>
-            <ListItemButton className="text-white">
-              <ListItemIcon className="text-white">
-                <PersonAdd />
-              </ListItemIcon>
-              <ListItemText primary="נרשמים חדשים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+  const [activeLink, setActiveLink] = useState('נרשמים חדשים');
 
-        <Link to="rides">
-          <ListItem disablePadding>
-            <ListItemButton className="text-white">
-              <ListItemIcon className="text-white">
-                <DriveEta />
-              </ListItemIcon>
-              <ListItemText primary="נסיעות" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        <Link to="passengers">
-          <ListItem disablePadding>
-            <ListItemButton className="text-white">
-              <ListItemIcon className="text-white">
-                <Accessible />
-              </ListItemIcon>
-              <ListItemText primary="נוסעים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        <Link to="volunteers">
-          <ListItem disablePadding>
-            <ListItemButton className="text-white">
-              <ListItemIcon className="text-white">
-                <VolunteerActivism />
-              </ListItemIcon>
-              <ListItemText primary="מתנדבים" />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+  const handleClick = (path: string) => {
+    setActiveLink(path);
+  };
+
+  const propsItem = [
+    { to: '', text: 'נרשמים חדשים', id: 1 },
+    { to: 'rides', text: 'נסיעות', id: 2 },
+    { to: 'passengers', text: 'נוסעים', id: 3 },
+    { to: 'volunteers', text: 'מתנדבים', id: 4 }
+  ];
+
+  return (
+    <nav className="bg-blue-600 shrink-0 w-250 mt-16">
+      <List>
+        {propsItem.map((item) => (
+          <Link to={item.to} key={item.id}>
+            <ListItem disablePadding>
+              <ListItemButton
+                className={activeLink === item.text ? 'bg-blue-600' : 'text-white'}
+                style={{ backgroundColor: activeLink === item.text ? 'white' : '' }}
+                onClick={() => handleClick(item.text)}
+              >
+                <ListItemIcon className={activeLink === item.text ? '#007DFF' : 'text-white'}>
+                  {item.text === 'נרשמים חדשים' && <PersonAdd />}
+                  {item.text === 'נסיעות' && <DriveEta />}
+                  {item.text === 'נוסעים' && <Accessible />}
+                  {item.text === 'מתנדבים' && <VolunteerActivism />}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ))}
       </List>
     </nav>
   );

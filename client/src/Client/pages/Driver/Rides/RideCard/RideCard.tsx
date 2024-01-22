@@ -43,10 +43,10 @@ export const RideCard = ({
         <div className="flex flex-col gap-2">
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
-              <Typography color="GrayText" variant="body2" component="div">
+              <Typography color="GrayText" variant="body2" component="div" className="hidden">
                 המתנה לאיסוף:
               </Typography>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 hidden">
                 <h1
                   className={`m-0 ${isWaitingTimeTooLong ? 'text-red-500' : 'text-black'} text-lg`}
                 >
@@ -107,14 +107,25 @@ export const RideCard = ({
               </Typography>
             </div>
           </div>
-          <div className="flex items-center">
-            <Typography color="GrayText" variant="body2" component="div">
-              הערה:
-            </Typography>
-            <Typography className="ml-1 mr-1" variant="body1" component="div">
-              {ride?.comment}
-            </Typography>
-          </div>
+          {ride?.comment && (
+            <div className="flex items-start">
+              <div className="mr-2">
+                <Typography className="ml-2" color="GrayText" variant="body2" component="div">
+                  תיאור הנסיעה:
+                </Typography>
+              </div>
+              <div style={{ width: '85%' }}>
+                <Typography
+                  className="mt-0"
+                  variant="body1"
+                  component="div"
+                  sx={{ maxWidth: '100%', overflowWrap: 'break-word' }}
+                >
+                  {ride?.comment}
+                </Typography>
+              </div>
+            </div>
+          )}
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           {selected && (
             <>
@@ -127,7 +138,7 @@ export const RideCard = ({
                   startIcon={<PhoneIcon />}
                   onClick={() => window.open(`tel:${ride?.cellphone}`)}
                 >
-                  צרו קשר
+                  {ride?.cellphone}
                 </Button>
                 <Button
                   className="flex-1"

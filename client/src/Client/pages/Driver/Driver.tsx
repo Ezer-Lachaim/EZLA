@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useActiveRide } from '../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../hooks/activeRide';
 import { RideStateEnum } from '../../../api-client';
 
 const Driver = () => {

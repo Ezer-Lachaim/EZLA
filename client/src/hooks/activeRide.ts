@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { useUserStore } from '../services/auth/user';
+import { useStore as useGuestAuthStore } from '../services/auth/guest';
 import { api, POLLING_INTERVAL } from '../services/api';
-import { useAuthStore } from '../services/auth';
 
 export function useActiveRide() {
-  const token = useAuthStore((state) => state.token);
+  const user = useUserStore((state) => state.user);
+  const guestToken = useGuestAuthStore((state) => state.token);
 
   const {
     data: activeRide,
@@ -11,7 +13,7 @@ export function useActiveRide() {
     refetch: reFetch
   } = useQuery({
     queryKey: ['getActiveRideForUser'],
-    enabled: !!token,
+    enabled: !!user || !!guestToken,
     queryFn: async () => {
       try {
         return await api.ride.getActiveRideForUser();

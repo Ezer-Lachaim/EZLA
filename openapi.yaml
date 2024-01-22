@@ -76,47 +76,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RideRequester'
-  /users/login:
-    post:
-      tags:
-        - user
-      summary: Logs user into the system
-      description: ''
-      operationId: loginUser
-      requestBody:
-        description: User login credentials
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-              required:
-                - email
-                - password
-      responses:
-        '200':
-          description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/json:
-              schema:
-                type: string
-        '400':
-          description: Invalid username/password supplied
   /users/logout:
     get:
       tags:
@@ -169,12 +128,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateInitialPasswordRequest'
       responses:
-        '200':
+        '202':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateInitialPasswordResponse'
         '400':
           description: Invalid user ID supplied
         '404':
@@ -249,26 +204,6 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
-  /users/reset_password:
-    post:
-      tags:
-        - user
-      summary: Send reset password email
-      description: sends a reset password email to the specified user.
-      operationId: sendResetPasswordEmail
-      requestBody:
-        description: User email to receive the reset password link
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResetPasswordRequest'
-      responses:
-        '204':
-          description: Reset password link sent successfully
-        '400':
-          description: Invalid request body
-        '404':
-          description: User not found (email not registered)
   /users/registerFcmToken:
     post:
       tags:
@@ -297,6 +232,27 @@ paths:
       operationId: createDriver
       requestBody:
         description: Driver object to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+      responses:
+        '201':
+          description: Driver created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '400':
+          description: Invalid request body
+    put:
+      tags:
+        - driver
+      summary: Update a driver
+      description: Updates a driver.
+      operationId: updateDriver
+      requestBody:
+        description: Driver object to be updated
         content:
           application/json:
             schema:
@@ -491,14 +447,22 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 1
-                    name:
-                      type: string
-                      example: 'תל השומר'
+                  $ref: '#/components/schemas/Hospital'
+
+  /env/settings:
+    get:
+      tags:
+        - env
+      summary: Get the env settings
+      operationId: getEnvSettings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvSettings'
+
 components:
   schemas:
     User:
@@ -642,7 +606,8 @@ components:
         comment:
           type: string
           example: 'comment'
-
+        guestToken:
+          type: string
     RideRequester:
       allOf:
         - $ref: '#/components/schemas/User'
@@ -707,15 +672,11 @@ components:
               - AccessibleCar
               - PatientDelivery
     CreateUserResponse:
-      properties: 
+      properties:
         user:
           $ref: '#/components/schemas/RideRequester'
-        token:
-          type: string
-    UpdateInitialPasswordResponse:
-      properties: 
-        token:
-          type: string
+      required:
+        - user
     UpdateInitialPasswordRequest:
       type: object
       properties:
@@ -730,14 +691,6 @@ components:
           type: string
       required:
         - fcmToken
-
-    ResetPasswordRequest:
-      type: object
-      properties:
-        email:
-          type: string
-      required:
-        - email
 
     Patient:
       properties:
@@ -761,6 +714,25 @@ components:
           example: 'מחלקת שיקום'
         message:
           type: string
+
+    Hospital:
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 'תל השומר'
+      required:
+        - id
+        - name
+
+    EnvSettings:
+      properties:
+        allowGuestRideMode:
+          type: boolean
+      required:
+        - allowGuestRideMode
 
   requestBodies:
     UserArray:
