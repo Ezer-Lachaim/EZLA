@@ -35,7 +35,7 @@ const specialRequestLabels: { [key: string]: string } = {
   isBabySafetySeat: 'מושב בטיחות לתינוק',
   isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
   isHighVehicle: 'רכב גבוה',
-  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
 };
 
 const specialMap: {
@@ -45,7 +45,7 @@ const specialMap: {
   isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
   isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
-  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage
 };
 
 enum DestinationSourceEnum {
@@ -74,7 +74,7 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone
       },
-      selectedSpecialRequests: [], 
+      selectedSpecialRequests: []
     }
   });
 
@@ -84,11 +84,9 @@ const OrderRide = () => {
     event: SelectChangeEvent<typeof selectedSpecialRequests>
   ) => {
     const {
-      target: { value },
+      target: { value }
     } = event;
-    setSelectedSpecialRequests(
-      typeof value === 'string' ? value.split(',') : value
-    );
+    setSelectedSpecialRequests(typeof value === 'string' ? value.split(',') : value);
   };
 
   useEffect(() => {
@@ -122,10 +120,7 @@ const OrderRide = () => {
   const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
 
-    const specialRequestsArray = selectedSpecialRequests.map(
-      (request) => specialMap[request]
-    );
-    
+    const specialRequestsArray = selectedSpecialRequests.map((request) => specialMap[request]);
 
     if (!user) {
       setGuestToken(uuidv4());
@@ -134,10 +129,10 @@ const OrderRide = () => {
     const newRide: Ride = {
       ...data.ride,
       specialRequest: specialRequestsArray,
-      state: RideStateEnum.WaitingForDriver,
+      state: RideStateEnum.WaitingForDriver
     };
 
-    await api.ride.ridesPost({    
+    await api.ride.ridesPost({
       ride: newRide
     });
 
@@ -281,30 +276,32 @@ const OrderRide = () => {
           )}
         </FormControl>
 
+        
+
         <FormControl className="flex flex-col gap-2">
-        <InputLabel id="demo-multiple-checkbox-label">בקשות מיוחדות</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={selectedSpecialRequests}
-          onChange={handleSpecialRequestsChange}
-          input={<OutlinedInput label="בקשות מיוחדות" />}
-          renderValue={(selected) => {
-            if (Array.isArray(selected)) {
-              return selected.map((value) => specialRequestLabels[value]).join(', ');
-            }
-            return specialRequestLabels[selected];
-          }}
-        >
-          {Object.keys(specialRequestLabels).map((key) => (
-            <MenuItem key={key} value={key}>
-              <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
-              <ListItemText primary={specialRequestLabels[key]} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
+          <Select
+            labelId="multiple-checkbox-label"
+            id="multiple-checkbox"
+            multiple
+            value={selectedSpecialRequests}
+            onChange={handleSpecialRequestsChange}
+            input={<OutlinedInput label="בקשות מיוחדות" />}
+            renderValue={(selected) => {
+              if (Array.isArray(selected)) {
+                return selected.map((value) => specialRequestLabels[value]).join(', ');
+              }
+              return specialRequestLabels[selected];
+            }}
+          >
+            {Object.keys(specialRequestLabels).map((key) => (
+              <MenuItem key={key} value={key}>
+                <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
+                <ListItemText primary={specialRequestLabels[key]} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>

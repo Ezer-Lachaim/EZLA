@@ -1,10 +1,11 @@
 import {
   Checkbox,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   InputLabel,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField
 } from '@mui/material';
@@ -18,6 +19,9 @@ function NewRideInfo() {
     watch,
     formState: { errors }
   } = useFormContext<Ride>();
+  const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
+  const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+
   return (
     <div className="flex gap-4">
       <div className="flex flex-col gap-8 flex-1">
@@ -73,17 +77,36 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
-          {DRIVER_CAPABILITIES.map(({ value, label }) => (
-            <FormControlLabel
-              value={value}
-              control={<Checkbox {...register('specialRequest')} />}
-              label={label}
-            />
-          ))}
-        </div>
+        <FormControl>
+          <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
+          <Select
+            labelId="special-requests-label"
+            aria-labelledby="special-requests-label"
+            id="special-requests"
+            multiple
+            input={<OutlinedInput label="בקשות מיוחדות" />}
+            {...register('specialRequest')}
+            value={selectedSpecialRequests}
+            renderValue={(selected: unknown[]) =>
+              (selected as string[])
+                .map(
+                  (value) =>
+                    DRIVER_CAPABILITIES.find((capability) => capability.value === value)?.label
+                )
+                .join(', ')
+            }
+            style={{ maxWidth: '310px', height: '53.11' }}
+          >
+            {DRIVER_CAPABILITIES.map(({ value, label }) => (
+              <MenuItem key={value} value={value}>
+                <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
+                <ListItemText primary={label} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
+
       <div className="flex flex-col gap-8 flex-1">
         <FormControl>
           <TextField
