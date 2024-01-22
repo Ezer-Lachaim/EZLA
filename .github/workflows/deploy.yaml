@@ -1,25 +1,18 @@
-name: List services in GCP
+name: cloudrun-deploy
 on:
   push:
-
-permissions:
-  id-token: write
-
+  
 jobs:
-  Get_OIDC_ID_token:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     steps:
-      - id: 'auth'
-        name: 'Authenticate to GCP'
-        uses: 'google-github-actions/auth@v2.0.1'
-        with:
-          create_credentials_file: 'true'
-          project_id: 'ezla-pickup'
-          workload_identity_provider: 'projects/708652536157/locations/global/workloadIdentityPools/ezla-identity-pool/providers/github'
-          service_account: 'test-wif@ezla-pickup.iam.gserviceaccount.com'
-      - id: 'gcloud'
-        name: 'gcloud'
-        run: |
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-          gcloud auth list
-          gcloud services list
+    - name: Checkout
+      uses: actions/checkout@master
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        export_default_credentials: true
