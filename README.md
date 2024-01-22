@@ -1,5 +1,5 @@
 # EZLA Project
- 
+
 This project was created by Redis, and is managed on a voluntary basis.
 
 If you would like to contribute, please send an email to <a href="mailto:guy.korland@redis.com">guy.korland@redis.com</a>.
