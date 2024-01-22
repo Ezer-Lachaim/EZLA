@@ -1,12 +1,12 @@
-name: cloudrun-deploy
+name: Staging CI/CD
 on:
   push:
     branches:
       - main
 
 jobs:
-  setup-build-publish-deploy:
-    name: staging-ci-cd
+  staging-ci-cd:
+    name: Staging CI/CD
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
