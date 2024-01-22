@@ -1,7 +1,8 @@
 name: cloudrun-deploy
 on:
   push:
-    main
+    branches:
+      - main
 
 jobs:
   setup-build-publish-deploy:
