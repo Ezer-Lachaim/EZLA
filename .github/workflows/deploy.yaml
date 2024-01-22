@@ -16,3 +16,11 @@ jobs:
         project_id: 'ezla-pickup'
         service_account: 'ezla-github-builder@ezla-pickup.iam.gserviceaccount.com'
         credentials_json: ${{ secrets.GCLOUD_SA_CREDS }}
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+      with:
+        version: '>= 363.0.0'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
