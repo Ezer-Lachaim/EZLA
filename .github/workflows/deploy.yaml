@@ -37,5 +37,5 @@ jobs:
         # Build the Docker image
       - name: Build & Publish
         run: |
-          docker build . --tag 'us-east1-docker.pkg.dev/ezla-pickup/cloud-run-source-deploy/ezla/ezla-app:latest'
-          docker push 'us-east1-docker.pkg.dev/ezla-pickup/cloud-run-source-deploy/ezla/ezla-app:latest'
+          docker build . --tag 'gcr.io/ezla-pickup/ezer-lachaim/ezla:latest'
+          docker push 'gcr.io/ezla-pickup/ezer-lachaim/ezla:latest'
