@@ -16,7 +16,7 @@ jobs:
       - run: npm ci
       - run: npm run build -w client -w backend
       - run: pwd
-      - run: ls -l
+      - run: ls -l client/
 
       # Setup gcloud CLI
       - uses: 'google-github-actions/auth@v2'
