@@ -87,9 +87,8 @@ jobs:
           docker build . --tag 'gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}'
           docker push 'gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}'
 
-      - name: 'deploy'
+      - name: deploy
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
             service: 'api-hub-staging'
             image: 'gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}'
-            
