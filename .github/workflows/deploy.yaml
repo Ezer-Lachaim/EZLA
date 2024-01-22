@@ -30,9 +30,6 @@ jobs:
         with:
           version: '>= 363.0.0'
 
-      - name: 'Use gcloud CLI'
-        run: 'gcloud info'
-
       - name: Configure Docker
         run: |
           gcloud auth configure-docker
@@ -40,6 +37,5 @@ jobs:
         # Build the Docker image
       - name: Build & Publish
         run: |
-          gcloud config set project 'ezla-pickup'
-          gcloud builds submit . --tag gcr.io/ezer-lachaim/ezla:latest
-          gcloud config set run/region us-central1
+          docker build . --tag 'us-east1-docker.pkg.dev/ezla-pickup/cloud-run-source-deploy/ezla/ezla-app:latest'
+          docker push 'us-east1-docker.pkg.dev/ezla-pickup/cloud-run-source-deploy/ezla/ezla-app:latest'
