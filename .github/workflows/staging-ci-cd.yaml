@@ -1,10 +1,11 @@
 name: cloudrun-deploy
 on:
   push:
+    main
 
 jobs:
   setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+    name: staging-ci-cd
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
