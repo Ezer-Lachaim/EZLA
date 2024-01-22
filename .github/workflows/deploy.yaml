@@ -41,5 +41,5 @@ jobs:
       - name: Build & Publish
         run: |
           gcloud config set project 'ezla-pickup'
-          gcloud builds submit --tag gcr.io/ezer-lachaim/ezla:latest
+          gcloud builds submit . --tag gcr.io/ezer-lachaim/ezla:latest
           gcloud config set run/region us-central1
