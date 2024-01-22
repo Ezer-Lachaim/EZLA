@@ -74,11 +74,7 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone
       },
-<<<<<<< HEAD
       selectedSpecialRequests: []
-=======
-      selectedSpecialRequests: [], 
->>>>>>> df3792dc715be8b0ee5d081f59432e160a93fc5a
     }
   });
 
