@@ -7,7 +7,7 @@ import {
   Button,
   InputLabel,
   FormHelperText,
-  FormControl
+  FormControl,
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,8 +18,13 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import QuantityInput from './PassengerCountSelector.tsx';
+import QuantityInput from '../../../components/PassengersNumberInput.tsx';
 
+interface OrderRideFormData {
+  ride: Ride;
+  isApproveTerms: boolean;
+  selectedSpecialRequests: RideSpecialRequestEnum[];
+}
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
@@ -153,7 +158,7 @@ const OrderRide = () => {
 
   return (
     <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
+      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
