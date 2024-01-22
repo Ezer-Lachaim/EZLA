@@ -95,7 +95,7 @@ function NewRideInfo() {
                 )
                 .join(', ')
             }
-            style={{ maxWidth: '310px', height: '53.11' }}
+            style={{ maxWidth: '310px' }}
           >
             {DRIVER_CAPABILITIES.map(({ value, label }) => (
               <MenuItem key={value} value={value}>
