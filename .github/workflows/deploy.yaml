@@ -1,37 +1,43 @@
 name: cloudrun-deploy
 on:
   push:
-  
+
 jobs:
   setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    # Setup gcloud CLI
-    - uses: 'google-github-actions/auth@v2'
-      with:
-        project_id: 'ezla-pickup'
-        service_account: 'ezla-github-builder@ezla-pickup.iam.gserviceaccount.com'
-        credentials_json: ${{ secrets.GCLOUD_SA_CREDS }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run build -w client -w backend
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v2'
-      with:
-        version: '>= 363.0.0'
+      # Setup gcloud CLI
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'ezla-pickup'
+          service_account: 'ezla-github-builder@ezla-pickup.iam.gserviceaccount.com'
+          credentials_json: ${{ secrets.GCLOUD_SA_CREDS }}
 
-    - name: 'Use gcloud CLI'
-      run: 'gcloud info'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+        with:
+          version: '>= 363.0.0'
 
-    - name: Configure Docker
-      run: |
-        gcloud auth configure-docker
-        
-      # Build the Docker image
-    - name: Build & Publish
-      run: |
-        gcloud config set project 'ezla-pickup'
-        gcloud builds submit --tag gcr.io/ezer-lachaim/ezla:latest
-        gcloud config set run/region us-central1
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+        # Build the Docker image
+      - name: Build & Publish
+        run: |
+          gcloud config set project 'ezla-pickup'
+          gcloud builds submit --tag gcr.io/ezer-lachaim/ezla:latest
+          gcloud config set run/region us-central1
