@@ -14,9 +14,8 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: npm run build -w client -w backend
-      - run: pwd
-      - run: ls -l client/
+      - run: npm run build -w backend
+      - run: npm run build-staging -w client
 
       # Setup gcloud CLI
       - uses: 'google-github-actions/auth@v2'
