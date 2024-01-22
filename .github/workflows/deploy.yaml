@@ -15,4 +15,4 @@ jobs:
       with:
         project_id: 'ezla-pickup'
         service_account: 'ezla-github-builder@ezla-pickup.iam.gserviceaccount.com'
-        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+        credentials_json: ${{ secrets.GCLOUD_SA_CREDS }}
