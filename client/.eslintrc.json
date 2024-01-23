@@ -10,14 +10,9 @@
     "plugin:prettier/recommended",
     "plugin:react/jsx-runtime"
   ],
-  "plugins":  ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": [
-    "coverage/**/*",
-    "dist/**/*",
-    "temp/**/*",
-    "src/api-client/**/*"
-  ],
+  "ignorePatterns": ["coverage/**/*", "dist/**/*", "temp/**/*", "src/api-client/**/*"],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",
@@ -39,12 +34,15 @@
         "functions": "defaultArguments"
       }
     ],
-    "prettier/prettier": ["error", {
-      "printWidth": 100,
-      "singleQuote": true,
-      "arrowParens": "always",
-      "trailingComma": "none",
-      "endOfLine": "auto"
-    }]
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 100,
+        "singleQuote": true,
+        "arrowParens": "always",
+        "trailingComma": "none",
+        "endOfLine": "auto"
+      }
+    ]
   }
 }

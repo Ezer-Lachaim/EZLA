@@ -1,21 +1,14 @@
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField
-} from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
+import NumberyInput from '../../../../../../../Client/components/QuantityInput';
 
 function NewRideInfo() {
   const {
     register,
     watch,
+    setValue,
     formState: { errors }
   } = useFormContext<Ride>();
   return (
@@ -118,29 +111,22 @@ function NewRideInfo() {
           )}
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
-            מספר נוסעים
-          </InputLabel>
-          <Select
+        <TextField
             id="passengerCount"
+            required
             label="מספר נוסעים"
+            type="number"
+            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+            defaultValue={1}
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
-          >
-            <MenuItem value={0}>0</MenuItem>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={11}>11</MenuItem>
-            <MenuItem value={12}>12</MenuItem>
-          </Select>
+            sx={{
+              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button': {
+                opacity: 1,
+              },
+            }}
+          />
+
           {errors.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
