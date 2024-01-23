@@ -2,7 +2,6 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } fr
 import { useFormContext } from 'react-hook-form';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
-import NumberyInput from '../../../../../../../Client/components/QuantityInput';
 
 function NewRideInfo() {
   const {
