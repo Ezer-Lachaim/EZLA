@@ -141,35 +141,22 @@ function EditRideInfo({ ride }: { ride: Ride }) {
           )}
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
-            מספר נוסעים
-          </InputLabel>
-          <Select
+          <TextField
             id="passengerCount"
+            required
             label="מספר נוסעים"
+            type="number"
+            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+            defaultValue={ride.passengerCount || 0}
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
-            defaultValue={ride.passengerCount || 0}
-          >
-            <MenuItem value={0}>0</MenuItem>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={11}>11</MenuItem>
-            <MenuItem value={12}>12</MenuItem>
-          </Select>
-          {errors.passengerCount?.type === 'required' && (
-            <FormHelperText error className="absolute top-full mr-0">
-              יש לבחור מספר נוסעים
-            </FormHelperText>
-          )}
+            sx={{
+              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                {
+                  opacity: 1
+                }
+            }}
+          />
         </FormControl>
         <FormControl>
           <TextField

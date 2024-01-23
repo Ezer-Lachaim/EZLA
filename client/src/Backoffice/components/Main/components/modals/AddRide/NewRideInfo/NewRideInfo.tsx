@@ -7,7 +7,6 @@ function NewRideInfo() {
   const {
     register,
     watch,
-    setValue,
     formState: { errors }
   } = useFormContext<Ride>();
   return (
@@ -110,7 +109,7 @@ function NewRideInfo() {
           )}
         </FormControl>
         <FormControl>
-        <TextField
+          <TextField
             id="passengerCount"
             required
             label="מספר נוסעים"
@@ -120,17 +119,12 @@ function NewRideInfo() {
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
             sx={{
-              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button': {
-                opacity: 1,
-              },
+              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                {
+                  opacity: 1
+                }
             }}
           />
-
-          {errors.passengerCount?.type === 'required' && (
-            <FormHelperText error className="absolute top-full mr-0">
-              יש לבחור מספר נוסעים
-            </FormHelperText>
-          )}
         </FormControl>
         <FormControl>
           <TextField
