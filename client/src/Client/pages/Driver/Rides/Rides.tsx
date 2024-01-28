@@ -116,7 +116,13 @@ const Rides = () => {
     <>
       <div style={{ width: '100%' }}>
         <div style={{ borderBottom: '1px solid divider' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            indicatorColor="primary"
+            textColor="primary" // Set the text color of the selected tab label to "primary" or your preferred color
+          >
             <Tab
               label={`קריאות פתוחות (${sortedRides.length})`}
               {...a11yProps(0)}
@@ -160,24 +166,18 @@ const Rides = () => {
             )}
           </div>
         </CustomTabPanel>
-        <CustomTabPanel
-  value={value}
-  index={1}
-
->   <div className="h-full flex flex-col justify-center items-center">
-<IconButton>
-    <SentimentDissatisfiedIcon
-    style={{ width: '48px', height: '48px' }}
-    />
-  </IconButton>
-  <p className="text-center text-gray-600">
-    אין לך נסיעות. <br />
-    בחר/י נסיעה מקריאות פתוחות.
-  </p>
-
-  </div>
-</CustomTabPanel>
-
+        <CustomTabPanel value={value} index={1}>
+          {' '}
+          <div className="h-full flex flex-col justify-center items-center">
+            <IconButton>
+              <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
+            </IconButton>
+            <p className="text-center text-gray-600">
+              אין לך נסיעות. <br />
+              בחר/י נסיעה מקריאות פתוחות.
+            </p>
+          </div>
+        </CustomTabPanel>
       </div>
     </>
   );
