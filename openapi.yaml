@@ -295,6 +295,7 @@ paths:
             enum:
               - WaitingForDriver
               - Booked
+              - DriverEnroute
               - DriverArrived
               - Riding
               - Completed
@@ -561,6 +562,7 @@ components:
           enum:
             - WaitingForDriver
             - Booked
+            - DriverEnroute
             - DriverArrived
             - Riding
             - Completed
