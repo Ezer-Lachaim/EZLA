@@ -27,7 +27,15 @@ const tabStyles = {
   flex: '1 0 0',
   background: 'var(--White, #FFF)',
   boxShadow:
-    '0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 2px 4px -1px rgba(0, 0, 0, 0.20)'
+    '0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 2px 4px -1px rgba(0, 0, 0, 0.20)',
+  textAlign: 'center',
+  fontFamily: 'Heebo',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 500,
+  lineHeight: '14px',
+  letterSpacing: '0.5px',
+  textTransform: 'uppercase'
 };
 
 function CustomTabPanel(props: TabPanelProps) {
@@ -121,14 +129,14 @@ const Rides = () => {
             onChange={handleChange}
             aria-label="basic tabs example"
             indicatorColor="primary"
-            textColor="primary" // Set the text color of the selected tab label to "primary" or your preferred color
+            textColor="primary"
           >
             <Tab
               label={`קריאות פתוחות (${sortedRides.length})`}
               {...a11yProps(0)}
-              style={tabStyles}
-            />
-            <Tab label={`נסיעות שלי (${MyRides})`} {...a11yProps(1)} style={tabStyles} />
+              style={tabStyles as React.CSSProperties}
+              />
+            <Tab label={`נסיעות שלי (${MyRides})`} {...a11yProps(1)} style={tabStyles as React.CSSProperties} />
           </Tabs>
         </div>
         <CustomTabPanel value={value} index={0}>
@@ -172,7 +180,7 @@ const Rides = () => {
             <IconButton>
               <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
             </IconButton>
-            <p className="text-center text-gray-600">
+            <p className="text-center text-gray-600 text-body2 font-normal leading-5 tracking-tight">
               אין לך נסיעות. <br />
               בחר/י נסיעה מקריאות פתוחות.
             </p>
