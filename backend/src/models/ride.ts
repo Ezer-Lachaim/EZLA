@@ -119,6 +119,7 @@ export interface Ride {
 export enum RideStateEnum {
     WaitingForDriver = 'WaitingForDriver',
     Booked = 'Booked',
+    DriverEnroute = 'DriverEnroute',
     DriverArrived = 'DriverArrived',
     Riding = 'Riding',
     Completed = 'Completed',
