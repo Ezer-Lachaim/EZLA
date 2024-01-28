@@ -6,7 +6,8 @@ import { DriverCarCapabilitiesEnum, Driver } from '../../../../../../../api-clie
 function EditDriverCarInfo({ driver }: { driver: Driver }) {
   const {
     register,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useFormContext<Driver>();
 
   const isSpecialRequestAvailable = (value: DriverCarCapabilitiesEnum) => {
@@ -117,6 +118,16 @@ function EditDriverCarInfo({ driver }: { driver: Driver }) {
             </FormHelperText>
           )}
         </FormControl>
+        <FormControlLabel
+          className="mb-2 "
+          control={
+            <Checkbox
+              defaultChecked={!driver.isGoogleForm}
+              onChange={(e) => setValue('isGoogleForm', !e.target.checked)}
+            />
+          }
+          label="הטופס אינו טיוטה"
+        />
       </div>
     </div>
   );

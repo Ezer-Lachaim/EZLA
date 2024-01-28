@@ -32,7 +32,7 @@ async function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
   await connect();
-  console.log(`Listening on ${bind}`);
+  console.log(`http://localhost: on ${bind}`);
 }
 
 export default server;

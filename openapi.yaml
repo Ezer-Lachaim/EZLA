@@ -582,7 +582,7 @@ components:
           example: 'בני ברק'
         address:
           type: string
-          example: 'ג׳בוטינסקי 1'
+          example: ' ז׳בוטינסקי 1'
         isInitialPassword:
           type: boolean
         signupDate:
@@ -705,6 +705,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/User'
       properties:
+        isGoogleForm:
+          type: boolean
         isValidLicense:
           type: boolean
           example: true
