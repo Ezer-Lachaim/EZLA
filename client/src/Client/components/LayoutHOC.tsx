@@ -7,6 +7,7 @@ interface LayoutHOCProps<P> extends Partial<NavBarProps> {
   hideNavbar?: boolean;
   hideFooter?: boolean;
   backgroundColor?: string;
+  wrapperClassName?: string;
 }
 
 const withLayout = <P extends object>(
@@ -20,6 +21,7 @@ const withLayout = <P extends object>(
     onBackClick,
     showLogoutButton = false,
     backgroundColor
+    ,wrapperClassName
   }: LayoutHOCProps<P>
 ) => {
   return () => (
@@ -32,7 +34,7 @@ const withLayout = <P extends object>(
           showLogoutButton={showLogoutButton}
         />
       )}
-      <div className="max-h-full overflow-auto h-full">
+      <div className={`max-h-full overflow-auto h-full ${wrapperClassName || ''}`}>
         <div className="max-w-lg mx-auto w-full h-full">
           <main className="flex items-center flex-col p-5 box-border h-full">
             <Component {...(componentProps as P)} />
