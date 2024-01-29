@@ -40,7 +40,8 @@
         "lodash": "^4.17.21",
         "morgan": "^1.9.1",
         "pug": "^3.0.1",
-        "redis": "^4.6.7"
+        "redis": "^4.6.7",
+        "sort-by": "0.0.2"
     },
     "devDependencies": {
         "@types/config": "^3.3.3",
@@ -54,7 +55,7 @@
         "@types/uuid": "^9.0.2",
         "concurrently": "6.5.1",
         "jest": "26.6.3",
-        "nodemon": "2.0.22",
+        "nodemon": "^3.0.3",
         "prettier": "2.8.8",
         "supertest": "6.3.3",
         "swagger-autogen": "^2.23.2",

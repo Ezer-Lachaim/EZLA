@@ -40,6 +40,26 @@ interface OrderRideFormData {
   };
 }
 
+const CustomFontSizeContainer = styled('div')(() => ({
+  fontSize: 20,
+  '& .MuiInputBase-input': {
+    fontSize: 20
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: 20
+  },
+  '& .MuiButtonBase-root': {
+    fontSize: 20
+  },
+  '& .MuiOutlinedInput-root': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      legend: {
+        fontSize: 15
+      }
+    }
+  }
+}));
+
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
 } = {
@@ -100,6 +120,20 @@ const OrderRide = () => {
         setQuantity((prevQuantity) => prevQuantity - 1);
         setValue('ride.passengerCount', quantity - 1);
       }}
+
+  const renderStyledFormControlLabel = ({
+    labelText,
+    registerName
+  }: {
+    labelText: string;
+    registerName: string;
+  }) => (
+    <FormControlLabel
+      control={<Checkbox {...register(`specialRequest.${registerName}`)} />}
+      checked={watch().specialRequest?.[registerName]}
+      label={<span style={{ fontSize: '20px' }}>{labelText}</span>}
+    />
+  );
 
   useEffect(() => {
     if (!user) {
@@ -171,7 +205,7 @@ const OrderRide = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pb-5">
+    <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
@@ -294,37 +328,28 @@ const OrderRide = () => {
         </FormControl>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">בקשות מיוחדות</p>
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChair')} />}
-            checked={watch().specialRequest?.isWheelChair}
-            label="התאמה לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
-            checked={watch().specialRequest?.isBabySafetySeat}
-            label="מושב בטיחות לתינוק"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
-            checked={watch().specialRequest?.isChildSafetySeat}
-            label="מושב בטיחות לילדים (גיל 3-8)"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
-            checked={watch().specialRequest?.isHighVehicle}
-            label="רכב גבוה"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
-            checked={watch().specialRequest?.isWheelChairTrunk}
-            label="תא מטען מתאים לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
-            checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים"
-          />
+          <p className="text-lg text-gray-500">בקשות מיוחדות</p>
+          {renderStyledFormControlLabel({
+            labelText: 'התאמה לכסא גלגלים',
+            registerName: 'isWheelChair'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לתינוק',
+            registerName: 'isBabySafetySeat'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לילדים (גיל 3-8)',
+            registerName: 'isChildSafetySeat'
+          })}
+          {renderStyledFormControlLabel({ labelText: 'רכב גבוה', registerName: 'isHighVehicle' })}
+          {renderStyledFormControlLabel({
+            labelText: 'תא מטען מתאים לכסא גלגלים',
+            registerName: 'isWheelChairTrunk'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'משלוחים',
+            registerName: 'isPatientDelivery'
+          })}
         </div>
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
@@ -423,7 +448,7 @@ const OrderRide = () => {
           {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
         </Button>
       </form>
-    </div>
+    </CustomFontSizeContainer>
   );
 };
 
