@@ -1,11 +1,11 @@
-import { RideStateEnum } from '../../../../../api-client';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
+import React from 'react';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
-import React from 'react';
+import { RideStateEnum } from '../../../../../api-client';
 
-
-type IconType = React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+type IconType = React.ReactElement | null;
 
 export const RIDE_STATE_MAPPER: Record<RideStateEnum, string> = {
   [RideStateEnum.WaitingForDriver]: 'ממתין לנהג',
@@ -34,24 +34,24 @@ export const getStateIcon = (state: RideStateEnum): IconType => {
     case RideStateEnum.Canceled:
       return React.createElement(HighlightOffOutlinedIcon);
     default:
-      return null as unknown as IconType;
+      return null;
   }
 };
 
 export const getStateIconColor = (state: RideStateEnum) => {
   switch (state) {
     case RideStateEnum.WaitingForDriver:
-      case RideStateEnum.Booked:
-        return '#FFB547'; 
-        case RideStateEnum.DriverEnroute:
-          case RideStateEnum.Riding:
-            return '#64B6F7';
-          case RideStateEnum.Completed:
-            return '#7BC67E';
-          case RideStateEnum.RequesterCanceled:
-          case RideStateEnum.DriverCanceled:
-          case RideStateEnum.Canceled:
-            return '#F44336';
+    case RideStateEnum.Booked:
+      return '#FFB547';
+    case RideStateEnum.DriverEnroute:
+    case RideStateEnum.Riding:
+      return '#64B6F7';
+    case RideStateEnum.Completed:
+      return '#7BC67E';
+    case RideStateEnum.RequesterCanceled:
+    case RideStateEnum.DriverCanceled:
+    case RideStateEnum.Canceled:
+      return '#F44336';
     default:
       return 'gray';
   }
