@@ -2,13 +2,13 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
-import { Button } from '@mui/material';
+import { Button, Chip, Avatar, Typography } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
-import { RIDE_STATE_MAPPER } from './Rides.constants';
+import { RIDE_STATE_MAPPER, getStateIcon, getStateIconColor } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
@@ -90,11 +90,48 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'state',
     header: 'סטטוס',
-    accessorFn: (data) => {
-      if (!data.state) return '-';
-      return RIDE_STATE_MAPPER[data.state];
+    cell: ({ row }) => {
+      if (!row.original.state) return null;
+
+      const icon = getStateIcon(row.original.state);
+      const label = RIDE_STATE_MAPPER[row.original.state];
+      const backgroundColor = getStateIconColor(row.original.state);
+
+      return (
+        <Chip
+          avatar={
+            <Avatar style={{ backgroundColor, color: '#fff', borderRadius: '50px' }}>{icon}</Avatar>
+          }
+          label={
+            <Typography
+              style={{
+                color: 'var(--Text-color-Dark-Mode-Primary, #FFF)',
+                textAlign: 'right',
+                fontFamily: 'Heebo',
+                fontSize: '14px',
+                fontStyle: 'normal',
+                fontWeight: 400,
+                lineHeight: '100%',
+                whiteSpace: 'normal'
+              }}
+            >
+              {label}
+            </Typography>
+          }
+          style={{
+            backgroundColor,
+            width: '100px',
+            padding: '3px 5px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '4px',
+            flex: '1 0 0'
+          }}
+        />
+      );
     }
   },
+
   {
     accessorKey: 'actions2',
     header: '',
