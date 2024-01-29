@@ -11,7 +11,7 @@ import { api } from '../../../../services/api';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
 
@@ -128,9 +128,18 @@ const ActiveRide = () => {
             </div>
           }
         />
-
-        {ride?.comment && <ViewField label="הערות" value={ride?.comment || ''} />}
-
+        <Box sx={{ width: '95%' }}>
+          {ride?.comment && (
+            <ViewField
+              label="תיאור הנסיעה:"
+              value={
+                <Box style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                  {ride?.comment || ''}
+                </Box>
+              }
+            />
+          )}
+        </Box>
         <hr className="mt-2" />
       </div>
 

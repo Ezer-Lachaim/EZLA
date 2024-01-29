@@ -5,12 +5,11 @@ import car from '../../../../assets/car.png';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
-import { useAuthStore } from '../../../../services/auth';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { RideStateEnum } from '../../../../api-client';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const SearchingDriver = () => {
-  const setGuestToken = useAuthStore((state) => state.setGuestToken);
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
   const [confirmClose, setConfirmClose] = React.useState(false);
 

@@ -1,11 +1,10 @@
 import { Button } from '@mui/material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
-import { useAuthStore } from '../../../../services/auth';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 const RideCompleted = () => {
-  const setGuestToken = useAuthStore((state) => state.setGuestToken);
   const { reFetch: reFetchActiveRide } = useActiveRide();
 
   const confirmComplete = async () => {

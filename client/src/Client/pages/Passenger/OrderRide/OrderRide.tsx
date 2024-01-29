@@ -9,16 +9,18 @@ import {
   Select,
   FormHelperText,
   FormControl,
-  MenuItem
+  MenuItem,
+  styled
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
-import { useAuthStore } from '../../../../services/auth';
+import { useUserStore } from '../../../../services/auth/user';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
-import { useActiveRide } from '../../../../hooks/useActiveRide';
+import { useActiveRide } from '../../../../hooks/activeRide';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -33,6 +35,26 @@ interface OrderRideFormData {
     [indexer: string]: boolean;
   };
 }
+
+const CustomFontSizeContainer = styled('div')(() => ({
+  fontSize: 20,
+  '& .MuiInputBase-input': {
+    fontSize: 20
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: 20
+  },
+  '& .MuiButtonBase-root': {
+    fontSize: 20
+  },
+  '& .MuiOutlinedInput-root': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      legend: {
+        fontSize: 15
+      }
+    }
+  }
+}));
 
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
@@ -51,8 +73,7 @@ enum DestinationSourceEnum {
 }
 
 const OrderRide = () => {
-  const user = useAuthStore((state) => state.user) as RideRequester;
-  const setGuestToken = useAuthStore((state) => state.setGuestToken);
+  const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
@@ -82,6 +103,20 @@ const OrderRide = () => {
       }
     }
   });
+
+  const renderStyledFormControlLabel = ({
+    labelText,
+    registerName
+  }: {
+    labelText: string;
+    registerName: string;
+  }) => (
+    <FormControlLabel
+      control={<Checkbox {...register(`specialRequest.${registerName}`)} />}
+      checked={watch().specialRequest?.[registerName]}
+      label={<span style={{ fontSize: '20px' }}>{labelText}</span>}
+    />
+  );
 
   useEffect(() => {
     if (!user) {
@@ -153,8 +188,8 @@ const OrderRide = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full pb-5">
-      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}! צריכים הסעה?</h1>
+    <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
+      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="flex flex-col">
           {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
@@ -251,63 +286,54 @@ const OrderRide = () => {
         </FormControl>
         <FormControl>
           <TextField
-            label={user ? 'הערה' : 'מטרת הנסיעה'}
+            label="תיאור הנסיעה"
             type="string"
             required={!user}
-            placeholder="הסבר קצר לגבי מטרת הנסיעה"
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
             error={!!errors?.ride?.comment}
             {...register('ride.comment', {
-              maxLength: 50,
+              maxLength: 100,
               required: !user
             })}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
-              (watch().ride?.comment?.length || 0) >= 50 ? 'text-red-500' : ''
+              (watch().ride?.comment?.length || 0) >= 100 ? 'text-red-500' : ''
             }`}
           >
-            {watch().ride?.comment?.length || 0} / 50
+            {watch().ride?.comment?.length || 0} / 100
           </span>
           {errors.ride?.comment && (
             <FormHelperText error className="absolute top-full mr-0">
-              {errors.ride.comment.type === 'required' && 'יש להזין את מטרת הנסיעה'}
-              {errors.ride.comment.type === 'maxLength' && 'הגעתם למקסימום אורך ההודעה המותר'}
+              {errors.ride.comment.type === 'required' && 'יש להזין את תיאור הנסיעה'}
+              {errors.ride.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}
         </FormControl>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">בקשות מיוחדות</p>
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChair')} />}
-            checked={watch().specialRequest?.isWheelChair}
-            label="התאמה לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isBabySafetySeat')} />}
-            checked={watch().specialRequest?.isBabySafetySeat}
-            label="מושב בטיחות לתינוק"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isChildSafetySeat')} />}
-            checked={watch().specialRequest?.isChildSafetySeat}
-            label="מושב בטיחות לילדים (גיל 3-8)"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isHighVehicle')} />}
-            checked={watch().specialRequest?.isHighVehicle}
-            label="רכב גבוה"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isWheelChairTrunk')} />}
-            checked={watch().specialRequest?.isWheelChairTrunk}
-            label="תא מטען מתאים לכסא גלגלים"
-          />
-          <FormControlLabel
-            control={<Checkbox {...register('specialRequest.isPatientDelivery')} />}
-            checked={watch().specialRequest?.isPatientDelivery}
-            label="משלוחים"
-          />
+          <p className="text-lg text-gray-500">בקשות מיוחדות</p>
+          {renderStyledFormControlLabel({
+            labelText: 'התאמה לכסא גלגלים',
+            registerName: 'isWheelChair'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לתינוק',
+            registerName: 'isBabySafetySeat'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'מושב בטיחות לילדים (גיל 3-8)',
+            registerName: 'isChildSafetySeat'
+          })}
+          {renderStyledFormControlLabel({ labelText: 'רכב גבוה', registerName: 'isHighVehicle' })}
+          {renderStyledFormControlLabel({
+            labelText: 'תא מטען מתאים לכסא גלגלים',
+            registerName: 'isWheelChairTrunk'
+          })}
+          {renderStyledFormControlLabel({
+            labelText: 'משלוחים',
+            registerName: 'isPatientDelivery'
+          })}
         </div>
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
@@ -406,13 +432,13 @@ const OrderRide = () => {
           {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
         </Button>
       </form>
-    </div>
+    </CustomFontSizeContainer>
   );
 };
 
 const OrderRideWrapper = () => {
   const navigate = useNavigate();
-  const user = useAuthStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
 
   const OrderRideComponent = withLayout(
     OrderRide,
