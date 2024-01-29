@@ -20,6 +20,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src",
+    "globalComponents/components/ChoiceHoursMenu.tsx",
+    "globalComponents/components/MenuAndPickUpTime.tsx",
+    "globalComponents/components/PickUpTime.tsx",
+    "globalComponents/components/PickUpDate.tsx"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "types": ["@mui/types"]
 }

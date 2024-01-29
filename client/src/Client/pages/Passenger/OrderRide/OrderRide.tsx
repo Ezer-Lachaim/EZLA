@@ -20,8 +20,8 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-// import CalenderDate from './CalenderDate.tsx';
-// import MenuAndCalenderTime from './MenuAndCalenderTime.tsx';
+import MenuAndPickUpTime from '../../../../../globalComponents/components/MenuAndPickUpTime.tsx';
+import CalenderDate from '../../../../../globalComponents/components/PickUpDate.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -277,6 +277,10 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+
+        <CalenderDate />
+
+        <MenuAndPickUpTime />
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>
