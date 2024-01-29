@@ -54,7 +54,7 @@ const RideApprovalModal = ({
             <CarIcon sx={{ fontSize: 48 }} color="secondary" />
             <h1 className="text-center m-0 text-blue-500">יוצאים לדרך</h1>
           </div>
-          <div className="flex flex-col gap-4" hidden>
+          {/* <div className="flex flex-col gap-4" hidden>
             <p className="text-center">עדכנו את זמן המתנה המשוער שיוצג לנוסע/ים.</p>
             <FormControl>
               <TextField
@@ -72,7 +72,7 @@ const RideApprovalModal = ({
                 </FormHelperText>
               )}
             </FormControl>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-4">
             <Button variant="contained" color="secondary" type="submit">
               אישור ויציאה לדרך
