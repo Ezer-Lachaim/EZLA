@@ -1,9 +1,4 @@
-import {
-  Modal,
-  Box,
-  Button,
-  IconButton,
-} from '@mui/material';
+import { Modal, Box, Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -33,11 +28,7 @@ const RideApprovalModal = ({
   onClose: () => void;
   onSubmit: SubmitHandler<SubmitRideInputs>;
 }) => {
-  const {
-    // register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<SubmitRideInputs>();
+  const { handleSubmit } = useForm<SubmitRideInputs>();
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
