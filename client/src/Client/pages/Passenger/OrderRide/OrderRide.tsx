@@ -8,7 +8,7 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-  IconButton
+  IconButton,
   MenuItem,
   styled,
   SelectChangeEvent,
