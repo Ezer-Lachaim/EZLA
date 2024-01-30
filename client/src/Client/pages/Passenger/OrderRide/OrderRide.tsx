@@ -113,21 +113,6 @@ const OrderRide = () => {
       setValue('ride.passengerCount', quantity - 1);
     }
   };
-  const renderStyledFormControlLabel = ({
-    labelText,
-    registerName
-  }: {
-    labelText: string;
-    registerName: string;
-  }) => (
-    <FormControlLabel
-      control={<Checkbox {...register(`specialRequest.${registerName}`)} />}
-      checked={watch().specialRequest?.[registerName]}
-      label={<span style={{ fontSize: '20px' }}>{labelText}</span>}
-    />
-  );
-
-  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
 
   const handleSpecialRequestsChange = (
     event: SelectChangeEvent<typeof selectedSpecialRequests>
