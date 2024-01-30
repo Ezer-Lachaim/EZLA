@@ -1,10 +1,4 @@
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  TextField
-} from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
 import { DriverCarCapabilitiesEnum, Ride } from '../../../../../../../api-client';

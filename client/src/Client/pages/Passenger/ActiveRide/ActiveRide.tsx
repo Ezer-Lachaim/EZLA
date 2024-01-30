@@ -54,7 +54,7 @@ const ActiveRide = () => {
     await api.ride.updateRide({
       rideId: ride?.rideId ?? '',
       ride: { state: RideStateEnum.RequesterCanceled }
-    });  
+    });
 
     setGuestToken(null);
 
