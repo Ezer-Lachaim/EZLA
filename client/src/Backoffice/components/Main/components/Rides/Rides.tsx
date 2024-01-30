@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
+import { Close, Edit } from '@mui/icons
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
@@ -148,13 +150,13 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         <div className="flex gap-1 items-center">
           <Button
             size="small"
-            variant="outlined"
+            variant="text"
             color="error"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Edit fontSize="small" />
+            <EditIcon style={{ color: '#0000008A', fontSize: '24px' }} />
           </Button>
           <EditRideModal open={toggleModal} handleModal={handleModal} ride={ride} />
         </div>
@@ -175,13 +177,13 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         <div className="flex gap-1 items-center">
           <Button
             size="small"
-            variant="outlined"
+            variant="text"
             color="error"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Close fontSize="small" />
+            <DeleteForeverIcon style={{ color: '#0000008A', fontSize: '24px' }} />
           </Button>
           <CancelRideModal
             rideId={row.original.rideId || ''}

@@ -1,10 +1,11 @@
 import {
   Checkbox,
   FormControl,
-  FormControlLabel,
   FormHelperText,
   InputLabel,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField
 } from '@mui/material';
@@ -18,6 +19,9 @@ function NewRideInfo() {
     watch,
     formState: { errors }
   } = useFormContext<Ride>();
+  const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
+  const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+
   return (
     <div className="flex gap-4">
       <div className="flex flex-col gap-8 flex-1">
@@ -73,16 +77,34 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
-          {DRIVER_CAPABILITIES.map(({ value, label }) => (
-            <FormControlLabel
-              value={value}
-              control={<Checkbox {...register('specialRequest')} />}
-              label={label}
-            />
-          ))}
-        </div>
+        <FormControl>
+          <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
+          <Select
+            labelId="special-requests-label"
+            aria-labelledby="special-requests-label"
+            id="special-requests"
+            multiple
+            input={<OutlinedInput label="בקשות מיוחדות" />}
+            {...register('specialRequest')}
+            value={selectedSpecialRequests}
+            renderValue={(selected: unknown[]) =>
+              (selected as string[])
+                .map(
+                  (value) =>
+                    DRIVER_CAPABILITIES.find((capability) => capability.value === value)?.label
+                )
+                .join(', ')
+            }
+            style={{ maxWidth: '310px' }}
+          >
+            {DRIVER_CAPABILITIES.map(({ value, label }) => (
+              <MenuItem key={value} value={value}>
+                <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
+                <ListItemText primary={label} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
       <div className="flex flex-col gap-8 flex-1">
         <FormControl>
@@ -118,34 +140,22 @@ function NewRideInfo() {
           )}
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
-            מספר נוסעים
-          </InputLabel>
-          <Select
+          <TextField
             id="passengerCount"
+            required
             label="מספר נוסעים"
+            type="number"
+            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+            defaultValue={1}
             error={!!errors?.passengerCount}
             {...register('passengerCount', { required: true })}
-          >
-            <MenuItem value={0}>0</MenuItem>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={11}>11</MenuItem>
-            <MenuItem value={12}>12</MenuItem>
-          </Select>
-          {errors.passengerCount?.type === 'required' && (
-            <FormHelperText error className="absolute top-full mr-0">
-              יש לבחור מספר נוסעים
-            </FormHelperText>
-          )}
+            sx={{
+              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                {
+                  opacity: 1
+                }
+            }}
+          />
         </FormControl>
         <FormControl>
           <TextField
