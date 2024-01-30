@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
-import { DriverCarCapabilitiesEnum, Ride } from '../../../../../../../api-client';
+import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
 function EditRideInfo({ ride }: { ride: Ride }) {
