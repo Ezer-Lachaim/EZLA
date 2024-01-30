@@ -52,9 +52,9 @@ const ActiveRide = () => {
 
   const onCancelRide = async () => {
     await api.ride.updateRide({
-      rideId: ride?.rideId || '',
+      rideId: ride?.rideId ?? '',
       ride: { state: RideStateEnum.RequesterCanceled }
-    });
+    });  
 
     setGuestToken(null);
 
