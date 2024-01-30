@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
-import { Close, Edit } from '@mui/icons
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
