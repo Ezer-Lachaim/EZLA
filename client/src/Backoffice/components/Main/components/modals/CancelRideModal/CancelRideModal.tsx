@@ -42,14 +42,14 @@ function CancelRideModal({ open, handleModal, rideId }: CancelRideModalProps) {
       <Box sx={style}>
         <div className="flex justify-between">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            ביטול בקשת נסיעה
+            ביטול נסיעה
           </Typography>
           <Button className="p-0" color="inherit" onClick={() => handleModal(false)}>
             <ClearIcon />
           </Button>
         </div>
         <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
-          האם את.ה בטוח.ה שברצונך לבטל את הבקשה לנסיעה?
+          האם אתם בטוחים שברצונכם לבטל את הנסיעה?
         </Typography>
         <Box
           sx={{
@@ -60,10 +60,10 @@ function CancelRideModal({ open, handleModal, rideId }: CancelRideModalProps) {
           }}
         >
           <Button variant="outlined" onClick={() => handleModal(false)}>
-            סגור
+            ביטול
           </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary" className="text-white">
-            ביטול נסיעה
+          <Button onClick={handleSubmit} variant="contained" color="error" className="text-white">
+            אישור
           </Button>
         </Box>
       </Box>
