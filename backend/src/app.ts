@@ -36,7 +36,7 @@ if (config.env !== 'production') {
 app.use('/env', envRouter);
 app.use('/users', authHandler(), usersRouter);
 app.use('/drivers', authHandler(), driversRouter);
-app.use('/signup', signupDriversRoutes);
+// app.use('/signup', signupDriversRoutes);
 app.use('/rides', ridesRouter);
 app.use('/signup', checkTokenMiddleware, signupDriversRoutes);
 app.use('/', index);

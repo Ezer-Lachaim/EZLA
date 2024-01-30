@@ -80,11 +80,12 @@ const FirstSignUp = () => {
         מחפשים להצטרף לקהילת המתנדבים?💪❤️ <br />
         למילוי טופס הצטרפות הקישו&nbsp;
         <a
-          href={
-            serverEnvSettings?.allowGuestRideMode
-              ? 'https://docs.google.com/forms/d/e/1FAIpQLSc_ZQfja7JKlKIR-_URVnqXc0uyE3L9oSMnV0mv5sWngvBwaw/viewform'
-              : 'https://forms.gle/fRAY1H2HLyZrpZAR6'
-          }
+          // href={
+          //   serverEnvSettings?.allowGuestRideMode
+          //     ? 'https://docs.google.com/forms/d/e/1FAIpQLSc_ZQfja7JKlKIR-_URVnqXc0uyE3L9oSMnV0mv5sWngvBwaw/viewform'
+          //     : 'https://forms.gle/fRAY1H2HLyZrpZAR6'
+          // }
+          href="https://docs.google.com/forms/d/e/1FAIpQLSend93DUjnKv2nqjSU3cPqPtrGGZRzXvwuYtKe9e8harV_Mjw/viewform?usp=sf_link"
         >
           כאן
         </a>
