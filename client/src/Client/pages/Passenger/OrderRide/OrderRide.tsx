@@ -6,15 +6,17 @@ import {
   Checkbox,
   Button,
   InputLabel,
-  Select,
   FormHelperText,
   FormControl,
+  IconButton,
   MenuItem,
   styled,
+  Select,
   SelectChangeEvent,
   OutlinedInput,
   ListItemText
 } from '@mui/material';
+import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -98,8 +100,20 @@ const OrderRide = () => {
       selectedSpecialRequests: []
     }
   });
+  const [quantity, setQuantity] = useState<number>(1);
+  const handleIncrement = () => {
+    if (quantity < 12) {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+      setValue('ride.passengerCount', quantity + 1);
+    }
+  };
 
-  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+      setValue('ride.passengerCount', quantity - 1);
+    }
+  };
 
   const handleSpecialRequestsChange = (
     event: SelectChangeEvent<typeof selectedSpecialRequests>
@@ -239,29 +253,27 @@ const OrderRide = () => {
         </div>
 
         <FormControl>
-          <InputLabel htmlFor="passengerCount" required>
-            מספר נוסעים
-          </InputLabel>
-          <Select
-            id="passengerCount"
-            label="מספר נוסעים"
-            error={!!errors?.ride?.passengerCount}
-            {...register('ride.passengerCount', { required: true })}
-          >
-            <MenuItem value={0}>0</MenuItem>
-            <MenuItem value={1}>1</MenuItem>
-            <MenuItem value={2}>2</MenuItem>
-            <MenuItem value={3}>3</MenuItem>
-            <MenuItem value={4}>4</MenuItem>
-            <MenuItem value={5}>5</MenuItem>
-            <MenuItem value={6}>6</MenuItem>
-            <MenuItem value={7}>7</MenuItem>
-            <MenuItem value={8}>8</MenuItem>
-            <MenuItem value={9}>9</MenuItem>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={11}>11</MenuItem>
-            <MenuItem value={12}>12</MenuItem>
-          </Select>
+          <InputLabel htmlFor="passengerCount" />
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <IconButton aria-label="decrement" onClick={handleDecrement}>
+              <RemoveCircleOutlineOutlined />
+            </IconButton>
+            <TextField
+              id="passengerCount"
+              variant="outlined"
+              value={quantity}
+              inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+              label="מספר נוסעים"
+            />
+            {errors.ride?.passengerCount?.type === 'required' && (
+              <FormHelperText error className="absolute top-full mr-0">
+                יש לבחור מספר נוסעים
+              </FormHelperText>
+            )}
+            <IconButton aria-label="increment" onClick={handleIncrement}>
+              <AddCircleOutlineOutlined />
+            </IconButton>
+          </div>
           {errors.ride?.passengerCount?.type === 'required' && (
             <FormHelperText error className="absolute top-full mr-0">
               יש לבחור מספר נוסעים
