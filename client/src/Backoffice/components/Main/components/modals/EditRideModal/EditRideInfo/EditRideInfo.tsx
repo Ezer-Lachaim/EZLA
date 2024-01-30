@@ -1,7 +1,16 @@
-import { Checkbox, FormControl, FormControlLabel, FormHelperText, TextField } from '@mui/material';
+import {
+  Checkbox,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField
+} from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
-import { DriverCarCapabilitiesEnum, Ride } from '../../../../../../../api-client';
+import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
 function EditRideInfo({ ride }: { ride: Ride }) {
@@ -19,11 +28,10 @@ function EditRideInfo({ ride }: { ride: Ride }) {
     setValue('lastName', ride.lastName || '');
     setValue('destination', ride.destination || '');
     setValue('comment', ride.comment || '');
+    setValue('specialRequest', ride.specialRequest || []);
   }, [ride, setValue]);
 
-  const isSpecialRequestNeeded = (value: DriverCarCapabilitiesEnum) => {
-    return ride.specialRequest?.includes(value) || false;
-  };
+  const selectedSpecialRequests = watch('specialRequest', []);
 
   return (
     <div className="flex gap-4">
@@ -80,22 +88,35 @@ function EditRideInfo({ ride }: { ride: Ride }) {
             </FormHelperText>
           )}
         </FormControl>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
-          {DRIVER_CAPABILITIES.map(({ value, label }) => {
-            return (
-              <FormControlLabel
-                value={value}
-                control={
-                  <Checkbox
-                    defaultChecked={isSpecialRequestNeeded(value)}
-                    {...register(`specialRequest`)}
-                  />
-                }
-                label={label}
-              />
-            );
-          })}
+        <div className="flex flex-col gap-8 flex-1">
+          <FormControl className="flex flex-col gap-2">
+            <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
+            <Select
+              labelId="special-requests-label"
+              aria-labelledby="special-requests-label"
+              id="special-requests"
+              multiple
+              input={<OutlinedInput label="בקשות מיוחדות" />}
+              {...register('specialRequest')}
+              value={selectedSpecialRequests}
+              renderValue={(selected: unknown[]) =>
+                (selected as string[])
+                  .map(
+                    (value) =>
+                      DRIVER_CAPABILITIES.find((capability) => capability.value === value)?.label
+                  )
+                  .join(', ')
+              }
+              style={{ maxWidth: '310px' }}
+            >
+              {DRIVER_CAPABILITIES.map(({ value, label }) => (
+                <MenuItem key={value} value={value}>
+                  <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
       </div>
       <div className="flex flex-col gap-8 flex-1">

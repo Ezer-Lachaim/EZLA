@@ -8,8 +8,12 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-  styled,
   IconButton
+  MenuItem,
+  styled,
+  SelectChangeEvent,
+  OutlinedInput,
+  ListItemText
 } from '@mui/material';
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
@@ -25,16 +29,26 @@ import { useActiveRide } from '../../../../hooks/activeRide';
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
-  specialRequest: {
-    isWheelChair: boolean;
-    isBabySafetySeat: boolean;
-    isChildSafetySeat: boolean;
-    isHighVehicle: boolean;
-    isWheelChairTrunk: boolean;
-    isPatientDelivery: boolean;
-    [indexer: string]: boolean;
-  };
+  selectedSpecialRequests: RideSpecialRequestEnum[];
 }
+
+const specialRequestLabels: { [key: string]: string } = {
+  isWheelChair: 'התאמה לכסא גלגלים',
+  isBabySafetySeat: 'מושב בטיחות לתינוק',
+  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+  isHighVehicle: 'רכב גבוה',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
+};
+
+const specialMap: {
+  [key: string]: RideSpecialRequestEnum;
+} = {
+  isWheelChair: RideSpecialRequestEnum.WheelChair,
+  isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
+  isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
+  isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage
+};
 
 const CustomFontSizeContainer = styled('div')(() => ({
   fontSize: 20,
@@ -55,17 +69,6 @@ const CustomFontSizeContainer = styled('div')(() => ({
     }
   }
 }));
-
-const specialMap: {
-  [key: string]: RideSpecialRequestEnum;
-} = {
-  isWheelChair: RideSpecialRequestEnum.WheelChair,
-  isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
-  isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
-  isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
-  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
-  isPatientDelivery: RideSpecialRequestEnum.PatientDelivery
-};
 
 enum DestinationSourceEnum {
   Destination,
@@ -93,14 +96,7 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone
       },
-      specialRequest: {
-        isWheelChair: user?.specialRequest?.includes(specialMap.isWheelChair),
-        isBabySafetySeat: user?.specialRequest?.includes(specialMap.isBabySafetySeat),
-        isChildSafetySeat: user?.specialRequest?.includes(specialMap.isChildSafetySeat),
-        isHighVehicle: user?.specialRequest?.includes(specialMap.isHighVehicle),
-        isWheelChairTrunk: user?.specialRequest?.includes(specialMap.isWheelChairTrunk),
-        isPatientDelivery: user?.specialRequest?.includes(specialMap.isPatientDelivery)
-      }
+      selectedSpecialRequests: []
     }
   });
   const [quantity, setQuantity] = useState<number>(1);
@@ -130,6 +126,17 @@ const OrderRide = () => {
       label={<span style={{ fontSize: '20px' }}>{labelText}</span>}
     />
   );
+
+  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
+
+  const handleSpecialRequestsChange = (
+    event: SelectChangeEvent<typeof selectedSpecialRequests>
+  ) => {
+    const {
+      target: { value }
+    } = event;
+    setSelectedSpecialRequests(typeof value === 'string' ? value.split(',') : value);
+  };
 
   useEffect(() => {
     if (!user) {
@@ -161,15 +168,7 @@ const OrderRide = () => {
 
   const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
     setIsOrderRideLoading(true);
-    const specialRequestsArray = Object.keys(data.specialRequest || {}).reduce(
-      (acc: RideSpecialRequestEnum[], cur) => {
-        if (data.specialRequest?.[cur]) {
-          acc.push(specialMap[cur]);
-        }
-        return acc;
-      },
-      []
-    );
+    const specialRequestsArray = selectedSpecialRequests.map((request) => specialMap[request]);
 
     if (!user) {
       setGuestToken(uuidv4());
@@ -322,30 +321,30 @@ const OrderRide = () => {
           )}
         </FormControl>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-lg text-gray-500">בקשות מיוחדות</p>
-          {renderStyledFormControlLabel({
-            labelText: 'התאמה לכסא גלגלים',
-            registerName: 'isWheelChair'
-          })}
-          {renderStyledFormControlLabel({
-            labelText: 'מושב בטיחות לתינוק',
-            registerName: 'isBabySafetySeat'
-          })}
-          {renderStyledFormControlLabel({
-            labelText: 'מושב בטיחות לילדים (גיל 3-8)',
-            registerName: 'isChildSafetySeat'
-          })}
-          {renderStyledFormControlLabel({ labelText: 'רכב גבוה', registerName: 'isHighVehicle' })}
-          {renderStyledFormControlLabel({
-            labelText: 'תא מטען מתאים לכסא גלגלים',
-            registerName: 'isWheelChairTrunk'
-          })}
-          {renderStyledFormControlLabel({
-            labelText: 'משלוחים',
-            registerName: 'isPatientDelivery'
-          })}
-        </div>
+        <FormControl className="flex flex-col gap-2">
+          <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
+          <Select
+            labelId="multiple-checkbox-label"
+            id="multiple-checkbox"
+            multiple
+            value={selectedSpecialRequests}
+            onChange={handleSpecialRequestsChange}
+            input={<OutlinedInput label="בקשות מיוחדות" />}
+            renderValue={(selected) => {
+              if (Array.isArray(selected)) {
+                return selected.map((value) => specialRequestLabels[value]).join(', ');
+              }
+              return specialRequestLabels[selected];
+            }}
+          >
+            {Object.keys(specialRequestLabels).map((key) => (
+              <MenuItem key={key} value={key}>
+                <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
+                <ListItemText primary={specialRequestLabels[key]} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
