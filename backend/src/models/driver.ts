@@ -28,6 +28,8 @@ export interface Driver extends User {
     carPlateNumber:string;
     carCapabilities?: Array<string>;
     volunteeringArea:string;
+    password: string;
+
 }
 
 
