@@ -8,14 +8,29 @@ import {
   Badge
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { Ride } from '../../../../../api-client';
+import { api } from '../../../../../services/api';
 
 const SideBar = () => {
+  const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
   const [activeLink, setActiveLink] = useState('נרשמים חדשים');
+
+  useEffect(() => {
+    const fetchRides = async () => {
+      const response = await api.ride.ridesGet();
+
+      const filtered = response.filter(
+        (ride) => ride.state === 'WaitingForDriver' || ride.state === 'Booked'
+      );
+      setFilteredRides(filtered);
+    };
+    fetchRides();
+  }, []);
 
   const handleClick = (path: string) => {
     setActiveLink(path);
@@ -23,7 +38,7 @@ const SideBar = () => {
 
   const propsItem = [
     { to: '', text: 'נרשמים חדשים', id: 1 },
-    { to: 'rides', text: 'נסיעות', id: 2, badgeCount: 5 }, // Set the badgeCount as needed
+    { to: 'rides', text: 'נסיעות', id: 2, badgeCount: filteredRides.length },
     { to: 'passengers', text: 'נוסעים', id: 3 },
     { to: 'volunteers', text: 'מתנדבים', id: 4 }
   ];
