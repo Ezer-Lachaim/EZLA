@@ -114,6 +114,7 @@ const OrderRide = () => {
       setValue('ride.passengerCount', quantity - 1);
     }
   };
+  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
 
   const handleSpecialRequestsChange = (
     event: SelectChangeEvent<typeof selectedSpecialRequests>
