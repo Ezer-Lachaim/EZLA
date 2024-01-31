@@ -14,7 +14,9 @@ const Title = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ActionButton = (props: Parameters<typeof Button>[0]) => {
-  return <Button className="flex gap-3" variant="outlined" startIcon={<Add />} {...props} />;
+  return (
+    <Button className="flex gap-3 col-wt" variant="contained" startIcon={<Add />} {...props} />
+  );
 };
 
 PageHeader.Title = Title;
