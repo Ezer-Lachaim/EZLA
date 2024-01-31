@@ -25,7 +25,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'driver.firstName',
-    header: 'שם נהג',
+    header: 'שם מתנדב',
     accessorFn: (data) => {
       const fullName = `${data.driver?.firstName ?? ''} ${data.driver?.lastName ?? ''}`;
       if (!fullName.trim()) return '-';
@@ -45,7 +45,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'cellphone',
-    header: 'טלפון',
+    header: 'טלפון ליצירת קשר',
     accessorFn: (data) => data.cellphone || '-'
   },
   {
@@ -60,12 +60,12 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: "מס' נוסעים",
+    header: "נוסעים/ ארגזים",
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
     accessorKey: 'comment',
-    header: 'תיאור נסיעה',
+    header: 'תיאור הנסיעה',
     accessorFn: (data) => data.comment || '-'
   },
   {
