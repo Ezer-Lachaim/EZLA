@@ -585,7 +585,11 @@ components:
         requestTimeStamp:
           type: string
           format: date
-          example: "2023-06-14"
+          example: "2023-06-14"        
+          pickupDateTime:
+          type: string
+          format: date
+          example: "2024-01-31 16:10"
         destinationArrivalTime:
           type: number
           nullable: true

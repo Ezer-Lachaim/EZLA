@@ -92,6 +92,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
 
   ride.rideId = rideId;
   ride.requestTimeStamp = new Date();
+  ride.pickupDateTime = new Date();
 
   if (req.user?.role === UserRoleEnum.Requester) {
     ride.rideRequester = { userId: req.user.userId };

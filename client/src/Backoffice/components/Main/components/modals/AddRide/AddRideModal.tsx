@@ -43,7 +43,8 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       'destination',
       'cellphone',
       'passengerCount',
-      'comment'
+      'comment',
+      'pickupDateTime'
     ]);
 
     if (isStepValid) {

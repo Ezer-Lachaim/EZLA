@@ -22,10 +22,10 @@
   },
   "include": [
     "src",
-    "globalComponents/components/ChoiceHoursMenu.tsx",
-    "globalComponents/components/MenuAndPickUpTime.tsx",
-    "globalComponents/components/PickUpTime.tsx",
-    "globalComponents/components/PickUpDate.tsx"
+    "src/globalComponents/components/ChoiceHoursMenu.tsx",
+    "src/globalComponents/components/MenuAndPickUpTime.tsx",
+    "src/globalComponents/components/PickUpTime.tsx",
+    "src/globalComponents/components/PickUpDate.tsx"
   ],
   "references": [{ "path": "./tsconfig.node.json" }],
   "types": ["@mui/types"]

@@ -1,13 +1,6 @@
-import dayjs from 'dayjs';
-import 'dayjs/locale/en-gb';
-import { DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
 import { TextField, TextFieldProps } from '@mui/material';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-
-const today = dayjs();
-const threeDay = dayjs().add(3, 'day');
 
 const DAY_MS = 1000 * 60 * 60 * 24; // 24 hours in ms
 
@@ -31,7 +24,7 @@ const DayTextField = ({ value, ...props }: TextFieldProps) => {
     } else if (dateValue >= tomorrow && dateValue < dayAfterTomorrow) {
       localValue = 'מחר';
     } else if (dateValue >= yesterday && dateValue < today) {
-      localValue = 'Yesterday';
+      localValue = 'אתמול';
     } else {
       localValue = dayjs(dateValue).format('DD-MM-YYYY');
     }
@@ -40,27 +33,23 @@ const DayTextField = ({ value, ...props }: TextFieldProps) => {
   return <TextField {...props} value={localValue} />;
 };
 
-export default function CalenderDate<T>(props: Omit<DatePickerProps<T>, 'format'>) {
+export default function PickUpDate(props: Omit<DatePickerProps<Dayjs>, 'format'>) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'en-gb'}>
-      <DemoItem>
-        <DatePicker
-          label="תאריך איסוף מבוקש"
-          defaultValue={today}
-          maxDate={threeDay}
-          disablePast
-          slotProps={{
-            textField: {
-              required: true
-            }
-          }}
-          {...props}
-          format="YYYY-MM-DD"
-          slots={{
-            textField: DayTextField
-          }}
-        />
-      </DemoItem>
-    </LocalizationProvider>
+    <DatePicker
+      label="תאריך איסוף מבוקש"
+      defaultValue={dayjs()}
+      maxDate={dayjs().add(3, 'day')}
+      disablePast
+      slotProps={{
+        textField: {
+          required: true
+        }
+      }}
+      {...props}
+      format="YYYY-MM-DD"
+      slots={{
+        textField: DayTextField
+      }}
+    />
   );
 }

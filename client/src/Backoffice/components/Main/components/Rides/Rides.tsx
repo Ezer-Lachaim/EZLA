@@ -63,6 +63,11 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
+    accessorKey: 'pickupDateTime',
+    header: "מס' נוסעים",
+    accessorFn: (data) => data.pickupDateTime || '-'
+  },
+  {
     accessorKey: 'comment',
     header: 'תיאור נסיעה',
     accessorFn: (data) => data.comment || '-'

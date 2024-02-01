@@ -67,6 +67,9 @@ export interface Ride {
      * @memberof Ride
      */
     requestTimeStamp?: Date;
+
+    pickupDateTime?: Date;
+    
     completedTimeStamp?: Date;
     /**
      * 

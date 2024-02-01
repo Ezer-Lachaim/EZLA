@@ -20,8 +20,8 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import MenuAndPickUpTime from '../../../../../globalComponents/components/MenuAndPickUpTime.tsx';
-import CalenderDate from '../../../../../globalComponents/components/PickUpDate.tsx';
+import MenuAndPickUpTime from '../../../../globalComponents/components/MenuAndPickUpTime.tsx';
+import PickUpDate from '../../../../globalComponents/components/PickUpDate.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -278,8 +278,9 @@ const OrderRide = () => {
           )}
         </FormControl>
 
-        <CalenderDate />
-
+        <FormControl>
+          <PickUpDate />
+        </FormControl>
         <MenuAndPickUpTime />
 
         <div className="flex flex-col gap-2">

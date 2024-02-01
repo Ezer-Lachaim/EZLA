@@ -12,6 +12,9 @@ import { useFormContext } from 'react-hook-form';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
+import MenuAndPickUpTime from '../../../../../../../globalComponents/components/MenuAndPickUpTime';
+import PickUpDate from '../../../../../../../globalComponents/components/PickUpDate';
+
 function NewRideInfo() {
   const {
     register,
@@ -73,6 +76,11 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <PickUpDate />
+        </FormControl>
+
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">רכב מותאם (בחירה מרובה)</p>
           {DRIVER_CAPABILITIES.map(({ value, label }) => (
@@ -147,6 +155,11 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <MenuAndPickUpTime />
+        </FormControl>
+
         <FormControl>
           <TextField
             label="תיאור הנסיעה"
