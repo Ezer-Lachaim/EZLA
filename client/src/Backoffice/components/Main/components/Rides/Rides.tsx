@@ -53,6 +53,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'cellphone',
 <<<<<<< HEAD
+<<<<<<< HEAD
     header: 'טלפון',
 =======
     header: 'טלפון ליצירת קשר',
@@ -72,6 +73,10 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         '-'
       );
     }
+=======
+    header: 'טלפון ליצירת קשר',
+    accessorFn: (data) => data.cellphone || '-'
+>>>>>>> 57a4c05 (modify the header names)
   },
   {
     accessorKey: 'origin',
