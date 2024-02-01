@@ -116,7 +116,6 @@ const OrderRide = () => {
   };
   const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
 
-
   const handleSpecialRequestsChange = (
     event: SelectChangeEvent<typeof selectedSpecialRequests>
   ) => {
