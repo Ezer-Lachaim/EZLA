@@ -168,6 +168,9 @@ function NewRideInfo() {
             {...register('comment', {
               maxLength: 100
             })}
+            inputProps={{
+              maxLength: 100
+            }}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${
