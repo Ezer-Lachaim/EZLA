@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
@@ -46,7 +47,21 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'cellphone',
     header: 'טלפון',
-    accessorFn: (data) => data.cellphone || '-'
+    cell: ({ row }) => {
+      const { cellphone } = row.original;
+      return cellphone ? (
+        <a
+          href={`https://wa.me/972${cellphone.replace(/-/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <WhatsAppIcon className="ml-2" style={{ color: '#2563EB', fontSize: '22px' }} />
+          {cellphone}
+        </a>
+      ) : (
+        '-'
+      );
+    }
   },
   {
     accessorKey: 'origin',
