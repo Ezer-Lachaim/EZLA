@@ -12,8 +12,7 @@ import {
   FormControl,
   MenuItem,
   OutlinedInput,
-  useTheme,
-  SelectChangeEvent
+  useTheme
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -155,6 +154,8 @@ const OrderRide = () => {
     await api.ride.ridesPost({
       ride: newRide
     });
+    console.log(newRide);
+
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Passenger.tsx)
   };
@@ -168,16 +169,6 @@ const OrderRide = () => {
       autofilledAddress === DestinationSourceEnum.Source
         ? DestinationSourceEnum.Destination
         : DestinationSourceEnum.Source
-    );
-  };
-
-  const handleChange = (event: SelectChangeEvent<typeof selectedTime>) => {
-    const {
-      target: { value }
-    } = event;
-    setSelectedTime(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
     );
   };
 
@@ -311,7 +302,7 @@ const OrderRide = () => {
             defaultValue={dayjs()}
             maxDate={dayjs().add(3, 'day')}
             disablePast
-            onChange={(date) => setValue('ride.completedTimeStamp', date?.toDate() || undefined)} // Handle null case
+            onChange={(date) => setValue('ride.pickUpTime', date?.toDate() || undefined)} // Handle null case
             format="YYYY-MM-DD"
             slots={{
               textField: DayTextField
@@ -327,9 +318,25 @@ const OrderRide = () => {
                 disablePast
                 ampm={false}
                 value={timeInIsrael}
-                onChange={setTimeInIsrael}
+                onChange={(time) => {
+                  if (time) {
+                    // Get existing date part
+                    const existingDate = watch().ride?.pickUpTime || dayjs();
+                    // Check if existingDate is a Date or Dayjs object
+                    const newDateTime =
+                      existingDate instanceof Date
+                        ? new Date(existingDate.getTime()) // Create a new Date object with the same timestamp
+                        : dayjs(existingDate).toDate(); // Convert Dayjs to Date
+                    // Update the time part
+                    newDateTime.setHours(time.hour(), time.minute());
+                    // Update the completedTimeStamp
+                    setValue('ride.pickUpTime', newDateTime);
+                    // Update the local state for timeInIsrael
+                    setTimeInIsrael(dayjs(newDateTime));
+                  }
+                }}
                 views={['minutes', 'hours']}
-              />{' '}
+              />
             </FormControl>
           </div>
           <div style={{ flex: '1' }}>
@@ -341,7 +348,14 @@ const OrderRide = () => {
                 labelId="demo-multiple-name-label"
                 id="demo-multiple-name"
                 value={selectedTime}
-                onChange={handleChange}
+                onChange={(event) => {
+                  const {
+                    target: { value }
+                  } = event;
+                  setSelectedTime(typeof value === 'string' ? value.split(',') : value);
+                  const selectedTimeIndex = menuHours.indexOf(value as string) + 1;
+                  setValue('ride.relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
+                }}
                 input={<OutlinedInput label="כמה זמן רלוונטי" />}
                 required
               >
