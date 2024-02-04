@@ -92,7 +92,22 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
 
   ride.rideId = rideId;
   ride.requestTimeStamp = new Date();
-  ride.pickupDateTime = new Date();
+
+  // Check if pickupDateTime is provided in the request
+  if (ride.pickupDateTime) {
+    ride.pickupDateTime = new Date(ride.pickupDateTime);
+  } else {
+    // Set pickupDateTime to the current date if not provided
+    ride.pickupDateTime = new Date();
+  }
+
+  // Check if relevantTime is provided in the request
+  if (ride.relevantTime) {
+    ride.relevantTime = ride.relevantTime; // Assuming relevantTime is a string or number
+  } else {
+    // Set a default value for relevantTime if not provided
+    ride.relevantTime = 3; // You can change this to any default value
+  }
 
   if (req.user?.role === UserRoleEnum.Requester) {
     ride.rideRequester = { userId: req.user.userId };
@@ -118,7 +133,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
       ]);
       res.status(200).json(ride);
     } else {
-      res.status(404).json({ error: `Couldn't create new ride` });
+      res.status(404).json({ error: `Couldn't create a new ride` });
     }
   } catch (error) {
     console.log(error);

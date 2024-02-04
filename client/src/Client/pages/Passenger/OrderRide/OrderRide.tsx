@@ -321,20 +321,22 @@ const OrderRide = () => {
                 value={timeInIsrael}
                 onChange={(time) => {
                   if (time) {
-                    // Get existing date part
                     const existingDate = watch().ride?.pickupDateTime || dayjs();
+                    let newDateTime;
 
-                    // Check if existingDate is a Date or Dayjs object
-                    const newDateTime =
-                      existingDate instanceof Date
-                        ? new Date(existingDate)
-                        : dayjs(existingDate).toDate();
+                    if (existingDate instanceof Date) {
+                      newDateTime = new Date(existingDate);
+                    } else {
+                      newDateTime = dayjs(existingDate).toDate();
+                    }
 
-                    // Set the new time
                     newDateTime.setHours(time.hour(), time.minute());
 
+                    // Convert the newDateTime to a Date object
+                    const newDateTimeDate = new Date(newDateTime);
+
                     // Update the completedTimeStamp
-                    setValue('ride.pickupDateTime', newDateTime.toISOString() as any);
+                    setValue('ride.pickupDateTime', newDateTimeDate);
 
                     // Update the local state for timeInIsrael
                     setTimeInIsrael(dayjs(newDateTime));
