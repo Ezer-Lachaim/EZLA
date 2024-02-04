@@ -87,7 +87,8 @@ const OrderRide = () => {
       ride: {
         origin: user?.address,
         firstName: user?.firstName,
-        lastName: user?.lastName
+        lastName: user?.lastName,
+        cellphone: user?.cellPhone
       },
       specialRequest: {
         isWheelChair: user?.specialRequest?.includes(specialMap.isWheelChair),
@@ -302,7 +303,7 @@ const OrderRide = () => {
             defaultValue={dayjs()}
             maxDate={dayjs().add(3, 'day')}
             disablePast
-            onChange={(date) => setValue('ride.pickUpTime', date?.toDate() || undefined)} // Handle null case
+            onChange={(date) => setValue('ride.pickupDateTime', date?.toISOString() || undefined)}
             format="YYYY-MM-DD"
             slots={{
               textField: DayTextField
@@ -321,7 +322,7 @@ const OrderRide = () => {
                 onChange={(time) => {
                   if (time) {
                     // Get existing date part
-                    const existingDate = watch().ride?.pickUpTime || dayjs();
+                    const existingDate = watch().ride?.pickupDateTime || dayjs();
                     // Check if existingDate is a Date or Dayjs object
                     const newDateTime =
                       existingDate instanceof Date
@@ -330,7 +331,7 @@ const OrderRide = () => {
                     // Update the time part
                     newDateTime.setHours(time.hour(), time.minute());
                     // Update the completedTimeStamp
-                    setValue('ride.pickUpTime', newDateTime);
+                    setValue('ride.pickupDateTime', newDateTime.toISOString());
                     // Update the local state for timeInIsrael
                     setTimeInIsrael(dayjs(newDateTime));
                   }

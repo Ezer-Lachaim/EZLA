@@ -12,7 +12,6 @@ import { useFormContext } from 'react-hook-form';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 
-import MenuAndPickUpTime from '../../../../../../../globalComponents/components/MenuAndPickUpTime';
 import PickUpDate from '../../../../../../../globalComponents/components/PickUpDate';
 
 function NewRideInfo() {
@@ -154,10 +153,6 @@ function NewRideInfo() {
               יש לבחור מספר נוסעים
             </FormHelperText>
           )}
-        </FormControl>
-
-        <FormControl>
-          <MenuAndPickUpTime />
         </FormControl>
 
         <FormControl>

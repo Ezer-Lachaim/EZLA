@@ -66,11 +66,13 @@ export interface Ride {
      * @type {string}
      * @memberof Ride
      */
-    requestTimeStamp?: Date;
-
-    pickupDateTime?: Date;
-    
     completedTimeStamp?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
+    pickupDateTime?: Date;
     /**
      * 
      * @type {number}

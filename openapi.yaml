@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Ezer LaChayim API
-  version: '1.0.0'
+  version: "1.0.0"
   description: |
     Redis' social hackathon June 2023 - bridge between volunteers and those in need of rides to the hospital
   termsOfService: http://swagger.io/terms/
@@ -11,7 +11,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: 'https://tbd.googlecloud.com'
+  - url: "https://tbd.googlecloud.com"
     description: Google CloudRun
 tags:
   - name: user
@@ -32,14 +32,14 @@ paths:
               type: object
               properties:
                 user:
-                  $ref: '#/components/schemas/RideRequester'
+                  $ref: "#/components/schemas/RideRequester"
       responses:
         default:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserResponse'
+                $ref: "#/components/schemas/CreateUserResponse"
     get:
       tags:
         - user
@@ -68,20 +68,20 @@ paths:
               - Driver
               - Admin
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/RideRequester'
+                  $ref: "#/components/schemas/RideRequester"
   /users/logout:
     get:
       tags:
         - user
       summary: Logs out current logged in user session
-      description: ''
+      description: ""
       operationId: logoutUser
       parameters: []
       responses:
@@ -92,20 +92,20 @@ paths:
       tags:
         - user
       summary: Get user by userId
-      description: ''
+      description: ""
       operationId: getCurrentUser
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/RideRequester'
-                  - $ref: '#/components/schemas/Driver'
-        '400':
+                  - $ref: "#/components/schemas/RideRequester"
+                  - $ref: "#/components/schemas/Driver"
+        "400":
           description: Invalid username supplied
-        '404':
+        "404":
           description: User not found
   /users/update_initial_password/{userId}:
     put:
@@ -126,13 +126,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateInitialPasswordRequest'
+              $ref: "#/components/schemas/UpdateInitialPasswordRequest"
       responses:
-        '202':
+        "202":
           description: Successful operation
-        '400':
+        "400":
           description: Invalid user ID supplied
-        '404':
+        "404":
           description: User not found
 
   /users/{userId}:
@@ -140,25 +140,25 @@ paths:
       tags:
         - user
       summary: Get user by userId
-      description: ''
+      description: ""
       operationId: getUserByName
       parameters:
         - name: userId
           in: path
-          description: 'The name that needs to be fetched. Use user1 for testing. '
+          description: "The name that needs to be fetched. Use user1 for testing. "
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideRequester'
-        '400':
+                $ref: "#/components/schemas/RideRequester"
+        "400":
           description: Invalid username supplied
-        '404':
+        "404":
           description: User not found
     put:
       tags:
@@ -178,14 +178,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RideRequester'
+              $ref: "#/components/schemas/RideRequester"
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RideRequester'
+                $ref: "#/components/schemas/RideRequester"
     delete:
       tags:
         - user
@@ -200,9 +200,9 @@ paths:
           schema:
             type: string
       responses:
-        '400':
+        "400":
           description: Invalid username supplied
-        '404':
+        "404":
           description: User not found
   /users/registerFcmToken:
     post:
@@ -216,11 +216,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterFcmTokenRequest'
+              $ref: "#/components/schemas/RegisterFcmTokenRequest"
       responses:
-        '200':
+        "200":
           description: FCM token registered successfully
-        '400':
+        "400":
           description: Invalid request body
 
   /drivers:
@@ -235,15 +235,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Driver'
+              $ref: "#/components/schemas/Driver"
       responses:
-        '201':
+        "201":
           description: Driver created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Driver'
-        '400':
+                $ref: "#/components/schemas/Driver"
+        "400":
           description: Invalid request body
     put:
       tags:
@@ -256,15 +256,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Driver'
+              $ref: "#/components/schemas/Driver"
       responses:
-        '201':
+        "201":
           description: Driver created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Driver'
-        '400':
+                $ref: "#/components/schemas/Driver"
+        "400":
           description: Invalid request body
     get:
       tags:
@@ -273,14 +273,14 @@ paths:
       description: Retrieves a list of all drivers.
       operationId: getAllDrivers
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Driver'
+                  $ref: "#/components/schemas/Driver"
   /rides:
     get:
       tags:
@@ -304,14 +304,14 @@ paths:
           required: false
           description: Ride state
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Ride'
+                  $ref: "#/components/schemas/Ride"
     post:
       tags:
         - ride
@@ -322,14 +322,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Ride'
+              $ref: "#/components/schemas/Ride"
       responses:
         default:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ride'
+                $ref: "#/components/schemas/Ride"
   /rides/active_ride:
     get:
       tags:
@@ -338,15 +338,15 @@ paths:
       description: Get the active ride for a specific user
       operationId: getActiveRideForUser
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ride'
-        '400':
+                $ref: "#/components/schemas/Ride"
+        "400":
           description: Invalid user ID supplied
-        '404':
+        "404":
           description: Active ride not found
   /rides/confirm_complete:
     post:
@@ -356,7 +356,7 @@ paths:
       description: Confirm that the ride was completed
       operationId: postConfirmRideComplete
       responses:
-        '200':
+        "200":
           description: Successful operation
   /rides/{rideId}:
     get:
@@ -373,15 +373,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ride'
-        '400':
+                $ref: "#/components/schemas/Ride"
+        "400":
           description: Invalid ride ID supplied
-        '404':
+        "404":
           description: Ride not found
     put:
       tags:
@@ -401,17 +401,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Ride'
+              $ref: "#/components/schemas/Ride"
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ride'
-        '400':
+                $ref: "#/components/schemas/Ride"
+        "400":
           description: Invalid ride ID supplied
-        '404':
+        "404":
           description: Ride not found
     delete:
       tags:
@@ -427,11 +427,11 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Ride deleted successfully
-        '400':
+        "400":
           description: Invalid ride ID supplied
-        '404':
+        "404":
           description: Ride not found
   /hospitals:
     get:
@@ -440,14 +440,14 @@ paths:
       summary: Get a list of hospitals
       operationId: getHospitalList
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Hospital'
+                  $ref: "#/components/schemas/Hospital"
 
   /env/settings:
     get:
@@ -456,12 +456,12 @@ paths:
       summary: Get the env settings
       operationId: getEnvSettings
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EnvSettings'
+                $ref: "#/components/schemas/EnvSettings"
 
 components:
   schemas:
@@ -470,10 +470,10 @@ components:
       properties:
         userId:
           type: string
-          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+          example: "v4xpr8hLrLR3W5VUTN2zZ3XXKrF3"
         nationalId:
           type: string
-          example: '123456789'
+          example: "123456789"
         authProvider:
           type: string
           enum:
@@ -482,10 +482,10 @@ components:
             - Apple
         username:
           type: string
-          example: '321234567 (for Israeli ID, but could be foreign passport)'
+          example: "321234567 (for Israeli ID, but could be foreign passport)"
         email:
           type: string
-          example: 'moishe@redis.com'
+          example: "moishe@redis.com"
         role:
           type: string
           enum:
@@ -494,18 +494,18 @@ components:
             - Admin
         firstName:
           type: string
-          example: 'Moishe'
+          example: "Moishe"
         lastName:
           type: string
-          example: 'Barak'
+          example: "Barak"
         cellPhone:
           type: string
-          example: '0523334444'
+          example: "0523334444"
 
         rejectCause:
           type: string
-          example: 'reject cause'
-          
+          example: "reject cause"
+
         registrationState:
           type: string
           enum:
@@ -514,10 +514,10 @@ components:
             - Rejected
         city:
           type: string
-          example: 'בני ברק'
+          example: "בני ברק"
         address:
           type: string
-          example: 'ג׳בוטינסקי 1'
+          example: "ג׳בוטינסקי 1"
         isInitialPassword:
           type: boolean
         signupDate:
@@ -528,16 +528,16 @@ components:
       properties:
         carId:
           type: string
-          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+          example: "v4xpr8hLrLR3W5VUTN2zZ3XXKrF3"
         brand:
           type: string
-          example: 'מזדה'
+          example: "מזדה"
         model:
           type: string
-          example: '3'
+          example: "3"
         color:
           type: string
-          example: 'לבן'
+          example: "לבן"
         passengerSeatsCount:
           type: integer
           example: 4
@@ -546,7 +546,7 @@ components:
       properties:
         rideId:
           type: string
-          example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+          example: "v4xpr8hLrLR3W5VUTN2zZ3XXKrF3"
         destination:
           type: string
           example: "Airport"
@@ -585,8 +585,8 @@ components:
         requestTimeStamp:
           type: string
           format: date
-          example: "2023-06-14"        
-          pickupDateTime:
+          example: "2023-06-14"
+        pickupDateTime:
           type: string
           format: date
           example: "2024-01-31 16:10"
@@ -594,31 +594,31 @@ components:
           type: number
           nullable: true
           example: 30
-        completedTimeStamp: 
+        completedTimeStamp:
           type: string
           format: date
         driver:
-          $ref: '#/components/schemas/Driver'
+          $ref: "#/components/schemas/Driver"
         rideRequester:
-          $ref: '#/components/schemas/RideRequester'
+          $ref: "#/components/schemas/RideRequester"
         firstName:
           type: string
-          example: 'John'
+          example: "John"
         lastName:
           type: string
-          example: 'Barak'
+          example: "Barak"
         comment:
           type: string
-          example: 'comment'
+          example: "comment"
         guestToken:
           type: string
     RideRequester:
       allOf:
-        - $ref: '#/components/schemas/User'
+        - $ref: "#/components/schemas/User"
       properties:
         passengerCellPhone:
           type: string
-          example: '0523334444'
+          example: "0523334444"
         specialRequest:
           type: array
           items:
@@ -638,11 +638,11 @@ components:
           type: string
           format: date
         patient:
-          $ref: '#/components/schemas/Patient'
+          $ref: "#/components/schemas/Patient"
 
     Driver:
       allOf:
-        - $ref: '#/components/schemas/User'
+        - $ref: "#/components/schemas/User"
       properties:
         isValidLicense:
           type: boolean
@@ -678,7 +678,7 @@ components:
     CreateUserResponse:
       properties:
         user:
-          $ref: '#/components/schemas/RideRequester'
+          $ref: "#/components/schemas/RideRequester"
       required:
         - user
     UpdateInitialPasswordRequest:
@@ -700,22 +700,22 @@ components:
       properties:
         nationalId:
           type: string
-          example: '321234567 (for Israeli ID, but could be foreign passport)'
+          example: "321234567 (for Israeli ID, but could be foreign passport)"
         firstName:
           type: string
-          example: 'John'
+          example: "John"
         lastName:
           type: string
-          example: 'Barak'
+          example: "Barak"
         hospitalId:
           type: number
           example: 1
         hospitalBuilding:
           type: string
-          example: 'Shafra Children Hospital'
+          example: "Shafra Children Hospital"
         hospitalDept:
           type: string
-          example: 'מחלקת שיקום'
+          example: "מחלקת שיקום"
         message:
           type: string
 
@@ -726,7 +726,7 @@ components:
           example: 1
         name:
           type: string
-          example: 'תל השומר'
+          example: "תל השומר"
       required:
         - id
         - name
@@ -746,4 +746,4 @@ components:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
