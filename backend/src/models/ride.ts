@@ -72,6 +72,12 @@ export interface Ride {
      * @type {number}
      * @memberof Ride
      */
+    requestTimeStamp?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
     pickupDateTime?: Date;
     /**
      * 

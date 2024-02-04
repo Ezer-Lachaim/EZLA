@@ -588,8 +588,12 @@ components:
           example: "2023-06-14"
         pickupDateTime:
           type: string
-          format: date
-          example: "2024-01-31 16:10"
+          format: date-time # Assuming it represents date and time
+          example: "2024-01-31T16:10:00Z" # Adjust the example to the actual format you want
+
+        relevantTime:
+          type: integer # Assuming it's an integer representing the time
+          example: 3 # Adjust the example to a relevant value
         destinationArrivalTime:
           type: number
           nullable: true
