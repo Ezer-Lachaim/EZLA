@@ -2,13 +2,15 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
-import { Button } from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
+import { Button, Chip, Avatar, Typography } from '@mui/material';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
-import { RIDE_STATE_MAPPER } from './Rides.constants';
+import { RIDE_STATE_MAPPER, getStateIcon, getStateIconColor } from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
@@ -45,7 +47,21 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'cellphone',
     header: 'טלפון',
-    accessorFn: (data) => data.cellphone || '-'
+    cell: ({ row }) => {
+      const { cellphone } = row.original;
+      return cellphone ? (
+        <a
+          href={`https://wa.me/972${cellphone.replace(/-/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <WhatsAppIcon className="ml-2" style={{ color: '#2563EB', fontSize: '22px' }} />
+          {cellphone}
+        </a>
+      ) : (
+        '-'
+      );
+    }
   },
   {
     accessorKey: 'origin',
@@ -90,11 +106,48 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'state',
     header: 'סטטוס',
-    accessorFn: (data) => {
-      if (!data.state) return '-';
-      return RIDE_STATE_MAPPER[data.state];
+    cell: ({ row }) => {
+      if (!row.original.state) return null;
+
+      const icon = getStateIcon(row.original.state);
+      const label = RIDE_STATE_MAPPER[row.original.state];
+      const backgroundColor = getStateIconColor(row.original.state);
+
+      return (
+        <Chip
+          avatar={
+            <Avatar style={{ backgroundColor, color: '#fff', borderRadius: '50px' }}>{icon}</Avatar>
+          }
+          label={
+            <Typography
+              style={{
+                color: 'var(--Text-color-Dark-Mode-Primary, #FFF)',
+                textAlign: 'right',
+                fontFamily: 'Heebo',
+                fontSize: '14px',
+                fontStyle: 'normal',
+                fontWeight: 400,
+                lineHeight: '100%',
+                whiteSpace: 'normal'
+              }}
+            >
+              {label}
+            </Typography>
+          }
+          style={{
+            backgroundColor,
+            width: '100px',
+            padding: '3px 5px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '4px',
+            flex: '1 0 0'
+          }}
+        />
+      );
     }
   },
+
   {
     accessorKey: 'actions2',
     header: '',
@@ -111,13 +164,13 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         <div className="flex gap-1 items-center">
           <Button
             size="small"
-            variant="outlined"
+            variant="text"
             color="error"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Edit fontSize="small" />
+            <EditIcon style={{ color: '#0000008A', fontSize: '24px' }} />
           </Button>
           <EditRideModal open={toggleModal} handleModal={handleModal} ride={ride} />
         </div>
@@ -138,13 +191,13 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         <div className="flex gap-1 items-center">
           <Button
             size="small"
-            variant="outlined"
+            variant="text"
             color="error"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Close fontSize="small" />
+            <DeleteForeverIcon style={{ color: '#0000008A', fontSize: '24px' }} />
           </Button>
           <CancelRideModal
             rideId={row.original.rideId || ''}

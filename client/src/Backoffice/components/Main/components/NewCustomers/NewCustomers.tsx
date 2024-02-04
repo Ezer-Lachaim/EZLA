@@ -109,13 +109,18 @@ const getNewCustomersColumns = (hospitals: Hospital[]): ColumnDef<Partial<RideRe
                 color="success"
                 style={{ minWidth: 0 }}
                 className="w-7 h-7"
-                onClick={async () => {
-                  await api.user.updateUser({
-                    userId: row.original.userId || '',
-                    rideRequester: { registrationState: 'Approved' }
-                  });
-
-                  window.location.reload();
+                onClick={() => {
+                  (async () => {
+                    try {
+                      await api.user.updateUser({
+                        userId: row.original.userId || '',
+                        rideRequester: { registrationState: 'Approved' }
+                      });
+                    } catch (error) {
+                      // Handle the error appropriately (e.g., log it or show a message to the user)
+                      console.error('Error updating user:', error);
+                    }
+                  })();
                 }}
               >
                 <Check fontSize="small" />
