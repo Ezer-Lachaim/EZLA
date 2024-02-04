@@ -17,9 +17,9 @@ const MenuProps = {
   }
 };
 
-const menuHours = ['שעה', 'שעתיים', '3 שעות', '4 שעות', '5 שעות', '6 שעות', '7 שעות'];
+export const menuHours = ['שעה', 'שעתיים', '3 שעות', '4 שעות', '5 שעות', '6 שעות', '7 שעות'];
 
-function getStyles(name: string, personName: string[], theme: Theme) {
+export function getStyles(name: string, personName: string[], theme: Theme) {
   return {
     fontWeight:
       personName.indexOf(name) === -1
@@ -28,7 +28,7 @@ function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-const defaultSelectedTime = ['3 שעות']; // Set the default value here
+const defaultSelectedTime = ['3 שעות'];
 
 export default function ChoiceHoursMenu() {
   const theme = useTheme();

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
@@ -9,7 +10,10 @@ import {
   Select,
   FormHelperText,
   FormControl,
-  MenuItem
+  MenuItem,
+  OutlinedInput,
+  useTheme,
+  SelectChangeEvent
 } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,8 +24,13 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import MenuAndPickUpTime from '../../../../globalComponents/components/MenuAndPickUpTime.tsx';
-import PickUpDate from '../../../../globalComponents/components/PickUpDate.tsx';
+import { DayTextField } from '../../../../globalComponents/components/PickUpDate.tsx';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { fixTimeUpDayjs } from '../../../../globalComponents/components/PickUpTime.tsx';
+import { getStyles, menuHours } from '../../../../globalComponents/components/ChoiceHoursMenu.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -53,6 +62,12 @@ enum DestinationSourceEnum {
   Source
 }
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
+fixTimeUpDayjs();
+const defaultSelectedTime = ['3 שעות'];
+
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
@@ -60,6 +75,8 @@ const OrderRide = () => {
     DestinationSourceEnum.Destination
   );
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
+  const [selectedTime, setSelectedTime] = React.useState<string[]>(defaultSelectedTime);
+  const [timeInIsrael, setTimeInIsrael] = React.useState<Dayjs | null>(today);
   const {
     register,
     watch,
@@ -71,8 +88,7 @@ const OrderRide = () => {
       ride: {
         origin: user?.address,
         firstName: user?.firstName,
-        lastName: user?.lastName,
-        cellphone: user?.cellPhone
+        lastName: user?.lastName
       },
       specialRequest: {
         isWheelChair: user?.specialRequest?.includes(specialMap.isWheelChair),
@@ -84,6 +100,7 @@ const OrderRide = () => {
       }
     }
   });
+  const theme = useTheme();
 
   useEffect(() => {
     if (!user) {
@@ -151,6 +168,16 @@ const OrderRide = () => {
       autofilledAddress === DestinationSourceEnum.Source
         ? DestinationSourceEnum.Destination
         : DestinationSourceEnum.Source
+    );
+  };
+
+  const handleChange = (event: SelectChangeEvent<typeof selectedTime>) => {
+    const {
+      target: { value }
+    } = event;
+    setSelectedTime(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
     );
   };
 
@@ -279,9 +306,54 @@ const OrderRide = () => {
         </FormControl>
 
         <FormControl>
-          <PickUpDate />
+          <DatePicker
+            label="תאריך איסוף מבוקש"
+            defaultValue={dayjs()}
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            onChange={(date) => setValue('ride.completedTimeStamp', date?.toDate() || undefined)} // Handle null case
+            format="YYYY-MM-DD"
+            slots={{
+              textField: DayTextField
+            }}
+          />
         </FormControl>
-        <MenuAndPickUpTime />
+        <div className="flex">
+          <div style={{ flex: '1' }}>
+            <FormControl>
+              <TimePicker
+                sx={{ width: '100%' }}
+                label="שעת איסוף"
+                disablePast
+                ampm={false}
+                value={timeInIsrael}
+                onChange={setTimeInIsrael}
+                views={['minutes', 'hours']}
+              />{' '}
+            </FormControl>
+          </div>
+          <div style={{ flex: '1' }}>
+            <FormControl sx={{ width: '100%' }} required>
+              <InputLabel id="demo-multiple-name-label" required>
+                כמה זמן רלוונטי
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={selectedTime}
+                onChange={handleChange}
+                input={<OutlinedInput label="כמה זמן רלוונטי" />}
+                required
+              >
+                {menuHours.map((hour) => (
+                  <MenuItem key={hour} value={hour} style={getStyles(hour, selectedTime, theme)}>
+                    {hour}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-gray-500">בקשות מיוחדות</p>

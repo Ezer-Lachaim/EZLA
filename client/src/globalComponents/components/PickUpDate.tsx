@@ -10,7 +10,7 @@ function getDayStart(date: Date) {
   return clone;
 }
 
-const DayTextField = ({ value, ...props }: TextFieldProps) => {
+export const DayTextField = ({ value, ...props }: TextFieldProps) => {
   let localValue = '';
   if (value) {
     const dateValue = new Date((value as string).replace(/[^0-9-]/g, ''));
