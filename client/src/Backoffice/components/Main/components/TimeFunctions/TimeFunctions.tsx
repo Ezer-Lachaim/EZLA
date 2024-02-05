@@ -62,3 +62,52 @@ export const fixTimeUpDayjs = () => {
     today = today.add(10 - minutes, 'minute');
   }
 };
+
+export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: number): string {
+  if (!pickupDateTime || !relevantTime) {
+    return 'Invalid date or relevant time';
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+
+  const pickupDate = new Date(pickupDateTime);
+
+  if (isNaN(pickupDate.getTime())) {
+    return 'Invalid date';
+  }
+
+  const currentDate = new Date();
+  const formattedDate = pickupDate.toLocaleDateString('he-IL', options);
+  const timeFormatter = new Intl.DateTimeFormat('he-IL', {
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+
+  const startTime = timeFormatter.format(pickupDate);
+
+  // Calculate end time based on relevant time (in hours)
+  pickupDate.setHours(pickupDate.getHours() + relevantTime);
+  const endTime = timeFormatter.format(pickupDate);
+
+  if (
+    pickupDate.getDate() === currentDate.getDate() &&
+    pickupDate.getMonth() === currentDate.getMonth() &&
+    pickupDate.getFullYear() === currentDate.getFullYear()
+  ) {
+    return `היום ${formattedDate} ${startTime} - ${endTime}`;
+  } else if (
+    pickupDate.getDate() === currentDate.getDate() + 1 &&
+    pickupDate.getMonth() === currentDate.getMonth() &&
+    pickupDate.getFullYear() === currentDate.getFullYear()
+  ) {
+    return `מחר ${formattedDate} ${startTime} - ${endTime}`;
+  } else {
+    const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'long' }).format(pickupDate);
+    return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
+  }
+}
+
