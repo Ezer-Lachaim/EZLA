@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs'
+import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 import { TextField, TextFieldProps } from '@mui/material';
 
