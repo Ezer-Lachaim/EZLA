@@ -194,7 +194,7 @@ const Rides = () => {
 const RidesHOC = () => {
   const RidesWithLayout = withLayout(Rides, {
     title: 'נסיעות',
-    showLogoutButton: false,
+    showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
     hideFooter: true,
     wrapperClassName: 'w-full h-full flex flex-col gap-5 pb-4'
