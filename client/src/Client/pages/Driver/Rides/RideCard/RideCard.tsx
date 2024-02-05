@@ -6,6 +6,7 @@ import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import BellIcon from '@mui/icons-material/NotificationImportantRounded';
 import { Ride } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
+import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';
 
 export const RideCard = ({
   ride,
@@ -43,24 +44,33 @@ export const RideCard = ({
         <div className="flex flex-col gap-2">
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
-              <Typography color="GrayText" variant="body2" component="div" className="hidden">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  <Typography style={{ marginRight: '8px' }}>מועד איסוף:</Typography>
+  <Typography style={{ fontFamily: 'Heebo', fontWeight: 700, fontSize: '16px' }}>{formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}</Typography>
+</div>
+
+
+
+
+
+              {/* <Typography color="GrayText" variant="body2" component="div" className="hidden">
                 המתנה לאיסוף:
-              </Typography>
-              <div className="flex items-center gap-1 hidden">
+              </Typography> */}
+              {/* <div className="flex items-center gap-1 hidden">
                 <h1
                   className={`m-0 ${isWaitingTimeTooLong ? 'text-red-500' : 'text-black'} text-lg`}
                 >
                   {rideWaitingTime}
                 </h1>
                 {isWaitingTimeTooLong && <BellIcon fontSize="small" className="fill-red-500" />}
-              </div>
+              </div> */}
             </div>
-            <div className="flex bg-green-500 rounded-full text-white items-center px-2 py-1">
+            {/* <div className="flex bg-green-500 rounded-full text-white items-center px-2 py-1">
               <p className="px-1 font-medium">{ride.passengerCount}</p>
               <EmojiPeopleRoundedIcon className="h-5" />
-            </div>
+            </div> */}
           </div>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Typography color="GrayText" variant="body2" component="div">
               שם:
             </Typography>
@@ -68,7 +78,7 @@ export const RideCard = ({
               {ride?.firstName || ride?.rideRequester?.firstName}{' '}
               {ride?.lastName || ride?.rideRequester?.lastName}
             </Typography>
-          </div>
+          </div> */}
           <div className="flex">
             <div className="flex-row flex-1">
               <Typography color="GrayText" variant="body2" component="div">
