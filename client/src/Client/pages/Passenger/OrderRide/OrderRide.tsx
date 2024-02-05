@@ -26,6 +26,10 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
+import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -76,12 +80,20 @@ enum DestinationSourceEnum {
   Source
 }
 
+dayjs.extend(timezone);
+let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
+fixTimeUpDayjs();
+const defaultSelectedTime = ['3 שעות'];
+
+
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
   );
+  const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(today);
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -310,6 +322,85 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <DatePicker
+            label="תאריך איסוף מבוקש"
+            defaultValue={dayjs()}
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            onChange={(date) => setValue('ride.pickupDateTime', date ? date.toDate() : undefined)}
+            format="YYYY-MM-DD"
+            slots={{
+              textField: DayTextField
+            }}
+          />
+        </FormControl>
+        <div className="flex gap-8">
+          <div style={{ flex: '1' }}>
+            <FormControl>
+              <TimePicker
+                sx={{ width: '100%' }}
+                label="שעת איסוף"
+                disablePast
+                ampm={false}
+                value={timeInIsrael}
+                onChange={(time) => {
+                  if (time) {
+                    const existingDate = watch().ride?.pickupDateTime || dayjs();
+                    let newDateTime;
+
+                    if (existingDate instanceof Date) {
+                      newDateTime = new Date(existingDate);
+                    } else {
+                      newDateTime = dayjs(existingDate).toDate();
+                    }
+
+                    newDateTime.setHours(time.hour(), time.minute());
+
+                    // Convert the newDateTime to a Date object
+                    const newDateTimeDate = new Date(newDateTime);
+
+                    // Update the completedTimeStamp
+                    setValue('ride.pickupDateTime', newDateTimeDate);
+
+                    // Update the local state for timeInIsrael
+                    setTimeInIsrael(dayjs(newDateTime));
+                  }
+                }}
+                views={['minutes', 'hours']}
+              />
+            </FormControl>
+          </div>
+          <div style={{ flex: '1' }}>
+            <FormControl sx={{ width: '100%' }} required>
+              <InputLabel id="demo-multiple-name-label" required>
+                כמה זמן רלוונטי
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={selectedTime}
+                onChange={(event) => {
+                  const {
+                    target: { value }
+                  } = event;
+                  setSelectedTime(typeof value === 'string' ? value.split(',') : value);
+                  const selectedTimeIndex = menuHours.indexOf(value as string) + 1;
+                  setValue('ride.relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
+                }}
+                input={<OutlinedInput label="כמה זמן רלוונטי" />}
+                required
+              >
+                {menuHours.map((hour) => (
+                  <MenuItem key={hour} value={hour} >
+                    {hour}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
 
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
