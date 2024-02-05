@@ -27,10 +27,8 @@ import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import dayjs, { Dayjs } from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { DayTextField, fixTimeUpDayjs, menuHours, getStyles } from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
-import { useTheme } from '@emotion/react';
+import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 
 interface OrderRideFormData {
@@ -82,7 +80,6 @@ enum DestinationSourceEnum {
   Source
 }
 
-dayjs.extend(utc);
 dayjs.extend(timezone);
 let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
 fixTimeUpDayjs();
@@ -130,7 +127,6 @@ const OrderRide = () => {
     }
   };
   const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
-  const theme = useTheme();
 
   const handleSpecialRequestsChange = (
     event: SelectChangeEvent<typeof selectedSpecialRequests>
@@ -340,7 +336,7 @@ const OrderRide = () => {
             }}
           />
         </FormControl>
-        <div className="flex">
+        <div className="flex gap-8">
           <div style={{ flex: '1' }}>
             <FormControl>
               <TimePicker
