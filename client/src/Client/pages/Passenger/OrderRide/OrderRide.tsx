@@ -344,6 +344,7 @@ const OrderRide = () => {
             <TextField
               id="passengerCount"
               variant="outlined"
+              defaultValue={1}
               value={quantity}
               inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
               label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}

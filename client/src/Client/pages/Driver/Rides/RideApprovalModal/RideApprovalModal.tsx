@@ -137,14 +137,14 @@ const RideApprovalModal = ({
           </div>
           <div className="flex flex-col gap-4">
             <Button
-              className="w-280 h-40px p-[13px 16px] rounded-md gap-8"
+              className="w-280 h-40px p-[13px 16px] m-20px rounded-md gap-8"
               variant="contained"
               color="primary"
               type="submit"
             >
               בחירת נסיעה
             </Button>
-            <Button variant="contained" color="secondary" onClick={onClose}>
+            <Button variant="outlined" color="primary" onClick={onClose}>
               ביטול
             </Button>
           </div>
