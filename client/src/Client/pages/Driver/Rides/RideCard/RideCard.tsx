@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
@@ -31,7 +31,7 @@ const boldTextStyle = {
 
 export const RideCard = ({
   ride,
-  context, 
+  context,
   onSelect,
   onApprovePassenger
 }: {
@@ -41,12 +41,11 @@ export const RideCard = ({
   selected: boolean;
   onApprovePassenger: () => void;
 }) => {
-
   const onClickCallback = useCallback(() => {
     onSelect(ride);
   }, [onSelect, ride]);
 
-    return (
+  return (
     <Card className="shadow-sm rounded-xl">
       <CardContent onClick={onClickCallback} className="p-4">
         <div className="flex flex-col gap-2">
@@ -106,36 +105,36 @@ export const RideCard = ({
             </div>
           </div>
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
-            <>
-              <Divider className="my-1" />
-              <div className="flex gap-4">
+          <>
+            <Divider className="my-1" />
+            <div className="flex gap-4">
               {context === 'openCalls' && (
-          <Button
-            className="flex-1"
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<CarIcon />}
-            onClick={onApprovePassenger}
-          >
-            פרטי נסיעה
-          </Button>
-        )}
+                <Button
+                  className="flex-1"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  startIcon={<CarIcon />}
+                  onClick={onApprovePassenger}
+                >
+                  פרטי נסיעה
+                </Button>
+              )}
 
-        {context === 'myRides' && (
-          <Button
-            className="flex-1"
-            variant="outlined"
-            color="primary"
-            size="large"
-            startIcon={<PhoneIcon />}
-            onClick={() => window.open(`tel:${ride?.cellphone}`)}
-          >
-            Call Passenger
-          </Button>
-        )}
-              </div>
-            </>
+              {context === 'myRides' && (
+                <Button
+                  className="flex-1"
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  startIcon={<PhoneIcon />}
+                  onClick={() => window.open(`tel:${ride?.cellphone}`)}
+                >
+                  Call Passenger
+                </Button>
+              )}
+            </div>
+          </>
         </div>
       </CardContent>
     </Card>
