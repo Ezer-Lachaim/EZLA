@@ -182,7 +182,8 @@ const Rides = () => {
                       onApprovePassenger={() => {
                         setSelectedRide(ride);
                         setIsModalOpen(true);
-                      }}                    />
+                      }}
+                    />
                   ))}
                 </Stack>
               </>

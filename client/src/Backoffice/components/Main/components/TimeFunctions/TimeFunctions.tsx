@@ -106,7 +106,7 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
   ) {
     return `מחר ${formattedDate} ${startTime} - ${endTime}`;
   } else {
-    const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'long' }).format(pickupDate);
+    const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(pickupDate);
     return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
   }
 }
