@@ -66,6 +66,7 @@ function a11yProps(index: number) {
 }
 
 const Rides = () => {
+  const [selectedTab, setSelectedTab] = useState('openCalls');
   const [selectedRide, setSelectedRide] = useState<Ride>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(0);
@@ -89,18 +90,14 @@ const Rides = () => {
   });
 
   const filteredRides = bookedRides
-  .filter((ride) => {
-    return (
-      ride.state === 'Booked' &&
-      ride.driver &&
-      ride.driver.userId === user?.userId
-    );
-  })
-  .sort((a, b) => {
-    const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
-    const waitingTimeB = b.requestTimeStamp?.getTime() || 0;
-    return waitingTimeA - waitingTimeB;
-  });
+    .filter((ride) => {
+      return ride.state === 'Booked' && ride.driver && ride.driver.userId === user?.userId;
+    })
+    .sort((a, b) => {
+      const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
+      const waitingTimeB = b.requestTimeStamp?.getTime() || 0;
+      return waitingTimeA - waitingTimeB;
+    });
 
   const onSelectRideCallback = useCallback((ride: Ride) => {
     setSelectedRide(ride);
@@ -108,6 +105,7 @@ const Rides = () => {
 
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
+    setSelectedTab(newValue === 0 ? 'openCalls' : 'myRides');
   };
 
   const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
@@ -152,12 +150,17 @@ const Rides = () => {
               label={`קריאות פתוחות (${sortedRides.length})`}
               {...a11yProps(0)}
               style={tabStyles as React.CSSProperties}
-              />
-            <Tab label={`נסיעות שלי (${filteredRides.length})`} {...a11yProps(1)} style={tabStyles as React.CSSProperties} />
+            />
+            <Tab
+              label={`נסיעות שלי (${filteredRides.length})`}
+              {...a11yProps(1)}
+              style={tabStyles as React.CSSProperties}
+            />
           </Tabs>
         </div>
         <CustomTabPanel value={value} index={0}>
           <RideApprovalModal
+            ride={selectedRide}
             open={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onSubmit={onSubmitRide}
@@ -173,10 +176,13 @@ const Rides = () => {
                     <RideCard
                       ride={ride}
                       key={`ride-${ride.rideId}`}
+                      context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
                       onSelect={onSelectRideCallback}
                       selected={selectedRide?.rideId === ride.rideId}
-                      onApprovePassenger={() => setIsModalOpen(true)}
-                    />
+                      onApprovePassenger={() => {
+                        setSelectedRide(ride);
+                        setIsModalOpen(true);
+                      }}                    />
                   ))}
                 </Stack>
               </>
@@ -192,40 +198,42 @@ const Rides = () => {
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-  <RideApprovalModal
-    open={isModalOpen}
-    onClose={() => setIsModalOpen(false)}
-    onSubmit={onSubmitRide}
-  />
-  {filteredRides.length > 0 ? (
-    <div className="w-full h-full flex flex-col gap-5 pb-4">
-      <h1 className="m-0 text-center text-black">
-        בחרו נסיעה מתוך {filteredRides.length} נסיעות שלך
-      </h1>
-      <Stack spacing={2}>
-        {filteredRides.map((ride) => (
-          <RideCard
-            ride={ride}
-            key={`ride-${ride.rideId}`}
-            onSelect={onSelectRideCallback}
-            selected={selectedRide?.rideId === ride.rideId}
-            onApprovePassenger={() => setIsModalOpen(true)}
+          <RideApprovalModal
+            ride={selectedRide}
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={onSubmitRide}
           />
-        ))}
-      </Stack>
-    </div>
-  ) : (
-    <div className="h-full flex flex-col justify-center items-center gap-4">
-      <IconButton>
-        <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
-      </IconButton>
-      <p className="text-center text-gray-600 text-body2 font-normal leading-5 tracking-tight">
-        אין לך נסיעות. <br />
-        בחר/י נסיעה מקריאות פתוחות.
-      </p>
-    </div>
-  )}
-</CustomTabPanel>
+          {filteredRides.length > 0 ? (
+            <div className="w-full h-full flex flex-col gap-5 pb-4">
+              <h1 className="m-0 text-center text-black">
+                בחרו נסיעה מתוך {filteredRides.length} נסיעות שלך
+              </h1>
+              <Stack spacing={2}>
+                {filteredRides.map((ride) => (
+                  <RideCard
+                    ride={ride}
+                    key={`ride-${ride.rideId}`}
+                    context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
+                    onSelect={onSelectRideCallback}
+                    selected={selectedRide?.rideId === ride.rideId}
+                    onApprovePassenger={() => setIsModalOpen(true)}
+                  />
+                ))}
+              </Stack>
+            </div>
+          ) : (
+            <div className="h-full flex flex-col justify-center items-center gap-4">
+              <IconButton>
+                <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
+              </IconButton>
+              <p className="text-center text-gray-600 text-body2 font-normal leading-5 tracking-tight">
+                אין לך נסיעות. <br />
+                בחר/י נסיעה מקריאות פתוחות.
+              </p>
+            </div>
+          )}
+        </CustomTabPanel>
       </div>
     </>
   );
