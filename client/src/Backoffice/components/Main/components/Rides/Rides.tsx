@@ -10,7 +10,12 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
-import { RIDE_STATE_MAPPER, getStateIcon, getStateIconColor } from './Rides.constants';
+import {
+  RIDE_REQUEST,
+  RIDE_STATE_MAPPER,
+  getStateIcon,
+  getStateIconColor
+} from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
@@ -82,6 +87,21 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorKey: 'comment',
     header: 'תיאור נסיעה',
     accessorFn: (data) => data.comment || '-'
+  },
+  {
+    accessorKey: 'carCapabilities',
+    header: 'בקשות מיוחדות',
+    accessorFn: (data) => {
+      if (data.specialRequest?.length) {
+        return data.specialRequest
+          .map((capability) => {
+            const capabilityItem = RIDE_REQUEST.find((item) => item.value === capability);
+            return capabilityItem?.label || -'';
+          })
+          .join(', ');
+      }
+      return '-';
+    }
   },
   {
     accessorKey: 'completedTimeStamp',

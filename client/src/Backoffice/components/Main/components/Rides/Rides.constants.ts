@@ -3,7 +3,7 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
-import { RideStateEnum } from '../../../../../api-client';
+import { RideStateEnum, RideSpecialRequestEnum } from '../../../../../api-client';
 
 type IconType = React.ReactElement | null;
 
@@ -56,3 +56,12 @@ export const getStateIconColor = (state: RideStateEnum) => {
       return 'gray';
   }
 };
+
+export const RIDE_REQUEST: { value: RideSpecialRequestEnum; label: string }[] = [
+  { value: 'WheelChair', label: 'התאמה לכסא גלגלים' },
+  { value: 'BabyChair', label: 'מושב בטיחות לתינוק' },
+  { value: 'KidsChair', label: 'מושב בטיחות לילדים (גיל 3-8)' },
+  { value: 'AccessibleCar', label: 'רכב גבוה' },
+  { value: 'WheelChairStorage', label: 'תא מטען מתאים לכסא גלגלים' },
+  { value: 'PatientDelivery', label: 'משלוחים' }
+];
