@@ -1,6 +1,5 @@
 import { Modal, Box, Button, IconButton, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Ride } from '../../../../../api-client';
 import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';

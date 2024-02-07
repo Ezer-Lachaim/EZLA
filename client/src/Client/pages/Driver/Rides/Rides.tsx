@@ -51,7 +51,7 @@ function CustomTabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <div style={{ padding: 24 }}>
-          <Typography>{children}</Typography>
+          <Typography component={'span'}>{children}</Typography>
         </div>
       )}
     </div>
@@ -135,6 +135,27 @@ const Rides = () => {
     }
   };
 
+  
+  const handleDriverEnroute = async ( rideId: string |undefined) => {
+    console.log('function is trigered!')
+    console.log(selectedRide)
+    if (rideId) {
+      try {
+        await api.ride.updateRide({
+          rideId: rideId || '',
+          ride: {
+            state: RideStateEnum.DriverEnroute,
+          }
+        });
+        console.log('Ride state updated to DriverEnroute')
+        await reFetchActiveRide();
+        // navigation will occur automatically (in @../Driver.tsx)
+      } catch (error) {
+        console.log('Failed to update ride state');
+      }
+    }
+  };
+
   return (
     <>
       <div style={{ width: '100%' }}>
@@ -183,6 +204,9 @@ const Rides = () => {
                         setSelectedRide(ride);
                         setIsModalOpen(true);
                       }}
+                      onDriverEnroute={handleDriverEnroute} // Pass the handler to RideCard
+                      rideId={ride.rideId}
+
                     />
                   ))}
                 </Stack>
@@ -219,6 +243,8 @@ const Rides = () => {
                     onSelect={onSelectRideCallback}
                     selected={selectedRide?.rideId === ride.rideId}
                     onApprovePassenger={() => setIsModalOpen(true)}
+                    onDriverEnroute={handleDriverEnroute} // Pass the handler to RideCard
+                    rideId={ride.rideId}
                   />
                 ))}
               </Stack>
