@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
@@ -7,6 +7,7 @@ import BellIcon from '@mui/icons-material/NotificationImportantRounded';
 import { Ride } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
 import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';
+import RideContactModal from '../RideContactModal/RideContactModal';
 
 
 const commonStyle = {
@@ -47,9 +48,12 @@ export const RideCard = ({
   onDriverEnroute: (rideId: string | undefined) => void; // Modify the prop to accept rideId
   rideId: string | undefined; // Define the rideId prop
 }) => {
-  const onClickCallback = useCallback(() => {
-    onSelect(ride);
-  }, [onSelect, ride]);
+  const [showModal, setShowModal] = useState(false); // state to control modal visibility
+
+  const onClickCallback = () => {
+    setShowModal(true); // open the modal when the button is clicked
+  };
+
 
   return (
     <Card className="shadow-sm rounded-xl">
@@ -58,55 +62,55 @@ export const RideCard = ({
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-  {/* Line 1: מועד איסוף */}
-  <div style={commonStyle}>
-    <Typography style={{ ...commonTextStyle, width: '80px' }}>
-      מועד איסוף:
-    </Typography>
-    <Typography style={boldTextStyle}>
-      {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}
-    </Typography>
-  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {/* Line 1: מועד איסוף */}
+                  <div style={commonStyle}>
+                    <Typography style={{ ...commonTextStyle, width: '80px' }}>
+                      מועד איסוף:
+                    </Typography>
+                    <Typography style={boldTextStyle}>
+                      {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}
+                    </Typography>
+                  </div>
 
-  {/* Line 2: כמות */}
-  <div style={commonStyle}>
-    <Typography style={commonTextStyle}>כמות:</Typography>
-    <Typography style={boldTextStyle}>{ride.passengerCount}</Typography>
-  </div>
+                  {/* Line 2: כמות */}
+                  <div style={commonStyle}>
+                    <Typography style={commonTextStyle}>כמות:</Typography>
+                    <Typography style={boldTextStyle}>{ride.passengerCount}</Typography>
+                  </div>
 
-  {/* Line 3: כתובת איסוף */}
-  <div style={commonStyle}>
-    <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
-    <a
-      style={{ fontFamily: 'Heebo' }}
-      href={`https://waze.com/ul?q=${ride?.origin}`}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {ride?.origin}
-    </a>
-  </div>
+                  {/* Line 3: כתובת איסוף */}
+                  <div style={commonStyle}>
+                    <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+                    <a
+                      style={{ fontFamily: 'Heebo' }}
+                      href={`https://waze.com/ul?q=${ride?.origin}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ride?.origin}
+                    </a>
+                  </div>
 
-  {/* Line 4: יעד נסיעה */}
-  <div style={commonStyle}>
-    <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
-    <a
-      style={{ fontFamily: 'Heebo' }}
-      href={`https://waze.com/ul?q=${ride.destination}`}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {ride.destination}
-    </a>
-  </div>
+                  {/* Line 4: יעד נסיעה */}
+                  <div style={commonStyle}>
+                    <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
+                    <a
+                      style={{ fontFamily: 'Heebo' }}
+                      href={`https://waze.com/ul?q=${ride.destination}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ride.destination}
+                    </a>
+                  </div>
 
-  {/* Line 5: תיאור הנסיעה */}
-  <div style={commonStyle}>
-    <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-    <Typography style={boldTextStyle}>{ride?.comment}</Typography>
-  </div>
-</div>
+                  {/* Line 5: תיאור הנסיעה */}
+                  <div style={commonStyle}>
+                    <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
+                    <Typography style={boldTextStyle}>{ride?.comment}</Typography>
+                  </div>
+                </div>
 
               </div>
             </div>
@@ -129,20 +133,29 @@ export const RideCard = ({
 
               {context === 'myRides' && (
                 <div className="flex flex-grow flex-row gap-4">
-  <Button variant="outlined" color="error" style={{ flex: 1}}>
-    ביטול
-  </Button>
-  <Button
-    variant="contained"
-    color="success"
-    size="large"
-    style={{ width: "205px" }}
-    startIcon={<CarIcon />}
-    onClick={() => onDriverEnroute(rideId)}
-    >
-    יציאה לדרך
-  </Button>
-</div>
+                  <Button variant="outlined" color="error" style={{ flex: 1 }}>
+                    ביטול
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    style={{ width: "205px" }}
+                    startIcon={<CarIcon />}
+                  >
+                    יציאה לדרך
+                  </Button>
+                  {showModal && ( // render modal when showModal state is true
+                    <RideContactModal
+                      ride={ride}
+                      onConfirm={() => {
+                        onDriverEnroute(ride.rideId); // call onDriverEnroute when confirmed
+                        setShowModal(false); // close modal after confirmation
+                      }}
+                      onCancel={() => setShowModal(false)} // close modal if canceled
+                    />
+                  )}
+                </div>
 
               )}
             </div>

@@ -50,37 +50,35 @@ const style = {
   p: 2.5
 };
 
-const RIdeContactModal = ({
+const RideContactModal = ({
   ride,
-  open,
-  onClose,
-  onSubmit
+  onConfirm,
+  onCancel,
+
 }: {
   ride?: Ride;
-  open: boolean;
-  onClose: () => void;
-  onSubmit: SubmitHandler<SubmitRideInputs>;
+  onConfirm: () => void;
+  onCancel: () => void;
 }) => {
   const { handleSubmit } = useForm<SubmitRideInputs>();
 
   return (
-    <Modal open={open} disablePortal disableEscapeKeyDown>
+    <Modal open={true} onClose={onCancel} disablePortal disableEscapeKeyDown>
       <Box
         className="fixed top-109 left-27 w-320 h-auto p-0 pt-0 pb-20 bg-white rounded-lg shadow-lg flex flex-col gap-20"
         sx={style}
       >
         <form
           className="flex flex-col w-full h-full gap-8"
-          onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
           <div className="flex flex-col w-full h-full gap-8">
             <div className="flex flex-row w-80 h-14 p-3 items-center justify-between">
-              <IconButton size="large" onClick={onClose}>
+              <IconButton size="large" onClick={onCancel}>
                 <DirectionsCarIcon />
               </IconButton>
               <Typography style={firstTitleStyle}>צרו קשר עם הנוסע</Typography>
-              <IconButton size="small" onClick={onClose}>
+              <IconButton size="small" onClick={onCancel}>
                 <Close />
               </IconButton>
             </div>
@@ -106,7 +104,7 @@ const RIdeContactModal = ({
               <div style={commonStyle}>
                 <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
                 <Typography style={boldTextStyle}>
-                {`tel:${ride?.cellphone}`}
+                  {`tel:${ride?.cellphone}`}
                 </Typography>
               </div>
             </div>
@@ -118,11 +116,13 @@ const RIdeContactModal = ({
               color="primary"
               type="submit"
               startIcon={<CarIcon />}
+              onClick={onConfirm} // call onConfirm when confirmation button is clicked
+
             >
               אישור ויציאה לדרך
             </Button>
-            <Button variant="outlined" color="primary" startIcon={<Close />} onClick={onClose}>
-            ביטול ההסעה שלי
+            <Button variant="outlined" color="primary" startIcon={<Close />} onClick={onCancel}>
+              ביטול ההסעה שלי
             </Button>
           </div>
         </form>
@@ -131,4 +131,4 @@ const RIdeContactModal = ({
   );
 };
 
-export default RIdeContactModal;
+export default RideContactModal;

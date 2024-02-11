@@ -211,18 +211,18 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         }
       }
 
-      if (updatedRide.state === RideStateEnum.Booked) {
-        await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
-        await Promise.all([
-          currentRide.rideRequester?.userId &&
-            sendPushByUserId(
-              currentRide.rideRequester?.userId,
-              'עדכון על הנסיעה',
-              'הנסיעה שלך התקבלה על ידי נהג'
-            ),
-          sendSMS(updatedRide.cellphone, getRideBookedPassengerSMSMessage(updatedRide))
-        ]);
-      }
+      // if (updatedRide.state === RideStateEnum.Booked) {
+      //   await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+      //   await Promise.all([
+      //     currentRide.rideRequester?.userId &&
+      //       sendPushByUserId(
+      //         currentRide.rideRequester?.userId,
+      //         'עדכון על הנסיעה',
+      //         'הנסיעה שלך התקבלה על ידי נהג'
+      //       ),
+      //     sendSMS(updatedRide.cellphone, getRideBookedPassengerSMSMessage(updatedRide))
+      //   ]);
+      // }
 
       if (updatedRide.state === RideStateEnum.DriverEnroute) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
