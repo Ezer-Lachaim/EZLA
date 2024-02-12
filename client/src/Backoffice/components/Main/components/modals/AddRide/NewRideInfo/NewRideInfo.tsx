@@ -9,18 +9,27 @@ import {
   Select,
   TextField
 } from '@mui/material';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { useFormContext } from 'react-hook-form';
+import dayjs, { Dayjs } from 'dayjs';
+import { useState } from 'react';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
+import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../TimeFunctions/TimeFunctions';
 
 function NewRideInfo() {
   const {
     register,
     watch,
+    setValue,
     formState: { errors }
   } = useFormContext<Ride>();
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+  const fixToday = fixTimeUpDayjs();
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
+  const defaultSelectedTime = ['3 שעות'];
+  const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
 
   return (
     <div className="flex gap-4">
@@ -76,6 +85,48 @@ function NewRideInfo() {
               {errors.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
             </FormHelperText>
           )}
+        </FormControl>
+
+        <FormControl>
+          <DatePicker
+            label="תאריך איסוף מבוקש"
+            defaultValue={dayjs()}
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            onChange={(date) => {
+              setValue('pickupDateTime', date ? date.toDate() : undefined);
+            }}
+            format="YYYY-MM-DD"
+            slots={{
+              textField: DayTextField
+            }}
+          />
+        </FormControl>
+        <FormControl sx={{ width: '100%' }} required>
+          <InputLabel id="demo-multiple-name-label" required>
+            כמה זמן רלוונטי
+          </InputLabel>
+          <Select
+            labelId="demo-multiple-name-label"
+            id="demo-multiple-name"
+            value={selectedTime}
+            onChange={(event) => {
+              const {
+                target: { value }
+              } = event;
+              setSelectedTime(typeof value === 'string' ? value.split(',') : value);
+              const selectedTimeIndex = menuHours.indexOf(value as string) + 1;
+              setValue('relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
+            }}
+            input={<OutlinedInput label="כמה זמן רלוונטי" />}
+            required
+          >
+            {menuHours.map((hour) => (
+              <MenuItem key={hour} value={hour}>
+                {hour}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
         <FormControl>
           <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
@@ -155,6 +206,38 @@ function NewRideInfo() {
                   opacity: 1
                 }
             }}
+          />
+        </FormControl>
+        <FormControl>
+          <TimePicker
+            sx={{ width: '100%' }}
+            label="שעת איסוף"
+            disablePast
+            ampm={false}
+            value={timeInIsrael}
+            onChange={(time) => {
+              if (time) {
+                const existingDate = watch().pickupDateTime || dayjs();
+                let newDateTime;
+                if (existingDate instanceof Date) {
+                  newDateTime = new Date(existingDate);
+                } else {
+                  newDateTime = dayjs(existingDate).toDate();
+                }
+
+                newDateTime.setHours(time.hour(), time.minute());
+
+                // Convert the newDateTime to a Date object
+                const newDateTimeDate = new Date(newDateTime);
+
+                // Update the completedTimeStamp
+                setValue('pickupDateTime', newDateTimeDate);
+
+                // Update the local state for timeInIsrael
+                setTimeInIsrael(dayjs(newDateTime));
+              }
+            }}
+            views={['minutes', 'hours']}
           />
         </FormControl>
         <FormControl>

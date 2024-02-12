@@ -10,7 +10,7 @@
     "plugin:prettier/recommended",
     "plugin:react/jsx-runtime"
   ],
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["prettier"],
   "parser": "@typescript-eslint/parser",
   "ignorePatterns": [
     "coverage/**/*",
