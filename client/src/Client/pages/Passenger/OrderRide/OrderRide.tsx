@@ -18,18 +18,22 @@ import {
 } from '@mui/material';
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import dayjs, { Dayjs } from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import {
+  DayTextField,
+  fixTimeUpDayjs,
+  menuHours
+} from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -81,10 +85,8 @@ enum DestinationSourceEnum {
 }
 
 dayjs.extend(timezone);
-let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
-fixTimeUpDayjs();
+const fixToday = fixTimeUpDayjs();
 const defaultSelectedTime = ['3 שעות'];
-
 
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
@@ -93,7 +95,7 @@ const OrderRide = () => {
     DestinationSourceEnum.Destination
   );
   const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
-  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(today);
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -329,7 +331,9 @@ const OrderRide = () => {
             defaultValue={dayjs()}
             maxDate={dayjs().add(3, 'day')}
             disablePast
-            onChange={(date) => setValue('ride.pickupDateTime', date ? date.toDate() : undefined)}
+            onChange={(date) => {
+              setValue('ride.pickupDateTime', date ? date.toDate() : undefined);
+            }}
             format="YYYY-MM-DD"
             slots={{
               textField: DayTextField
@@ -349,21 +353,16 @@ const OrderRide = () => {
                   if (time) {
                     const existingDate = watch().ride?.pickupDateTime || dayjs();
                     let newDateTime;
-
                     if (existingDate instanceof Date) {
                       newDateTime = new Date(existingDate);
                     } else {
                       newDateTime = dayjs(existingDate).toDate();
                     }
-
                     newDateTime.setHours(time.hour(), time.minute());
-
                     // Convert the newDateTime to a Date object
                     const newDateTimeDate = new Date(newDateTime);
-
                     // Update the completedTimeStamp
                     setValue('ride.pickupDateTime', newDateTimeDate);
-
                     // Update the local state for timeInIsrael
                     setTimeInIsrael(dayjs(newDateTime));
                   }
@@ -393,7 +392,7 @@ const OrderRide = () => {
                 required
               >
                 {menuHours.map((hour) => (
-                  <MenuItem key={hour} value={hour} >
+                  <MenuItem key={hour} value={hour}>
                     {hour}
                   </MenuItem>
                 ))}
