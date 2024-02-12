@@ -144,8 +144,6 @@ const Rides = () => {
 
 
   const handleDriverEnroute = async (rideId: string | undefined) => {
-    console.log('function is trigered!')
-    console.log(rideId)
     if (rideId) {
       try {
         await api.ride.updateRide({
@@ -260,9 +258,7 @@ const Rides = () => {
                       open={showModal}
                       onCancel={() => setShowModal(false)} // close modal if canceled
                       onConfirm={() => {
-                        console.log("I clicked!");
                         handleDriverEnroute(ride.rideId);
-                        console.log("IOdfsad");
                       }}
                     />
                   </>
