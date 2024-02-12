@@ -10,13 +10,13 @@ import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/
 import RideContactModal from '../RideContactModal/RideContactModal';
 
 
-const commonStyle = {
+export const commonStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: '8px'
 };
 
-const commonTextStyle = {
+export const commonTextStyle = {
   marginRight: '8px',
   fontFamily: 'Heebo',
   fontWeight: '400',
@@ -24,7 +24,7 @@ const commonTextStyle = {
   width: '80px'
 };
 
-const boldTextStyle = {
+export const boldTextStyle = {
   ...commonTextStyle,
   fontWeight: '700',
   fontSize: '16px',
@@ -36,8 +36,8 @@ export const RideCard = ({
   context,
   onSelect,
   selected,
+  onOpenContactModal,
   onApprovePassenger,
-  onDriverEnroute,
   rideId // New parameter to pass the ride ID
 }: {
   ride: Ride;
@@ -45,19 +45,15 @@ export const RideCard = ({
   onSelect: (ride: Ride) => void;
   selected: boolean;
   onApprovePassenger: () => void;
-  onDriverEnroute: (rideId: string | undefined) => void; // Modify the prop to accept rideId
+  onOpenContactModal: () => void;
   rideId: string | undefined; // Define the rideId prop
 }) => {
-  const [showModal, setShowModal] = useState(false); // state to control modal visibility
 
-  const onClickCallback = () => {
-    setShowModal(true); // open the modal when the button is clicked
-  };
 
 
   return (
     <Card className="shadow-sm rounded-xl">
-      <CardContent onClick={onClickCallback} className="p-4">
+      <CardContent className="p-4">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
@@ -142,19 +138,12 @@ export const RideCard = ({
                     size="large"
                     style={{ width: "205px" }}
                     startIcon={<CarIcon />}
+                    onClick={onOpenContactModal}
                   >
                     יציאה לדרך
                   </Button>
-                  {showModal && ( // render modal when showModal state is true
-                    <RideContactModal
-                      ride={ride}
-                      onConfirm={() => {
-                        onDriverEnroute(ride.rideId); // call onDriverEnroute when confirmed
-                        setShowModal(false); // close modal after confirmation
-                      }}
-                      onCancel={() => setShowModal(false)} // close modal if canceled
-                    />
-                  )}
+
+
                 </div>
 
               )}

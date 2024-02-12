@@ -11,6 +11,7 @@ import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApp
 import { useActiveRide } from '../../../../hooks/activeRide';
 import { IconButton, Tab, Tabs, Typography } from '@material-ui/core';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import RideContactModal from './RideContactModal/RideContactModal.tsx';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -135,10 +136,16 @@ const Rides = () => {
     }
   };
 
-  
-  const handleDriverEnroute = async ( rideId: string |undefined) => {
+  const [showModal, setShowModal] = useState(false); // state to control modal visibility
+
+  const onClickCallback = () => {
+    setShowModal(true); // open the modal when the button is clicked
+  };
+
+
+  const handleDriverEnroute = async (rideId: string | undefined) => {
     console.log('function is trigered!')
-    console.log(selectedRide)
+    console.log(rideId)
     if (rideId) {
       try {
         await api.ride.updateRide({
@@ -154,6 +161,7 @@ const Rides = () => {
         console.log('Failed to update ride state');
       }
     }
+    setShowModal(false); // close modal after confirmation
   };
 
   return (
@@ -204,9 +212,8 @@ const Rides = () => {
                         setSelectedRide(ride);
                         setIsModalOpen(true);
                       }}
-                      onDriverEnroute={handleDriverEnroute} // Pass the handler to RideCard
                       rideId={ride.rideId}
-
+                      onOpenContactModal={onClickCallback}
                     />
                   ))}
                 </Stack>
@@ -223,6 +230,7 @@ const Rides = () => {
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
+
           <RideApprovalModal
             ride={selectedRide}
             open={isModalOpen}
@@ -236,16 +244,28 @@ const Rides = () => {
               </h1>
               <Stack spacing={2}>
                 {filteredRides.map((ride) => (
-                  <RideCard
-                    ride={ride}
-                    key={`ride-${ride.rideId}`}
-                    context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
-                    onSelect={onSelectRideCallback}
-                    selected={selectedRide?.rideId === ride.rideId}
-                    onApprovePassenger={() => setIsModalOpen(true)}
-                    onDriverEnroute={handleDriverEnroute} // Pass the handler to RideCard
-                    rideId={ride.rideId}
-                  />
+                  <>
+                    <RideCard
+                      ride={ride}
+                      key={`ride-${ride.rideId}`}
+                      context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
+                      onSelect={onSelectRideCallback}
+                      selected={selectedRide?.rideId === ride.rideId}
+                      onApprovePassenger={() => setIsModalOpen(true)}
+                      rideId={ride.rideId}
+                      onOpenContactModal={onClickCallback}
+                    />
+                    <RideContactModal
+                      ride={ride}
+                      open={showModal}
+                      onCancel={() => setShowModal(false)} // close modal if canceled
+                      onConfirm={() => {
+                        console.log("I clicked!");
+                        handleDriverEnroute(ride.rideId);
+                        console.log("IOdfsad");
+                      }}
+                    />
+                  </>
                 ))}
               </Stack>
             </div>
