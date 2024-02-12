@@ -15,7 +15,6 @@ export function getStyles(name: string, personName: string[], theme: Theme) {
   };
 }
 
-
 const DAY_MS = 1000 * 60 * 60 * 24; // 24 hours in ms
 
 function getDayStart(date: Date) {
@@ -47,18 +46,16 @@ export const DayTextField = ({ value, ...props }: TextFieldProps) => {
   return <TextField {...props} value={localValue} />;
 };
 
-
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
-let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
 
 export const fixTimeUpDayjs = () => {
+  let today = dayjs(dayjs(), 'Asia/Jerusalem');
   today = today.add(3, 'hour');
   const minutes = today.minute() % 10;
   if (minutes < 5) {
-    today = today.add(5 - minutes, 'minute');
+    return (today = today.add(5 - minutes, 'minute'));
   } else {
-    today = today.add(10 - minutes, 'minute');
+    return (today = today.add(10 - minutes, 'minute'));
   }
 };

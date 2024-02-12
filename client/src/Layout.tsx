@@ -67,7 +67,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="he">{children}</LocalizationProvider>
       </ThemeProvider>
     </CacheProvider>
   );

@@ -14,7 +14,6 @@ import {
   TextField
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'dayjs/locale/he';
 import { Hospital } from '../../../../../../api-client';
@@ -67,7 +66,6 @@ export const PatientInfoForm = () => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="he">
       <div className="flex flex-col gap-9 mb-5">
         <FormControlLabel
           control={<Checkbox onClick={serviceForMeHandler} />}
@@ -274,6 +272,5 @@ export const PatientInfoForm = () => {
           )}
         </div>
       </div>
-    </LocalizationProvider>
   );
 };

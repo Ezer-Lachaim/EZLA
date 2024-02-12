@@ -28,7 +28,11 @@ import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../.
 import { useActiveRide } from '../../../../hooks/activeRide';
 import dayjs, { Dayjs } from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
-import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
+import {
+  DayTextField,
+  fixTimeUpDayjs,
+  menuHours
+} from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 
 interface OrderRideFormData {
@@ -81,10 +85,8 @@ enum DestinationSourceEnum {
 }
 
 dayjs.extend(timezone);
-let today = dayjs.tz(dayjs(), 'Asia/Jerusalem');
-fixTimeUpDayjs();
+const fixToday = fixTimeUpDayjs();
 const defaultSelectedTime = ['3 שעות'];
-
 
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
@@ -93,7 +95,7 @@ const OrderRide = () => {
     DestinationSourceEnum.Destination
   );
   const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
-  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(today);
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -329,7 +331,9 @@ const OrderRide = () => {
             defaultValue={dayjs()}
             maxDate={dayjs().add(3, 'day')}
             disablePast
-            onChange={(date) => setValue('ride.pickupDateTime', date ? date.toDate() : undefined)}
+            onChange={(date) => {
+              setValue('ride.pickupDateTime', date ? date.toDate() : undefined);
+            }}
             format="YYYY-MM-DD"
             slots={{
               textField: DayTextField
@@ -349,21 +353,16 @@ const OrderRide = () => {
                   if (time) {
                     const existingDate = watch().ride?.pickupDateTime || dayjs();
                     let newDateTime;
-
                     if (existingDate instanceof Date) {
                       newDateTime = new Date(existingDate);
                     } else {
                       newDateTime = dayjs(existingDate).toDate();
                     }
-
                     newDateTime.setHours(time.hour(), time.minute());
-
                     // Convert the newDateTime to a Date object
                     const newDateTimeDate = new Date(newDateTime);
-
                     // Update the completedTimeStamp
                     setValue('ride.pickupDateTime', newDateTimeDate);
-
                     // Update the local state for timeInIsrael
                     setTimeInIsrael(dayjs(newDateTime));
                   }
@@ -393,7 +392,7 @@ const OrderRide = () => {
                 required
               >
                 {menuHours.map((hour) => (
-                  <MenuItem key={hour} value={hour} >
+                  <MenuItem key={hour} value={hour}>
                     {hour}
                   </MenuItem>
                 ))}
