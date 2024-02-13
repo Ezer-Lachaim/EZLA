@@ -30,7 +30,7 @@ import { useActiveRide } from '../../../../hooks/activeRide';
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
-  selectedSpecialRequests: RideSpecialRequestEnum[];
+  selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
 const specialRequestLabels: { [key: string]: string } = {
@@ -41,6 +41,17 @@ const specialRequestLabels: { [key: string]: string } = {
   isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
 };
 
+const deliverySpecialRequestLabels: { [key: string]: string } = {
+  isFood: 'מזון',
+  isMilitaryEquipment: 'ציוד צבאי',
+  isMedicalEquipment: 'ציוד רפואי',
+  isHolyItems: 'תשמישי קדושה',
+  isLargeVolume: 'נפח גדול',
+  isSmallVolume: 'נפח קטן',
+  isHeavyWeight: 'משקל כבד',
+  isFragile: 'שביר'
+};
+
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
 } = {
@@ -48,7 +59,15 @@ const specialMap: {
   isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
   isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
-  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isFood: RideSpecialRequestEnum.Food,
+  isMilitaryEquipment: RideSpecialRequestEnum.MilitaryEquipment,
+  isMedicalEquipment: RideSpecialRequestEnum.MedicalEquipment,
+  isHolyItems: RideSpecialRequestEnum.HolyItems,
+  isLargeVolume: RideSpecialRequestEnum.LargeVolume,
+  isSmallVolume: RideSpecialRequestEnum.SmallVolume,
+  isHeavyWeight: RideSpecialRequestEnum.HeavyWeight,
+  isFragile: RideSpecialRequestEnum.Fragile
 };
 
 const CustomFontSizeContainer = styled('div')(() => ({
@@ -163,6 +182,7 @@ const OrderRide = () => {
 
     const newRide: Ride = {
       ...data.ride,
+      serviceType: rideOrDelivery,
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver
     };
@@ -186,10 +206,34 @@ const OrderRide = () => {
     );
   };
 
+  const [rideOrDelivery, setRideOrDelivery] = useState<string>('ride');
+  const handleDeliveryDriverButtonClick = (status: string) => {
+    setRideOrDelivery(status);
+    console.log('rideOrDelivery', rideOrDelivery);
+  };
+
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="flex">
+          <Button
+            className="w-full"
+            variant={rideOrDelivery === 'ride' ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => handleDeliveryDriverButtonClick('ride')}
+          >
+            נוסעים
+          </Button>
+          <Button
+            className="w-full"
+            variant={rideOrDelivery === 'delivery' ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => handleDeliveryDriverButtonClick('delivery')}
+          >
+            משלוחים
+          </Button>
+        </div>
         <div className="flex flex-col">
           {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
             <FormControl>
@@ -264,7 +308,7 @@ const OrderRide = () => {
               variant="outlined"
               value={quantity}
               inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-              label="מספר נוסעים"
+              label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}
             />
             {errors.ride?.passengerCount?.type === 'required' && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -319,18 +363,35 @@ const OrderRide = () => {
             multiple
             value={selectedSpecialRequests}
             onChange={handleSpecialRequestsChange}
-            input={<OutlinedInput label="בקשות מיוחדות" />}
+            input={
+              <OutlinedInput
+                label={rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
+              />
+            }
             renderValue={(selected) => {
-              if (Array.isArray(selected)) {
-                return selected.map((value) => specialRequestLabels[value]).join(', ');
-              }
-              return specialRequestLabels[selected];
+              return Array.isArray(selected)
+                ? selected
+                    .map((value) =>
+                      rideOrDelivery === 'delivery'
+                        ? deliverySpecialRequestLabels[value]
+                        : specialRequestLabels[value]
+                    )
+                    .join(', ')
+                : '';
             }}
           >
-            {Object.keys(specialRequestLabels).map((key) => (
+            {Object.keys(
+              rideOrDelivery === 'delivery' ? deliverySpecialRequestLabels : specialRequestLabels
+            ).map((key) => (
               <MenuItem key={key} value={key}>
                 <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
-                <ListItemText primary={specialRequestLabels[key]} />
+                <ListItemText
+                  primary={
+                    rideOrDelivery === 'delivery'
+                      ? deliverySpecialRequestLabels[key]
+                      : specialRequestLabels[key]
+                  }
+                />
               </MenuItem>
             ))}
           </Select>
