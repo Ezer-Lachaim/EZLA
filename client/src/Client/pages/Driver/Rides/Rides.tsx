@@ -51,7 +51,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <div style={{ padding: 24 }}>
+        <div style={{ padding: 14 }}>
           <Typography component={'span'}>{children}</Typography>
         </div>
       )}
@@ -195,9 +195,6 @@ const Rides = () => {
           <div className="w-full h-full flex flex-col gap-5 pb-4">
             {sortedRides.length > 0 ? (
               <>
-                <h1 className="m-0 text-center text-black">
-                  בחרו נסיעה מתוך {sortedRides.length} קריאות פתוחות
-                </h1>
                 <Stack spacing={2}>
                   {sortedRides.map((ride) => (
                     <RideCard
@@ -237,9 +234,6 @@ const Rides = () => {
           />
           {filteredRides.length > 0 ? (
             <div className="w-full h-full flex flex-col gap-5 pb-4">
-              <h1 className="m-0 text-center text-black">
-                בחרו נסיעה מתוך {filteredRides.length} נסיעות שלך
-              </h1>
               <Stack spacing={2}>
                 {filteredRides.map((ride) => (
                   <>
