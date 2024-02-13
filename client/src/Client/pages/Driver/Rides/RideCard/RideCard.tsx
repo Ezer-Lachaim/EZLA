@@ -1,15 +1,8 @@
-import { useCallback, useState } from 'react';
-import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
-import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import { Button, Card, CardContent, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
-import BellIcon from '@mui/icons-material/NotificationImportantRounded';
 import { Ride } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
 import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';
-import RideContactModal from '../RideContactModal/RideContactModal';
-import { ViewField } from '../../../../components/ViewField/ViewField';
-
 
 export const commonStyle = {
   display: 'flex',
@@ -34,11 +27,8 @@ export const boldTextStyle = {
 export const RideCard = ({
   ride,
   context,
-  onSelect,
-  selected,
   onOpenContactModal,
   onApprovePassenger,
-  rideId // New parameter to pass the ride ID
 }: {
   ride: Ride;
   context: 'openCalls' | 'myRides';
