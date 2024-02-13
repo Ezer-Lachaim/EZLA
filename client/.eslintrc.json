@@ -39,12 +39,15 @@
         "functions": "defaultArguments"
       }
     ],
-    "prettier/prettier": ["error", {
-      "printWidth": 100,
-      "singleQuote": true,
-      "arrowParens": "always",
-      "trailingComma": "none",
-      "endOfLine": "auto"
-    }]
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 100,
+        "singleQuote": true,
+        "arrowParens": "always",
+        "trailingComma": "none",
+        "endOfLine": "auto"
+      }
+    ]
   }
 }
