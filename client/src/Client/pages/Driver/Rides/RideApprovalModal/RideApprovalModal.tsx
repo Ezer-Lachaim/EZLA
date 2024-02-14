@@ -1,6 +1,8 @@
 import { Modal, Box, Button, IconButton, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { Ride } from '../../../../../api-client';
 import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';
 
@@ -85,7 +87,9 @@ const RideApprovalModal = ({
             </div>
 
             <div className="flex items-center gap-2 m-20px">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}>
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}
+              >
                 <div style={commonStyle}>
                   <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
                   <Typography style={boldTextStyle}>
@@ -94,17 +98,31 @@ const RideApprovalModal = ({
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>כמות:</Typography>
-                  <Typography >{ride?.passengerCount}</Typography>
+                  <Typography>
+                    {ride?.serviceType === 'ride' ? (
+                      <span className="ml-2">
+                        <EmojiPeopleIcon />
+                      </span>
+                    ) : (
+                      <span className="ml-2">
+                        <InventoryIcon />
+                      </span>
+                    )}
+                    {ride?.passengerCount}
+                  </Typography>{' '}
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>טלפון:</Typography>
-                  <Typography >             <a
-                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {ride?.cellphone}
-                  </a> </Typography>
+                  <Typography>
+                    {' '}
+                    <a
+                      href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ride?.cellphone}
+                    </a>{' '}
+                  </Typography>
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
@@ -130,18 +148,13 @@ const RideApprovalModal = ({
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                  <Typography style={boldTextStyle}>{ride?.comment}</Typography>
+                  <Typography>{ride?.comment}</Typography>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
-            <Button
-              className="w-280 h-40px m-20px rounded-md gap-8"
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
+          <div className="flex flex-col gap-4 p-87">
+            <Button variant="contained" color="primary" type="submit">
               בחירת נסיעה
             </Button>
             <Button variant="outlined" color="primary" onClick={onClose}>

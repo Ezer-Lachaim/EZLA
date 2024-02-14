@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
@@ -11,7 +12,6 @@ import { CustomRequest } from '../middlewares/CustomRequest';
 import { populateRideDetails } from '../repository/ride';
 
 const SUPPORT_PHONE_NUMBER = '033-730440';
-
 /**
  * GET /rides
  * Get all rides.
@@ -24,6 +24,10 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       const keys = await redisClient.keys('ride:*');
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
       rides = await Promise.all([].concat(...rides).map((ride) => populateRideDetails(ride)));
+
+      if (req.query.driverID) {
+        rides = rides.filter((item) => item.driver.userId === req.query.driverID);
+      }
 
       if (req.query.state) {
         rides = rides.filter((item) => item.state === req.query.state);
@@ -85,6 +89,18 @@ export const getRideById = async (req: CustomRequest, res: Response): Promise<vo
  * POST /rides
  * Create a new ride.
  */
+const fixTimeUpDayjs = () => {
+  let today = dayjs(dayjs(), 'Asia/Jerusalem');
+  today = today.add(3, 'hour');
+  const minutes = today.minute() % 10;
+  if (minutes < 5) {
+    today = today.add(5 - minutes, 'minute');
+  } else {
+    today = today.add(10 - minutes, 'minute');
+  }
+  // Convert Day.js object to Date object
+  return today.toDate();
+};
 export const createRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const guestToken = req.get('guest-token');
   const rideId = uuidv4();
@@ -96,11 +112,11 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   if (ride.pickupDateTime) {
     ride.pickupDateTime = new Date(ride.pickupDateTime);
   } else {
-    ride.pickupDateTime = new Date();
+    ride.pickupDateTime = new Date(fixTimeUpDayjs());
   }
 
   if (ride.relevantTime) {
-    ride.relevantTime = ride.relevantTime; 
+    ride.relevantTime = req.body.ride.relevantTime;
   } else {
     ride.relevantTime = 3;
   }

@@ -1,118 +1,101 @@
 import { Modal, Box, Button, IconButton, Typography, Divider } from '@mui/material';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { Close } from '@mui/icons-material';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { Ride } from '../../../../../api-client';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-import { SubmitRideInputs } from '../RideApprovalModal/RideApprovalModal';
-
-const commonStyle = {
-  display: 'flex',
-  alignItems: 'stretch',
-  gap: '8px'
-};
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const commonTextStyle = {
   marginRight: '8px',
   fontFamily: 'Heebo',
   fontWeight: '400',
   fontSize: '12px',
-  width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
+  width: '80px'
 };
 
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
-};
-
-const firstTitleStyle = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 320,
-  bgcolor: 'background.paper',
-  borderRadius: '4px',
-  boxShadow: 24,
-  p: 2.5
-};
 const RideContactModal = ({
   ride,
   open,
   onConfirm,
-  onCancel,
+  onCancel
 }: {
   ride?: Ride;
   open: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }) => {
-
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box
-        className="fixed top-109 left-27 w-320 h-auto p-0 pt-0 pb-20 bg-white rounded-lg shadow-lg flex flex-col gap-20"
-        sx={style}
-      >
-        <div className="flex flex-col w-full h-full gap-8">
-          <div className="flex flex-col w-full h-full gap-8">
-            <div className="flex flex-row w-80 h-14 p-3 items-center justify-between">
-              <IconButton size="large" onClick={onCancel}>
-                <DirectionsCarIcon />
-              </IconButton>
-              <Typography style={firstTitleStyle}>צרו קשר עם הנוסע</Typography>
-              <IconButton size="small" onClick={onCancel}>
-                <Close />
-              </IconButton>
-            </div>
-            <div>
-              <Typography>חשוב ליצור קשר עם הנוסעים</Typography>
-              <Typography >
-                יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
-                רכב.
+      <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-lg p-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col justify-center items-center gap-2">
+            <IconButton size="small" onClick={onCancel} className="absolute left-2 top-2">
+              <Close />
+            </IconButton>
+            <CarIcon color="primary" fontSize="large" />
+            <div className="text-center">
+              <Typography
+                className="font-medium text-blue-500 font-heebo"
+                style={{ fontSize: '22px' }}
+              >
+                צרו קשר עם הנוסע
               </Typography>
             </div>
-            <Divider />
+          </div>
+          <div>
+            <Typography className="text-center" style={{ fontSize: '18px', fontWeight: '700' }}>
+              חשוב ליצור קשר עם הנוסעים.
+            </Typography>
+            <Typography className="font-normal text-center" style={{ fontSize: '16px' }}>
+              יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
+              רכב.
+            </Typography>
+          </div>
+          <Divider />
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>כמות:</Typography>
-                <Typography style={boldTextStyle}>{ride?.passengerCount}</Typography>
-              </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-                <Typography style={boldTextStyle}>{`${ride?.firstName} ${ride?.comment}`}</Typography>
-              </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
-                <Typography style={boldTextStyle}>{`tel:${ride?.cellphone}`}</Typography>
-              </div>
+              <Typography className="font-semibold" style={commonTextStyle}>
+                כמות:
+              </Typography>
+              <Typography>
+                {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                {ride?.passengerCount}
+              </Typography>
+            </div>
+            <div className="flex items-center gap-2">
+              <Typography style={commonTextStyle}>שם הנוסע:</Typography>
+              <Typography>{`${ride?.firstName} ${ride?.lastName}`}</Typography>
+            </div>
+            <div className="flex items-center gap-2">
+              <Typography style={commonTextStyle}>
+                טלפון הנוסע:
+              </Typography>
+              <Typography>
+                <a
+                  href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {ride?.cellphone}
+                </a>
+              </Typography>
             </div>
           </div>
           <div className="flex flex-col gap-4">
             <Button
-              className="w-280 h-40px p-[13px 16px] m-20px rounded-md gap-8"
-              variant="contained"
-              color="primary"
-              type="submit"
-              startIcon={<CarIcon />}
+            variant='contained'
+              className="w-full bg-green-600 text-white"
               onClick={onConfirm}
+              startIcon={<CarIcon />}
             >
               אישור ויציאה לדרך
             </Button>
-            <Button variant="outlined" color="primary" startIcon={<Close />} onClick={onCancel}>
+            <Button
+            variant='outlined'
+  className="w-full border border-red-500 text-red-500"
+  onClick={onCancel}
+              startIcon={<Close />}
+            >
               ביטול ההסעה שלי
             </Button>
           </div>

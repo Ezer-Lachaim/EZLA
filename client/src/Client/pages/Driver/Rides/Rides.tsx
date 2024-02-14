@@ -19,26 +19,6 @@ interface TabPanelProps {
   value: number;
 }
 
-const tabStyles = {
-  display: 'flex',
-  height: '48px',
-  padding: '8px 33px',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flex: '1 0 0',
-  background: 'var(--White, #FFF)',
-  boxShadow:
-    '0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 2px 4px -1px rgba(0, 0, 0, 0.20)',
-  textAlign: 'center',
-  fontFamily: 'Heebo',
-  fontSize: '14px',
-  fontStyle: 'normal',
-  fontWeight: 500,
-  lineHeight: '14px',
-  letterSpacing: '0.5px',
-  textTransform: 'uppercase'
-};
-
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
@@ -80,7 +60,7 @@ const Rides = () => {
   });
   const { data: bookedRides = [] } = useQuery({
     queryKey: ['bookedRides'],
-    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.Booked }),
+    queryFn: () => api.ride.ridesGet({ driverID: user?.userId }),
     refetchInterval: POLLING_INTERVAL
   });
 
@@ -133,6 +113,7 @@ const Rides = () => {
       // navigation will occur automatically (in @../Driver.tsx)
 
       setIsModalOpen(false);
+      setValue(1);
     }
   };
 
@@ -166,24 +147,32 @@ const Rides = () => {
     <>
       <div style={{ width: '100%' }}>
         <div style={{ borderBottom: '1px solid divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab
-              label={`קריאות פתוחות (${sortedRides.length})`}
-              {...a11yProps(0)}
-              style={tabStyles as React.CSSProperties}
-            />
-            <Tab
-              label={`נסיעות שלי (${filteredRides.length})`}
-              {...a11yProps(1)}
-              style={tabStyles as React.CSSProperties}
-            />
-          </Tabs>
+        <Tabs
+  value={value}
+  onChange={handleChange}
+  aria-label="basic tabs example"
+  indicatorColor="primary"
+  textColor="primary"
+>
+  <Tab
+    {...a11yProps(0)}
+    className="flex items-center flex-1 bg-white shadow-md text-center"
+    label={
+      <span className="text-base">
+        קריאות פתוחות ({sortedRides.length})
+      </span>
+    }
+  />
+  <Tab
+    {...a11yProps(1)}
+    className="flex items-center flex-1 bg-white shadow-md text-center"
+    label={
+      <span className="font-Heebo font-medium text-base tracking-wide uppercase">
+        נסיעות שלי ({filteredRides.length})
+      </span>
+    }
+  />
+</Tabs>
         </div>
         <CustomTabPanel value={value} index={0}>
           <RideApprovalModal

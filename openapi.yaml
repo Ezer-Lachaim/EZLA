@@ -574,6 +574,8 @@ components:
             - DriverCanceled
             - RequesterCanceled
             - Canceled
+        driverID:
+          type: string
         passengerCount:
           type: number
           example: 2
