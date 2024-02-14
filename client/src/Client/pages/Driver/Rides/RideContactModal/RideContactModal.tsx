@@ -79,8 +79,8 @@ const RideContactModal = ({
               </IconButton>
             </div>
             <div>
-              <Typography style={boldTextStyle}>חשוב ליצור קשר עם הנוסעים</Typography>
-              <Typography style={commonTextStyle}>
+              <Typography>חשוב ליצור קשר עם הנוסעים</Typography>
+              <Typography >
                 יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
                 רכב.
               </Typography>
