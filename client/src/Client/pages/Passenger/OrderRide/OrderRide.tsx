@@ -15,11 +15,15 @@ import {
   SelectChangeEvent,
   OutlinedInput,
   ListItemText,
-  Box,
   Tab,
   Tabs
 } from '@mui/material';
-import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
+import {
+  AddCircleOutlineOutlined,
+  RemoveCircleOutlineOutlined,
+  Inventory,
+  EmojiPeople
+} from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -237,7 +241,7 @@ const OrderRide = () => {
           >
             <Tab
               value="ride"
-              // icon={<PersonPinIcon />}
+              icon={<EmojiPeople />}
               iconPosition="start"
               label="נוסעים"
               className={`transition-all duration-300 ease-in-out ${
@@ -246,7 +250,7 @@ const OrderRide = () => {
             />
             <Tab
               value="delivery"
-              // icon={<LocalShippingIcon />}
+              icon={<Inventory />}
               iconPosition="start"
               label="משלוחים"
               className={`transition-all duration-300 ease-in-out ${
