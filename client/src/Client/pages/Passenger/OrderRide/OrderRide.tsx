@@ -14,7 +14,10 @@ import {
   Select,
   SelectChangeEvent,
   OutlinedInput,
-  ListItemText
+  ListItemText,
+  Box,
+  Tab,
+  Tabs
 } from '@mui/material';
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
@@ -24,7 +27,13 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
-import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import {
+  Ride,
+  RideRequester,
+  RideServiceTypeEnum,
+  RideSpecialRequestEnum,
+  RideStateEnum
+} from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
 
 interface OrderRideFormData {
@@ -206,33 +215,47 @@ const OrderRide = () => {
     );
   };
 
-  const [rideOrDelivery, setRideOrDelivery] = useState<string>('ride');
-  const handleDeliveryDriverButtonClick = (status: string) => {
-    setRideOrDelivery(status);
-    console.log('rideOrDelivery', rideOrDelivery);
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+
+  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
+    setRideOrDelivery(newValue);
   };
 
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="flex">
-          <Button
-            className="w-full"
-            variant={rideOrDelivery === 'ride' ? 'contained' : 'outlined'}
-            color="primary"
-            onClick={() => handleDeliveryDriverButtonClick('ride')}
+        <div className="flex border border-blue-500 rounded-lg">
+          <Tabs
+            value={rideOrDelivery}
+            onChange={(event, newValue) => handleDeliveryDriverButtonClick(newValue)}
+            className="flex-grow"
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            TabIndicatorProps={{ style: { backgroundColor: 'transparent' } }}
           >
-            נוסעים
-          </Button>
-          <Button
-            className="w-full"
-            variant={rideOrDelivery === 'delivery' ? 'contained' : 'outlined'}
-            color="primary"
-            onClick={() => handleDeliveryDriverButtonClick('delivery')}
-          >
-            משלוחים
-          </Button>
+            <Tab
+              value="ride"
+              // icon={<PersonPinIcon />}
+              iconPosition="start"
+              label="נוסעים"
+              className={`transition-all duration-300 ease-in-out ${
+                rideOrDelivery === 'ride' ? 'bg-blue-500 text-white rounded-r-lg' : 'text-blue-500'
+              }`}
+            />
+            <Tab
+              value="delivery"
+              // icon={<LocalShippingIcon />}
+              iconPosition="start"
+              label="משלוחים"
+              className={`transition-all duration-300 ease-in-out ${
+                rideOrDelivery === 'delivery'
+                  ? 'bg-blue-500 text-white rounded-l-lg'
+                  : 'text-blue-500'
+              }`}
+            />
+          </Tabs>
         </div>
         <div className="flex flex-col">
           {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
@@ -296,7 +319,6 @@ const OrderRide = () => {
             </div>
           )}
         </div>
-
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -354,7 +376,6 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
-
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
           <Select
@@ -365,7 +386,8 @@ const OrderRide = () => {
             onChange={handleSpecialRequestsChange}
             input={
               <OutlinedInput
-                label={rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
+                label="בקשות מיוחדות"
+                // {rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
               />
             }
             renderValue={(selected) => {
@@ -396,7 +418,6 @@ const OrderRide = () => {
             ))}
           </Select>
         </FormControl>
-
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
           <TextField
@@ -451,7 +472,6 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
-
         {!user && (
           <div>
             <FormControlLabel
@@ -482,7 +502,6 @@ const OrderRide = () => {
             )}
           </div>
         )}
-
         <Button
           variant="contained"
           size="large"
