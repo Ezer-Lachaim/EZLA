@@ -518,7 +518,7 @@ components:
           example: 'בני ברק'
         address:
           type: string
-          example: 'ג׳בוטינסקי 1'
+          example: ' ז׳בוטינסקי 1'
         isInitialPassword:
           type: boolean
         signupDate:
@@ -548,6 +548,11 @@ components:
         rideId:
           type: string
           example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        serviceType:
+          type: string
+          enum:
+            - Ride
+            - Delivery
         destination:
           type: string
           example: "Airport"
@@ -582,7 +587,14 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         requestTimeStamp:
           type: string
@@ -635,6 +647,14 @@ components:
               - KidsChair
               - AccessibleCar
               - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         startServiceDate:
           type: string
@@ -649,6 +669,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/User'
       properties:
+        isGoogleForm:
+          type: boolean
         isValidLicense:
           type: boolean
           example: true

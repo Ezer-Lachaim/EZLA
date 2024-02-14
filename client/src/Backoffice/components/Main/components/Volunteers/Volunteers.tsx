@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, Clear, Edit } from '@mui/icons-material';
+import { Check, Clear, Edit, Description } from '@mui/icons-material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Button } from '@mui/material';
@@ -107,7 +108,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   { accessorKey: 'numOfDrives', header: 'נסיעות', accessorFn: (data) => data.numOfDrives || '-' },
   {
     accessorKey: 'actionEdit',
-    header: '',
+    header: 'עריכה',
     cell: ({ row }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [toggleModal, setToggleModal] = useState(false);
@@ -120,12 +121,12 @@ const columns: ColumnDef<Partial<Driver>>[] = [
           <Button
             size="small"
             variant="outlined"
-            color="error"
+            color="primary"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Edit fontSize="small" />
+            {driver.isGoogleForm ? <Description fontSize="small" /> : <Edit fontSize="small" />}
           </Button>
           <EditDriverModal open={toggleModal} handleModal={handleModal} driver={driver} />
         </div>
