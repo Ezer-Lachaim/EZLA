@@ -40,9 +40,8 @@ const DriverArrivedModal = ({
               </div>
               <h1 className="text-center my-3 text-[22px]">הגעת לכתובת האיסוף</h1>
             </div>
-            <p className="text-center text-lg text-gray-600">
-              אסוף את הנוסעים והתחילו בנסיעה לכתובת היעד
-            </p>
+            <p className="text-center text-lg text-red-600">
+צרו קשר עם הנוסעים לעדכן אותם שהגעתם.            </p>
             <button
               type="button"
               className="underline text-blue-600"
