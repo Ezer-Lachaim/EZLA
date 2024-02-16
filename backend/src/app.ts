@@ -14,6 +14,7 @@ import { ridesRouter } from './routes/rides';
 import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';
+import { rateLimit } from 'express-rate-limit'
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -28,6 +29,14 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
+
+var limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // max 100 requests per windowMs
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 if (config.env !== 'production') {
   app.use('/dev', devRouter);
