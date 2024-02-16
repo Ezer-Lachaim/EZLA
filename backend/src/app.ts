@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
+import { rateLimit } from 'express-rate-limit';
 import config from './config';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
 import { authHandler } from './middlewares/auth';
@@ -14,7 +15,7 @@ import { ridesRouter } from './routes/rides';
 import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';
-import { rateLimit } from 'express-rate-limit'
+
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -30,9 +31,9 @@ app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-var limiter = rateLimit({
+let limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // max 100 requests per windowMs
+  max: 1000 // max 100 requests per windowMs
 });
 
 // apply rate limiter to all requests
