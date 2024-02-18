@@ -137,6 +137,7 @@ const OrderRide = () => {
         firstName: user?.firstName,
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
+        passengerCount: 1,
         relevantTime: 3
       },
       selectedSpecialRequests: []
@@ -252,12 +253,6 @@ const OrderRide = () => {
 
     setValue('ride.pickupDateTime', joined.toDate());
   }, [pickupDate, pickupTime, setValue]);
-
-  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
-    setRideOrDelivery(newValue);
-  };
-
-  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);
