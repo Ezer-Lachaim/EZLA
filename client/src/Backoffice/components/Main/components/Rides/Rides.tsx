@@ -17,7 +17,7 @@ import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך ושעת הזמנה ',
+    header: 'מועד איסוף',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
       return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
