@@ -7,7 +7,14 @@ const specialRequestsMap = {
   [RideSpecialRequestEnum.BabyChair]: 'מושב בטיחות לתינוק',
   [RideSpecialRequestEnum.KidsChair]: 'מושב בטיחות לילדים (3-8)',
   [RideSpecialRequestEnum.AccessibleCar]: 'רכב גבוה',
-  [RideSpecialRequestEnum.PatientDelivery]: 'משלוחים'
+  [RideSpecialRequestEnum.Food]: 'מזון',
+  [RideSpecialRequestEnum.MilitaryEquipment]: 'ציוד צבאי',
+  [RideSpecialRequestEnum.MedicalEquipment]: 'ציוד רפואי',
+  [RideSpecialRequestEnum.HolyItems]: 'תשמישי קדושה',
+  [RideSpecialRequestEnum.LargeVolume]: 'נפח גדול',
+  [RideSpecialRequestEnum.SmallVolume]: 'נפח קטן',
+  [RideSpecialRequestEnum.HeavyWeight]: 'משקל כבד',
+  [RideSpecialRequestEnum.Fragile]: 'שביר'
 };
 
 const getLabel = (type: RideSpecialRequestEnum): string => specialRequestsMap[type];

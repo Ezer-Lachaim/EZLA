@@ -14,9 +14,16 @@ import {
   Select,
   SelectChangeEvent,
   OutlinedInput,
-  ListItemText
+  ListItemText,
+  Tab,
+  Tabs
 } from '@mui/material';
-import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
+import {
+  AddCircleOutlineOutlined,
+  RemoveCircleOutlineOutlined,
+  Inventory,
+  EmojiPeople
+} from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +31,13 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
-import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
+import {
+  Ride,
+  RideRequester,
+  RideServiceTypeEnum,
+  RideSpecialRequestEnum,
+  RideStateEnum
+} from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import PrivacyPolicyPopup from '../../Privacy/privacyPopup.tsx';
 import TermsPolicyPopup from '../../Terms/termsPopup.tsx';
@@ -32,7 +45,7 @@ import TermsPolicyPopup from '../../Terms/termsPopup.tsx';
 interface OrderRideFormData {
   ride: Ride;
   isApproveTerms: boolean;
-  selectedSpecialRequests: RideSpecialRequestEnum[];
+  selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
 const specialRequestLabels: { [key: string]: string } = {
@@ -43,6 +56,17 @@ const specialRequestLabels: { [key: string]: string } = {
   isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
 };
 
+const deliverySpecialRequestLabels: { [key: string]: string } = {
+  isFood: 'מזון',
+  isMilitaryEquipment: 'ציוד צבאי',
+  isMedicalEquipment: 'ציוד רפואי',
+  isHolyItems: 'תשמישי קדושה',
+  isLargeVolume: 'נפח גדול',
+  isSmallVolume: 'נפח קטן',
+  isHeavyWeight: 'משקל כבד',
+  isFragile: 'שביר'
+};
+
 const specialMap: {
   [key: string]: RideSpecialRequestEnum;
 } = {
@@ -50,7 +74,15 @@ const specialMap: {
   isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
   isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
-  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isFood: RideSpecialRequestEnum.Food,
+  isMilitaryEquipment: RideSpecialRequestEnum.MilitaryEquipment,
+  isMedicalEquipment: RideSpecialRequestEnum.MedicalEquipment,
+  isHolyItems: RideSpecialRequestEnum.HolyItems,
+  isLargeVolume: RideSpecialRequestEnum.LargeVolume,
+  isSmallVolume: RideSpecialRequestEnum.SmallVolume,
+  isHeavyWeight: RideSpecialRequestEnum.HeavyWeight,
+  isFragile: RideSpecialRequestEnum.Fragile
 };
 
 const CustomFontSizeContainer = styled('div')(() => ({
@@ -165,6 +197,7 @@ const OrderRide = () => {
 
     const newRide: Ride = {
       ...data.ride,
+      serviceType: rideOrDelivery,
       specialRequest: specialRequestsArray,
       state: RideStateEnum.WaitingForDriver
     };
@@ -188,10 +221,48 @@ const OrderRide = () => {
     );
   };
 
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+
+  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
+    setRideOrDelivery(newValue);
+  };
+
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="flex border border-blue-500 rounded-lg">
+          <Tabs
+            value={rideOrDelivery}
+            onChange={(event, newValue) => handleDeliveryDriverButtonClick(newValue)}
+            className="flex-grow"
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            TabIndicatorProps={{ style: { backgroundColor: 'transparent' } }}
+          >
+            <Tab
+              value="ride"
+              icon={<EmojiPeople />}
+              iconPosition="start"
+              label="נוסעים"
+              className={`transition-all duration-300 ease-in-out ${
+                rideOrDelivery === 'ride' ? 'bg-blue-500 text-white rounded-r-lg' : 'text-blue-500'
+              }`}
+            />
+            <Tab
+              value="delivery"
+              icon={<Inventory />}
+              iconPosition="start"
+              label="משלוחים"
+              className={`transition-all duration-300 ease-in-out ${
+                rideOrDelivery === 'delivery'
+                  ? 'bg-blue-500 text-white rounded-l-lg'
+                  : 'text-blue-500'
+              }`}
+            />
+          </Tabs>
+        </div>
         <div className="flex flex-col">
           {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
             <FormControl>
@@ -254,7 +325,6 @@ const OrderRide = () => {
             </div>
           )}
         </div>
-
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -266,7 +336,7 @@ const OrderRide = () => {
               variant="outlined"
               value={quantity}
               inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-              label="מספר נוסעים"
+              label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}
             />
             {errors.ride?.passengerCount?.type === 'required' && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -315,7 +385,6 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
-
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
           <Select
@@ -324,23 +393,40 @@ const OrderRide = () => {
             multiple
             value={selectedSpecialRequests}
             onChange={handleSpecialRequestsChange}
-            input={<OutlinedInput label="בקשות מיוחדות" />}
+            input={
+              <OutlinedInput
+                label="בקשות מיוחדות"
+                // {rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
+              />
+            }
             renderValue={(selected) => {
-              if (Array.isArray(selected)) {
-                return selected.map((value) => specialRequestLabels[value]).join(', ');
-              }
-              return specialRequestLabels[selected];
+              return Array.isArray(selected)
+                ? selected
+                    .map((value) =>
+                      rideOrDelivery === 'delivery'
+                        ? deliverySpecialRequestLabels[value]
+                        : specialRequestLabels[value]
+                    )
+                    .join(', ')
+                : '';
             }}
           >
-            {Object.keys(specialRequestLabels).map((key) => (
+            {Object.keys(
+              rideOrDelivery === 'delivery' ? deliverySpecialRequestLabels : specialRequestLabels
+            ).map((key) => (
               <MenuItem key={key} value={key}>
                 <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
-                <ListItemText primary={specialRequestLabels[key]} />
+                <ListItemText
+                  primary={
+                    rideOrDelivery === 'delivery'
+                      ? deliverySpecialRequestLabels[key]
+                      : specialRequestLabels[key]
+                  }
+                />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
           <TextField
@@ -395,7 +481,6 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
-
         {!user && (
           <div>
             <FormControlLabel
@@ -419,7 +504,6 @@ const OrderRide = () => {
             )}
           </div>
         )}
-
         <Button
           variant="contained"
           size="large"
