@@ -1,10 +1,14 @@
 import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-import { Ride } from '../../../../../api-client';
+import { Ride, RideStateEnum } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
 import { formatPickupDateTime } from '../../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
+import { useState } from 'react';
+import { useActiveRide } from '../../../../../hooks/activeRide';
+import { api } from '../../../../../services/api';
 
 export const commonStyle = {
   display: 'flex',
@@ -40,6 +44,31 @@ export const RideCard = ({
   onOpenContactModal: () => void;
   rideId: string | undefined; // Define the rideId prop
 }) => {
+  const { reFetch: reFetchActiveRide } = useActiveRide();
+  const [confirmCancelModalOpen, setConfirmCancelModalOpen] = useState(false);
+
+  const toggleConfirmCancelModal = () => {
+    setConfirmCancelModalOpen(!confirmCancelModalOpen);
+  };
+
+  const onCancel = async () => {
+    if (!ride || !ride.rideId) {
+      console.error('Invalid ride data. Ride ID is missing.');
+      return;
+    }  
+    try {
+      await api.ride.updateRide({
+        rideId: ride.rideId,
+        ride: { state: RideStateEnum.DriverCanceled }
+      });
+      await reFetchActiveRide();
+      // navigation will occur automatically (in @../Driver.tsx)
+    } catch (error) {
+      console.error('Error canceling ride:', error);
+      // Handle error as needed
+    }
+  };
+  
   return (
     <Card className="shadow-sm rounded-xl">
       <CardContent>
@@ -130,13 +159,13 @@ export const RideCard = ({
           </div>
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           <>
-          <Divider />
+            <Divider />
             <div className="flex gap-4 mt-3">
               {context === 'openCalls' && (
                 <Button
                   className="flex-1"
                   variant="contained"
-                  color="primary" 
+                  color="primary"
                   size="large"
                   startIcon={<CarIcon />}
                   onClick={onApprovePassenger}
@@ -147,7 +176,12 @@ export const RideCard = ({
 
               {context === 'myRides' && (
                 <div className="flex flex-grow flex-row gap-4">
-                  <Button variant="outlined" color="error" style={{ flex: 1 }}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={toggleConfirmCancelModal} // Open ConfirmCancelRideModal
+                    style={{ flex: 1 }}
+                  >
                     ביטול
                   </Button>
                   <Button
@@ -165,6 +199,11 @@ export const RideCard = ({
             </div>
           </>
         </div>
+        <ConfirmCancelRideModal
+          open={confirmCancelModalOpen}
+          onCancel={onCancel}
+          onContinue={toggleConfirmCancelModal}          
+        />
       </CardContent>
     </Card>
   );
