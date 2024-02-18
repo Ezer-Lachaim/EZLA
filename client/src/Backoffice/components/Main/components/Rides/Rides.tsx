@@ -5,7 +5,6 @@ import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
@@ -90,7 +89,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: "נוסעים/ ארגזים",
+    header: 'נוסעים/ ארגזים',
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
