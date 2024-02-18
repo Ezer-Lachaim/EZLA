@@ -112,7 +112,7 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   }
 
   if (ride.relevantTime) {
-    ride.relevantTime = req.body.ride.relevantTime;
+    ride.relevantTime = ride.relevantTime || req.body.ride.relevantTime;
   } else {
     ride.relevantTime = 3;
   }

@@ -4,7 +4,6 @@ import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Box, Button, Typography } from '@mui/material';
 // import { format } from 'date-fns';
-import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';

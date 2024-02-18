@@ -144,7 +144,7 @@ const RideApprovalModal = ({
             >
               בחירת נסיעה
             </Button>
-            <Button variant="outlined" color="primary" onClick={onClose}>
+            <Button variant="outlined" color="primary" onClick={onClose} style={{margin: '13px'}}>
               ביטול
             </Button>
           </div>

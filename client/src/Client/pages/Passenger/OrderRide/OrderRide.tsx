@@ -18,6 +18,7 @@ import {
   Tab,
   Tabs
 } from '@mui/material';
+<<<<<<< HEAD
 import {
   AddCircleOutlineOutlined,
   RemoveCircleOutlineOutlined,
@@ -25,6 +26,10 @@ import {
   EmojiPeople
 } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+=======
+import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
+// import SwapVertIcon from '@mui/icons-material/SwapVert';
+>>>>>>> 486e771 (Add confirm Cancel in the driver's screens)
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -111,10 +116,10 @@ const CustomFontSizeContainer = styled('div')(() => ({
   }
 }));
 
-enum DestinationSourceEnum {
-  Destination,
-  Source
-}
+// enum DestinationSourceEnum {
+//   Destination,
+//   Source
+// }
 
 dayjs.extend(timezone);
 const fixToday = fixTimeUpDayjs();
@@ -123,9 +128,9 @@ const defaultSelectedTime = ['3 שעות'];
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
-  const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
-    DestinationSourceEnum.Destination
-  );
+  // const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
+  //   DestinationSourceEnum.Destination
+  // );
   const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
   const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
@@ -141,7 +146,8 @@ const OrderRide = () => {
         origin: user?.address,
         firstName: user?.firstName,
         lastName: user?.lastName,
-        cellphone: user?.cellPhone
+        cellphone: user?.cellPhone,
+        passengerCount: 1
       },
       selectedSpecialRequests: []
     }
@@ -176,25 +182,25 @@ const OrderRide = () => {
       return;
     }
 
-    (async () => {
-      const hospitals = await api.hospital.getHospitalList();
+    // (async () => {
+    //   const hospitals = await api.hospital.getHospitalList();
 
-      if (hospitals) {
-        const hospitalName =
-          hospitals.find((hospital) => hospital.id === user.patient?.hospitalId)?.name || '';
-        const hospitalDept = user.patient?.hospitalDept || '';
-        const hospitalBuilding = user.patient?.hospitalBuilding || '';
+    //   if (hospitals) {
+    //     const hospitalName =
+    //       hospitals.find((hospital) => hospital.id === user.patient?.hospitalId)?.name || '';
+    //     const hospitalDept = user.patient?.hospitalDept || '';
+    //     const hospitalBuilding = user.patient?.hospitalBuilding || '';
 
-        const value = `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
-          hospitalBuilding && ` / ${hospitalBuilding}`
-        }`;
-        if (autofilledAddress === DestinationSourceEnum.Destination) {
-          setValue('ride.destination', value);
-        } else {
-          setValue('ride.origin', value);
-        }
-      }
-    })();
+    //     const value = `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
+    //       hospitalBuilding && ` / ${hospitalBuilding}`
+    //     }`;
+    //     if (autofilledAddress === DestinationSourceEnum.Destination) {
+    //       setValue('ride.destination', value);
+    //     } else {
+    //       setValue('ride.origin', value);
+    //     }
+    //   }
+    // })();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -221,17 +227,17 @@ const OrderRide = () => {
     // navigation will occur automatically (in @../Passenger.tsx)
   };
 
-  const onSwapAddresses = () => {
-    const { origin, destination } = watch().ride;
-    setValue('ride.origin', destination);
-    setValue('ride.destination', origin);
+  // const onSwapAddresses = () => {
+  //   const { origin, destination } = watch().ride;
+  //   setValue('ride.origin', destination);
+  //   setValue('ride.destination', origin);
 
-    setAutofilledAddress(
-      autofilledAddress === DestinationSourceEnum.Source
-        ? DestinationSourceEnum.Destination
-        : DestinationSourceEnum.Source
-    );
-  };
+  //   setAutofilledAddress(
+  //     autofilledAddress === DestinationSourceEnum.Source
+  //       ? DestinationSourceEnum.Destination
+  //       : DestinationSourceEnum.Source
+  //   );
+  // };
 
   const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
 
@@ -276,7 +282,9 @@ const OrderRide = () => {
           </Tabs>
         </div>
         <div className="flex flex-col">
-          {!user || autofilledAddress === DestinationSourceEnum.Destination ? (
+          {!user
+          //  || autofilledAddress === DestinationSourceEnum.Destination 
+           ? (
             <FormControl>
               <TextField
                 label="כתובת איסוף"
@@ -302,17 +310,19 @@ const OrderRide = () => {
           )}
 
           <div className="flex justify-center m-3">
-            <Button
+            {/* <Button
               variant="outlined"
               size="small"
               className="w-8 min-w-0"
               onClick={onSwapAddresses}
             >
               <SwapVertIcon />
-            </Button>
+            </Button> */}
           </div>
 
-          {!user || autofilledAddress === DestinationSourceEnum.Source ? (
+          {!user 
+          // || autofilledAddress === DestinationSourceEnum.Source 
+          ? (
             <FormControl>
               <TextField
                 label="כתובת יעד"
@@ -346,7 +356,6 @@ const OrderRide = () => {
             <TextField
               id="passengerCount"
               variant="outlined"
-              defaultValue={1}
               value={quantity}
               inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
               label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}
@@ -371,6 +380,8 @@ const OrderRide = () => {
             label="תיאור הנסיעה"
             type="string"
             required={!user}
+            multiline
+            maxRows={2}
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
             error={!!errors?.ride?.comment}
             {...register('ride.comment', {

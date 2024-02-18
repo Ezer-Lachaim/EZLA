@@ -133,7 +133,12 @@ const Rides = () => {
       // navigation will occur automatically (in @../Driver.tsx)
 
       setIsModalOpen(false);
+<<<<<<< HEAD
     }
+=======
+      setValue(1);
+      setSelectedTab('myRides');    }
+>>>>>>> 486e771 (Add confirm Cancel in the driver's screens)
   };
 
   const [showModal, setShowModal] = useState(false); // state to control modal visibility
@@ -142,17 +147,16 @@ const Rides = () => {
     setShowModal(true); // open the modal when the button is clicked
   };
 
-
   const handleDriverEnroute = async (rideId: string | undefined) => {
     if (rideId) {
       try {
         await api.ride.updateRide({
           rideId: rideId || '',
           ride: {
-            state: RideStateEnum.DriverEnroute,
+            state: RideStateEnum.DriverEnroute
           }
         });
-        console.log('Ride state updated to DriverEnroute')
+        console.log('Ride state updated to DriverEnroute');
         await reFetchActiveRide();
         // navigation will occur automatically (in @../Driver.tsx)
       } catch (error) {
@@ -174,14 +178,18 @@ const Rides = () => {
             textColor="primary"
           >
             <Tab
-              label={`קריאות פתוחות (${sortedRides.length})`}
               {...a11yProps(0)}
-              style={tabStyles as React.CSSProperties}
+              className="flex items-center flex-1 bg-white shadow-md text-center"
+              label={<span className="text-base">קריאות פתוחות ({sortedRides.length})</span>}
             />
             <Tab
-              label={`נסיעות שלי (${filteredRides.length})`}
               {...a11yProps(1)}
-              style={tabStyles as React.CSSProperties}
+              className="flex items-center flex-1 bg-white shadow-md text-center"
+              label={
+                <span className="font-Heebo font-medium text-base tracking-wide uppercase">
+                  נסיעות שלי ({filteredRides.length})
+                </span>
+              }
             />
           </Tabs>
         </div>
@@ -225,7 +233,6 @@ const Rides = () => {
           </div>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-
           <RideApprovalModal
             ride={selectedRide}
             open={isModalOpen}
@@ -250,7 +257,7 @@ const Rides = () => {
                     <RideContactModal
                       ride={ride}
                       open={showModal}
-                      onCancel={() => setShowModal(false)} // close modal if canceled
+                      onClose={() => setShowModal(false)} // close modal if canceled
                       onConfirm={() => {
                         handleDriverEnroute(ride.rideId);
                       }}
@@ -260,11 +267,11 @@ const Rides = () => {
               </Stack>
             </div>
           ) : (
-            <div className="h-full flex flex-col justify-center items-center gap-4">
+            <div className="h-full flex flex-col justify-center items-center">
               <IconButton>
                 <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
               </IconButton>
-              <p className="text-center text-gray-600 text-body2 font-normal leading-5 tracking-tight">
+              <p className="text-center text-gray-600 text-body2 font-normal">
                 אין לך נסיעות. <br />
                 בחר/י נסיעה מקריאות פתוחות.
               </p>
