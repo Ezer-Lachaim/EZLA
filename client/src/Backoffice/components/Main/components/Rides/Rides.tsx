@@ -5,6 +5,7 @@ import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
@@ -23,7 +24,7 @@ import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך ושעת הזמנה ',
+    header: 'מועד איסוף',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
       return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
@@ -51,7 +52,11 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'cellphone',
+<<<<<<< HEAD
     header: 'טלפון',
+=======
+    header: 'טלפון ליצירת קשר',
+>>>>>>> 355b00d (Backoffice menu design according to figma)
     cell: ({ row }) => {
       const { cellphone } = row.original;
       return cellphone ? (
