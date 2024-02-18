@@ -135,13 +135,8 @@ const RideApprovalModal = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
-            <Button
-              className="w-280 h-40px m-20px rounded-md gap-8"
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
+          <div className="flex flex-col gap-16px p-87">
+            <Button variant="contained" color="primary" type="submit" style={{marginRight: '13px', marginLeft: '13px'}}>
               בחירת נסיעה
             </Button>
             <Button variant="outlined" color="primary" onClick={onClose} style={{margin: '13px'}}>

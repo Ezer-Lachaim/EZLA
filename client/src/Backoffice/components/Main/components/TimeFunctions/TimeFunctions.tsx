@@ -58,7 +58,7 @@ export const fixTimeUpDayjs = () => {
   } else {
     today = today.add(10 - minutes, 'minute');
   }
-<<<<<<< HEAD
+  return today;
 };
 
 export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: number): string {
@@ -108,8 +108,3 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
     return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
   }
 }
-
-=======
-  return today;
-};
->>>>>>> 9d92ea4 (Finish issue-371, Fix verify)

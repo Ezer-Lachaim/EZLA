@@ -1,298 +1,620 @@
-import { useState, useCallback } from 'react';
-import { SubmitHandler } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
-import { Stack } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import {
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  InputLabel,
+  FormHelperText,
+  FormControl,
+  IconButton,
+  MenuItem,
+  styled,
+  Select,
+  SelectChangeEvent,
+  OutlinedInput,
+  ListItemText
+} from '@mui/material';
+import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
+// import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { Link, useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
 import withLayout from '../../../components/LayoutHOC.tsx';
-import { Driver, Ride, RideStateEnum } from '../../../../api-client';
-import { api, POLLING_INTERVAL } from '../../../../services/api';
+import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
-import { RideCard } from './RideCard/RideCard.tsx';
-import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
+import { setToken as setGuestToken } from '../../../../services/auth/guest';
+import { Ride, RideRequester, RideServiceTypeEnum, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import { IconButton, Tab, Tabs, Typography } from '@material-ui/core';
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
-import RideContactModal from './RideContactModal/RideContactModal.tsx';
+import {
+  DayTextField,
+  fixTimeUpDayjs,
+  menuHours
+} from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+interface OrderRideFormData {
+  ride: Ride;
+  isApproveTerms: boolean;
+  selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
-const tabStyles = {
-  display: 'flex',
-  height: '48px',
-  padding: '8px 33px',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flex: '1 0 0',
-  background: 'var(--White, #FFF)',
-  boxShadow:
-    '0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 2px 4px -1px rgba(0, 0, 0, 0.20)',
-  textAlign: 'center',
-  fontFamily: 'Heebo',
-  fontSize: '14px',
-  fontStyle: 'normal',
-  fontWeight: 500,
-  lineHeight: '14px',
-  letterSpacing: '0.5px',
-  textTransform: 'uppercase'
+const specialRequestLabels: { [key: string]: string } = {
+  isWheelChair: 'התאמה לכסא גלגלים',
+  isBabySafetySeat: 'מושב בטיחות לתינוק',
+  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+  isHighVehicle: 'רכב גבוה',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
 };
 
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+const deliverySpecialRequestLabels: { [key: string]: string } = {
+  isFood: 'מזון',
+  isMilitaryEquipment: 'ציוד צבאי',
+  isMedicalEquipment: 'ציוד רפואי',
+  isHolyItems: 'תשמישי קדושה',
+  isLargeVolume: 'נפח גדול',
+  isSmallVolume: 'נפח קטן',
+  isHeavyWeight: 'משקל כבד',
+  isFragile: 'שביר'
+};
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <div style={{ padding: 14 }}>
-          <Typography component={'span'}>{children}</Typography>
-        </div>
-      )}
-    </div>
-  );
-}
+const specialMap: {
+  [key: string]: RideSpecialRequestEnum;
+} = {
+  isWheelChair: RideSpecialRequestEnum.WheelChair,
+  isBabySafetySeat: RideSpecialRequestEnum.BabyChair,
+  isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
+  isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
+  isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isFood: RideSpecialRequestEnum.Food,
+  isMilitaryEquipment: RideSpecialRequestEnum.MilitaryEquipment,
+  isMedicalEquipment: RideSpecialRequestEnum.MedicalEquipment,
+  isHolyItems: RideSpecialRequestEnum.HolyItems,
+  isLargeVolume: RideSpecialRequestEnum.LargeVolume,
+  isSmallVolume: RideSpecialRequestEnum.SmallVolume,
+  isHeavyWeight: RideSpecialRequestEnum.HeavyWeight,
+  isFragile: RideSpecialRequestEnum.Fragile
+};
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  };
-}
-
-const Rides = () => {
-  const [selectedTab, setSelectedTab] = useState('openCalls');
-  const [selectedRide, setSelectedRide] = useState<Ride>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [value, setValue] = useState(0);
-  const user = useUserStore((state) => state.user);
-  const { reFetch: reFetchActiveRide } = useActiveRide();
-  const { data: rides = [] } = useQuery({
-    queryKey: ['ridesGet'],
-    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }),
-    refetchInterval: POLLING_INTERVAL
-  });
-  const { data: bookedRides = [] } = useQuery({
-    queryKey: ['bookedRides'],
-    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.Booked }),
-    refetchInterval: POLLING_INTERVAL
-  });
-
-  const sortedRides = [...rides].sort((a, b) => {
-    const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
-    const waitingTimeB = b.requestTimeStamp?.getTime() || 0;
-    return waitingTimeA - waitingTimeB;
-  });
-
-  const filteredRides = bookedRides
-    .filter((ride) => {
-      return ride.state === 'Booked' && ride.driver && ride.driver.userId === user?.userId;
-    })
-    .sort((a, b) => {
-      const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
-      const waitingTimeB = b.requestTimeStamp?.getTime() || 0;
-      return waitingTimeA - waitingTimeB;
-    });
-
-  const onSelectRideCallback = useCallback((ride: Ride) => {
-    setSelectedRide(ride);
-  }, []);
-
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-    setSelectedTab(newValue === 0 ? 'openCalls' : 'myRides');
-  };
-
-  const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
-    if (selectedRide?.state === RideStateEnum.WaitingForDriver) {
-      const driver = user as Driver;
-      await api.ride.updateRide({
-        rideId: selectedRide?.rideId || '',
-        ride: {
-          state: RideStateEnum.Booked,
-          driver: {
-            userId: driver?.userId,
-            firstName: driver?.firstName,
-            lastName: driver?.lastName,
-            cellPhone: driver?.cellPhone,
-            carManufacturer: driver?.carManufacturer,
-            carModel: driver?.carModel,
-            carColor: driver?.carColor,
-            carPlateNumber: driver?.carPlateNumber
-          },
-          destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
-        }
-      });
-      await reFetchActiveRide();
-      // navigation will occur automatically (in @../Driver.tsx)
-
-      setIsModalOpen(false);
-<<<<<<< HEAD
-    }
-=======
-      setValue(1);
-      setSelectedTab('myRides');    }
->>>>>>> 486e771 (Add confirm Cancel in the driver's screens)
-  };
-
-  const [showModal, setShowModal] = useState(false); // state to control modal visibility
-
-  const onClickCallback = () => {
-    setShowModal(true); // open the modal when the button is clicked
-  };
-
-  const handleDriverEnroute = async (rideId: string | undefined) => {
-    if (rideId) {
-      try {
-        await api.ride.updateRide({
-          rideId: rideId || '',
-          ride: {
-            state: RideStateEnum.DriverEnroute
-          }
-        });
-        console.log('Ride state updated to DriverEnroute');
-        await reFetchActiveRide();
-        // navigation will occur automatically (in @../Driver.tsx)
-      } catch (error) {
-        console.log('Failed to update ride state');
+const CustomFontSizeContainer = styled('div')(() => ({
+  fontSize: 20,
+  '& .MuiInputBase-input': {
+    fontSize: 20
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: 20
+  },
+  '& .MuiButtonBase-root': {
+    fontSize: 20
+  },
+  '& .MuiOutlinedInput-root': {
+    '& .MuiOutlinedInput-notchedOutline': {
+      legend: {
+        fontSize: 15
       }
     }
-    setShowModal(false); // close modal after confirmation
+  }
+}));
+
+// enum DestinationSourceEnum {
+//   Destination,
+//   Source
+// }
+
+dayjs.extend(timezone);
+const fixToday = fixTimeUpDayjs();
+const defaultSelectedTime = ['3 שעות'];
+
+const OrderRide = () => {
+  const user = useUserStore((state) => state.user) as RideRequester;
+  const { reFetch: reFetchActiveRide } = useActiveRide();
+  // const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
+  //   DestinationSourceEnum.Destination
+  // );
+  const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
+  const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
+  const {
+    register,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm<OrderRideFormData>({
+    defaultValues: {
+      ride: {
+        origin: user?.address,
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        cellphone: user?.cellPhone,
+        passengerCount: 1
+      },
+      selectedSpecialRequests: []
+    }
+  });
+  const [quantity, setQuantity] = useState<number>(1);
+  const handleIncrement = () => {
+    if (quantity < 12) {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+      setValue('ride.passengerCount', quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+      setValue('ride.passengerCount', quantity - 1);
+    }
+  };
+  const [selectedSpecialRequests, setSelectedSpecialRequests] = useState<string[]>([]);
+
+  const handleSpecialRequestsChange = (
+    event: SelectChangeEvent<typeof selectedSpecialRequests>
+  ) => {
+    const {
+      target: { value }
+    } = event;
+    setSelectedSpecialRequests(typeof value === 'string' ? value.split(',') : value);
+  };
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    // (async () => {
+    //   const hospitals = await api.hospital.getHospitalList();
+
+    //   if (hospitals) {
+    //     const hospitalName =
+    //       hospitals.find((hospital) => hospital.id === user.patient?.hospitalId)?.name || '';
+    //     const hospitalDept = user.patient?.hospitalDept || '';
+    //     const hospitalBuilding = user.patient?.hospitalBuilding || '';
+
+    //     const value = `${hospitalName}${hospitalDept && ` / ${hospitalDept}`}${
+    //       hospitalBuilding && ` / ${hospitalBuilding}`
+    //     }`;
+    //     if (autofilledAddress === DestinationSourceEnum.Destination) {
+    //       setValue('ride.destination', value);
+    //     } else {
+    //       setValue('ride.origin', value);
+    //     }
+    //   }
+    // })();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmit: SubmitHandler<OrderRideFormData> = async (data) => {
+    setIsOrderRideLoading(true);
+    const specialRequestsArray = selectedSpecialRequests.map((request) => specialMap[request]);
+
+    if (!user) {
+      setGuestToken(uuidv4());
+    }
+
+    const newRide: Ride = {
+      ...data.ride,
+      serviceType: rideOrDelivery,
+      specialRequest: specialRequestsArray,
+      state: RideStateEnum.WaitingForDriver
+    };
+
+    await api.ride.ridesPost({
+      ride: newRide
+    });
+    await reFetchActiveRide();
+    // navigation will occur automatically (in @../Passenger.tsx)
+  };
+
+  // const onSwapAddresses = () => {
+  //   const { origin, destination } = watch().ride;
+  //   setValue('ride.origin', destination);
+  //   setValue('ride.destination', origin);
+
+  //   setAutofilledAddress(
+  //     autofilledAddress === DestinationSourceEnum.Source
+  //       ? DestinationSourceEnum.Destination
+  //       : DestinationSourceEnum.Source
+  //   );
+  // };
+
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+  const handleDeliveryDriverButtonClick = (status: RideServiceTypeEnum) => {
+    setRideOrDelivery(status);
+    console.log('rideOrDelivery', rideOrDelivery);
   };
 
   return (
-    <>
-      <div style={{ width: '100%' }}>
-        <div style={{ borderBottom: '1px solid divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-            indicatorColor="primary"
-            textColor="primary"
+    <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
+      <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
+      <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <div className="flex">
+          <Button
+            className="w-full"
+            variant={rideOrDelivery === 'ride' ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => handleDeliveryDriverButtonClick('ride')}
           >
-            <Tab
-              {...a11yProps(0)}
-              className="flex items-center flex-1 bg-white shadow-md text-center"
-              label={<span className="text-base">קריאות פתוחות ({sortedRides.length})</span>}
-            />
-            <Tab
-              {...a11yProps(1)}
-              className="flex items-center flex-1 bg-white shadow-md text-center"
-              label={
-                <span className="font-Heebo font-medium text-base tracking-wide uppercase">
-                  נסיעות שלי ({filteredRides.length})
-                </span>
-              }
-            />
-          </Tabs>
+            נוסעים
+          </Button>
+          <Button
+            className="w-full"
+            variant={rideOrDelivery === 'delivery' ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={() => handleDeliveryDriverButtonClick('delivery')}
+          >
+            משלוחים
+          </Button>
         </div>
-        <CustomTabPanel value={value} index={0}>
-          <RideApprovalModal
-            ride={selectedRide}
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={onSubmitRide}
-          />
-          <div className="w-full h-full flex flex-col gap-5 pb-4">
-            {sortedRides.length > 0 ? (
-              <>
-                <Stack spacing={2}>
-                  {sortedRides.map((ride) => (
-                    <RideCard
-                      ride={ride}
-                      key={`ride-${ride.rideId}`}
-                      context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
-                      onSelect={onSelectRideCallback}
-                      selected={selectedRide?.rideId === ride.rideId}
-                      onApprovePassenger={() => {
-                        setSelectedRide(ride);
-                        setIsModalOpen(true);
-                      }}
-                      rideId={ride.rideId}
-                      onOpenContactModal={onClickCallback}
-                    />
-                  ))}
-                </Stack>
-              </>
-            ) : (
-              <div className="h-full flex flex-col justify-center items-center gap-4">
-                <p className="text-center text-black">
-                  כרגע אין קריאות פתוחות,
-                  <br />
-                  נשלח לך ברגע שתפתח קריאה חדשה.
-                </p>
-              </div>
-            )}
-          </div>
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <RideApprovalModal
-            ride={selectedRide}
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={onSubmitRide}
-          />
-          {filteredRides.length > 0 ? (
-            <div className="w-full h-full flex flex-col gap-5 pb-4">
-              <Stack spacing={2}>
-                {filteredRides.map((ride) => (
-                  <>
-                    <RideCard
-                      ride={ride}
-                      key={`ride-${ride.rideId}`}
-                      context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
-                      onSelect={onSelectRideCallback}
-                      selected={selectedRide?.rideId === ride.rideId}
-                      onApprovePassenger={() => setIsModalOpen(true)}
-                      rideId={ride.rideId}
-                      onOpenContactModal={onClickCallback}
-                    />
-                    <RideContactModal
-                      ride={ride}
-                      open={showModal}
-                      onClose={() => setShowModal(false)} // close modal if canceled
-                      onConfirm={() => {
-                        handleDriverEnroute(ride.rideId);
-                      }}
-                    />
-                  </>
-                ))}
-              </Stack>
-            </div>
+        <div className="flex flex-col">
+          {!user
+          //  || autofilledAddress === DestinationSourceEnum.Destination 
+           ? (
+            <FormControl>
+              <TextField
+                label="כתובת איסוף"
+                autoFocus
+                type="string"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
+                required
+                value={watch().ride?.origin || ''}
+                error={!!errors?.ride?.origin}
+                {...register('ride.origin', { required: true })}
+              />
+              {errors.ride?.origin && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.ride.origin.type === 'required' && 'יש להזין כתובת מגורים לאיסוף'}
+                </FormHelperText>
+              )}
+            </FormControl>
           ) : (
-            <div className="h-full flex flex-col justify-center items-center">
-              <IconButton>
-                <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
-              </IconButton>
-              <p className="text-center text-gray-600 text-body2 font-normal">
-                אין לך נסיעות. <br />
-                בחר/י נסיעה מקריאות פתוחות.
-              </p>
+            <div>
+              <InputLabel>כתובת איסוף</InputLabel>
+              <span>{watch().ride?.origin || ''}</span>
             </div>
           )}
-        </CustomTabPanel>
-      </div>
-    </>
+
+          <div className="flex justify-center m-3">
+            {/* <Button
+              variant="outlined"
+              size="small"
+              className="w-8 min-w-0"
+              onClick={onSwapAddresses}
+            >
+              <SwapVertIcon />
+            </Button> */}
+          </div>
+
+          {!user 
+          // || autofilledAddress === DestinationSourceEnum.Source 
+          ? (
+            <FormControl>
+              <TextField
+                label="כתובת יעד"
+                type="string"
+                placeholder="יש להזין שם רחוב, מספר בית ועיר"
+                required
+                value={watch().ride?.destination || ''}
+                error={!!errors?.ride?.destination}
+                {...register('ride.destination', { required: true })}
+              />
+
+              {errors.ride?.destination && (
+                <FormHelperText error className="absolute top-full mr-0">
+                  {errors.ride.destination.type === 'required' && 'יש להזין כתובת מגורים יעד'}
+                </FormHelperText>
+              )}
+            </FormControl>
+          ) : (
+            <div>
+              <InputLabel>כתובת יעד</InputLabel>
+              <span>{watch().ride?.destination || ''}</span>
+            </div>
+          )}
+        </div>
+
+        <FormControl>
+          <InputLabel htmlFor="passengerCount" />
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <IconButton aria-label="decrement" onClick={handleDecrement}>
+              <RemoveCircleOutlineOutlined />
+            </IconButton>
+            <TextField
+              id="passengerCount"
+              variant="outlined"
+              value={quantity}
+              inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+              label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}
+            />
+            {errors.ride?.passengerCount?.type === 'required' && (
+              <FormHelperText error className="absolute top-full mr-0">
+                יש לבחור מספר נוסעים
+              </FormHelperText>
+            )}
+            <IconButton aria-label="increment" onClick={handleIncrement}>
+              <AddCircleOutlineOutlined />
+            </IconButton>
+          </div>
+          {errors.ride?.passengerCount?.type === 'required' && (
+            <FormHelperText error className="absolute top-full mr-0">
+              יש לבחור מספר נוסעים
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="תיאור הנסיעה"
+            type="string"
+            required={!user}
+            multiline
+            maxRows={2}
+            placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            error={!!errors?.ride?.comment}
+            {...register('ride.comment', {
+              maxLength: 100,
+              required: !user
+            })}
+            inputProps={{
+              maxLength: 100
+            }}
+          />
+          <span
+            className={`absolute top-1 left-1 text-xs ${
+              (watch().ride?.comment?.length || 0) >= 100 ? 'text-red-500' : ''
+            }`}
+          >
+            {watch().ride?.comment?.length || 0} / 100
+          </span>
+          {errors.ride?.comment && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.comment.type === 'required' && 'יש להזין את תיאור הנסיעה'}
+              {errors.ride.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
+            </FormHelperText>
+          )}
+        </FormControl>
+
+        <FormControl>
+          <DatePicker
+            label="תאריך איסוף מבוקש"
+            defaultValue={dayjs()}
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            onChange={(date) => {
+              setValue('ride.pickupDateTime', date ? date.toDate() : undefined);
+            }}
+            format="YYYY-MM-DD"
+            slots={{
+              textField: DayTextField
+            }}
+          />
+        </FormControl>
+        <div className="flex gap-8">
+          <div style={{ flex: '1' }}>
+            <FormControl>
+              <TimePicker
+                sx={{ width: '100%' }}
+                label="שעת איסוף"
+                disablePast
+                ampm={false}
+                value={timeInIsrael}
+                onChange={(time) => {
+                  if (time) {
+                    const existingDate = watch().ride?.pickupDateTime || dayjs();
+                    let newDateTime;
+                    if (existingDate instanceof Date) {
+                      newDateTime = new Date(existingDate);
+                    } else {
+                      newDateTime = dayjs(existingDate).toDate();
+                    }
+                    newDateTime.setHours(time.hour(), time.minute());
+                    // Convert the newDateTime to a Date object
+                    const newDateTimeDate = new Date(newDateTime);
+                    // Update the completedTimeStamp
+                    setValue('ride.pickupDateTime', newDateTimeDate);
+                    // Update the local state for timeInIsrael
+                    setTimeInIsrael(dayjs(newDateTime));
+                  }
+                }}
+                views={['minutes', 'hours']}
+              />
+            </FormControl>
+          </div>
+          <div style={{ flex: '1' }}>
+            <FormControl sx={{ width: '100%' }} required>
+              <InputLabel id="demo-multiple-name-label" required>
+                כמה זמן רלוונטי
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={selectedTime}
+                onChange={(event) => {
+                  const {
+                    target: { value }
+                  } = event;
+                  setSelectedTime(typeof value === 'string' ? value.split(',') : value);
+                  const selectedTimeIndex = menuHours.indexOf(value as string) + 1;
+                  setValue('ride.relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
+                }}
+                input={<OutlinedInput label="כמה זמן רלוונטי" />}
+                required
+              >
+                {menuHours.map((hour) => (
+                  <MenuItem key={hour} value={hour}>
+                    {hour}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+
+        <FormControl className="flex flex-col gap-2">
+          <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
+          <Select
+            labelId="multiple-checkbox-label"
+            id="multiple-checkbox"
+            multiple
+            value={selectedSpecialRequests}
+            onChange={handleSpecialRequestsChange}
+            input={
+              <OutlinedInput
+                label={rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
+              />
+            }
+            renderValue={(selected) => {
+              return Array.isArray(selected)
+                ? selected
+                    .map((value) =>
+                      rideOrDelivery === 'delivery'
+                        ? deliverySpecialRequestLabels[value]
+                        : specialRequestLabels[value]
+                    )
+                    .join(', ')
+                : '';
+            }}
+          >
+            {Object.keys(
+              rideOrDelivery === 'delivery' ? deliverySpecialRequestLabels : specialRequestLabels
+            ).map((key) => (
+              <MenuItem key={key} value={key}>
+                <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
+                <ListItemText
+                  primary={
+                    rideOrDelivery === 'delivery'
+                      ? deliverySpecialRequestLabels[key]
+                      : specialRequestLabels[key]
+                  }
+                />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
+        <FormControl>
+          <TextField
+            label="שם פרטי"
+            fullWidth
+            required
+            disabled={!!user}
+            type="text"
+            error={!!errors.ride?.firstName}
+            {...register('ride.firstName', { required: true, minLength: 2 })}
+          />
+          {errors.ride?.firstName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.firstName.type === 'required' && 'יש להזין שם פרטי'}
+              {errors.ride.firstName.type === 'minLength' && 'שם פרטי חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="שם משפחה"
+            fullWidth
+            required
+            disabled={!!user}
+            type="text"
+            error={!!errors.ride?.lastName}
+            {...register('ride.lastName', { required: true, minLength: 2 })}
+          />
+          {errors.ride?.lastName && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.lastName.type === 'required' && 'יש להזין שם משפחה'}
+              {errors.ride.lastName.type === 'minLength' && 'שם משפחה חייב להכיל לפחות 2 תווים'}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="טלפון ליצירת קשר"
+            type="string"
+            placeholder="יש להזין 10 ספרות של הטלפון הנייד"
+            required
+            error={!!errors?.ride?.cellphone}
+            {...register('ride.cellphone', {
+              required: true,
+              pattern: /^05\d-?\d{7}$/
+            })}
+          />
+          {errors.ride?.cellphone && (
+            <FormHelperText error className="absolute top-full mr-0">
+              {errors.ride.cellphone.type === 'required' && 'יש להזין טלפון נייד'}
+              {errors.ride.cellphone.type === 'pattern' && 'יש להקליד מספר טלפון תקין'}
+            </FormHelperText>
+          )}
+        </FormControl>
+
+        {!user && (
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...register('isApproveTerms', { required: true })}
+                  sx={errors.isApproveTerms ? { color: 'red' } : {}}
+                />
+              }
+              label={
+                <p>
+                  הנני מאשר/ת כי קראתי את{' '}
+                  <a href="/terms.html" target="_blank">
+                    תקנון האתר
+                  </a>{' '}
+                  ואת ואת{' '}
+                  <Link to="/privacy" target="_blank">
+                    מדיניות הפרטיות
+                  </Link>{' '}
+                  ומסכים לתנאיהם
+                </p>
+              }
+            />
+            {errors.isApproveTerms && (
+              <FormHelperText error>
+                {errors.isApproveTerms.type === 'required' && 'יש לאשר קריאת תקנון האתר'}
+              </FormHelperText>
+            )}
+          </div>
+        )}
+
+        <Button
+          variant="contained"
+          size="large"
+          className="w-full"
+          type="submit"
+          disabled={isOrderRideLoading}
+        >
+          {isOrderRideLoading ? 'טוען...' : 'הזמינו נסיעה'}
+        </Button>
+      </form>
+    </CustomFontSizeContainer>
   );
 };
 
-const RidesHOC = () => {
-  const RidesWithLayout = withLayout(Rides, {
-    title: 'נסיעות',
-    showLogoutButton: true,
-    backgroundColor: 'bg-gray-100',
-    hideFooter: true,
-    wrapperClassName: 'w-full h-full flex flex-col gap-5 pb-4'
-  });
+const OrderRideWrapper = () => {
+  const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
 
-  return <RidesWithLayout />;
+  const OrderRideComponent = withLayout(
+    OrderRide,
+    user
+      ? {
+          title: 'הזמנת הסעה לביקור חולים',
+          showLogoutButton: true
+        }
+      : {
+          title: 'הזמנת הסעה',
+          showBackButton: true,
+          onBackClick: () => {
+            navigate('/first-signup');
+          }
+        }
+  );
+
+  return <OrderRideComponent />;
 };
 
-export default RidesHOC;
+export default OrderRideWrapper;

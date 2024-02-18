@@ -25,6 +25,10 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
       rides = await Promise.all([].concat(...rides).map((ride) => populateRideDetails(ride)));
 
+      if (req.query.driverID) {
+        rides = rides.filter((item) => item.driver.userId === req.query.driverID);
+      }
+
       if (req.query.state) {
         rides = rides.filter((item) => item.state === req.query.state);
       }

@@ -54,7 +54,7 @@ const DriverArrivedModal = ({
               צור קשר
             </Button>
             <Button variant="contained" className="flex gap-2" onClick={onContinue}>
-              התחילו נסיעה
+               התחילו נסיעה
             </Button>
           </div>
         </Box>

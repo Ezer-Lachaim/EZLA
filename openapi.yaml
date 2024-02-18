@@ -551,8 +551,13 @@ components:
         serviceType:
           type: string
           enum:
+<<<<<<< HEAD
             - ride
             - delivery
+=======
+            - Ride
+            - Delivery
+>>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
         destination:
           type: string
           example: "Airport"
@@ -574,6 +579,8 @@ components:
             - DriverCanceled
             - RequesterCanceled
             - Canceled
+        driverID:
+          type: string
         passengerCount:
           type: number
           example: 2

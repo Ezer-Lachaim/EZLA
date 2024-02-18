@@ -15,38 +15,9 @@ const commonTextStyle = {
   fontFamily: 'Heebo',
   fontWeight: '400',
   fontSize: '12px',
-  width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
+  width: '80px'
 };
 
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
-};
-
-const firstTitleStyle = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 320,
-  bgcolor: 'background.paper',
-  borderRadius: '4px',
-  boxShadow: 24,
-  p: 2.5
-};
 const RideContactModal = ({
   ride,
   open,
@@ -99,7 +70,18 @@ const RideContactModal = ({
                 צרו קשר עם הנוסע
               </Typography>
             </div>
-            <Divider />
+          </div>
+          <div>
+            <Typography className="text-center" style={{ fontSize: '18px', fontWeight: '700' }}>
+              חשוב ליצור קשר עם הנוסעים.
+            </Typography>
+            <Typography className="font-normal text-center" style={{ fontSize: '16px' }}>
+              יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
+              רכב.
+            </Typography>
+          </div>
+          <Divider />
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Typography className="font-semibold" style={commonTextStyle}>
                 כמות:
@@ -132,7 +114,6 @@ const RideContactModal = ({
               className="w-full bg-green-600 text-white"
               onClick={onConfirm}
               startIcon={<CarIcon />}
-              onClick={onConfirm}
             >
               אישור ויציאה לדרך
             </Button>

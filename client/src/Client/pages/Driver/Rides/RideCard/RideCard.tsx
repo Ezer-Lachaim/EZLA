@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { Ride, RideStateEnum } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
@@ -87,23 +87,40 @@ export const RideCard = ({
                   </div>
                   <div style={commonStyle}>
                     <Typography style={commonTextStyle}>כמות:</Typography>
-                    <Typography style={boldTextStyle}>{ride.passengerCount}</Typography>
+                    <Typography>
+                      {ride.serviceType === 'ride' ? (
+                        <span className="ml-2">
+                          <EmojiPeopleIcon />
+                        </span>
+                      ) : (
+                        <span className="ml-2">
+                          <InventoryIcon />
+                        </span>
+                      )}
+                      {ride.passengerCount}
+                    </Typography>
                   </div>
                   {context === 'myRides' && (
                     <>
                       <div style={commonStyle}>
                         <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-                        <Typography style={boldTextStyle}>{ride?.firstName} {ride?.lastName}</Typography>
+                        <Typography style={boldTextStyle}>
+                          {ride?.firstName} {ride?.lastName}
+                        </Typography>
                       </div>
                       <div style={commonStyle}>
                         <Typography style={commonTextStyle}>טלפון:</Typography>
-                        <Typography >             <a
-                          href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {ride?.cellphone}
-                        </a> </Typography>                      </div>
+                        <Typography>
+                          {' '}
+                          <a
+                            href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {ride?.cellphone}
+                          </a>{' '}
+                        </Typography>{' '}
+                      </div>
                     </>
                   )}
                   <div style={commonStyle}>
@@ -134,16 +151,16 @@ export const RideCard = ({
                   </div>
                   <div style={commonStyle}>
                     <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                    <Typography >{ride?.comment}</Typography>
+                    <Typography>{ride?.comment}</Typography>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
           <>
-            <div className="flex gap-4">
+            <Divider />
+            <div className="flex gap-4 mt-3">
               {context === 'openCalls' && (
                 <Button
                   className="flex-1"
@@ -171,16 +188,13 @@ export const RideCard = ({
                     variant="contained"
                     color="success"
                     size="large"
-                    style={{ width: "205px" }}
+                    style={{ width: '205px' }}
                     startIcon={<CarIcon />}
                     onClick={onOpenContactModal}
                   >
                     יציאה לדרך
                   </Button>
-
-
                 </div>
-
               )}
             </div>
           </>
