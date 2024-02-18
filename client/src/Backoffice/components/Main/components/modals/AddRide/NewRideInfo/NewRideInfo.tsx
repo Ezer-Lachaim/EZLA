@@ -25,7 +25,7 @@ function NewRideInfo() {
     formState: { errors }
   } = useFormContext<Ride>();
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
-  const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+  // const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
   const fixToday = fixTimeUpDayjs();
   const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
   const defaultSelectedTime = ['3 שעות'];
@@ -137,7 +137,7 @@ function NewRideInfo() {
             multiple
             input={<OutlinedInput label="בקשות מיוחדות" />}
             {...register('specialRequest')}
-            value={selectedSpecialRequests}
+            // value={selectedSpecialRequests}
             renderValue={(selected: unknown[]) =>
               (selected as string[])
                 .map(
@@ -150,7 +150,7 @@ function NewRideInfo() {
           >
             {DRIVER_CAPABILITIES.map(({ value, label }) => (
               <MenuItem key={value} value={value}>
-                <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
+                {/* <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} /> */}
                 <ListItemText primary={label} />
               </MenuItem>
             ))}

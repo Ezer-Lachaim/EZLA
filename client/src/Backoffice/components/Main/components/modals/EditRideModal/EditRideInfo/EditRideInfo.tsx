@@ -111,7 +111,7 @@ function EditRideInfo({ ride }: { ride: Ride }) {
             >
               {DRIVER_CAPABILITIES.map(({ value, label }) => (
                 <MenuItem key={value} value={value}>
-                  <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
+                  {/* <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} /> */}
                   {label}
                 </MenuItem>
               ))}
