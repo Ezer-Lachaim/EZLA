@@ -257,6 +257,12 @@ const OrderRide = () => {
     setRideOrDelivery(newValue);
   };
 
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+
+  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
+    setRideOrDelivery(newValue);
+  };
+
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
