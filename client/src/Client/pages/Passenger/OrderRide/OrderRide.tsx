@@ -14,27 +14,10 @@ import {
   Select,
   SelectChangeEvent,
   OutlinedInput,
-  ListItemText,
-  Tab,
-  Tabs
+  ListItemText
 } from '@mui/material';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import {
-  AddCircleOutlineOutlined,
-  RemoveCircleOutlineOutlined,
-  Inventory,
-  EmojiPeople
-} from '@mui/icons-material';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-=======
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 // import SwapVertIcon from '@mui/icons-material/SwapVert';
->>>>>>> 486e771 (Add confirm Cancel in the driver's screens)
-=======
-import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
-// import SwapVertIcon from '@mui/icons-material/SwapVert';
->>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,17 +27,7 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
-<<<<<<< HEAD
-import {
-  Ride,
-  RideRequester,
-  RideServiceTypeEnum,
-  RideSpecialRequestEnum,
-  RideStateEnum
-} from '../../../../api-client';
-=======
 import { Ride, RideRequester, RideServiceTypeEnum, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
->>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
 import { useActiveRide } from '../../../../hooks/activeRide';
 import {
   DayTextField,
@@ -249,54 +222,15 @@ const OrderRide = () => {
   // };
 
   const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
-<<<<<<< HEAD
-
-  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
-    setRideOrDelivery(newValue);
-=======
   const handleDeliveryDriverButtonClick = (status: RideServiceTypeEnum) => {
     setRideOrDelivery(status);
     console.log('rideOrDelivery', rideOrDelivery);
->>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
   };
 
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
-<<<<<<< HEAD
-        <div className="flex border border-blue-500 rounded-lg">
-          <Tabs
-            value={rideOrDelivery}
-            onChange={(event, newValue) => handleDeliveryDriverButtonClick(newValue)}
-            className="flex-grow"
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-            TabIndicatorProps={{ style: { backgroundColor: 'transparent' } }}
-          >
-            <Tab
-              value="ride"
-              icon={<EmojiPeople />}
-              iconPosition="start"
-              label="נוסעים"
-              className={`transition-all duration-300 ease-in-out ${
-                rideOrDelivery === 'ride' ? 'bg-blue-500 text-white rounded-r-lg' : 'text-blue-500'
-              }`}
-            />
-            <Tab
-              value="delivery"
-              icon={<Inventory />}
-              iconPosition="start"
-              label="משלוחים"
-              className={`transition-all duration-300 ease-in-out ${
-                rideOrDelivery === 'delivery'
-                  ? 'bg-blue-500 text-white rounded-l-lg'
-                  : 'text-blue-500'
-              }`}
-            />
-          </Tabs>
-=======
         <div className="flex">
           <Button
             className="w-full"
@@ -314,7 +248,6 @@ const OrderRide = () => {
           >
             משלוחים
           </Button>
->>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
         </div>
         <div className="flex flex-col">
           {!user
@@ -382,6 +315,7 @@ const OrderRide = () => {
             </div>
           )}
         </div>
+
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -528,12 +462,7 @@ const OrderRide = () => {
             onChange={handleSpecialRequestsChange}
             input={
               <OutlinedInput
-<<<<<<< HEAD
-                label="בקשות מיוחדות"
-                // {rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
-=======
                 label={rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
->>>>>>> 486e7719f7fa99b68d552827d8aedb24142351a3
               />
             }
             renderValue={(selected) => {
@@ -564,6 +493,7 @@ const OrderRide = () => {
             ))}
           </Select>
         </FormControl>
+
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
           <TextField
@@ -618,6 +548,7 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+
         {!user && (
           <div>
             <FormControlLabel
@@ -648,6 +579,7 @@ const OrderRide = () => {
             )}
           </div>
         )}
+
         <Button
           variant="contained"
           size="large"
