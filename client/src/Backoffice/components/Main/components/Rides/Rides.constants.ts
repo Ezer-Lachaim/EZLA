@@ -63,5 +63,12 @@ export const RIDE_REQUEST: { value: RideSpecialRequestEnum; label: string }[] = 
   { value: 'KidsChair', label: 'מושב בטיחות לילדים (גיל 3-8)' },
   { value: 'AccessibleCar', label: 'רכב גבוה' },
   { value: 'WheelChairStorage', label: 'תא מטען מתאים לכסא גלגלים' },
-  { value: 'PatientDelivery', label: 'משלוחים' }
+  { value: 'Food', label: 'מזון' },
+  { value: 'MilitaryEquipment', label: 'ציוד צבאי' },
+  { value: 'MedicalEquipment', label: 'ציוד רפואי' },
+  { value: 'HolyItems', label: 'תשמישי קדושה' },
+  { value: 'LargeVolume', label: 'נפח גדול' },
+  { value: 'SmallVolume', label: 'נפח קטן' },
+  { value: 'HeavyWeight', label: 'משקל כבד' },
+  { value: 'Fragile', label: 'שביר' }
 ];
