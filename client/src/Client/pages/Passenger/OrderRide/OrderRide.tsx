@@ -287,6 +287,9 @@ const OrderRide = () => {
             type="string"
             required={!user}
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
+            multiline
+            rows={2}
+            maxRows={2}
             error={!!errors?.ride?.comment}
             {...register('ride.comment', {
               maxLength: 100,
