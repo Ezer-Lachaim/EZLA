@@ -163,7 +163,7 @@ function NewRideInfo() {
             type="string"
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
             multiline
-            maxRows={3}
+            maxRows={2}
             error={!!errors?.comment}
             {...register('comment', {
               maxLength: 100
