@@ -4,6 +4,7 @@ import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
@@ -17,7 +18,7 @@ import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך ושעת הזמנה ',
+    header: 'מועד איסוף',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
       return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
@@ -46,7 +47,21 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'cellphone',
     header: 'טלפון ליצירת קשר',
-    accessorFn: (data) => data.cellphone || '-'
+    cell: ({ row }) => {
+      const { cellphone } = row.original;
+      return cellphone ? (
+        <a
+          href={`https://wa.me/972${cellphone.replace(/-/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <WhatsAppIcon className="ml-2" style={{ color: '#2563EB', fontSize: '22px' }} />
+          {cellphone}
+        </a>
+      ) : (
+        '-'
+      );
+    }
   },
   {
     accessorKey: 'origin',
