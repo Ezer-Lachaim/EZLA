@@ -547,6 +547,11 @@ components:
         rideId:
           type: string
           example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        serviceType:
+          type: string
+          enum:
+            - ride
+            - delivery
         destination:
           type: string
           example: "Airport"
@@ -580,7 +585,14 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         requestTimeStamp:
           type: string
@@ -626,6 +638,14 @@ components:
               - KidsChair
               - AccessibleCar
               - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         startServiceDate:
           type: string
