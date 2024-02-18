@@ -292,6 +292,9 @@ const OrderRide = () => {
               maxLength: 100,
               required: !user
             })}
+            inputProps={{
+              maxLength: 100
+            }}
           />
           <span
             className={`absolute top-1 left-1 text-xs ${

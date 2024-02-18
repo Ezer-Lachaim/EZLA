@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Box,
-  Button,
-  IconButton,
-  TextField,
-  FormHelperText,
-  FormControl
-} from '@mui/material';
+import { Modal, Box, Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -36,11 +28,7 @@ const RideApprovalModal = ({
   onClose: () => void;
   onSubmit: SubmitHandler<SubmitRideInputs>;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<SubmitRideInputs>();
+  const { handleSubmit } = useForm<SubmitRideInputs>();
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
@@ -53,25 +41,6 @@ const RideApprovalModal = ({
           <div className="flex flex-col items-center flex-grow gap-2">
             <CarIcon sx={{ fontSize: 48 }} color="secondary" />
             <h1 className="text-center m-0 text-blue-500">יוצאים לדרך</h1>
-          </div>
-          <div className="flex flex-col gap-4" hidden>
-            <p className="text-center">עדכנו את זמן המתנה המשוער שיוצג לנוסע/ים.</p>
-            <FormControl>
-              <TextField
-                label="זמן המתנה בדקות"
-                type="number"
-                placeholder="זמן המתנה שיוצג לנוסע בדקות"
-                value="0"
-                className="w-full"
-                error={!!errors?.minutesToArrive}
-                {...register('minutesToArrive', { required: true })}
-              />
-              {errors.minutesToArrive && (
-                <FormHelperText error className="absolute top-full mr-0">
-                  חסר זמן המתנה
-                </FormHelperText>
-              )}
-            </FormControl>
           </div>
           <div className="flex flex-col gap-4">
             <Button variant="contained" color="secondary" type="submit">

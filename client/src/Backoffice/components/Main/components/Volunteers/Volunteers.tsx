@@ -1,5 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, Clear, Edit } from '@mui/icons-material';
+import { Check, Clear, Edit, Description } from '@mui/icons-material';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { Button } from '@mui/material';
@@ -30,7 +32,25 @@ const columns: ColumnDef<Partial<Driver>>[] = [
     }
   },
   { accessorKey: 'nationalId', header: 'ת.ז.', accessorFn: (data) => data.nationalId || '-' },
-  { accessorKey: 'cellPhone', header: 'יצירת קשר', accessorFn: (data) => data.cellPhone || '-' },
+  {
+    accessorKey: 'cellPhone',
+    header: 'יצירת קשר',
+    cell: ({ row }) => {
+      const { cellPhone } = row.original;
+      return cellPhone ? (
+        <a
+          href={`https://wa.me/972${cellPhone.replace(/[^0-9]/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <WhatsAppIcon className="ml-2" style={{ color: '#2563EB', fontSize: '22px' }} />
+          {cellPhone}
+        </a>
+      ) : (
+        '-'
+      );
+    }
+  },
   { accessorKey: 'email', header: 'אימייל', accessorFn: (data) => data.email },
   { accessorKey: 'city', header: 'עיר מגורים', accessorFn: (data) => data.city || '-' },
   {
@@ -88,7 +108,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
   { accessorKey: 'numOfDrives', header: 'נסיעות', accessorFn: (data) => data.numOfDrives || '-' },
   {
     accessorKey: 'actionEdit',
-    header: '',
+    header: 'עריכה',
     cell: ({ row }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [toggleModal, setToggleModal] = useState(false);
@@ -101,12 +121,12 @@ const columns: ColumnDef<Partial<Driver>>[] = [
           <Button
             size="small"
             variant="outlined"
-            color="error"
+            color="primary"
             style={{ minWidth: 0 }}
             className="w-7 h-7"
             onClick={() => handleModal(true)}
           >
-            <Edit fontSize="small" />
+            {driver.isGoogleForm ? <Description fontSize="small" /> : <Edit fontSize="small" />}
           </Button>
           <EditDriverModal open={toggleModal} handleModal={handleModal} driver={driver} />
         </div>

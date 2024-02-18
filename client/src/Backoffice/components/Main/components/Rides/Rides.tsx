@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { format, formatDistance } from 'date-fns';
 import heLocale from 'date-fns/locale/he';
 import { Button, Chip, Avatar, Typography } from '@mui/material';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -10,7 +11,12 @@ import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
 import { Ride } from '../../../../../api-client';
-import { RIDE_STATE_MAPPER, getStateIcon, getStateIconColor } from './Rides.constants';
+import {
+  RIDE_REQUEST,
+  RIDE_STATE_MAPPER,
+  getStateIcon,
+  getStateIconColor
+} from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
@@ -82,6 +88,21 @@ const columns: ColumnDef<Partial<Ride>>[] = [
     accessorKey: 'comment',
     header: 'תיאור הנסיעה',
     accessorFn: (data) => data.comment || '-'
+  },
+  {
+    accessorKey: 'carCapabilities',
+    header: 'בקשות מיוחדות',
+    accessorFn: (data) => {
+      if (data.specialRequest?.length) {
+        return data.specialRequest
+          .map((capability) => {
+            const capabilityItem = RIDE_REQUEST.find((item) => item.value === capability);
+            return capabilityItem?.label || -'';
+          })
+          .join(', ');
+      }
+      return '-';
+    }
   },
   {
     accessorKey: 'completedTimeStamp',
