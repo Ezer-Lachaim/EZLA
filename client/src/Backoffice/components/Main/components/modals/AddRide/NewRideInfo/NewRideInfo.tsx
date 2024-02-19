@@ -148,7 +148,7 @@ function NewRideInfo() {
             style={{ maxWidth: '310px' }}
           >
             {DRIVER_CAPABILITIES.map(({ value, label }) => (
-              <MenuItem key={value} value={value}>
+                  <MenuItem key={value} value={value}>
                 <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
                 <ListItemText primary={label} />
               </MenuItem>

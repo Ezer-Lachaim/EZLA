@@ -348,17 +348,17 @@ function getNewRidePassengerSMSMessage(ride: Ride): string {
   );
 }
 
-function getRideBookedPassengerSMSMessage(ride: Ride): string {
-  return (
-    `${ride.firstName} שלום, ` +
-    `${ride.driver.firstName} נמצא מתנדב.ת` +
-    `מועד איסוף בין ???? ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
-    `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
-    `מספר רכב ${ride.driver.carPlateNumber}.\n` +
-    `נקודת איסוף ${ride.origin}.\n` +
-    `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
-  );
-}
+// function getRideBookedPassengerSMSMessage(ride: Ride): string {
+//   return (
+//     `${ride.firstName} שלום, ` +
+//     `${ride.driver.firstName} נמצא מתנדב.ת` +
+//     `מועד איסוף בין ???? ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
+//     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
+//     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
+//     `נקודת איסוף ${ride.origin}.\n` +
+//     `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
+//   );
+// }
 
 function getRideDriverEnroutePassengerSMSMessage(ride: Ride): string {
   return (

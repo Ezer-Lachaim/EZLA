@@ -43,7 +43,7 @@ export const getStateIconColor = (state: RideStateEnum) => {
     case RideStateEnum.WaitingForDriver:
     case RideStateEnum.Booked:
       return '#FFB547';
-    case RideStateEnum.DriverEnroute: 
+    case RideStateEnum.DriverEnroute:
     case RideStateEnum.Riding:
       return '#64B6F7';
     case RideStateEnum.Completed:
