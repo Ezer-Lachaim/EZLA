@@ -295,6 +295,7 @@ paths:
             enum:
               - WaitingForDriver
               - Booked
+              - DriverEnroute
               - DriverArrived
               - Riding
               - Completed
@@ -598,6 +599,13 @@ components:
           type: string
           format: date
           example: "2023-06-14"
+        pickupDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-31T16:10:00Z" 
+        relevantTime:
+          type: integer
+          example: 3
         destinationArrivalTime:
           type: number
           nullable: true

@@ -79,6 +79,18 @@ export interface Ride {
      * @type {number}
      * @memberof Ride
      */
+    pickupDateTime?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
+    relevantTime?: number; 
+        /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
     destinationArrivalTime?: number | null;
     /**
      * 
@@ -134,6 +146,7 @@ export type RideServiceTypeEnum = typeof RideServiceTypeEnum[keyof typeof RideSe
 export enum RideStateEnum {
     WaitingForDriver = 'WaitingForDriver',
     Booked = 'Booked',
+    DriverEnroute = 'DriverEnroute',
     DriverArrived = 'DriverArrived',
     Riding = 'Riding',
     Completed = 'Completed',
@@ -147,7 +160,7 @@ export enum RideStateEnum {
     */
 export enum RideSpecialRequestEnum {
     WheelChair = 'WheelChair',
-    WheelChairStorage = 'WheelChairStorage',
+    WheelChairStorage = 'WheelChairStorage', 
     BabyChair = 'BabyChair',
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
