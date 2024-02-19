@@ -51,16 +51,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'cellphone',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    header: 'טלפון',
-=======
     header: 'טלפון ליצירת קשר',
->>>>>>> 355b00d (Backoffice menu design according to figma)
-=======
-    header: 'טלפון ליצירת קשר',
->>>>>>> 3769ebbe25d74a13182e4bcc71e8a2835d886da1
     cell: ({ row }) => {
       const { cellphone } = row.original;
       return cellphone ? (
@@ -76,10 +67,6 @@ const columns: ColumnDef<Partial<Ride>>[] = [
         '-'
       );
     }
-=======
-    header: 'טלפון ליצירת קשר',
-    accessorFn: (data) => data.cellphone || '-'
->>>>>>> 57a4c05 (modify the header names)
   },
   {
     accessorKey: 'origin',
@@ -93,7 +80,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: 'נוסעים/ ארגזים',
+    header: "נוסעים/ ארגזים",
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
