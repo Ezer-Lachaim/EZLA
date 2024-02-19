@@ -25,17 +25,23 @@ import {
 } from '@mui/icons-material';
 <<<<<<< HEAD
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+<<<<<<< HEAD
 import { TimePicker } from '@mui/x-date-pickers';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
 =======
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
+<<<<<<< HEAD
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
@@ -49,17 +55,23 @@ import {
 } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import DayPicker from '../../../../Backoffice/components/Main/components/DayPicker/DayPicker.tsx';
 import { fixTimeForDufault, getHoursArray, getMenuHoursLabel } from '../../../../utils/datetime';
 import PrivacyPolicyPopup from '../../Privacy/privacyPopup.tsx';
 import TermsPolicyPopup from '../../Terms/termsPopup.tsx';
 =======
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
 import {
   DayTextField,
   fixTimeUpDayjs,
   menuHours
 } from '../../../components/TimeFunctions/TimeFunctions.tsx';
+<<<<<<< HEAD
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
 
 interface OrderRideFormData {
   ride: Ride;
@@ -131,6 +143,10 @@ const defaultSelectedTime = ['3 שעות'];
 // For relevantTime
 const menuHours = getHoursArray(7);
 
+dayjs.extend(timezone);
+const fixToday = fixTimeUpDayjs();
+const defaultSelectedTime = ['3 שעות'];
+
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
@@ -138,11 +154,16 @@ const OrderRide = () => {
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
   );
+<<<<<<< HEAD
 
 =======
   const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
   const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+  const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
+  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -158,11 +179,15 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
 <<<<<<< HEAD
+<<<<<<< HEAD
         passengerCount: 1,
         relevantTime: 3
 =======
         passengerCount: 1
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+        passengerCount: 1
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
       },
       selectedSpecialRequests: []
     }
@@ -427,6 +452,7 @@ const OrderRide = () => {
           )}
         </FormControl>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         <FormControl>
           <DayPicker
@@ -437,6 +463,8 @@ const OrderRide = () => {
             onChange={(date) => setPickupDate(date)}
             format="DD/MM/YYYY"
 =======
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
         <FormControl>
           <DatePicker
             label="תאריך איסוף מבוקש"
@@ -450,7 +478,10 @@ const OrderRide = () => {
             slots={{
               textField: DayTextField
             }}
+<<<<<<< HEAD
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
           />
         </FormControl>
         <div className="flex gap-8">
@@ -462,9 +493,12 @@ const OrderRide = () => {
                 disablePast
                 ampm={false}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 value={pickupTime}
                 onChange={(date) => setPickupTime(date)}
 =======
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
                 value={timeInIsrael}
                 onChange={(time) => {
                   if (time) {
@@ -484,13 +518,17 @@ const OrderRide = () => {
                     setTimeInIsrael(dayjs(newDateTime));
                   }
                 }}
+<<<<<<< HEAD
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
                 views={['minutes', 'hours']}
               />
             </FormControl>
           </div>
           <div style={{ flex: '1' }}>
             <FormControl sx={{ width: '100%' }} required>
+<<<<<<< HEAD
 <<<<<<< HEAD
               <InputLabel id="relevant-time-label" required>
                 כמה זמן רלוונטי
@@ -503,6 +541,8 @@ const OrderRide = () => {
                 onChange={(e) => setValue('ride.relevantTime', e.target.value as number)}
                 label="כמה זמן רלוונטי"
 =======
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
               <InputLabel id="demo-multiple-name-label" required>
                 כמה זמן רלוונטי
               </InputLabel>
@@ -519,16 +559,23 @@ const OrderRide = () => {
                   setValue('ride.relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
                 }}
                 input={<OutlinedInput label="כמה זמן רלוונטי" />}
+<<<<<<< HEAD
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
                 required
               >
                 {menuHours.map((hour) => (
                   <MenuItem key={hour} value={hour}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                     {getMenuHoursLabel(hour)}
 =======
                     {hour}
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+                    {hour}
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
                   </MenuItem>
                 ))}
               </Select>
@@ -536,9 +583,13 @@ const OrderRide = () => {
           </div>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 8b27a77 (Implemented the entire driver-side functionality for future rides)
+=======
+
+>>>>>>> ae8a3b7 (Implemented the entire driver-side functionality for future rides)
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
           <Select
