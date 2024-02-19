@@ -256,7 +256,7 @@ const OrderRide = () => {
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <IconButton aria-label="decrement" onClick={handleDecrement}>
+            <IconButton aria-label="decrement" onClick={handleDecrement} disabled={quantity === 1}>
               <RemoveCircleOutlineOutlined />
             </IconButton>
             <TextField
