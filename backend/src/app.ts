@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import * as path from 'path';
+import { rateLimit } from 'express-rate-limit';
 import config from './config';
 import { errorHandler, errorNotFoundHandler } from './middlewares/errorHandler';
 import { authHandler } from './middlewares/auth';
@@ -28,6 +29,14 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000 // max 100 requests per windowMs
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 if (config.env !== 'production') {
   app.use('/dev', devRouter);
