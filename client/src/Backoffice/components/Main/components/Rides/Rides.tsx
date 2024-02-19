@@ -81,7 +81,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: 'נוסעים/ ארגזים',
+    header: "נוסעים/ ארגזים",
     accessorFn: (data) => data.passengerCount || '-'
   },
   {
