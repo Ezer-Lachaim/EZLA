@@ -11,7 +11,7 @@ const Driver = () => {
   useEffect(() => {
     let expectedRoute: string;
     switch (activeRide?.state) {
-      case RideStateEnum.Booked:
+      case RideStateEnum.DriverEnroute:
       case RideStateEnum.DriverArrived:
       case RideStateEnum.RequesterCanceled:
         expectedRoute = 'active';

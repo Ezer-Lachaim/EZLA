@@ -295,6 +295,7 @@ paths:
             enum:
               - WaitingForDriver
               - Booked
+              - DriverEnroute
               - DriverArrived
               - Riding
               - Completed

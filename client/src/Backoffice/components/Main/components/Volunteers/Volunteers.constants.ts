@@ -6,5 +6,4 @@ export const DRIVER_CAPABILITIES: { value: DriverCarCapabilitiesEnum; label: str
   { value: 'KidsChair', label: 'מושב בטיחות לילדים (גיל 3-8)' },
   { value: 'AccessibleCar', label: 'רכב גבוה' },
   { value: 'WheelChairStorage', label: 'תא מטען מתאים לכסא גלגלים' },
-  { value: 'PatientDelivery', label: 'משלוחים' }
 ];

@@ -1,7 +1,40 @@
-import { Modal, Box, Button, IconButton } from '@mui/material';
+import { Modal, Box, Button, IconButton, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
+import { Ride } from '../../../../../api-client';
+
+const commonStyle = {
+  display: 'flex',
+  alignItems: 'stretch',
+  gap: '8px'
+};
+
+const commonTextStyle = {
+  marginRight: '8px',
+  fontFamily: 'Heebo',
+  fontWeight: '400',
+  fontSize: '12px',
+  width: '80px',
+  Letter: '0.4px',
+  align: 'right',
+  lineHeight: '20px'
+};
+
+const boldTextStyle = {
+  ...commonTextStyle,
+  fontWeight: '700',
+  fontSize: '16px',
+  width: '195px',
+  letter: '0.15px'
+};
+
+const firstTitleStyle = {
+  ...boldTextStyle,
+  fontWeight: '500',
+  fontSize: '22px',
+  color: '#007DFF'
+};
 
 const style = {
   position: 'absolute' as const,
@@ -20,10 +53,12 @@ export type SubmitRideInputs = {
 };
 
 const RideApprovalModal = ({
+  ride,
   open,
   onClose,
   onSubmit
 }: {
+  ride?: Ride;
   open: boolean;
   onClose: () => void;
   onSubmit: SubmitHandler<SubmitRideInputs>;
@@ -32,28 +67,89 @@ const RideApprovalModal = ({
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box sx={style}>
+      <Box
+        className="fixed top-109 left-27 w-320 h-auto p-0 pt-0 pb-20px bg-white rounded-lg shadow-lg flex flex-col gap-20"
+        sx={style}
+      >
+        {' '}
         <form
-          className="flex flex-col w-full h-full gap-8"
+          className="flex flex-col w-full h-full gap-8px m-20px"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <div className="flex flex-col items-center flex-grow gap-2">
-            <CarIcon sx={{ fontSize: 48 }} color="secondary" />
-            <h1 className="text-center m-0 text-blue-500">יוצאים לדרך</h1>
+          <div className="flex flex-col w-full h-full gap-8px">
+            <div className="flex flex-row w-80 h-14 p-3 items-center justify-between">
+              <Typography style={firstTitleStyle}>פרטי נסיעה</Typography>
+              <IconButton size="small" onClick={onClose}>
+                <Close />
+              </IconButton>
+            </div>
+            <div className="flex items-center gap-2 m-20px">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}>
+                <div style={commonStyle}>
+                  <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
+                  <Typography style={boldTextStyle}>
+                    {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
+                  </Typography>
+                </div>
+                <div style={commonStyle}>
+                  <Typography style={commonTextStyle}>כמות:</Typography>
+                  <Typography >{ride?.passengerCount}</Typography>
+                </div>
+                <div style={commonStyle}>
+                  <Typography style={commonTextStyle}>טלפון:</Typography>
+                  <Typography >             <a
+                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {ride?.cellphone}
+                  </a> </Typography>
+                </div>
+                <div style={commonStyle}>
+                  <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+                  <a
+                    style={{ fontFamily: 'Heebo' }}
+                    href={`https://waze.com/ul?q=${ride?.origin}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {ride?.origin}
+                  </a>
+                </div>
+                <div style={commonStyle}>
+                  <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
+                  <a
+                    style={{ fontFamily: 'Heebo' }}
+                    href={`https://waze.com/ul?q=${ride?.destination}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {ride?.destination}
+                  </a>
+                </div>
+                <div style={commonStyle}>
+                  <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
+                  <Typography style={boldTextStyle}>{ride?.comment}</Typography>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
-            <Button variant="contained" color="secondary" type="submit">
-              אישור ויציאה לדרך
+          <div className="flex flex-col">
+            <Button
+              className="w-280 h-40px m-20px rounded-md gap-8"
+              variant="contained"
+              color="primary"
+              type="submit"
+              style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
+            >
+              בחירת נסיעה
             </Button>
-            <Button variant="outlined" color="secondary" onClick={onClose}>
+            <Button variant="outlined" color="primary" onClick={onClose} style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}>
               ביטול
             </Button>
           </div>
         </form>
-        <IconButton size="small" className="absolute left-2 top-1" onClick={onClose}>
-          <Close />
-        </IconButton>
       </Box>
     </Modal>
   );

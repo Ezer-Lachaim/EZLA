@@ -7,6 +7,7 @@ interface LayoutHOCProps<P> extends Partial<NavBarProps> {
   hideNavbar?: boolean;
   hideFooter?: boolean;
   backgroundColor?: string;
+  wrapperClassName?: string;
 }
 
 const withLayout = <P extends object>(
