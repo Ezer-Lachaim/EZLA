@@ -16,7 +16,6 @@ import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';
 
-
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
 
@@ -31,7 +30,7 @@ app.use(logger('dev'));
 
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-let limiter = rateLimit({
+const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000 // max 100 requests per windowMs
 });
