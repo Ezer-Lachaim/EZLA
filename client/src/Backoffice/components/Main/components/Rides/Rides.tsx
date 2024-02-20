@@ -23,7 +23,7 @@ import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך ושעת הזמנה ',
+    header: 'מועד איסוף',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
       return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
@@ -31,7 +31,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'driver.firstName',
-    header: 'שם נהג',
+    header: 'שם מתנדב',
     accessorFn: (data) => {
       const fullName = `${data.driver?.firstName ?? ''} ${data.driver?.lastName ?? ''}`;
       if (!fullName.trim()) return '-';
@@ -51,7 +51,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'cellphone',
-    header: 'טלפון',
+    header: 'טלפון ליצירת קשר',
     cell: ({ row }) => {
       const { cellphone } = row.original;
       return cellphone ? (
@@ -66,7 +66,8 @@ const columns: ColumnDef<Partial<Ride>>[] = [
       ) : (
         '-'
       );
-    }
+    },
+    accessorFn: (data) => data.cellphone || '-'
   },
   {
     accessorKey: 'origin',
@@ -85,7 +86,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'comment',
-    header: 'תיאור נסיעה',
+    header: 'תיאור הנסיעה',
     accessorFn: (data) => data.comment || '-'
   },
   {
