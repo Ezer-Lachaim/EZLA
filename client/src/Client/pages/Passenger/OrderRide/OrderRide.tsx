@@ -24,7 +24,11 @@ import {
   Inventory,
   EmojiPeople
 } from '@mui/icons-material';
+<<<<<<< HEAD
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+=======
+import SwapVertIcon from '@mui/icons-material/SwapVert';
+>>>>>>> 8a505e4ae35271829c3e9ebed7ac74d2c77a737a
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
@@ -195,14 +199,27 @@ const OrderRide = () => {
     handleDeliveryDriverButtonClick(newValue);
   };
 
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+
+  const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
+    setRideOrDelivery(newValue);
+  };
+
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
       <h1 className="mt-0">שלום{user?.firstName && ` ${user?.firstName}`}, צריכים הסעה?</h1>
       <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
+<<<<<<< HEAD
         <div className="flex border border-blue-500 rounded-md">
           <Tabs
             value={rideOrDelivery}
             onChange={(_, newValue) => handleTabChange(newValue)}
+=======
+        <div className="flex border border-blue-500 rounded-lg">
+          <Tabs
+            value={rideOrDelivery}
+            onChange={(event, newValue) => handleDeliveryDriverButtonClick(newValue)}
+>>>>>>> 8a505e4ae35271829c3e9ebed7ac74d2c77a737a
             className="flex-grow"
             indicatorColor="primary"
             textColor="primary"
@@ -296,7 +313,7 @@ const OrderRide = () => {
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <IconButton aria-label="decrement" onClick={handleDecrement}>
+            <IconButton aria-label="decrement" onClick={handleDecrement} disabled={quantity === 1}>
               <RemoveCircleOutlineOutlined />
             </IconButton>
             <TextField
@@ -353,6 +370,7 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+<<<<<<< HEAD
         <FormControl>
           <DatePicker
             label="תאריך איסוף מבוקש"
@@ -429,6 +447,8 @@ const OrderRide = () => {
           </div>
         </div>
 
+=======
+>>>>>>> 8a505e4ae35271829c3e9ebed7ac74d2c77a737a
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
           <Select
