@@ -50,16 +50,16 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const fixTimeUpDayjs = () => {
-    let today = dayjs(dayjs(), 'Asia/Jerusalem');
-    today = today.add(3, 'hour');
-    const minutes = today.minute() % 10;
-    if (minutes < 5) {
-      today = today.add(5 - minutes, 'minute');
-    } else {
-      today = today.add(10 - minutes, 'minute');
-    }
-    return today; 
-  };
+  let today = dayjs(dayjs(), 'Asia/Jerusalem');
+  today = today.add(3, 'hour');
+  const minutes = today.minute() % 10;
+  if (minutes < 5) {
+    today = today.add(5 - minutes, 'minute');
+  } else {
+    today = today.add(10 - minutes, 'minute');
+  }
+  return today;
+};
 export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: number): string {
   if (!pickupDateTime || !relevantTime) {
     return 'Invalid date or relevant time';
@@ -68,12 +68,12 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'numeric',
-    day: 'numeric',
+    day: 'numeric'
   };
 
   const pickupDate = new Date(pickupDateTime);
 
-  if (isNaN(pickupDate.getTime())) {
+  if (Number.isNaN(pickupDate.getTime())) {
     return 'Invalid date';
   }
 
@@ -81,7 +81,7 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
   const formattedDate = pickupDate.toLocaleDateString('he-IL', options);
   const timeFormatter = new Intl.DateTimeFormat('he-IL', {
     hour: 'numeric',
-    minute: 'numeric',
+    minute: 'numeric'
   });
 
   const startTime = timeFormatter.format(pickupDate);
@@ -96,15 +96,15 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
     pickupDate.getFullYear() === currentDate.getFullYear()
   ) {
     return `היום ${formattedDate} ${startTime} - ${endTime}`;
-  } else if (
+  }
+  if (
     pickupDate.getDate() === currentDate.getDate() + 1 &&
     pickupDate.getMonth() === currentDate.getMonth() &&
     pickupDate.getFullYear() === currentDate.getFullYear()
   ) {
     return `מחר ${formattedDate} ${startTime} - ${endTime}`;
-  } else {
-    const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(pickupDate);
-    return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
   }
-}
 
+  const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(pickupDate);
+  return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
+}

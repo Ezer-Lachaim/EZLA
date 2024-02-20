@@ -19,7 +19,7 @@ const Passenger = () => {
         expectedRoute = 'driver-arrived';
         break;
       case RideStateEnum.Booked:
-        case RideStateEnum.DriverEnroute:
+      case RideStateEnum.DriverEnroute:
       case RideStateEnum.DriverCanceled:
         expectedRoute = 'active';
         break;

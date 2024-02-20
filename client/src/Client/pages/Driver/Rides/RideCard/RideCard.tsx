@@ -1,9 +1,6 @@
 import { useState } from 'react';
-import { Button, Card, CardContent, Divider, Typography } from '@mui/material';
-import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import { Button, Card, CardContent, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
-import BellIcon from '@mui/icons-material/NotificationImportantRounded';
 import { Ride, RideStateEnum } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
 import { useActiveRide } from '../../../../../hooks/activeRide';
@@ -29,7 +26,7 @@ const boldTextStyle = {
   ...commonTextStyle,
   fontWeight: '700',
   fontSize: '16px',
-  width: '100%',
+  width: '100%'
 };
 
 export const RideCard = ({
@@ -77,7 +74,7 @@ export const RideCard = ({
           <div className="flex justify-between w-full">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={commonStyle}>
                     <Typography style={{ ...commonTextStyle, width: '80px' }}>
                       מועד איסוף:
@@ -147,45 +144,43 @@ export const RideCard = ({
             </div>
           </div>
           <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
-          <>
-            <div className="flex gap-4 mt-3">
-              {context === 'openCalls' && (
-                <Button
-                  className="flex-1"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  startIcon={<CarIcon />}
-                  onClick={onApprovePassenger}
-                >
-                  פרטי נסיעה
-                </Button>
-              )}
+          <div className="flex gap-4 mt-3">
+            {context === 'openCalls' && (
+              <Button
+                className="flex-1"
+                variant="contained"
+                color="primary"
+                size="large"
+                startIcon={<CarIcon />}
+                onClick={onApprovePassenger}
+              >
+                פרטי נסיעה
+              </Button>
+            )}
 
-              {context === 'myRides' && (
-                <div className="flex flex-grow flex-row gap-4 mt-2">
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={toggleConfirmCancelModal}
-                    style={{ flex: 1 }}
-                  >
-                    ביטול
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    size="large"
-                    style={{ width: '205px' }}
-                    startIcon={<CarIcon />}
-                    onClick={onOpenContactModal}
-                  >
-                    יציאה לדרך
-                  </Button>
-                </div>
-              )}
-            </div>
-          </>
+            {context === 'myRides' && (
+              <div className="flex flex-grow flex-row gap-4 mt-2">
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={toggleConfirmCancelModal}
+                  style={{ flex: 1 }}
+                >
+                  ביטול
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  style={{ width: '205px' }}
+                  startIcon={<CarIcon />}
+                  onClick={onOpenContactModal}
+                >
+                  יציאה לדרך
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
         <ConfirmCancelRideModal
           open={confirmCancelModalOpen}

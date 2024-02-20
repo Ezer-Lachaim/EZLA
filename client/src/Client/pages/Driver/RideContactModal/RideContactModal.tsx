@@ -20,39 +20,13 @@ const commonTextStyle = {
   lineHeight: '20px'
 };
 
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
-};
-
-const firstTitleStyle = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
-
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 320,
-  bgcolor: 'background.paper',
-  borderRadius: '4px',
-  boxShadow: 24,
-  p: 2.5
-};
 const RideContactModal = ({
   ride,
   open,
   onConfirm,
   onClose
 }: {
-  ride?: Ride;
+  ride: Ride;
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
@@ -65,11 +39,10 @@ const RideContactModal = ({
   };
 
   const onCancel = async () => {
-    if (!ride || !ride.rideId) {
-      console.error('Invalid ride data. Ride ID is missing.');
-      return;
-    }
     try {
+      if (!ride || !ride.rideId) {
+        throw new Error('Invalid ride data. Ride ID is missing.');
+      }
       await api.ride.updateRide({
         rideId: ride.rideId,
         ride: { state: RideStateEnum.DriverCanceled }

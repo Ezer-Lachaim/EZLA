@@ -94,7 +94,7 @@ const ActiveRide = () => {
               >
                 {ride?.cellphone}
               </a>{' '}
-              <span className="px-2 text-sm"></span>
+              <span className="px-2 text-sm" />
             </div>
           }
         />

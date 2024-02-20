@@ -15,7 +15,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
-import { DayTextField, fixTimeUpDayjs, menuHours } from '../../../../../../../Client/components/TimeFunctions/TimeFunctions';
+import {
+  DayTextField,
+  fixTimeUpDayjs,
+  menuHours
+} from '../../../../../../../Client/components/TimeFunctions/TimeFunctions';
 
 function NewRideInfo() {
   const {
@@ -148,7 +152,7 @@ function NewRideInfo() {
             style={{ maxWidth: '310px' }}
           >
             {DRIVER_CAPABILITIES.map(({ value, label }) => (
-                  <MenuItem key={value} value={value}>
+              <MenuItem key={value} value={value}>
                 <Checkbox checked={(selectedSpecialRequests ?? []).includes(value)} />
                 <ListItemText primary={label} />
               </MenuItem>
@@ -253,7 +257,7 @@ function NewRideInfo() {
             inputProps={{
               maxLength: 100
             }}
-          /> 
+          />
           <span
             className={`absolute top-1 left-1 text-xs ${
               (watch().comment?.length || 0) >= 100 ? 'text-red-500' : ''

@@ -85,7 +85,9 @@ const RideApprovalModal = ({
               </IconButton>
             </div>
             <div className="flex items-center gap-2 m-20px">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}>
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}
+              >
                 <div style={commonStyle}>
                   <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
                   <Typography style={boldTextStyle}>
@@ -94,17 +96,20 @@ const RideApprovalModal = ({
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>כמות:</Typography>
-                  <Typography >{ride?.passengerCount}</Typography>
+                  <Typography>{ride?.passengerCount}</Typography>
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>טלפון:</Typography>
-                  <Typography >             <a
-                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {ride?.cellphone}
-                  </a> </Typography>
+                  <Typography>
+                    {' '}
+                    <a
+                      href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {ride?.cellphone}
+                    </a>{' '}
+                  </Typography>
                 </div>
                 <div style={commonStyle}>
                   <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
@@ -141,11 +146,16 @@ const RideApprovalModal = ({
               variant="contained"
               color="primary"
               type="submit"
-              style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
+              style={{ marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
             >
               בחירת נסיעה
             </Button>
-            <Button variant="outlined" color="primary" onClick={onClose} style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={onClose}
+              style={{ marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
+            >
               ביטול
             </Button>
           </div>
