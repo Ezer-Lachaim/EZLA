@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
@@ -26,6 +26,8 @@ import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
+import PrivacyPolicyPopup from '../../Privacy/privacyPopup.tsx';
+import TermsPolicyPopup from '../../Terms/termsPopup.tsx';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -405,15 +407,8 @@ const OrderRide = () => {
               }
               label={
                 <p>
-                  הנני מאשר/ת כי קראתי את{' '}
-                  <a href="/terms.html" target="_blank">
-                    תקנון האתר
-                  </a>{' '}
-                  ואת ואת{' '}
-                  <Link to="/privacy" target="_blank">
-                    מדיניות הפרטיות
-                  </Link>{' '}
-                  ומסכים לתנאיהם
+                  הנני מאשר/ת כי קראתי את <TermsPolicyPopup /> ואת <PrivacyPolicyPopup /> ומסכים
+                  לתנאיהם
                 </p>
               }
             />
