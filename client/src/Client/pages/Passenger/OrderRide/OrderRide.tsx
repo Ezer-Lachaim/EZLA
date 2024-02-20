@@ -95,7 +95,8 @@ const OrderRide = () => {
         origin: user?.address,
         firstName: user?.firstName,
         lastName: user?.lastName,
-        cellphone: user?.cellPhone
+        cellphone: user?.cellPhone,
+        passengerCount: 1
       },
       selectedSpecialRequests: []
     }
