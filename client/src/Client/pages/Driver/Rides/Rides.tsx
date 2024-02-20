@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { Stack } from '@mui/material';
@@ -76,10 +76,6 @@ const Rides = () => {
       return waitingTimeA - waitingTimeB;
     });
 
-  const onSelectRideCallback = useCallback((ride: Ride) => {
-    setSelectedRide(ride);
-  }, []);
-
   const handleChange = (_event: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue);
     setSelectedTab(newValue === 0 ? 'openCalls' : 'myRides');
@@ -135,7 +131,7 @@ const Rides = () => {
         console.log('Failed to update ride state');
       }
     }
-    setShowModal(false); // close modal after confirmation
+    setShowModal(false);
   };
 
   return (
@@ -165,12 +161,14 @@ const Rides = () => {
         </Tabs>
       </div>
       <CustomTabPanel value={value} index={0}>
-        <RideApprovalModal
-          ride={selectedRide}
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={onSubmitRide}
-        />
+        {selectedRide && (
+          <RideApprovalModal
+            ride={selectedRide}
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={onSubmitRide}
+          />
+        )}
         <div className="w-full h-full flex flex-col gap-5 pb-4">
           {sortedRides.length > 0 ? (
             <Stack spacing={2}>
@@ -179,8 +177,6 @@ const Rides = () => {
                   ride={ride}
                   key={`ride-${ride.rideId}`}
                   context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
-                  onSelect={onSelectRideCallback}
-                  selected={selectedRide?.rideId === ride.rideId}
                   onApprovePassenger={() => {
                     setSelectedRide(ride);
                     setIsModalOpen(true);
@@ -202,12 +198,14 @@ const Rides = () => {
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <RideApprovalModal
-          ride={selectedRide}
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={onSubmitRide}
-        />
+        {selectedRide && (
+          <RideApprovalModal
+            ride={selectedRide}
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={onSubmitRide}
+          />
+        )}
         {filteredRides.length > 0 ? (
           <div className="w-full h-full flex flex-col gap-5 pb-4">
             <Stack spacing={2}>
@@ -217,8 +215,6 @@ const Rides = () => {
                     ride={ride}
                     key={`ride-${ride.rideId}`}
                     context={selectedTab === 'openCalls' ? 'openCalls' : 'myRides'}
-                    onSelect={onSelectRideCallback}
-                    selected={selectedRide?.rideId === ride.rideId}
                     onApprovePassenger={() => setIsModalOpen(true)}
                     rideId={ride.rideId}
                     onOpenContactModal={onClickCallback}

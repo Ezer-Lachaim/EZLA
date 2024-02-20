@@ -37,8 +37,6 @@ export const RideCard = ({
 }: {
   ride: Ride;
   context: 'openCalls' | 'myRides';
-  onSelect: (ride: Ride) => void;
-  selected: boolean;
   onOpenContactModal: () => void;
   onApprovePassenger: () => void;
   rideId: string | undefined;

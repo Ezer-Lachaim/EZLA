@@ -58,7 +58,7 @@ const RideApprovalModal = ({
   onClose,
   onSubmit
 }: {
-  ride?: Ride;
+  ride: Ride;
   open: boolean;
   onClose: () => void;
   onSubmit: SubmitHandler<SubmitRideInputs>;
