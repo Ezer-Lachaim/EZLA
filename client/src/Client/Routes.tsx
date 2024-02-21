@@ -16,7 +16,7 @@ import Driver from './pages/Driver/Driver';
 import Rides from './pages/Driver/Rides/Rides';
 import FirstSignUp from './pages/FirstSignUp/FirstSignUp';
 import Terms from './pages/Terms/Terms';
-import Privacy from './pages/Privacy/Privacy';
+import Privacy from './pages/Privacy/Privacy.tsx';
 import Logout from './pages/Login/Logout';
 import DriverActiveRide from './pages/Driver/ActiveRide/ActiveRide';
 import PassengerActiveRide from './pages/Passenger/ActiveRide/ActiveRide';
