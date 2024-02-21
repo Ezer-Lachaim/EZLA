@@ -11,7 +11,7 @@ import { useUserStore } from '../../../../services/auth/user';
 import { RideCard } from './RideCard/RideCard.tsx';
 import RideApprovalModal, { SubmitRideInputs } from './RideApprovalModal/RideApprovalModal';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import RideContactModal from '../RideContactModal/RideContactModal.tsx';
+import RideContactModal from './RideContactModal/RideContactModal.tsx';
 
 interface TabPanelProps {
   children: React.ReactNode;
@@ -61,6 +61,7 @@ const Rides = () => {
     queryFn: () => api.ride.ridesGet({ driverID: user?.userId }),
     refetchInterval: POLLING_INTERVAL
   });
+  console.log(bookedRides);
 
   const sortedRides = [...rides].sort((a, b) => {
     const waitingTimeA = a.requestTimeStamp?.getTime() || 0;

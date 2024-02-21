@@ -37,7 +37,7 @@ const Riding = () => {
           label="שם הנוסע"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg">
+              <p className="text-lg" style={{ minWidth: '0', wordWrap: 'break-word' }}>
                 {ride?.firstName || ride?.rideRequester?.firstName}{' '}
                 {ride?.lastName || ride?.rideRequester?.lastName}
                 <span className="px-2 text-sm">
@@ -52,7 +52,12 @@ const Riding = () => {
           label="כתובת יעד"
           value={
             <div className="flex gap-2 justify-between">
-              <Typography variant="body1" component="div" className="mb-2">
+              <Typography
+                variant="body1"
+                component="div"
+                className="mb-2"
+                style={{ minWidth: '0', wordWrap: 'break-word' }}
+              >
                 <a
                   href={`https://waze.com/ul?q=${ride?.destination}`}
                   target="_blank"
@@ -82,10 +87,12 @@ const Riding = () => {
             />
           )}
         </Box>
-        <ViewField
-          label="בקשות מיוחדות"
-          value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
-        />
+        {ride?.specialRequest && (
+          <ViewField
+            label="בקשות מיוחדות"
+            value={<SpecialRequestsChips specialRequests={ride?.specialRequest || []} />}
+          />
+        )}
 
         <hr className="mt-2" />
       </div>

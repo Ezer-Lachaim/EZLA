@@ -10,26 +10,26 @@ const commonStyle = {
   gap: '8px'
 };
 
-const commonTextStyle = {
+const commonTextStyle: React.CSSProperties = {
   marginRight: '8px',
   fontFamily: 'Heebo',
   fontWeight: '400',
   fontSize: '12px',
   width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
+  lineHeight: '20px',
+  minWidth: '0',
+  wordWrap: 'break-word'
 };
 
 const boldTextStyle = {
   ...commonTextStyle,
   fontWeight: '700',
   fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
+  letter: '0.15px',
+  width: '100%'
 };
 
-const firstTitleStyle = {
+const firstTitleStyle: React.CSSProperties = {
   ...boldTextStyle,
   fontWeight: '500',
   fontSize: '22px',
@@ -67,76 +67,81 @@ const RideApprovalModal = ({
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box
-        className="fixed top-109 left-27 w-320 h-auto p-0 pt-0 pb-20px bg-white rounded-lg shadow-lg flex flex-col gap-20"
-        sx={style}
-      >
-        {' '}
+      <Box className="fixed p-0 pt-0 bg-white rounded-lg shadow-lg" sx={style}>
         <form
-          className="flex flex-col w-full h-full gap-8px m-20px"
+          className="flex flex-col w-full gap-8px m-20px"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <div className="flex flex-col w-full h-full gap-8px">
-            <div className="flex flex-row w-80 h-14 p-3 items-center justify-between">
+          <div className="flex flex-col w-full gap-8px">
+            <div className="flex flex-row w-full p-3 items-center justify-between">
               <Typography style={firstTitleStyle}>פרטי נסיעה</Typography>
               <IconButton size="small" onClick={onClose}>
                 <Close />
               </IconButton>
             </div>
-            <div className="flex items-center gap-2 m-20px">
-              <div
-                style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}
-              >
-                <div style={commonStyle}>
-                  <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
-                  <Typography style={boldTextStyle}>
-                    {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
-                  </Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>כמות:</Typography>
-                  <Typography>{ride?.passengerCount}</Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>טלפון:</Typography>
-                  <Typography>
-                    {' '}
-                    <a
-                      href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {ride?.cellphone}
-                    </a>{' '}
-                  </Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+          </div>
+          <div className="flex flex-col">
+            {' '}
+            {/* Adjusted to remove unnecessary width */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                margin: '20px'
+              }}
+            >
+              <div style={commonStyle}>
+                <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
+                <Typography style={boldTextStyle}>
+                  {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
+                </Typography>
+              </div>
+              <div style={commonStyle}>
+                <Typography style={commonTextStyle}>כמות:</Typography>
+                <Typography>{ride?.passengerCount}</Typography>
+              </div>
+              <div style={commonStyle}>
+                <Typography style={commonTextStyle}>טלפון:</Typography>
+                <Typography>
+                  {' '}
                   <a
-                    style={{ fontFamily: 'Heebo' }}
-                    href={`https://waze.com/ul?q=${ride?.origin}`}
+                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {ride?.origin}
-                  </a>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
-                  <a
-                    style={{ fontFamily: 'Heebo' }}
-                    href={`https://waze.com/ul?q=${ride?.destination}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {ride?.destination}
-                  </a>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                  <Typography style={boldTextStyle}>{ride?.comment}</Typography>
-                </div>
+                    {ride?.cellphone}
+                  </a>{' '}
+                </Typography>
+              </div>
+              <div style={commonStyle}>
+                <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+                <a
+                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  href={`https://waze.com/ul?q=${ride?.origin}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {ride?.origin}
+                </a>
+              </div>
+              <div style={commonStyle}>
+                <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
+                <a
+                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  href={`https://waze.com/ul?q=${ride?.destination}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {ride?.destination}
+                </a>
+              </div>
+              <div style={commonStyle}>
+                <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
+                <Typography style={{ ...boldTextStyle, fontWeight: '400' }}>
+                  {ride?.comment}
+                </Typography>
               </div>
             </div>
           </div>

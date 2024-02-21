@@ -36,7 +36,7 @@ const ConfirmCancelRideModal = ({
           <p className="text-center text-lg text-gray-600">
             האם אתה בטוח שברצונך לבטל את הנסיעה שלך?
           </p>
-          <Button variant="outlined" color="error" className="flex gap-2" onClick={onCancel}>
+          <Button variant="contained" color="error" className="flex gap-2" onClick={onCancel}>
             ביטול נסיעה
           </Button>
           <Button variant="outlined" className="flex gap-2" onClick={onContinue}>

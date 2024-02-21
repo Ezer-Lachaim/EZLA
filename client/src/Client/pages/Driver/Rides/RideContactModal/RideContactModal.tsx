@@ -1,23 +1,30 @@
 import { Modal, Box, Button, IconButton, Typography, Divider } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useState } from 'react';
-import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
-import { api } from '../../../../services/api';
-import { useActiveRide } from '../../../../hooks/activeRide';
-import { Ride, RideStateEnum } from '../../../../api-client';
+import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
+import { api } from '../../../../../services/api';
+import { useActiveRide } from '../../../../../hooks/activeRide';
+import { Ride, RideStateEnum } from '../../../../../api-client';
 
 const commonTextStyle = {
   marginRight: '8px',
   fontFamily: 'Heebo',
   fontWeight: '400',
   fontSize: '12px',
-  width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
+  width: '80px'
+};
+
+const boldTextStyle: React.CSSProperties = {
+  ...commonTextStyle,
+  fontWeight: '700',
+  fontSize: '16px',
+  width: '100%',
+  minWidth: '0',
+  wordWrap: 'break-word'
 };
 
 const RideContactModal = ({
@@ -26,7 +33,7 @@ const RideContactModal = ({
   onConfirm,
   onClose
 }: {
-  ride: Ride;
+  ride?: Ride;
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
@@ -39,13 +46,14 @@ const RideContactModal = ({
   };
 
   const onCancel = async () => {
+    if (!ride || !ride.rideId) {
+      console.error('Invalid ride data. Ride ID is missing.');
+      return;
+    }
     try {
-      if (!ride || !ride.rideId) {
-        throw new Error('Invalid ride data. Ride ID is missing.');
-      }
       await api.ride.updateRide({
         rideId: ride.rideId,
-        ride: { state: RideStateEnum.DriverCanceled }
+        ride: { state: RideStateEnum.WaitingForDriver }
       });
       await reFetchActiveRide();
       // navigation will occur automatically (in @../Driver.tsx)
@@ -71,7 +79,18 @@ const RideContactModal = ({
                 צרו קשר עם הנוסע
               </Typography>
             </div>
-            <Divider />
+          </div>
+          <div>
+            <Typography className="text-center" style={{ fontSize: '18px', fontWeight: '700' }}>
+              חשוב ליצור קשר עם הנוסעים.
+            </Typography>
+            <Typography className="font-normal text-center" style={{ fontSize: '16px' }}>
+              יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
+              רכב.
+            </Typography>
+          </div>
+          <Divider />
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Typography className="font-semibold" style={commonTextStyle}>
                 כמות:
@@ -83,7 +102,9 @@ const RideContactModal = ({
             </div>
             <div className="flex items-center gap-2">
               <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-              <Typography>{`${ride?.firstName} ${ride?.lastName}`}</Typography>
+              <Typography
+                style={boldTextStyle}
+              >{`${ride?.firstName} ${ride?.lastName}`}</Typography>
             </div>
             <div className="flex items-center gap-2">
               <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
@@ -111,7 +132,7 @@ const RideContactModal = ({
               variant="outlined"
               className="w-full border border-red-500 text-red-500"
               onClick={toggleConfirmCancelModal}
-              startIcon={<Close />}
+              startIcon={<CancelIcon />}
             >
               ביטול ההסעה שלי
             </Button>
