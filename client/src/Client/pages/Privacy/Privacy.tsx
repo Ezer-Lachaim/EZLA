@@ -1,12 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 import logo from '../../../assets/logo.png';
-import withLayout from '../../components/LayoutHOC.tsx';
 
 const Privacy = () => {
   return (
     <div className="flex flex-col items-center w-full">
-      <img src={logo} alt="logo" className="mb-2.5" />
-      <h1 className="text-center">מדיניות פרטיות עזר לחיים</h1>
+      <h1 style={{ textAlign: 'center' }}>מדיניות פרטיות עזר לחיים</h1>
+      <img
+        src={logo}
+        alt="logo"
+        style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '15px' }}
+      />
       <p className="px-5">
         מדיניות פרטיות זו ("מדיניות הפרטיות") מתארת כיצד עמותת עזר לחיים מרכז תמיכה וסיוע (ע"ר)
         ("העמותה") מתייחסת למידע שהיא אוספת או מקבלת ממך ("המשתמש)" דרך אתרי העמותה או אפליקציית
@@ -160,4 +163,4 @@ const Privacy = () => {
   );
 };
 
-export default withLayout(Privacy, { title: 'מדיניות הפרטיות עזר לחיים' });
+export default Privacy;
