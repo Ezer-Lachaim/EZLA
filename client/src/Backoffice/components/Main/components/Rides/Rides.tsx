@@ -6,10 +6,12 @@ import { Button, Chip, Avatar, Typography } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
-import { Ride } from '../../../../../api-client';
+import { Ride, RideServiceTypeEnum } from '../../../../../api-client';
 import {
   RIDE_REQUEST,
   RIDE_STATE_MAPPER,
@@ -81,8 +83,24 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: "מס' נוסעים",
-    accessorFn: (data) => data.passengerCount || '-'
+    header: 'נוסעים/ ארגזים',
+    cell: ({ row }) => {
+      const iconsServerType = [<EmojiPeopleIcon />, <InventoryIcon />];
+      let iconVeiw: number;
+
+      if (!row.original.passengerCount) return <span>-</span>;
+
+      if (row.original.serviceType === RideServiceTypeEnum.Ride) {
+        iconVeiw = 0;
+      } else {
+        iconVeiw = 1;
+      }
+      return (
+        <span>
+          {iconsServerType[iconVeiw]} {row.original.passengerCount}
+        </span>
+      );
+    }
   },
   {
     accessorKey: 'comment',
