@@ -93,8 +93,8 @@ const RideApprovalModal = ({
               }}
             >
               <div style={commonStyle}>
-                <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
-                <Typography style={boldTextStyle}>
+                <Typography style={commonTextStyle}>מועד איסוף:</Typography>
+                <Typography>
                   {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
                 </Typography>
               </div>

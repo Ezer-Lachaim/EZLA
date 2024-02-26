@@ -30,7 +30,9 @@ function CustomTabPanel({ children, value, index = 0, ...other }: TabPanelProps)
     >
       {value === index && (
         <div style={{ padding: 14 }}>
-          <Typography component="span">{children}</Typography>
+          {/* <Typography component="span"> */}
+          {children}
+          {/* </Typography> */}
         </div>
       )}
     </div>
@@ -136,8 +138,8 @@ const Rides = () => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <div style={{ borderBottom: '1px solid divider' }}>
+    <div className="w-full">
+      <div>
         <Tabs
           value={value}
           onChange={handleChange}
@@ -148,28 +150,40 @@ const Rides = () => {
           <Tab
             {...a11yProps(0)}
             className="flex items-center flex-1 bg-white shadow-md text-center"
-            label={<span className="text-base">קריאות פתוחות ({sortedRides.length})</span>}
+            label={
+              <span style={{ font: 'Heebo', fontSize: '14px', fontWeight: '700' }}>
+                קריאות פתוחות ({sortedRides.length})
+              </span>
+            }
           />
           <Tab
             {...a11yProps(1)}
             className="flex items-center flex-1 bg-white shadow-md text-center"
             label={
-              <span className="font-Heebo font-medium text-base tracking-wide uppercase">
+              <span style={{ font: 'Heebo', fontSize: '14px', fontWeight: '700' }}>
                 נסיעות שלי ({filteredRides.length})
               </span>
             }
           />
         </Tabs>
+        <div className="space-x-10">
+          <button className="border border-black p-2" onClick={() => handleChange(undefined, 0)}>
+            all
+          </button>
+          <button className="border border-black p-2" onClick={() => handleChange(undefined, 1)}>
+            mine
+          </button>
+        </div>
       </div>
       <CustomTabPanel value={value} index={0}>
-        {selectedRide && (
+        {/* {selectedRide && (
           <RideApprovalModal
             ride={selectedRide}
             open={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onSubmit={onSubmitRide}
           />
-        )}
+        )} */}
         <div className="w-full h-full flex flex-col gap-5 pb-4">
           {sortedRides.length > 0 ? (
             <Stack spacing={2}>
@@ -199,14 +213,6 @@ const Rides = () => {
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        {selectedRide && (
-          <RideApprovalModal
-            ride={selectedRide}
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={onSubmitRide}
-          />
-        )}
         {filteredRides.length > 0 ? (
           <div className="w-full h-full flex flex-col gap-5 pb-4">
             <Stack spacing={2}>
@@ -245,6 +251,14 @@ const Rides = () => {
           </div>
         )}
       </CustomTabPanel>
+      {selectedRide && (
+        <RideApprovalModal
+          ride={selectedRide}
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={onSubmitRide}
+        />
+      )}
     </div>
   );
 };

@@ -18,13 +18,16 @@ const commonTextStyle = {
   width: '80px'
 };
 
-const boldTextStyle: React.CSSProperties = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '100%',
-  minWidth: '0',
-  wordWrap: 'break-word'
+const style = {
+  position: 'absolute' as const,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 320,
+  bgcolor: 'background.paper',
+  borderRadius: '4px',
+  boxShadow: 24,
+  p: 2.5
 };
 
 const RideContactModal = ({
@@ -64,8 +67,8 @@ const RideContactModal = ({
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-lg p-4">
-        <div className="flex flex-col gap-4">
+      <Box className="fixed p-0 pt-0 bg-white rounded-lg shadow-lg" sx={style}>
+        <div className="flex flex-col gap-4 pt-4">
           <div className="flex flex-col justify-center items-center gap-2">
             <IconButton size="small" onClick={onClose} className="absolute left-2 top-2">
               <Close />
@@ -103,7 +106,7 @@ const RideContactModal = ({
             <div className="flex items-center gap-2">
               <Typography style={commonTextStyle}>שם הנוסע:</Typography>
               <Typography
-                style={boldTextStyle}
+                style={{ fontWeight: '700' }}
               >{`${ride?.firstName} ${ride?.lastName}`}</Typography>
             </div>
             <div className="flex items-center gap-2">
@@ -119,7 +122,7 @@ const RideContactModal = ({
               </Typography>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-4">
             <Button
               variant="contained"
               className="w-full bg-green-600 text-white"

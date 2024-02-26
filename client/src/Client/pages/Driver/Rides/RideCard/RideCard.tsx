@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import { Ride, RideStateEnum } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
 import { useActiveRide } from '../../../../../hooks/activeRide';
@@ -18,15 +20,6 @@ const commonTextStyle = {
   fontWeight: '400',
   fontSize: '12px',
   width: '80px'
-};
-
-const boldTextStyle: React.CSSProperties = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '100%',
-  minWidth: '0',
-  wordWrap: 'break-word'
 };
 
 export const RideCard = ({
@@ -69,19 +62,23 @@ export const RideCard = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
               <div style={commonStyle}>
                 <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
-                <Typography style={boldTextStyle}>
+                <Typography style={{ fontWeight: '700' }}>
                   {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}
                 </Typography>
               </div>
               <div style={commonStyle}>
                 <Typography style={commonTextStyle}>כמות:</Typography>
-                <Typography style={boldTextStyle}>{ride.passengerCount}</Typography>
+                <Typography style={{ fontWeight: '700' }}>
+                  {' '}
+                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride.passengerCount}
+                </Typography>
               </div>
               {context === 'myRides' && (
                 <>
                   <div style={commonStyle}>
                     <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-                    <Typography style={boldTextStyle}>
+                    <Typography style={{ fontWeight: '700' }}>
                       {ride?.firstName} {ride?.lastName}
                     </Typography>
                   </div>
@@ -104,7 +101,6 @@ export const RideCard = ({
                 <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
                 <a
                   style={{
-                    fontFamily: 'Heebo',
                     alignContent: 'right',
                     minWidth: '0',
                     wordWrap: 'break-word'
