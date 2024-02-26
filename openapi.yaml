@@ -550,8 +550,8 @@ components:
         serviceType:
           type: string
           enum:
-            - ride
-            - delivery
+            - Ride
+            - Delivery
         destination:
           type: string
           example: "Airport"

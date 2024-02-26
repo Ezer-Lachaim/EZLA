@@ -221,7 +221,9 @@ const OrderRide = () => {
     );
   };
 
-  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>('ride');
+  const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>(
+    RideServiceTypeEnum.Ride
+  );
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);
@@ -242,21 +244,23 @@ const OrderRide = () => {
             TabIndicatorProps={{ style: { backgroundColor: 'transparent' } }}
           >
             <Tab
-              value="ride"
+              value={RideServiceTypeEnum.Ride}
               icon={<EmojiPeople />}
               iconPosition="start"
               label="נוסעים"
               className={`transition-all duration-300 ease-in-out ${
-                rideOrDelivery === 'ride' ? 'bg-blue-500 text-white rounded-r-lg' : 'text-blue-500'
+                rideOrDelivery === RideServiceTypeEnum.Ride
+                  ? 'bg-blue-500 text-white rounded-r-lg'
+                  : 'text-blue-500'
               }`}
             />
             <Tab
-              value="delivery"
+              value={RideServiceTypeEnum.Delivery}
               icon={<Inventory />}
               iconPosition="start"
               label="משלוחים"
               className={`transition-all duration-300 ease-in-out ${
-                rideOrDelivery === 'delivery'
+                rideOrDelivery === RideServiceTypeEnum.Delivery
                   ? 'bg-blue-500 text-white rounded-l-lg'
                   : 'text-blue-500'
               }`}
@@ -336,7 +340,11 @@ const OrderRide = () => {
               variant="outlined"
               value={quantity}
               inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-              label={rideOrDelivery === 'delivery' ? 'מספר חבילות/ארגזים' : 'מספר נוסעים'}
+              label={
+                rideOrDelivery === RideServiceTypeEnum.Delivery
+                  ? 'מספר חבילות/ארגזים'
+                  : 'מספר נוסעים'
+              }
             />
             {errors.ride?.passengerCount?.type === 'required' && (
               <FormHelperText error className="absolute top-full mr-0">
@@ -396,14 +404,14 @@ const OrderRide = () => {
             input={
               <OutlinedInput
                 label="בקשות מיוחדות"
-                // {rideOrDelivery === 'delivery' ? 'בקשות אחרות' : 'בקשות מיוחדות'}
+                // {rideOrDelivery === RideServiceTypeEnum.Delivery ? 'בקשות אחרות' : 'בקשות מיוחדות'}
               />
             }
             renderValue={(selected) => {
               return Array.isArray(selected)
                 ? selected
                     .map((value) =>
-                      rideOrDelivery === 'delivery'
+                      rideOrDelivery === RideServiceTypeEnum.Delivery
                         ? deliverySpecialRequestLabels[value]
                         : specialRequestLabels[value]
                     )
@@ -412,13 +420,15 @@ const OrderRide = () => {
             }}
           >
             {Object.keys(
-              rideOrDelivery === 'delivery' ? deliverySpecialRequestLabels : specialRequestLabels
+              rideOrDelivery === RideServiceTypeEnum.Delivery
+                ? deliverySpecialRequestLabels
+                : specialRequestLabels
             ).map((key) => (
               <MenuItem key={key} value={key}>
                 <Checkbox checked={selectedSpecialRequests.indexOf(key) > -1} />
                 <ListItemText
                   primary={
-                    rideOrDelivery === 'delivery'
+                    rideOrDelivery === RideServiceTypeEnum.Delivery
                       ? deliverySpecialRequestLabels[key]
                       : specialRequestLabels[key]
                   }
