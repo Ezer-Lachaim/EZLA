@@ -15,6 +15,9 @@
     "build": "npm run sentry:sourcemaps && npm run build -w client -w backend",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org ezla-b6c4c8865 --project javascript-react ./client/dist && sentry-cli sourcemaps upload --org ezla-b6c4c8865 --project javascript-react ./client/dist"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ezer-Lachaim/EZLA.git"
