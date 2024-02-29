@@ -309,7 +309,6 @@ function getRideBookedPassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
     `${ride.driver.firstName} המתנדב.ת בדרך אליכם. ` +
-    `זמן הגעה משוער ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +
