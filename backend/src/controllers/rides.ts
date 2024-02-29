@@ -4,7 +4,6 @@ import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
 import { sendSMS } from '../utils/sms-util';
-import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
