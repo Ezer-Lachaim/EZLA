@@ -30,27 +30,22 @@ const SearchingDriver = () => {
       <div className="flex flex-col w-full h-full">
         <div className="flex flex-col justify-center flex-grow items-center">
           <img src={car} alt="car" className="w-20 animate-bounce" />
-          <h1 className="text-center">פנייתכם נקלטה</h1>
-          <h1 className="text-center">אנא האזרו בסבלנות, זה עשוי לקחת מספר דקות</h1>
-          <h1 className="text-center">
-            במידה ואין מתנדבים זמינים כרגע, אנחנו ניצור אתכם קשר לפני שיצאו לדרך
-          </h1>
+          <h1 className="text-center">פנייתכם נקלטה בהצלחה</h1>
+          <p className="text-center">אנו מחפשים עבורכם מתנדב/ת, אנא האזרו בסבלנות</p>
+          <br />
+          <p className="text-center">נעדכן אתכם כאן באפליקציה ובאמצעות הודעת SMS כאשר יימצא נהג </p>
         </div>
         <Button
           variant="outlined"
           color="error"
-          className="flex gap-2"
+          className="flex gap-2 h-12 font-medium text-base leading-5"
           onClick={() => setConfirmClose(true)}
         >
-          <Cancel color="error" fontSize="small" />
+          <Cancel color="error" className="w-5 h-5" />
           ביטול נסיעה
         </Button>
       </div>
-      <IconButton
-        size="small"
-        className="absolute left-2 top-1"
-        onClick={() => setConfirmClose(true)}
-      >
+      <IconButton className="absolute left-2 top-1" onClick={() => setConfirmClose(true)}>
         <Close />
       </IconButton>
 

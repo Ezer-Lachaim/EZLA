@@ -104,8 +104,6 @@ const Rides = () => {
           destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
         }
       });
-      await reFetchActiveRide();
-      // navigation will occur automatically (in @../Driver.tsx)
       setIsModalOpen(false);
       setValue(1);
       setSelectedTab('myRides');

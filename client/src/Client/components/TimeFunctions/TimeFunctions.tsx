@@ -108,3 +108,60 @@ export function formatPickupDateTime(pickupDateTime?: Date, relevantTime?: numbe
   const dayOfWeek = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(pickupDate);
   return `${dayOfWeek} ${formattedDate} ${startTime} - ${endTime}`;
 }
+
+export function formatPickupDateTimeMultiDay(pickupDateTime?: Date, relevantTime?: number): string {
+  if (!pickupDateTime || !relevantTime) {
+    return 'Invalid date or relevant time';
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  };
+
+  const pickupDate = new Date(pickupDateTime);
+
+  if (Number.isNaN(pickupDate.getTime())) {
+    return 'Invalid date';
+  }
+
+  const currentDate = new Date();
+  const formattedDate = pickupDate.toLocaleDateString('he-IL', options);
+  const timeFormatter = new Intl.DateTimeFormat('he-IL', {
+    hour: 'numeric',
+    minute: 'numeric'
+  });
+
+  const startTime = timeFormatter.format(pickupDate);
+
+  // Calculate end time based on relevant time (in hours)
+  pickupDate.setHours(pickupDate.getHours() + relevantTime);
+  const endTime = timeFormatter.format(pickupDate);
+
+  if (
+    pickupDate.getDate() === currentDate.getDate() &&
+    pickupDate.getMonth() === currentDate.getMonth() &&
+    pickupDate.getFullYear() === currentDate.getFullYear()
+  ) {
+    return `היום ${formattedDate} בין ${startTime} - ${endTime}`;
+  } else {
+    const dayOfWeekStart = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(
+      pickupDate
+    );
+    const dayOfWeekEnd = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(
+      new Date(pickupDate.getTime() + relevantTime * 3600000)
+    );
+
+    // Check if the day changes during relevant time
+    if (dayOfWeekStart === dayOfWeekEnd) {
+      return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime} ו${endTime}`;
+    } else {
+      const formattedEndDate = new Date(
+        pickupDate.getTime() + relevantTime * 3600000
+      ).toLocaleDateString('he-IL', options);
+      return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime}
+      יום ${dayOfWeekEnd} ${formattedEndDate} ${endTime}`;
+    }
+  }
+}

@@ -14,6 +14,7 @@ import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { formatPickupDateTimeMultiDay } from '../../../components/TimeFunctions/TimeFunctions.tsx';
 
 const ActiveRide = () => {
   const user = useUserStore((state) => state.user);
@@ -75,11 +76,16 @@ const ActiveRide = () => {
       >
         <ClockIcon sx={{ fill: '#FF9800' }} fontSize="large" />
         <h1 className="font-medium m-0" style={{ color: '#FF9800' }}>
-          המתנדב בדרך אליך
+          נמצא מתנדב/ת
         </h1>
       </Box>
       {/* {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>} */}
       <div className="flex-1">
+        <h1 className="text-center">
+          מועד איסוף
+          <br />
+          {formatPickupDateTimeMultiDay(ride?.pickupDateTime, ride?.relevantTime)}
+        </h1>
         <hr />
         <ViewField
           label="שם המתנדב"
@@ -98,17 +104,19 @@ const ActiveRide = () => {
         <hr className="mt-2" />
         <ViewField label="כתובת איסוף" value={ride?.origin || ''} />
         <ViewField label="כתובת יעד" value={ride?.destination || ''} />
-
-        <div className="mt-2">
-          <p className=" text-sm text-gray-500">בקשות מיוחדות</p>
-          <SpecialRequestsChips specialRequests={ride?.specialRequest || []} />
-        </div>
+        <ViewField label="תיאור הנסיעה" value={ride?.comment || ''} />
+        {ride?.specialRequest && ride.specialRequest.length > 0 && (
+          <div className="mt-2">
+            <p className="text-sm text-gray-500">בקשות מיוחדות</p>
+            <SpecialRequestsChips specialRequests={ride.specialRequest} />
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 mt-5">
         <Button variant="outlined" href={`tel:${ride?.driver?.cellPhone}`}>
           <Phone className="ml-2" />
-          צור קשר עם המתנדב
+          צרו קשר עם המתנדב
         </Button>
 
         <Button variant="outlined" color="error" onClick={() => setConfirmClose(true)}>

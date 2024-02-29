@@ -133,7 +133,8 @@ const OrderRide = () => {
         firstName: user?.firstName,
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
-        passengerCount: 1
+        passengerCount: 1,
+        relevantTime: 3
       },
       selectedSpecialRequests: []
     }
