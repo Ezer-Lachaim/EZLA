@@ -4,11 +4,11 @@ import SideBar from './components/SideBar/SideBar';
 
 const Main = () => {
   return (
-    <div className="flex flex-col dvh-screen">
+    <div className="flex flex-col dvh-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Header />
       <div className="flex flex-1">
         <SideBar />
-        <main className="flex overflow-hidden flex-1 flex-col px-5 py-4">
+        <main className="flex flex-1 flex-col px-5 py-4">
           <Outlet />
         </main>
       </div>

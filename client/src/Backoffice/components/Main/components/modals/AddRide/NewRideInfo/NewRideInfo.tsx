@@ -1,4 +1,5 @@
 import {
+  Box,
   Checkbox,
   FormControl,
   FormHelperText,
@@ -6,13 +7,16 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  TextField
+  TextField,
+  Grid
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { TimePicker } from '@mui/x-date-pickers';
 import { useFormContext } from 'react-hook-form';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import dayjs, { Dayjs } from 'dayjs';
-import { Ride } from '../../../../../../../api-client';
+import { Ride, RideServiceTypeEnum } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 import DayPicker from '../../../DayPicker/DayPicker';
 import {
@@ -32,6 +36,7 @@ function NewRideInfo() {
   } = useFormContext<Ride>();
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+  const serviceType = watch('serviceType');
 
   // For pickupDateTime
   const timeDufault = fixTimeForDufault();
@@ -203,22 +208,52 @@ function NewRideInfo() {
           )}
         </FormControl>
         <FormControl>
-          <TextField
-            id="passengerCount"
-            required
-            label="מספר נוסעים"
-            type="number"
-            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-            defaultValue={1}
-            error={!!errors?.passengerCount}
-            {...register('passengerCount', { required: true })}
-            sx={{
-              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
-                {
-                  opacity: 1
-                }
-            }}
-          />
+          <Grid container justifyContent="space-between">
+            <Grid item xs={6}>
+              <Box>
+                <InputLabel id="serviceType">סוגי נסיעה</InputLabel>
+                <Select
+                  style={{ width: '98%', padding: 0, height: 54 }}
+                  labelId="serviceType"
+                  id="serviceType"
+                  defaultValue={serviceType}
+                  label="סוגי נסיעה *"
+                >
+                  <MenuItem
+                    value={RideServiceTypeEnum.Ride}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Ride)}
+                  >
+                    <EmojiPeopleIcon /> נסיעה
+                  </MenuItem>
+                  <MenuItem
+                    value={RideServiceTypeEnum.Delivery}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Delivery)}
+                  >
+                    <InventoryIcon /> משלוח
+                  </MenuItem>
+                </Select>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                style={{ width: '100%' }}
+                id="passengerCount"
+                required
+                label="כמות"
+                type="number"
+                inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+                defaultValue={1}
+                error={!!errors?.passengerCount}
+                {...register('passengerCount', { required: true })}
+                sx={{
+                  '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                    {
+                      opacity: 1
+                    }
+                }}
+              />
+            </Grid>
+          </Grid>
         </FormControl>
         <FormControl>
           <TimePicker
@@ -237,10 +272,12 @@ function NewRideInfo() {
             type="string"
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
             multiline
-            maxRows={3}
+            required
+            maxRows={2}
             error={!!errors?.comment}
             {...register('comment', {
-              maxLength: 100
+              maxLength: 100,
+              required: true
             })}
             inputProps={{
               maxLength: 100
@@ -255,6 +292,7 @@ function NewRideInfo() {
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
+              {errors.comment.type === 'required' && 'יש להזין את תיאור הנסיעה'}
               {errors.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}

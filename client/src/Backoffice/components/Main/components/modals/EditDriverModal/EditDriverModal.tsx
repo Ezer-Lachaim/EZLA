@@ -44,7 +44,8 @@ function EditDriverModal({ open, handleModal, driver }: EditDriverModalProps) {
       carModel: driver.carModel,
       numOfSeats: driver.numOfSeats,
       carPlateNumber: driver.carPlateNumber,
-      carCapabilities: driver.carCapabilities
+      carCapabilities: driver.carCapabilities,
+      isGoogleForm: driver.isGoogleForm
     }
   });
 

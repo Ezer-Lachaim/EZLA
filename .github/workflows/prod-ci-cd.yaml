@@ -1,12 +1,10 @@
-name: Staging CI/CD
+name: Production CI/CD
 on:
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
 
 jobs:
-  staging-ci-cd:
-    name: Staging CI/CD
+  prod-ci-cd:
+    name: Production CI/CD
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,7 +15,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build -w backend
-      - run: npm run build-staging -w client
+      - run: npm run build -w client
 
       # Setup gcloud CLI
       - uses: 'google-github-actions/auth@v2'
@@ -44,6 +42,6 @@ jobs:
       - name: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: api-hub-staging
+          service: api-hub
           image: gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}
           region: us-east1

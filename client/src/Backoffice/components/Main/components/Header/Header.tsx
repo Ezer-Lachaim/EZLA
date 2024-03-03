@@ -14,7 +14,13 @@ export default function ButtonAppBar() {
     <AppBar position="fixed" className="bg-white drop-shadow-md" sx={{ backgroundColor: 'white' }}>
       <Toolbar>
         <img src="/logo.png" alt="logo" width="64" height="64" className="ml-6" />
-        <Typography variant="h6" component="div" color="primary" className="flex-grow">
+        <Typography
+          variant="h6"
+          component="div"
+          color="primary"
+          className="flex-grow"
+          fontSize="22px"
+        >
           עזר לחיים - מערכת ניהול
         </Typography>
         {/* <Badge badgeContent={30} color="error" className="ml-6"> */}

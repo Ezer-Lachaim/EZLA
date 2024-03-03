@@ -7,8 +7,8 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "run-p dev:firebase dev:docker dev:backend dev:client-generate",
-    "dev:firebase" : "firebase emulators:start --only auth",
-    "dev:docker" : "docker run -p 6379:6379 redis/redis-stack:latest",
+    "dev:firebase": "firebase emulators:start --only auth",
+    "dev:docker": "docker run -p 6379:6379 redis/redis-stack:latest",
     "dev:backend": "npm run dev -w backend",
     "dev:client": "npm run start -w client",
     "generate:api:client": "npm run generate:api:client -w client",
@@ -49,6 +49,7 @@
     "@sentry/vite-plugin": "^2.7.0",
     "@tanstack/react-query": "^4.7.1",
     "react-hook-form-persist": "^3.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "express-rate-limit": "^7.1.5"
   }
 }

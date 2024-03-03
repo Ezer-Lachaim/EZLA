@@ -6,11 +6,18 @@ import { Button, Chip, Avatar, Typography } from '@mui/material';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import PageHeader from '../PageHeader/PageHeader';
 import Table from '../../../Table/Table';
 import { api } from '../../../../../services/api';
-import { Ride } from '../../../../../api-client';
-import { RIDE_STATE_MAPPER, getStateIcon, getStateIconColor } from './Rides.constants';
+import { Ride, RideServiceTypeEnum } from '../../../../../api-client';
+import {
+  RIDE_REQUEST,
+  RIDE_STATE_MAPPER,
+  getStateIcon,
+  getStateIconColor
+} from './Rides.constants';
 import AddRideModal from '../modals/AddRide/AddRideModal.tsx';
 import CancelRideModal from '../modals/CancelRideModal/CancelRideModal.tsx';
 import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
@@ -18,7 +25,7 @@ import EditRideModal from '../modals/EditRideModal/EditRideModal.tsx';
 const columns: ColumnDef<Partial<Ride>>[] = [
   {
     accessorKey: 'requestTimeStamp',
-    header: 'תאריך ושעת הזמנה ',
+    header: 'מועד איסוף',
     accessorFn: (data) => {
       if (!data.requestTimeStamp) return '-';
       return format(data.requestTimeStamp, 'dd/MM/yyyy HH:mm');
@@ -26,7 +33,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'driver.firstName',
-    header: 'שם נהג',
+    header: 'שם מתנדב',
     accessorFn: (data) => {
       const fullName = `${data.driver?.firstName ?? ''} ${data.driver?.lastName ?? ''}`;
       if (!fullName.trim()) return '-';
@@ -46,7 +53,7 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'cellphone',
-    header: 'טלפון',
+    header: 'טלפון ליצירת קשר',
     cell: ({ row }) => {
       const { cellphone } = row.original;
       return cellphone ? (
@@ -61,7 +68,8 @@ const columns: ColumnDef<Partial<Ride>>[] = [
       ) : (
         '-'
       );
-    }
+    },
+    accessorFn: (data) => data.cellphone || '-'
   },
   {
     accessorKey: 'origin',
@@ -75,13 +83,44 @@ const columns: ColumnDef<Partial<Ride>>[] = [
   },
   {
     accessorKey: 'passengerCount',
-    header: "מס' נוסעים",
-    accessorFn: (data) => data.passengerCount || '-'
+    header: 'נוסעים/ ארגזים',
+    cell: ({ row }) => {
+      const iconsServerType = [<EmojiPeopleIcon />, <InventoryIcon />];
+      let iconVeiw: number;
+
+      if (!row.original.passengerCount) return <span>-</span>;
+
+      if (row.original.serviceType === RideServiceTypeEnum.Ride) {
+        iconVeiw = 0;
+      } else {
+        iconVeiw = 1;
+      }
+      return (
+        <span>
+          {iconsServerType[iconVeiw]} {row.original.passengerCount}
+        </span>
+      );
+    }
   },
   {
     accessorKey: 'comment',
-    header: 'תיאור נסיעה',
+    header: 'תיאור הנסיעה',
     accessorFn: (data) => data.comment || '-'
+  },
+  {
+    accessorKey: 'carCapabilities',
+    header: 'בקשות מיוחדות',
+    accessorFn: (data) => {
+      if (data.specialRequest?.length) {
+        return data.specialRequest
+          .map((capability) => {
+            const capabilityItem = RIDE_REQUEST.find((item) => item.value === capability);
+            return capabilityItem?.label || -'';
+          })
+          .join(', ');
+      }
+      return '-';
+    }
   },
   {
     accessorKey: 'completedTimeStamp',
