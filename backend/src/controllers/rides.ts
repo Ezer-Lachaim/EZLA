@@ -5,7 +5,6 @@ import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
 import { sendSMS } from '../utils/sms-util';
-import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -224,18 +223,18 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         }
       }
 
-      // if (updatedRide.state === RideStateEnum.Booked) {
-      //   await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
-      //   await Promise.all([
-      //     currentRide.rideRequester?.userId &&
-      //       sendPushByUserId(
-      //         currentRide.rideRequester?.userId,
-      //         'עדכון על הנסיעה',
-      //         'הנסיעה שלך התקבלה על ידי נהג'
-      //       ),
-      //     sendSMS(updatedRide.cellphone, getRideBookedPassengerSMSMessage(updatedRide))
-      //   ]);
-      // }
+      if (updatedRide.state === RideStateEnum.Booked) {
+        await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'הנסיעה שלך התקבלה על ידי נהג'
+            ),
+          sendSMS(updatedRide.cellphone, getRideBookedPassengerSMSMessage(updatedRide))
+        ]);
+      }
 
       if (updatedRide.state === RideStateEnum.DriverEnroute) {
         await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
@@ -284,7 +283,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }
   } catch (error) {
-    console.log(error);
+    console.log('Error retrieving current ride:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -347,7 +346,6 @@ function getRideBookedPassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
     `${ride.driver.firstName} נמצא מתנדב.ת` +
-    `מועד איסוף בין ???? ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +
@@ -359,7 +357,6 @@ function getRideDriverEnroutePassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
     `${ride.driver.firstName} המתנדב.ת בדרך אליך` +
-    `זמן הגעה ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +

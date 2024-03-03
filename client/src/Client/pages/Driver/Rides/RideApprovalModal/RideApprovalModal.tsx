@@ -3,38 +3,8 @@ import { Close } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
 import { Ride } from '../../../../../api-client';
-
-const commonStyle = {
-  display: 'flex',
-  alignItems: 'stretch',
-  gap: '8px'
-};
-
-const commonTextStyle = {
-  marginRight: '8px',
-  fontFamily: 'Heebo',
-  fontWeight: '400',
-  fontSize: '12px',
-  width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
-};
-
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
-};
-
-const firstTitleStyle = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const style = {
   position: 'absolute' as const,
@@ -58,7 +28,7 @@ const RideApprovalModal = ({
   onClose,
   onSubmit
 }: {
-  ride?: Ride;
+  ride: Ride;
   open: boolean;
   onClose: () => void;
   onSubmit: SubmitHandler<SubmitRideInputs>;
@@ -67,85 +37,109 @@ const RideApprovalModal = ({
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box
-        className="fixed top-109 left-27 w-320 h-auto p-0 pt-0 pb-20px bg-white rounded-lg shadow-lg flex flex-col gap-20"
-        sx={style}
-      >
-        {' '}
+      <Box className="fixed p-0 pt-0 bg-white rounded-lg shadow-lg" sx={style}>
         <form
-          className="flex flex-col w-full h-full gap-8px m-20px"
+          className="flex flex-col w-full gap-8px m-20px"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-          <div className="flex flex-col w-full h-full gap-8px">
-            <div className="flex flex-row w-80 h-14 p-3 items-center justify-between">
-              <Typography style={firstTitleStyle}>פרטי נסיעה</Typography>
+          <div className="flex flex-col w-full gap-8px">
+            <div className="flex flex-row w-full p-3 items-center justify-between">
+              <Typography className=" font-medium text-[1.375rem] text-blue-500">
+                פרטי נסיעה
+              </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Close />
               </IconButton>
             </div>
-            <div className="flex items-center gap-2 m-20px">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: '20px' }}>
-                <div style={commonStyle}>
-                  <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
-                  <Typography style={boldTextStyle}>
-                    {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
-                  </Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>כמות:</Typography>
-                  <Typography >{ride?.passengerCount}</Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>טלפון:</Typography>
-                  <Typography >             <a
-                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+          </div>
+          <div className="flex flex-col">
+            {' '}
+            {/* Adjusted to remove unnecessary width */}
+            <div className="flex flex-col gap-2.5 m-5">
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                  מועד איסוף:
+                </Typography>
+                <Typography>
+                  {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
+                </Typography>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  כמות:
+                </Typography>
+                <Typography>
+                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride?.passengerCount}
+                </Typography>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  טלפון:
+                </Typography>
+                <Typography>
+                  {' '}
+                  <a
+                    href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {ride?.cellphone}
-                  </a> </Typography>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
-                  <a
-                    style={{ fontFamily: 'Heebo' }}
-                    href={`https://waze.com/ul?q=${ride?.origin}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {ride?.origin}
-                  </a>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
-                  <a
-                    style={{ fontFamily: 'Heebo' }}
-                    href={`https://waze.com/ul?q=${ride?.destination}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {ride?.destination}
-                  </a>
-                </div>
-                <div style={commonStyle}>
-                  <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                  <Typography style={boldTextStyle}>{ride?.comment}</Typography>
-                </div>
+                  </a>{' '}
+                </Typography>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  כתובת איסוף:
+                </Typography>
+                <a
+                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  href={`https://waze.com/ul?q=${ride?.origin}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {ride?.origin}
+                </a>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  יעד נסיעה:
+                </Typography>
+                <a
+                  className="min-w-0 break-words"
+                  href={`https://waze.com/ul?q=${ride?.destination}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {ride?.destination}
+                </a>
+              </div>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                  תיאור הנסיעה:
+                </Typography>
+                <Typography className="mr-2 font-bold text-normal min-w-0 break-words">
+                  {ride?.comment}
+                </Typography>
               </div>
             </div>
           </div>
           <div className="flex flex-col">
             <Button
-              className="w-280 h-40px m-20px rounded-md gap-8"
+              className="w-280 h-40px m-20px rounded-md gap-8 mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
               variant="contained"
               color="primary"
               type="submit"
-              style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
             >
               בחירת נסיעה
             </Button>
-            <Button variant="outlined" color="primary" onClick={onClose} style={{marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}>
+            <Button
+              className="mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
+              variant="outlined"
+              color="primary"
+              onClick={onClose}
+            >
               ביטול
             </Button>
           </div>

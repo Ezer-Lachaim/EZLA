@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
-import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 
 const DriverArrived = () => {
   const { activeRide: ride } = useActiveRide();

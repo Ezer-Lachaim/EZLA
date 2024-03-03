@@ -12,7 +12,7 @@ import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
-import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
@@ -29,7 +29,7 @@ const ActiveRide = () => {
   const onCancel = async () => {
     await api.ride.updateRide({
       rideId: ride?.rideId || '',
-      ride: { state: RideStateEnum.DriverCanceled }
+      ride: { state: RideStateEnum.WaitingForDriver }
     });
     await reFetchActiveRide();
     // navigation will occur automatically (in @../Driver.tsx)
@@ -73,7 +73,7 @@ const ActiveRide = () => {
           label="שם הנוסע"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg">
+              <p className="text-lg min-w-0" style={{ wordWrap: 'break-word' }}>
                 {ride?.firstName || ride?.rideRequester?.firstName}{' '}
                 {ride?.lastName || ride?.rideRequester?.lastName}
                 <span className="px-2 text-sm">
@@ -94,7 +94,7 @@ const ActiveRide = () => {
               >
                 {ride?.cellphone}
               </a>{' '}
-              <span className="px-2 text-sm"></span>
+              <span className="px-2 text-sm" />
             </div>
           }
         />
@@ -102,7 +102,12 @@ const ActiveRide = () => {
           label="כתובת איסוף"
           value={
             <div className="flex gap-2 justify-between">
-              <Typography variant="body1" component="div" className="mb-2">
+              <Typography
+                variant="body1"
+                component="div"
+                className="mb-2"
+                style={{ minWidth: '0', wordWrap: 'break-word' }}
+              >
                 <a href={`https://waze.com/ul?q=${ride?.origin}`} target="_blank" rel="noreferrer">
                   {ride?.origin}
                 </a>
@@ -121,7 +126,7 @@ const ActiveRide = () => {
           label="כתובת יעד"
           value={
             <div className="flex gap-2 justify-between">
-              <Typography variant="body1" component="div" className="mb-2">
+              <Typography className="mb-2 min-w-0" style={{ wordWrap: 'break-word' }}>
                 <a
                   href={`https://waze.com/ul?q=${ride?.destination}`}
                   target="_blank"
@@ -143,7 +148,7 @@ const ActiveRide = () => {
           label="תיאור הנסיעה"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg">{ride?.comment}</p>
+              <p className="text-lg min-w-0 break-words">{ride?.comment}</p>
             </div>
           }
         />
@@ -174,7 +179,7 @@ const ActiveRide = () => {
           onClick={() => setConfirmClose(true)}
         >
           <CancelIcon className="fill-red-600" />
-          ביטול הנסיעה
+          ביטול ההסעה
         </Button>
       </div>
 

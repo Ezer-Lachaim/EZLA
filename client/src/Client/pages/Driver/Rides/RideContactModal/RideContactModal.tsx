@@ -1,39 +1,14 @@
 import { Modal, Box, Button, IconButton, Typography, Divider } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { useState } from 'react';
-import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
-import { api } from '../../../../services/api';
-import { useActiveRide } from '../../../../hooks/activeRide';
-import { Ride, RideStateEnum } from '../../../../api-client';
-
-const commonTextStyle = {
-  marginRight: '8px',
-  fontFamily: 'Heebo',
-  fontWeight: '400',
-  fontSize: '12px',
-  width: '80px',
-  Letter: '0.4px',
-  align: 'right',
-  lineHeight: '20px'
-};
-
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  width: '195px',
-  letter: '0.15px'
-};
-
-const firstTitleStyle = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
+import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
+import { api } from '../../../../../services/api';
+import { useActiveRide } from '../../../../../hooks/activeRide';
+import { Ride, RideStateEnum } from '../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
@@ -46,6 +21,7 @@ const style = {
   boxShadow: 24,
   p: 2.5
 };
+
 const RideContactModal = ({
   ride,
   open,
@@ -72,7 +48,7 @@ const RideContactModal = ({
     try {
       await api.ride.updateRide({
         rideId: ride.rideId,
-        ride: { state: RideStateEnum.DriverCanceled }
+        ride: { state: RideStateEnum.WaitingForDriver }
       });
       await reFetchActiveRide();
       // navigation will occur automatically (in @../Driver.tsx)
@@ -83,40 +59,46 @@ const RideContactModal = ({
 
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
-      <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-lg shadow-lg p-4">
-        <div className="flex flex-col gap-4">
+      <Box className="fixed p-0 pt-0 bg-white rounded-lg shadow-lg" sx={style}>
+        <div className="flex flex-col gap-4 pt-4">
           <div className="flex flex-col justify-center items-center gap-2">
             <IconButton size="small" onClick={onClose} className="absolute left-2 top-2">
               <Close />
             </IconButton>
             <CarIcon color="primary" fontSize="large" />
             <div className="text-center">
-              <Typography
-                className="font-medium text-blue-500 font-heebo"
-                style={{ fontSize: '22px' }}
-              >
+              <Typography className="font-medium text-blue-500 font-heebo text-[1.375rem]">
                 צרו קשר עם הנוסע
               </Typography>
             </div>
-            <Divider />
+          </div>
+          <div className="mr-5 ml-5 mt-3 mb-3">
+            <Typography className="text-center text-lg font-bold">
+              חשוב ליצור קשר עם הנוסעים.
+            </Typography>
+            <Typography className="font-normal text-center text-base">
+              יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
+              רכב.
+            </Typography>
+          </div>
+          <Divider />
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Typography className="font-semibold" style={commonTextStyle}>
-                כמות:
-              </Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">כמות:</Typography>
               <Typography>
                 {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
                 {ride?.passengerCount}
               </Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-              <Typography>{`${ride?.firstName} ${ride?.lastName}`}</Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">שם הנוסע:</Typography>
+              <Typography className="font-bold">{`${ride?.firstName} ${ride?.lastName}`}</Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">טלפון הנוסע:</Typography>
               <Typography>
                 <a
-                  href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                  href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -125,7 +107,7 @@ const RideContactModal = ({
               </Typography>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-4">
             <Button
               variant="contained"
               className="w-full bg-green-600 text-white"
@@ -138,7 +120,7 @@ const RideContactModal = ({
               variant="outlined"
               className="w-full border border-red-500 text-red-500"
               onClick={toggleConfirmCancelModal}
-              startIcon={<Close />}
+              startIcon={<CancelIcon />}
             >
               ביטול ההסעה שלי
             </Button>

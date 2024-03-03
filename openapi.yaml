@@ -304,6 +304,12 @@ paths:
               - Canceled
           required: false
           description: Ride state
+        - in: query
+          name: driverID
+          schema:
+            type: string
+          required: false
+          description: ID of the driver associated with the ride
       responses:
         '200':
           description: Successful operation
@@ -567,6 +573,7 @@ components:
           enum:
             - WaitingForDriver
             - Booked
+            - DriverEnroute
             - DriverArrived
             - Riding
             - Completed
@@ -700,7 +707,6 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
     CreateUserResponse:
       properties:
         user:
