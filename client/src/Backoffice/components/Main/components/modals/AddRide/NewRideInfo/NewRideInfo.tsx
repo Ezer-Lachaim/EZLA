@@ -6,16 +6,26 @@ import {
   InputLabel,
   ListItemText,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   Grid
 } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { TimePicker } from '@mui/x-date-pickers';
 import { useFormContext } from 'react-hook-form';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import dayjs, { Dayjs } from 'dayjs';
 import { Ride, RideServiceTypeEnum } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
+import DayPicker from '../../../DayPicker/DayPicker';
+import {
+  fixTimeForDufault,
+  getHoursArray,
+  getMenuHoursLabel
+} from '../../../../../../../utils/datetime';
+
+const menuHours = getHoursArray(7);
 
 function NewRideInfo() {
   const {
@@ -27,6 +37,27 @@ function NewRideInfo() {
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
   const serviceType = watch('serviceType');
+
+  // For pickupDateTime
+  const timeDufault = fixTimeForDufault();
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+
+  useEffect(() => {
+    if (!pickupDate || !pickupTime) {
+      setValue('pickupDateTime', undefined);
+      return;
+    }
+
+    const joined = pickupDate
+      .clone()
+      .hour(pickupTime.hour())
+      .minute(pickupTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    setValue('pickupDateTime', joined.toDate());
+  }, [pickupDate, pickupTime, setValue]);
 
   return (
     <div className="flex gap-4">
@@ -83,6 +114,37 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <DayPicker
+            label="תאריך איסוף מבוקש"
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            value={pickupDate}
+            onChange={(date) => setPickupDate(date)}
+            format="DD/MM/YYYY"
+          />
+        </FormControl>
+        <FormControl sx={{ width: '100%' }} required>
+          <InputLabel id="relevant-time-label" required>
+            כמה זמן רלוונטי
+          </InputLabel>
+          <Select
+            labelId="relevant-time-label"
+            aria-labelledby="relevant-time-label"
+            id="relevant-time"
+            value={watch('relevantTime')}
+            onChange={(e) => setValue('relevantTime', e.target.value as number)}
+            label="כמה זמן רלוונטי"
+            required
+          >
+            {menuHours.map((hour) => (
+              <MenuItem key={hour} value={hour}>
+                {getMenuHoursLabel(hour)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl>
           <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
           <Select
@@ -90,7 +152,7 @@ function NewRideInfo() {
             aria-labelledby="special-requests-label"
             id="special-requests"
             multiple
-            input={<OutlinedInput label="בקשות מיוחדות" />}
+            label="בקשות מיוחדות"
             {...register('specialRequest')}
             value={selectedSpecialRequests}
             renderValue={(selected: unknown[]) =>
@@ -192,6 +254,17 @@ function NewRideInfo() {
               />
             </Grid>
           </Grid>
+        </FormControl>
+        <FormControl>
+          <TimePicker
+            sx={{ width: '100%' }}
+            label="שעת איסוף"
+            disablePast
+            ampm={false}
+            value={pickupTime}
+            onChange={(date) => setPickupTime(date)}
+            views={['minutes', 'hours']}
+          />
         </FormControl>
         <FormControl>
           <TextField

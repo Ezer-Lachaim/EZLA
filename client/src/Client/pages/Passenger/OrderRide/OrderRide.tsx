@@ -13,7 +13,6 @@ import {
   styled,
   Select,
   SelectChangeEvent,
-  OutlinedInput,
   ListItemText,
   Tab,
   Tabs
@@ -25,8 +24,10 @@ import {
   EmojiPeople
 } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { TimePicker } from '@mui/x-date-pickers';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs, { Dayjs } from 'dayjs';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
@@ -39,6 +40,8 @@ import {
   RideStateEnum
 } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
+import DayPicker from '../../../../Backoffice/components/Main/components/DayPicker/DayPicker.tsx';
+import { fixTimeForDufault, getHoursArray, getMenuHoursLabel } from '../../../../utils/datetime';
 import PrivacyPolicyPopup from '../../Privacy/privacyPopup.tsx';
 import TermsPolicyPopup from '../../Terms/termsPopup.tsx';
 
@@ -110,12 +113,16 @@ enum DestinationSourceEnum {
   Source
 }
 
+// For relevantTime
+const menuHours = getHoursArray(7);
+
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
   const { reFetch: reFetchActiveRide } = useActiveRide();
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
   );
+
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -130,7 +137,8 @@ const OrderRide = () => {
         firstName: user?.firstName,
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
-        passengerCount: 1
+        passengerCount: 1,
+        relevantTime: 3
       },
       selectedSpecialRequests: []
     }
@@ -221,10 +229,30 @@ const OrderRide = () => {
         : DestinationSourceEnum.Source
     );
   };
-
   const [rideOrDelivery, setRideOrDelivery] = useState<RideServiceTypeEnum>(
     RideServiceTypeEnum.Ride
   );
+
+  // For pickupDateTime
+  const timeDufault = fixTimeForDufault();
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+
+  useEffect(() => {
+    if (!pickupDate || !pickupTime) {
+      setValue('ride.pickupDateTime', undefined);
+      return;
+    }
+
+    const joined = pickupDate
+      .clone()
+      .hour(pickupTime.hour())
+      .minute(pickupTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    setValue('ride.pickupDateTime', joined.toDate());
+  }, [pickupDate, pickupTime, setValue]);
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);
@@ -394,6 +422,54 @@ const OrderRide = () => {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <DayPicker
+            label="תאריך איסוף מבוקש"
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            value={pickupDate}
+            onChange={(date) => setPickupDate(date)}
+            format="DD/MM/YYYY"
+          />
+        </FormControl>
+        <div className="flex gap-8">
+          <div style={{ flex: '1' }}>
+            <FormControl>
+              <TimePicker
+                sx={{ width: '100%' }}
+                label="שעת איסוף"
+                disablePast
+                ampm={false}
+                value={pickupTime}
+                onChange={(date) => setPickupTime(date)}
+                views={['minutes', 'hours']}
+              />
+            </FormControl>
+          </div>
+          <div style={{ flex: '1' }}>
+            <FormControl sx={{ width: '100%' }} required>
+              <InputLabel id="relevant-time-label" required>
+                כמה זמן רלוונטי
+              </InputLabel>
+              <Select
+                labelId="relevant-time-label"
+                aria-labelledby="relevant-time-label"
+                id="relevant-time"
+                value={watch('ride.relevantTime')}
+                onChange={(e) => setValue('ride.relevantTime', e.target.value as number)}
+                label="כמה זמן רלוונטי"
+                required
+              >
+                {menuHours.map((hour) => (
+                  <MenuItem key={hour} value={hour}>
+                    {getMenuHoursLabel(hour)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
         <FormControl className="flex flex-col gap-2">
           <InputLabel id="multiple-checkbox-label">בקשות מיוחדות</InputLabel>
           <Select
@@ -402,12 +478,7 @@ const OrderRide = () => {
             multiple
             value={selectedSpecialRequests}
             onChange={handleSpecialRequestsChange}
-            input={
-              <OutlinedInput
-                label="בקשות מיוחדות"
-                // {rideOrDelivery === RideServiceTypeEnum.Delivery ? 'בקשות אחרות' : 'בקשות מיוחדות'}
-              />
-            }
+            label="בקשות מיוחדות"
             renderValue={(selected) => {
               return Array.isArray(selected)
                 ? selected
