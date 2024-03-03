@@ -1,10 +1,10 @@
 import { Modal, Box, Button, IconButton, Typography } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
-import { Ride } from '../../../../../api-client';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
+import { Ride } from '../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,

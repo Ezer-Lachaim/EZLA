@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
-import { Beenhere, DirectionsCarFilled, EmojiPeopleRounded } from '@mui/icons-material';
+import { Beenhere, DirectionsCarFilled } from '@mui/icons-material';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';

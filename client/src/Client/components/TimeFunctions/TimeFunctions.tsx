@@ -145,23 +145,21 @@ export function formatPickupDateTimeMultiDay(pickupDateTime?: Date, relevantTime
     pickupDate.getFullYear() === currentDate.getFullYear()
   ) {
     return `היום ${formattedDate} בין ${startTime} - ${endTime}`;
-  } else {
-    const dayOfWeekStart = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(
-      pickupDate
-    );
-    const dayOfWeekEnd = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(
-      new Date(pickupDate.getTime() + relevantTime * 3600000)
-    );
-
-    // Check if the day changes during relevant time
-    if (dayOfWeekStart === dayOfWeekEnd) {
-      return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime} ו${endTime}`;
-    } else {
-      const formattedEndDate = new Date(
-        pickupDate.getTime() + relevantTime * 3600000
-      ).toLocaleDateString('he-IL', options);
-      return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime}
-      יום ${dayOfWeekEnd} ${formattedEndDate} ${endTime}`;
-    }
   }
+
+  const dayOfWeekStart = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(pickupDate);
+  const dayOfWeekEnd = new Intl.DateTimeFormat('he-IL', { weekday: 'short' }).format(
+    new Date(pickupDate.getTime() + relevantTime * 3600000)
+  );
+
+  if (dayOfWeekStart === dayOfWeekEnd) {
+    return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime} ו${endTime}`;
+  }
+
+  const formattedEndDate = new Date(
+    pickupDate.getTime() + relevantTime * 3600000
+  ).toLocaleDateString('he-IL', options);
+
+  return `בין יום ${dayOfWeekStart} ${formattedDate} ${startTime}
+  יום ${dayOfWeekEnd} ${formattedEndDate} ${endTime}`;
 }

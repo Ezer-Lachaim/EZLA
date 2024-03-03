@@ -28,7 +28,7 @@ const RideContactModal = ({
   onConfirm,
   onClose
 }: {
-  ride?: Ride;
+  ride: Ride;
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;

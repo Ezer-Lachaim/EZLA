@@ -1,6 +1,5 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import dayjs from 'dayjs';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
@@ -88,18 +87,6 @@ export const getRideById = async (req: CustomRequest, res: Response): Promise<vo
  * POST /rides
  * Create a new ride.
  */
-
-const fixTimeUpDayjs = () => {
-  let today = dayjs(dayjs(), 'Asia/Jerusalem');
-  today = today.add(3, 'hour');
-  const minutes = today.minute() % 10;
-  if (minutes < 5) {
-    today = today.add(5 - minutes, 'minute');
-  } else {
-    today = today.add(10 - minutes, 'minute');
-  }
-  return today.toDate();
-};
 
 export const createRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const guestToken = req.get('guest-token');

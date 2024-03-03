@@ -14,13 +14,7 @@ const style = {
   p: 2.5
 };
 
-const DriverCanceledModal = ({
-  open,
-  onGotoRides
-}: {
-  open: boolean;
-  onGotoRides: () => void;
-}) => {
+const DriverCanceledModal = ({ open, onGotoRides }: { open: boolean; onGotoRides: () => void }) => {
   return (
     <Modal open={open} disablePortal disableEscapeKeyDown>
       <Box sx={style}>
@@ -31,7 +25,11 @@ const DriverCanceledModal = ({
             </div>
             <h1 className="text-red-600 text-center my-3 text-[22px]">נסיעתך בוטלה</h1>
           </div>
-          <p className="text-center text-lg text-gray-600">ביטלת את ההסעה שלך.<br />הנסיעה חזרה לרשימת הנסיעות הפתוחות</p>
+          <p className="text-center text-lg text-gray-600">
+            ביטלת את ההסעה שלך.
+            <br />
+            הנסיעה חזרה לרשימת הנסיעות הפתוחות
+          </p>
           <Button variant="contained" className="flex gap-2" onClick={onGotoRides}>
             לקריאות פתוחות
           </Button>

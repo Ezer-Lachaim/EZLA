@@ -237,8 +237,7 @@ const RidesHOC = () => {
     title: 'נסיעות',
     showLogoutButton: true,
     backgroundColor: 'bg-gray-100',
-    hideFooter: true,
-    wrapperClassName: 'w-full h-full flex flex-col gap-5 pb-4'
+    hideFooter: true
   });
 
   return <RidesWithLayout />;
