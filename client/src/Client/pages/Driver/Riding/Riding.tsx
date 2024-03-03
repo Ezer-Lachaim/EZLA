@@ -4,7 +4,7 @@ import withLayout from '../../../components/LayoutHOC.tsx';
 import { RideStateEnum } from '../../../../api-client';
 import { api } from '../../../../services/api';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
-import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 import { useActiveRide } from '../../../../hooks/activeRide';
 
 const Riding = () => {

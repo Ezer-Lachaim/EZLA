@@ -12,7 +12,7 @@ import DriverArrivedModal from './DriverArrivedModal.tsx';
 import RequesterCanceledModal from './RequesterCanceledModal.tsx';
 import { useActiveRide } from '../../../../hooks/activeRide';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
-import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 
 const ActiveRide = () => {
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();

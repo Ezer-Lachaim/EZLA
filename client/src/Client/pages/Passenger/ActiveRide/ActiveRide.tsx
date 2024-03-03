@@ -13,8 +13,9 @@ import { useActiveRide } from '../../../../hooks/activeRide';
 import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
-import { SpecialRequestsChips } from '../../../components/SpecicalRequests/SpecialRequests.tsx';
+import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 import { formatPickupDateTimeMultiDay } from '../../../components/TimeFunctions/TimeFunctions.tsx';
+import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 
 const ActiveRide = () => {
   const user = useUserStore((state) => state.user);
@@ -70,15 +71,27 @@ const ActiveRide = () => {
 
   return (
     <div className="w-full pb-5 h-full flex flex-col">
-      <Box
-        sx={{ background: 'rgba(255, 152, 0, 0.10)' }}
-        className="rounded-md flex items-center flex-col py-4 gap-2"
-      >
-        <ClockIcon sx={{ fill: '#FF9800' }} fontSize="large" />
-        <h1 className="font-medium m-0" style={{ color: '#FF9800' }}>
-          נמצא מתנדב/ת
-        </h1>
-      </Box>
+      {ride?.state === 'Booked' ? (
+        <Box
+          sx={{ background: 'rgba(255, 152, 0, 0.10)' }}
+          className="rounded-md flex items-center flex-col py-4 gap-2"
+        >
+          <ClockIcon sx={{ fill: '#FF9800' }} fontSize="large" />
+          <h1 className="font-medium m-0" style={{ color: '#FF9800' }}>
+            נמצא מתנדב/ת
+          </h1>
+        </Box>
+      ) : (
+        <Box
+          sx={{ background: 'rgba(76, 175, 80, 0.1)' }}
+          className="rounded-md flex items-center flex-col py-4 gap-2"
+        >
+          <CarIcon sx={{ fill: '#4CAF50' }} fontSize="large" />
+          <h1 className="font-medium m-0" style={{ color: '#4CAF50' }}>
+            המתנדב/ת בדרך אליך
+          </h1>
+        </Box>
+      )}
       {/* {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>} */}
       <div className="flex-1">
         <h1 className="text-center">

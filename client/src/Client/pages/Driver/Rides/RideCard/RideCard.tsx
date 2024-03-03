@@ -4,7 +4,7 @@ import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { Ride, RideStateEnum } from '../../../../../api-client';
-import { SpecialRequestsChips } from '../../../../components/SpecicalRequests/SpecialRequests';
+import { SpecialRequestsChips } from '../../../../components/SpecialRequests/SpecialRequests';
 import { useActiveRide } from '../../../../../hooks/activeRide';
 import { api } from '../../../../../services/api';
 import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
