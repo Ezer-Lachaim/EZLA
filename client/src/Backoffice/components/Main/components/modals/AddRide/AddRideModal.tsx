@@ -30,7 +30,8 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
   const methods = useForm<Ride>({
     defaultValues: {
       serviceType: RideServiceTypeEnum.Ride,
-      specialRequest: []
+      specialRequest: [],
+      relevantTime: 3
     }
   });
 

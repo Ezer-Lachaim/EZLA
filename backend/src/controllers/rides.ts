@@ -11,7 +11,6 @@ import { CustomRequest } from '../middlewares/CustomRequest';
 import { populateRideDetails } from '../repository/ride';
 
 const SUPPORT_PHONE_NUMBER = '033-730440';
-
 /**
  * GET /rides
  * Get all rides.
@@ -92,6 +91,14 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
 
   ride.rideId = rideId;
   ride.requestTimeStamp = new Date();
+
+  if (!ride.pickupDateTime) {
+    ride.pickupDateTime = getDefaultPickupDateTime();
+  }
+
+  if (!ride.relevantTime) {
+    ride.relevantTime = 3;
+  }
 
   if (req.user?.role === UserRoleEnum.Requester) {
     ride.rideRequester = { userId: req.user.userId };
@@ -341,4 +348,17 @@ function getRideCanceledDriverSMSMessage(ride: Ride): string {
     `לצערנו הנוסע.ת ביטל.ה את הנסיעה.\n` +
     `כנסו לאפליקציה לצפייה ברשימת בקשות להסעה. צוות עזר לחיים`
   );
+}
+
+function getDefaultPickupDateTime() {
+  const now = new Date();
+
+  // Add 3 hours by default
+  now.setHours(now.getHours() + 3);
+
+  // round to 5 minute resolusion
+  const remainderMinutes = now.getMinutes() % 5;
+  now.setMinutes(now.getMinutes() + 5 - remainderMinutes);
+
+  return now;
 }
