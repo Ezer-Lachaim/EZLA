@@ -4,7 +4,6 @@ import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
 import { sendSMS } from '../utils/sms-util';
-import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -309,7 +308,6 @@ function getRideBookedPassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
     `${ride.driver.firstName} המתנדב.ת בדרך אליכם. ` +
-    `זמן הגעה משוער ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +
