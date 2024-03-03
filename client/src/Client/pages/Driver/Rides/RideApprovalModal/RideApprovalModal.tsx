@@ -3,6 +3,8 @@ import { Close } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
 import { Ride } from '../../../../../api-client';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 const commonStyle = {
   display: 'flex',
@@ -100,7 +102,10 @@ const RideApprovalModal = ({
               </div>
               <div style={commonStyle}>
                 <Typography style={commonTextStyle}>כמות:</Typography>
-                <Typography>{ride?.passengerCount}</Typography>
+                <Typography>
+                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride?.passengerCount}
+                </Typography>
               </div>
               <div style={commonStyle}>
                 <Typography style={commonTextStyle}>טלפון:</Typography>

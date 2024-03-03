@@ -55,7 +55,8 @@ const Rides = () => {
   const { reFetch: reFetchActiveRide } = useActiveRide();
   const { data: rides = [] } = useQuery({
     queryKey: ['ridesGet'],
-    queryFn: () => api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver }),
+    queryFn: () =>
+      api.ride.ridesGet({ state: RideStateEnum.WaitingForDriver || RideStateEnum.DriverCanceled }),
     refetchInterval: POLLING_INTERVAL
   });
   const { data: bookedRides = [] } = useQuery({
@@ -63,7 +64,6 @@ const Rides = () => {
     queryFn: () => api.ride.ridesGet({ driverID: user?.userId }),
     refetchInterval: POLLING_INTERVAL
   });
-  console.log(bookedRides);
 
   const sortedRides = [...rides].sort((a, b) => {
     const waitingTimeA = a.requestTimeStamp?.getTime() || 0;
@@ -100,8 +100,7 @@ const Rides = () => {
             carModel: driver?.carModel,
             carColor: driver?.carColor,
             carPlateNumber: driver?.carPlateNumber
-          },
-          destinationArrivalTime: new Date().getTime() + minutesToArrive * 60000
+          }
         }
       });
       setIsModalOpen(false);
@@ -164,24 +163,8 @@ const Rides = () => {
             }
           />
         </Tabs>
-        <div className="space-x-10">
-          <button className="border border-black p-2" onClick={() => handleChange(undefined, 0)}>
-            all
-          </button>
-          <button className="border border-black p-2" onClick={() => handleChange(undefined, 1)}>
-            mine
-          </button>
-        </div>
       </div>
       <CustomTabPanel value={value} index={0}>
-        {/* {selectedRide && (
-          <RideApprovalModal
-            ride={selectedRide}
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={onSubmitRide}
-          />
-        )} */}
         <div className="w-full h-full flex flex-col gap-5 pb-4">
           {sortedRides.length > 0 ? (
             <Stack spacing={2}>

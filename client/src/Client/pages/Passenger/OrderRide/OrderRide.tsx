@@ -204,7 +204,7 @@ const OrderRide = () => {
           <Tabs
             value={rideOrDelivery}
             onChange={(_, newValue) => handleTabChange(newValue)}
-            className="flex-grow"
+            className="flex-grow min-h-0"
             indicatorColor="primary"
             textColor="primary"
             variant="fullWidth"
@@ -215,7 +215,7 @@ const OrderRide = () => {
               icon={<EmojiPeople />}
               iconPosition="start"
               label="נוסעים"
-              className={`transition-all duration-300 ease-in-out ${
+              className={`transition-all min-h-0 duration-300 ease-in-out ${
                 rideOrDelivery === 'ride' ? 'bg-blue-500 text-white rounded-r-lg' : 'text-blue-500'
               }`}
             />
@@ -224,7 +224,7 @@ const OrderRide = () => {
               icon={<Inventory />}
               iconPosition="start"
               label="משלוחים"
-              className={`transition-all duration-300 ease-in-out ${
+              className={`transition-all  min-h-0 duration-300 ease-in-out ${
                 rideOrDelivery === 'delivery'
                   ? 'bg-blue-500 text-white rounded-l-lg'
                   : 'text-blue-500'

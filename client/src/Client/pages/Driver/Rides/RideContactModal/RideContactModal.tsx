@@ -83,11 +83,11 @@ const RideContactModal = ({
               </Typography>
             </div>
           </div>
-          <div>
-            <Typography className="text-center" style={{ fontSize: '18px', fontWeight: '700' }}>
+          <div className="p-5">
+            <Typography className="text-center text-lg font-bold">
               חשוב ליצור קשר עם הנוסעים.
             </Typography>
-            <Typography className="font-normal text-center" style={{ fontSize: '16px' }}>
+            <Typography className="font-normal text-center text-base">
               יש ליידע אותם שאתם בדרך לאסוף אותם ולמסור להם את פרטי הרכב שלכם: סוג וצבע רכב, ומספר
               רכב.
             </Typography>
@@ -113,7 +113,7 @@ const RideContactModal = ({
               <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
               <Typography>
                 <a
-                  href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`} // Use optional chaining
+                  href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
                 >
