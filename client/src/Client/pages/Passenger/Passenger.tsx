@@ -3,11 +3,11 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { RideStateEnum } from '../../../api-client';
 import { useActiveRide } from '../../../hooks/activeRide';
 import RideCanceledModal from './RideCanceledModal';
-import { useState } from 'react';
+// import { useState } from 'react';
 
 const Passenger = () => {
   const { activeRide } = useActiveRide();
-  const [previousStatus, setPreviousStatus] = useState();
+  // const [previousStatus, setPreviousStatus] = useState();
   const location = useLocation();
   const navigate = useNavigate();
 

@@ -7,9 +7,12 @@
   "files.autoSave": "onFocusChange", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
   "cSpell.words": [
+    "Beenhere",
+    "Eligble",
     "Enroute",
     "EZLA",
     "Parens",
+    "signup",
     "tanstack",
     "uuidv",
     "האזרו",
