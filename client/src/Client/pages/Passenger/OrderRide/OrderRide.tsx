@@ -13,27 +13,22 @@ import {
   styled,
   Select,
   SelectChangeEvent,
-  OutlinedInput,
   ListItemText
 } from '@mui/material';
 import { AddCircleOutlineOutlined, RemoveCircleOutlineOutlined } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { TimePicker } from '@mui/x-date-pickers';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import { Ride, RideRequester, RideSpecialRequestEnum, RideStateEnum } from '../../../../api-client';
 import { useActiveRide } from '../../../../hooks/activeRide';
-import {
-  DayTextField,
-  fixTimeUpDayjs,
-  menuHours
-} from '../../../../Backoffice/components/Main/components/TimeFunctions/TimeFunctions.tsx';
+import DayPicker from '../../../../Backoffice/components/Main/components/DayPicker/DayPicker.tsx';
+import { fixTimeForDufault, getHoursArray, getMenuHoursLabel } from '../../../../utils/datetime';
 
 interface OrderRideFormData {
   ride: Ride;
@@ -84,9 +79,8 @@ enum DestinationSourceEnum {
   Source
 }
 
-dayjs.extend(timezone);
-const fixToday = fixTimeUpDayjs();
-const defaultSelectedTime = ['3 שעות'];
+// For relevantTime
+const menuHours = getHoursArray(7);
 
 const OrderRide = () => {
   const user = useUserStore((state) => state.user) as RideRequester;
@@ -94,8 +88,7 @@ const OrderRide = () => {
   const [autofilledAddress, setAutofilledAddress] = useState<DestinationSourceEnum>(
     DestinationSourceEnum.Destination
   );
-  const [selectedTime, setSelectedTime] = useState<string[]>(defaultSelectedTime);
-  const [timeInIsrael, setTimeInIsrael] = useState<Dayjs | null>(fixToday);
+
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
   const {
     register,
@@ -109,7 +102,8 @@ const OrderRide = () => {
         origin: user?.address,
         firstName: user?.firstName,
         lastName: user?.lastName,
-        cellphone: user?.cellPhone
+        cellphone: user?.cellPhone,
+        relevantTime: 3
       },
       selectedSpecialRequests: []
     }
@@ -199,6 +193,27 @@ const OrderRide = () => {
         : DestinationSourceEnum.Source
     );
   };
+
+  // For pickupDateTime
+  const timeDufault = fixTimeForDufault();
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+
+  useEffect(() => {
+    if (!pickupDate || !pickupTime) {
+      setValue('ride.pickupDateTime', undefined);
+      return;
+    }
+
+    const joined = pickupDate
+      .clone()
+      .hour(pickupTime.hour())
+      .minute(pickupTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    setValue('ride.pickupDateTime', joined.toDate());
+  }, [pickupDate, pickupTime]);
 
   return (
     <CustomFontSizeContainer className="flex flex-col items-center w-full pb-5">
@@ -326,18 +341,13 @@ const OrderRide = () => {
         </FormControl>
 
         <FormControl>
-          <DatePicker
+          <DayPicker
             label="תאריך איסוף מבוקש"
-            defaultValue={dayjs()}
             maxDate={dayjs().add(3, 'day')}
             disablePast
-            onChange={(date) => {
-              setValue('ride.pickupDateTime', date ? date.toDate() : undefined);
-            }}
-            format="YYYY-MM-DD"
-            slots={{
-              textField: DayTextField
-            }}
+            value={pickupDate}
+            onChange={(date) => setPickupDate(date)}
+            format="DD/MM/YYYY"
           />
         </FormControl>
         <div className="flex gap-8">
@@ -348,52 +358,29 @@ const OrderRide = () => {
                 label="שעת איסוף"
                 disablePast
                 ampm={false}
-                value={timeInIsrael}
-                onChange={(time) => {
-                  if (time) {
-                    const existingDate = watch().ride?.pickupDateTime || dayjs();
-                    let newDateTime;
-                    if (existingDate instanceof Date) {
-                      newDateTime = new Date(existingDate);
-                    } else {
-                      newDateTime = dayjs(existingDate).toDate();
-                    }
-                    newDateTime.setHours(time.hour(), time.minute());
-                    // Convert the newDateTime to a Date object
-                    const newDateTimeDate = new Date(newDateTime);
-                    // Update the completedTimeStamp
-                    setValue('ride.pickupDateTime', newDateTimeDate);
-                    // Update the local state for timeInIsrael
-                    setTimeInIsrael(dayjs(newDateTime));
-                  }
-                }}
+                value={pickupTime}
+                onChange={(date) => setPickupTime(date)}
                 views={['minutes', 'hours']}
               />
             </FormControl>
           </div>
           <div style={{ flex: '1' }}>
             <FormControl sx={{ width: '100%' }} required>
-              <InputLabel id="demo-multiple-name-label" required>
+              <InputLabel id="relevant-time-label" required>
                 כמה זמן רלוונטי
               </InputLabel>
               <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                value={selectedTime}
-                onChange={(event) => {
-                  const {
-                    target: { value }
-                  } = event;
-                  setSelectedTime(typeof value === 'string' ? value.split(',') : value);
-                  const selectedTimeIndex = menuHours.indexOf(value as string) + 1;
-                  setValue('ride.relevantTime', selectedTimeIndex); // Set value to 'ride.relevantTime'
-                }}
-                input={<OutlinedInput label="כמה זמן רלוונטי" />}
+                labelId="relevant-time-label"
+                aria-labelledby="relevant-time-label"
+                id="relevant-time"
+                value={watch('ride.relevantTime')}
+                onChange={(e) => setValue('ride.relevantTime', e.target.value as number)}
+                label="כמה זמן רלוונטי"
                 required
               >
                 {menuHours.map((hour) => (
                   <MenuItem key={hour} value={hour}>
-                    {hour}
+                    {getMenuHoursLabel(hour)}
                   </MenuItem>
                 ))}
               </Select>
@@ -409,7 +396,7 @@ const OrderRide = () => {
             multiple
             value={selectedSpecialRequests}
             onChange={handleSpecialRequestsChange}
-            input={<OutlinedInput label="בקשות מיוחדות" />}
+            label="בקשות מיוחדות"
             renderValue={(selected) => {
               if (Array.isArray(selected)) {
                 return selected.map((value) => specialRequestLabels[value]).join(', ');

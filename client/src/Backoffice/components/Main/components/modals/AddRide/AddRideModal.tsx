@@ -29,7 +29,8 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
 
   const methods = useForm<Ride>({
     defaultValues: {
-      specialRequest: []
+      specialRequest: [],
+      relevantTime: 3
     }
   });
 

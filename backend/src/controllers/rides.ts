@@ -1,6 +1,5 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import dayjs from 'dayjs';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
@@ -85,18 +84,6 @@ export const getRideById = async (req: CustomRequest, res: Response): Promise<vo
  * POST /rides
  * Create a new ride.
  */
-const fixTimeUpDayjs = () => {
-  let today = dayjs(dayjs(), 'Asia/Jerusalem');
-  today = today.add(3, 'hour');
-  const minutes = today.minute() % 10;
-  if (minutes < 5) {
-    today = today.add(5 - minutes, 'minute');
-  } else {
-    today = today.add(10 - minutes, 'minute');
-  }
-  // Convert Day.js object to Date object
-  return today.toDate();
-};
 export const createRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const guestToken = req.get('guest-token');
   const rideId = uuidv4();
@@ -105,17 +92,13 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
   ride.rideId = rideId;
   ride.requestTimeStamp = new Date();
 
-  if (ride.pickupDateTime) {
-    ride.pickupDateTime = new Date(ride.pickupDateTime);
-  } else {
-    ride.pickupDateTime = new Date(fixTimeUpDayjs());
-  }
-
-  if (ride.relevantTime) {
-    ride.relevantTime = req.body.ride.relevantTime;
-  } else {
+  if (!ride.pickupDateTime) {
+    ride.pickupDateTime = getDefaultPickupDateTime();
+  } 
+  
+  if (!ride.relevantTime) {
     ride.relevantTime = 3;
-  }
+  } 
 
   if (req.user?.role === UserRoleEnum.Requester) {
     ride.rideRequester = { userId: req.user.userId };
@@ -366,3 +349,16 @@ function getRideCanceledDriverSMSMessage(ride: Ride): string {
     `כנסו לאפליקציה לצפייה ברשימת בקשות להסעה. צוות עזר לחיים`
   );
 }
+
+function getDefaultPickupDateTime() {
+  const now = new Date();
+
+  // Add 3 hours by default
+  now.setHours(now.getHours() + 3);
+
+  // round to 5 minute resolusion
+  const remainderMinutes = now.getMinutes() % 5;
+  now.setMinutes(now.getMinutes() + 5 - remainderMinutes);
+
+  return now;
+};
