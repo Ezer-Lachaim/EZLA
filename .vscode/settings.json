@@ -6,6 +6,14 @@
   "editor.formatOnSaveMode": "file", // required to format on save
   "files.autoSave": "onFocusChange", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
-  "cSpell.words": ["Enroute", "EZLA", "Parens", "tanstack", "uuidv", "נמצא"],
+  "cSpell.words": [
+    "Enroute",
+    "EZLA",
+    "Parens",
+    "tanstack",
+    "uuidv",
+    "האזרו",
+    "נמצא"
+  ],
   "cSpell.language": "en,he" // set as "true" to run 'prettier' last not first
 }

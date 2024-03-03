@@ -10,18 +10,6 @@ import { api } from '../../../../../services/api';
 import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
 import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
 
-const commonStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '5px'
-};
-const commonTextStyle = {
-  fontFamily: 'Heebo',
-  fontWeight: '400',
-  fontSize: '12px',
-  width: '80px'
-};
-
 export const RideCard = ({
   ride,
   context,
@@ -57,18 +45,19 @@ export const RideCard = ({
   return (
     <Card className="shadow-sm rounded-xl">
       <CardContent>
-        <div className="flex flex-col w-full h-full gap-8px m-20px">
+        <div className="flex flex-col w-full h-full gap-2 m-5">
           <div className="flex justify-between w-full">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-              <div style={commonStyle}>
-                <Typography style={{ ...commonTextStyle, width: '80px' }}>מועד איסוף:</Typography>
-                <Typography style={{ fontWeight: '700' }}>
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="flex items-center gap-[0.3125rem]">
+                <Typography className="font-normal text-xs w-20">מועד איסוף:</Typography>
+
+                <Typography className="font-bold">
                   {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}
                 </Typography>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>כמות:</Typography>
-                <Typography style={{ fontWeight: '700' }}>
+              <div className="flex items-center gap-[0.3125rem]">
+                <Typography className="font-normal text-xs w-20">כמות:</Typography>
+                <Typography className="font-bold">
                   {' '}
                   {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
                   {ride.passengerCount}
@@ -76,14 +65,14 @@ export const RideCard = ({
               </div>
               {context === 'myRides' && (
                 <>
-                  <div style={commonStyle}>
-                    <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-                    <Typography style={{ fontWeight: '700' }}>
+                  <div className="flex items-center gap-[0.3125rem]">
+                    <Typography className="font-normal text-xs w-20">שם הנוסע:</Typography>
+                    <Typography className="font-bold">
                       {ride?.firstName} {ride?.lastName}
                     </Typography>
                   </div>
-                  <div style={commonStyle}>
-                    <Typography style={commonTextStyle}>טלפון:</Typography>
+                  <div className="flex items-center gap-[0.3125rem]">
+                    <Typography className="font-normal text-xs w-20">טלפון:</Typography>
                     <Typography>
                       {' '}
                       <a
@@ -97,14 +86,10 @@ export const RideCard = ({
                   </div>
                 </>
               )}
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+              <div className="flex items-center gap-[0.3125rem]">
+                <Typography className="font-normal text-xs w-20">כתובת איסוף:</Typography>
                 <a
-                  style={{
-                    alignContent: 'right',
-                    minWidth: '0',
-                    wordWrap: 'break-word'
-                  }}
+                  className="content-normal min-w-0 break-words"
                   href={`https://waze.com/ul?q=${ride?.origin}`}
                   target="_blank"
                   rel="noreferrer"
@@ -113,10 +98,10 @@ export const RideCard = ({
                 </a>
               </div>
 
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
+              <div className="flex items-center gap-[0.3125rem]">
+                <Typography className="font-normal text-xs w-20">יעד נסיעה:</Typography>
                 <a
-                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  className="min-w-0 break-words"
                   href={`https://waze.com/ul?q=${ride.destination}`}
                   target="_blank"
                   rel="noreferrer"
@@ -124,11 +109,9 @@ export const RideCard = ({
                   {ride.destination}
                 </a>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                <Typography style={{ minWidth: '0', wordWrap: 'break-word' }}>
-                  {ride?.comment}
-                </Typography>
+              <div className="flex items-center gap-[0.3125rem]">
+                <Typography className="font-normal text-xs w-20">תיאור הנסיעה:</Typography>
+                <Typography className="min-w-0 break-words">{ride?.comment}</Typography>
               </div>
             </div>
           </div>
@@ -154,7 +137,7 @@ export const RideCard = ({
                 variant="outlined"
                 color="error"
                 onClick={toggleConfirmCancelModal}
-                style={{ flex: 1 }}
+                className="flex-1"
               >
                 ביטול
               </Button>
@@ -162,7 +145,7 @@ export const RideCard = ({
                 variant="contained"
                 color="success"
                 size="large"
-                style={{ width: '205px' }}
+                className="w-[12.8125rem]"
                 startIcon={<CarIcon />}
                 onClick={onOpenContactModal}
               >

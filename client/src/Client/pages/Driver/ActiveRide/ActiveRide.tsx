@@ -73,7 +73,7 @@ const ActiveRide = () => {
           label="שם הנוסע"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg" style={{ minWidth: '0', wordWrap: 'break-word' }}>
+              <p className="text-lg min-w-0" style={{ wordWrap: 'break-word' }}>
                 {ride?.firstName || ride?.rideRequester?.firstName}{' '}
                 {ride?.lastName || ride?.rideRequester?.lastName}
                 <span className="px-2 text-sm">
@@ -126,7 +126,7 @@ const ActiveRide = () => {
           label="כתובת יעד"
           value={
             <div className="flex gap-2 justify-between">
-              <Typography className="mb-2" style={{ minWidth: '0', wordWrap: 'break-word' }}>
+              <Typography className="mb-2 min-w-0" style={{ wordWrap: 'break-word' }}>
                 <a
                   href={`https://waze.com/ul?q=${ride?.destination}`}
                   target="_blank"
@@ -148,9 +148,7 @@ const ActiveRide = () => {
           label="תיאור הנסיעה"
           value={
             <div className="flex items-center justify-between w-full mb-2">
-              <p className="text-lg" style={{ minWidth: '0', wordWrap: 'break-word' }}>
-                {ride?.comment}
-              </p>
+              <p className="text-lg min-w-0 break-words">{ride?.comment}</p>
             </div>
           }
         />

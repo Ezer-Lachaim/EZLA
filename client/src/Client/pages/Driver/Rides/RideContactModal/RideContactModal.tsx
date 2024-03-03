@@ -10,14 +10,6 @@ import { api } from '../../../../../services/api';
 import { useActiveRide } from '../../../../../hooks/activeRide';
 import { Ride, RideStateEnum } from '../../../../../api-client';
 
-const commonTextStyle = {
-  marginRight: '8px',
-  fontFamily: 'Heebo',
-  fontWeight: '400',
-  fontSize: '12px',
-  width: '80px'
-};
-
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -75,15 +67,12 @@ const RideContactModal = ({
             </IconButton>
             <CarIcon color="primary" fontSize="large" />
             <div className="text-center">
-              <Typography
-                className="font-medium text-blue-500 font-heebo"
-                style={{ fontSize: '22px' }}
-              >
+              <Typography className="font-medium text-blue-500 font-heebo text-[1.375rem]">
                 צרו קשר עם הנוסע
               </Typography>
             </div>
           </div>
-          <div className="p-5">
+          <div className="mr-5 ml-5 mt-3 mb-3">
             <Typography className="text-center text-lg font-bold">
               חשוב ליצור קשר עם הנוסעים.
             </Typography>
@@ -95,22 +84,18 @@ const RideContactModal = ({
           <Divider />
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Typography className="font-semibold" style={commonTextStyle}>
-                כמות:
-              </Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">כמות:</Typography>
               <Typography>
                 {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
                 {ride?.passengerCount}
               </Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography style={commonTextStyle}>שם הנוסע:</Typography>
-              <Typography
-                style={{ fontWeight: '700' }}
-              >{`${ride?.firstName} ${ride?.lastName}`}</Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">שם הנוסע:</Typography>
+              <Typography className="font-bold">{`${ride?.firstName} ${ride?.lastName}`}</Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography style={commonTextStyle}>טלפון הנוסע:</Typography>
+              <Typography className="mr-2 font-normal text-xs w-20">טלפון הנוסע:</Typography>
               <Typography>
                 <a
                   href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}

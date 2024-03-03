@@ -16,7 +16,6 @@ import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
 import { formatPickupDateTimeMultiDay } from '../../../components/TimeFunctions/TimeFunctions.tsx';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
-
 const ActiveRide = () => {
   const user = useUserStore((state) => state.user);
   const { activeRide: ride, reFetch: reFetchActiveRide } = useActiveRide();
@@ -92,7 +91,6 @@ const ActiveRide = () => {
           </h1>
         </Box>
       )}
-      {/* {destinationTime && <h1 className="text-center">{`זמן הגעה משוער ${destinationTime}`}</h1>} */}
       <div className="flex-1">
         <h1 className="text-center">
           מועד איסוף

@@ -6,38 +6,6 @@ import { Ride } from '../../../../../api-client';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
 
-const commonStyle = {
-  display: 'flex',
-  alignItems: 'stretch',
-  gap: '8px'
-};
-
-const commonTextStyle: React.CSSProperties = {
-  marginRight: '8px',
-  fontFamily: 'Heebo',
-  fontWeight: '400',
-  fontSize: '12px',
-  width: '80px',
-  lineHeight: '20px',
-  minWidth: '0',
-  wordWrap: 'break-word'
-};
-
-const boldTextStyle = {
-  ...commonTextStyle,
-  fontWeight: '700',
-  fontSize: '16px',
-  letter: '0.15px',
-  width: '100%'
-};
-
-const firstTitleStyle: React.CSSProperties = {
-  ...boldTextStyle,
-  fontWeight: '500',
-  fontSize: '22px',
-  color: '#007DFF'
-};
-
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -77,7 +45,9 @@ const RideApprovalModal = ({
         >
           <div className="flex flex-col w-full gap-8px">
             <div className="flex flex-row w-full p-3 items-center justify-between">
-              <Typography style={firstTitleStyle}>פרטי נסיעה</Typography>
+              <Typography className=" font-medium text-[1.375rem] text-blue-500">
+                פרטי נסיעה
+              </Typography>
               <IconButton size="small" onClick={onClose}>
                 <Close />
               </IconButton>
@@ -86,29 +56,28 @@ const RideApprovalModal = ({
           <div className="flex flex-col">
             {' '}
             {/* Adjusted to remove unnecessary width */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-                margin: '20px'
-              }}
-            >
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>מועד איסוף:</Typography>
+            <div className="flex flex-col gap-2.5 m-5">
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                  מועד איסוף:
+                </Typography>
                 <Typography>
                   {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
                 </Typography>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>כמות:</Typography>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  כמות:
+                </Typography>
                 <Typography>
                   {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
                   {ride?.passengerCount}
                 </Typography>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>טלפון:</Typography>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  טלפון:
+                </Typography>
                 <Typography>
                   {' '}
                   <a
@@ -120,8 +89,10 @@ const RideApprovalModal = ({
                   </a>{' '}
                 </Typography>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>כתובת איסוף:</Typography>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  כתובת איסוף:
+                </Typography>
                 <a
                   style={{ minWidth: '0', wordWrap: 'break-word' }}
                   href={`https://waze.com/ul?q=${ride?.origin}`}
@@ -131,10 +102,12 @@ const RideApprovalModal = ({
                   {ride?.origin}
                 </a>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>יעד נסיעה:</Typography>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                  יעד נסיעה:
+                </Typography>
                 <a
-                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  className="min-w-0 break-words"
                   href={`https://waze.com/ul?q=${ride?.destination}`}
                   target="_blank"
                   rel="noreferrer"
@@ -142,9 +115,11 @@ const RideApprovalModal = ({
                   {ride?.destination}
                 </a>
               </div>
-              <div style={commonStyle}>
-                <Typography style={commonTextStyle}>תיאור הנסיעה:</Typography>
-                <Typography style={{ ...boldTextStyle, fontWeight: '400' }}>
+              <div className="flex items-stretch gap-2">
+                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                  תיאור הנסיעה:
+                </Typography>
+                <Typography className="mr-2 font-bold text-normal min-w-0 break-words">
                   {ride?.comment}
                 </Typography>
               </div>
@@ -152,19 +127,18 @@ const RideApprovalModal = ({
           </div>
           <div className="flex flex-col">
             <Button
-              className="w-280 h-40px m-20px rounded-md gap-8"
+              className="w-280 h-40px m-20px rounded-md gap-8 mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
               variant="contained"
               color="primary"
               type="submit"
-              style={{ marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
             >
               בחירת נסיעה
             </Button>
             <Button
+              className="mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
               variant="outlined"
               color="primary"
               onClick={onClose}
-              style={{ marginRight: '13px', marginLeft: '13px', marginBottom: '13px' }}
             >
               ביטול
             </Button>

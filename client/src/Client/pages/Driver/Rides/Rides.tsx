@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { Stack } from '@mui/material';
-import { IconButton, Tab, Tabs, Typography } from '@material-ui/core';
+import { IconButton, Tab, Tabs } from '@material-ui/core';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { Driver, Ride, RideStateEnum } from '../../../../api-client';
@@ -28,13 +28,7 @@ function CustomTabPanel({ children, value, index = 0, ...other }: TabPanelProps)
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <div style={{ padding: 14 }}>
-          {/* <Typography component="span"> */}
-          {children}
-          {/* </Typography> */}
-        </div>
-      )}
+      {value === index && <div className=" p-3.5">{children}</div>}
     </div>
   );
 }
@@ -84,7 +78,7 @@ const Rides = () => {
     setSelectedTab(newValue === 0 ? 'openCalls' : 'myRides');
   };
 
-  const onSubmitRide: SubmitHandler<SubmitRideInputs> = async ({ minutesToArrive }) => {
+  const onSubmitRide: SubmitHandler<SubmitRideInputs> = async () => {
     if (selectedRide?.state === RideStateEnum.WaitingForDriver) {
       const driver = user as Driver;
       await api.ride.updateRide({
@@ -103,6 +97,9 @@ const Rides = () => {
           }
         }
       });
+      await reFetchActiveRide();
+      // navigation will occur automatically (in @../Driver.tsx)
+
       setIsModalOpen(false);
       setValue(1);
       setSelectedTab('myRides');
@@ -147,20 +144,12 @@ const Rides = () => {
           <Tab
             {...a11yProps(0)}
             className="flex items-center flex-1 bg-white shadow-md text-center"
-            label={
-              <span style={{ font: 'Heebo', fontSize: '14px', fontWeight: '700' }}>
-                קריאות פתוחות ({sortedRides.length})
-              </span>
-            }
+            label={<span className="text-sm font-bold">קריאות פתוחות ({sortedRides.length})</span>}
           />
           <Tab
             {...a11yProps(1)}
             className="flex items-center flex-1 bg-white shadow-md text-center"
-            label={
-              <span style={{ font: 'Heebo', fontSize: '14px', fontWeight: '700' }}>
-                נסיעות שלי ({filteredRides.length})
-              </span>
-            }
+            label={<span className="text-sm font-bold">נסיעות שלי ({filteredRides.length})</span>}
           />
         </Tabs>
       </div>
@@ -223,7 +212,7 @@ const Rides = () => {
         ) : (
           <div className="h-full flex flex-col justify-center items-center">
             <IconButton>
-              <SentimentDissatisfiedIcon style={{ width: '48px', height: '48px' }} />
+              <SentimentDissatisfiedIcon className="w-12 h-12" />
             </IconButton>
             <p className="text-center text-gray-600 text-body2 font-normal">
               אין לך נסיעות. <br />
