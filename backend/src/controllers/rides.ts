@@ -1,10 +1,10 @@
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 import { getUserByUid, incDriverNumOfDrives } from '../repository/user';
 import { User, UserRoleEnum } from '../models/user';
 import { sendNewRideNotificationToDrivers, sendPushNotification } from '../utils/firebase';
 import { sendSMS } from '../utils/sms-util';
-import { formatDate } from '../utils/date-utils';
 import redisClient from '../repository/redis-client';
 import { Ride, RideStateEnum } from '../models/ride';
 import { CustomRequest } from '../middlewares/CustomRequest';
@@ -24,9 +24,13 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
       rides = await Promise.all([].concat(...rides).map((ride) => populateRideDetails(ride)));
 
+      if (req.query.driverID) {
+        rides = rides.filter((item) => item.driver.userId === req.query.driverID);
+      }
       if (req.query.state) {
         rides = rides.filter((item) => item.state === req.query.state);
       }
+
       res.status(200).json(rides);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -84,6 +88,19 @@ export const getRideById = async (req: CustomRequest, res: Response): Promise<vo
  * POST /rides
  * Create a new ride.
  */
+
+const fixTimeUpDayjs = () => {
+  let today = dayjs(dayjs(), 'Asia/Jerusalem');
+  today = today.add(3, 'hour');
+  const minutes = today.minute() % 10;
+  if (minutes < 5) {
+    today = today.add(5 - minutes, 'minute');
+  } else {
+    today = today.add(10 - minutes, 'minute');
+  }
+  return today.toDate();
+};
+
 export const createRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const guestToken = req.get('guest-token');
   const rideId = uuidv4();
@@ -219,6 +236,19 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         ]);
       }
 
+      if (updatedRide.state === RideStateEnum.DriverEnroute) {
+        await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'המתנדב/ת בדרך אליך'
+            ),
+          sendSMS(updatedRide.cellphone, getRideDriverEnroutePassengerSMSMessage(updatedRide))
+        ]);
+      }
+
       if (updatedRide.state === RideStateEnum.DriverArrived) {
         await Promise.all([
           currentRide.rideRequester?.userId &&
@@ -253,7 +283,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }
   } catch (error) {
-    console.log(error);
+    console.log('Error retrieving current ride:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -315,8 +345,18 @@ function getNewRidePassengerSMSMessage(ride: Ride): string {
 function getRideBookedPassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
-    `${ride.driver.firstName} המתנדב.ת בדרך אליכם. ` +
-    `זמן הגעה משוער ${formatDate(ride.destinationArrivalTime, 'HH:mm')} ` +
+    `${ride.driver.firstName} נמצא מתנדב.ת` +
+    `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
+    `מספר רכב ${ride.driver.carPlateNumber}.\n` +
+    `נקודת איסוף ${ride.origin}.\n` +
+    `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
+  );
+}
+
+function getRideDriverEnroutePassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName} שלום, ` +
+    `${ride.driver.firstName} המתנדב.ת בדרך אליך` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +
