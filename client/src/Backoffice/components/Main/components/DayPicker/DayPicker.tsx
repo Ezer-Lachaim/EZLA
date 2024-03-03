@@ -25,13 +25,13 @@ function generateTextField(format: string | undefined) {
   };
 }
 
-export default function DayPicker<TDate>(props: DatePickerProps<TDate>) {
+export default function DayPicker<TDate>({ format, ...props }: DatePickerProps<TDate>) {
   return (
     <DatePicker
       {...props}
       format="YYYY-MM-DD"
       slots={{
-        textField: generateTextField(props.format)
+        textField: generateTextField(format)
       }}
     />
   );

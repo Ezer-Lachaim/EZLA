@@ -251,7 +251,7 @@ const OrderRide = () => {
       .millisecond(0);
 
     setValue('ride.pickupDateTime', joined.toDate());
-  }, [pickupDate, pickupTime]);
+  }, [pickupDate, pickupTime, setValue]);
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);

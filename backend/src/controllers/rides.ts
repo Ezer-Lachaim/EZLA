@@ -94,11 +94,11 @@ export const createRide = async (req: CustomRequest, res: Response): Promise<voi
 
   if (!ride.pickupDateTime) {
     ride.pickupDateTime = getDefaultPickupDateTime();
-  } 
-  
+  }
+
   if (!ride.relevantTime) {
     ride.relevantTime = 3;
-  } 
+  }
 
   if (req.user?.role === UserRoleEnum.Requester) {
     ride.rideRequester = { userId: req.user.userId };
@@ -361,4 +361,4 @@ function getDefaultPickupDateTime() {
   now.setMinutes(now.getMinutes() + 5 - remainderMinutes);
 
   return now;
-};
+}

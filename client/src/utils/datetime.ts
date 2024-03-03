@@ -16,7 +16,7 @@ export const fixTimeForDufault = () => {
   return today;
 };
 
-export function getHoursArray(maxHour: number, minHour: number = 1) {
+export function getHoursArray(maxHour: number, minHour = 1) {
   return Array.from({ length: maxHour - minHour + 1 }, (_, i) => i + minHour);
 }
 

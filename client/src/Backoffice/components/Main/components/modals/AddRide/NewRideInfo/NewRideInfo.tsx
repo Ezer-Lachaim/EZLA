@@ -57,7 +57,7 @@ function NewRideInfo() {
       .millisecond(0);
 
     setValue('pickupDateTime', joined.toDate());
-  }, [pickupDate, pickupTime]);
+  }, [pickupDate, pickupTime, setValue]);
 
   return (
     <div className="flex gap-4">
