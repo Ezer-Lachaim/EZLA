@@ -77,7 +77,7 @@ const SideBar = () => {
                   {item.text === 'נסיעות' && (
                     <Badge
                       badgeContent={item.badgeCount}
-                      color="error"
+                      color="warning"
                       sx={{ backgroundColor: '#FF9800', marginLeft: '16px' }}
                     />
                   )}

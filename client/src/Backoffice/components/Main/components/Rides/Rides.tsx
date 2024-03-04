@@ -252,10 +252,16 @@ const columns: ColumnDef<Partial<Ride>>[] = [
 const Rides = () => {
   const [rides, setRides] = useState<Ride[]>([]);
   const [isAddRideModalOpen, setIsAddRideModalOpen] = useState(false);
+  const [activeTravelCurrently, setActiveTravelCurrently] = useState<Ride[]>([]);
 
   useEffect(() => {
     const fetchRides = async () => {
       const response = await api.ride.ridesGet();
+
+      const filtered = response.filter(
+        (ride) => ride.state === 'WaitingForDriver' || ride.state === 'Booked'
+      );
+      setActiveTravelCurrently(() => filtered);
 
       const sortedRides = response.sort((a, b) => {
         if (!a.requestTimeStamp) return 1;
@@ -272,7 +278,27 @@ const Rides = () => {
   return (
     <div className="flex flex-col flex-grow">
       <PageHeader>
-        <PageHeader.Title>נסיעות ({rides?.length})</PageHeader.Title>
+        <PageHeader.Title>
+          נסיעות ({rides?.length}){' '}
+          <Chip
+            label={
+              <Typography
+                style={{
+                  color: 'var(--Text-color-Dark-Mode-Primary, #FFF)',
+                  fontSize: '14px',
+                  fontWeight: 400
+                }}
+              >
+                {activeTravelCurrently.length >= 1 && activeTravelCurrently.length} ממתינות לנהג
+              </Typography>
+            }
+            style={{
+              background: '#FFA600',
+              width: '113px',
+              height: '20px'
+            }}
+          />
+        </PageHeader.Title>
 
         <PageHeader.ActionButton onClick={() => setIsAddRideModalOpen(true)}>
           נסיעה חדשה
