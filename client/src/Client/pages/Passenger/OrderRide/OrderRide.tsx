@@ -360,7 +360,7 @@ const OrderRide = () => {
         </div>
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div className="flex flex-row">
             <IconButton aria-label="decrement" onClick={handleDecrement} disabled={quantity === 1}>
               <RemoveCircleOutlineOutlined />
             </IconButton>
@@ -434,10 +434,10 @@ const OrderRide = () => {
           />
         </FormControl>
         <div className="flex gap-8">
-          <div style={{ flex: '1' }}>
+          <div className="flex-1">
             <FormControl>
               <TimePicker
-                sx={{ width: '100%' }}
+                className="w-full"
                 label="שעת איסוף"
                 disablePast
                 ampm={false}
@@ -447,7 +447,7 @@ const OrderRide = () => {
               />
             </FormControl>
           </div>
-          <div style={{ flex: '1' }}>
+          <div className="flex-1">
             <FormControl sx={{ width: '100%' }} required>
               <InputLabel id="relevant-time-label" required>
                 כמה זמן רלוונטי

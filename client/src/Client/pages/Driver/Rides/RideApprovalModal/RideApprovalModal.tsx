@@ -94,7 +94,7 @@ const RideApprovalModal = ({
                   כתובת איסוף:
                 </Typography>
                 <a
-                  style={{ minWidth: '0', wordWrap: 'break-word' }}
+                  className="min-w-0 break-words"
                   href={`https://waze.com/ul?q=${ride?.origin}`}
                   target="_blank"
                   rel="noreferrer"

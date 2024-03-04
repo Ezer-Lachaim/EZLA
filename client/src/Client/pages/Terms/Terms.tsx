@@ -4,12 +4,8 @@ import logo from '../../../assets/logo.png';
 const Terms = () => {
   return (
     <div className="flex flex-col items-center w-full">
-      <h1 style={{ textAlign: 'center' }}>תנאי שימוש עזר לחיים</h1>
-      <img
-        src={logo}
-        alt="logo"
-        style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', paddingBottom: '15px' }}
-      />
+      <h1 className="text-center">תנאי שימוש עזר לחיים</h1>
+      <img src={logo} alt="logo" className="block ml-auto mr-auto pb-[0.9375rem]" />
       <p className="px-5">
         תנאי שימוש אלה (להלן &quot;ההסכם&quot;) משמשים כהסכם בין עמותת עזר לחיים מרכז תמיכה וסיוע
         (ע&quot;ר) (&quot;העמותה&quot;) לבינך (&quot;המשתמש&quot;), והם חלים על כל שימוש שלך בשירותי
