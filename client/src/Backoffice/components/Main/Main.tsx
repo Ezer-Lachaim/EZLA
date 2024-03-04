@@ -6,9 +6,9 @@ const Main = () => {
   return (
     <div className="flex flex-col dvh-screen" style={{ backgroundColor: '#F5F5F5' }}>
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-grow pt-16 min-h-0">
         <SideBar />
-        <main className="flex flex-1 flex-col px-5 py-4">
+        <main className="flex flex-grow flex-col px-5 overflow-auto">
           <Outlet />
         </main>
       </div>
