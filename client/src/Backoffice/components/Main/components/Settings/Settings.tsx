@@ -1,17 +1,38 @@
+import { useEffect, useState } from 'react';
 import { Box, Switch, TextField, Typography } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
+import { SettingsApi } from '../../../../../api-client';
+import { Settings } from '../../../../../api-client/models/Settings'
 
 const Settings = () => {
   const [isRoundTripEnabled, setIsRoundTripEnabled] = useState(false);
   const [inviteTimeLimit, setInviteTimeLimit] = useState(24);
 
+  useEffect(() => {
+    // Fetch initial settings from the backend when the component mounts
+    fetchSettings();
+  }, []);
+
+
+
   const handleRoundTripToggle = () => {
     setIsRoundTripEnabled(!isRoundTripEnabled);
+    updateSettings({ isRoundTripEnabled: !isRoundTripEnabled });
   };
 
   const handleInviteTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const hours = parseInt(e.target.value, 10);
     setInviteTimeLimit(hours);
+    updateSettings({ inviteTimeLimit: hours });
+  };
+
+  const updateSettings = async (updatedSettings: { isRoundTripEnabled?: boolean; inviteTimeLimit?: number }) => {
+    try {
+      // Make API call to update settings in the backend
+      await SettingsApi.updateSettings(updatedSettings);
+    } catch (error) {
+      console.error('Error updating settings:', error);
+    }
   };
 
   return (

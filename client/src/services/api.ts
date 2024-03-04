@@ -7,7 +7,8 @@ import {
   UserApi,
   EnvApi,
   RequestContext,
-  FetchParams
+  FetchParams,
+  SettingsApi
 } from '../api-client';
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL || '';
@@ -48,6 +49,7 @@ export const api = {
   ride: new RideApi(configuration),
   hospital: new HospitalApi(configuration),
   driver: new DriverApi(configuration),
+  settings: new SettingsApi(configuration),
   env: new EnvApi(configuration)
 };
 
