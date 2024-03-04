@@ -213,7 +213,7 @@ function NewRideInfo() {
               <Box>
                 <InputLabel id="serviceType">סוגי נסיעה</InputLabel>
                 <Select
-                  style={{ width: '98%', padding: 0, height: 54 }}
+                className='w-11/12 p-0 h-[3.375rem]'
                   labelId="serviceType"
                   id="serviceType"
                   defaultValue={serviceType}
@@ -236,7 +236,7 @@ function NewRideInfo() {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                style={{ width: '100%' }}
+              className='w-full'
                 id="passengerCount"
                 required
                 label="כמות"
@@ -257,8 +257,8 @@ function NewRideInfo() {
         </FormControl>
         <FormControl>
           <TimePicker
-            sx={{ width: '100%' }}
-            label="שעת איסוף"
+              className='w-full'
+              label="שעת איסוף"
             disablePast
             ampm={false}
             value={pickupTime}

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { Ride } from '../../../../../api-client';
@@ -37,10 +38,12 @@ const SideBar = () => {
   };
 
   const propsItem = [
-    { to: '', text: 'נרשמים חדשים', id: 1 },
+    { to: 'base', text: 'נרשמים חדשים', id: 1 },
     { to: 'rides', text: 'נסיעות', id: 2, badgeCount: filteredRides.length },
     { to: 'passengers', text: 'נוסעים', id: 3 },
-    { to: 'volunteers', text: 'מתנדבים', id: 4 }
+    { to: 'volunteers', text: 'מתנדבים', id: 4 },
+    { to: 'settings', text: 'הגדרות', id: 5}
+
   ];
 
   return (
@@ -59,6 +62,8 @@ const SideBar = () => {
                   {item.text === 'נסיעות' && <DirectionsCarIcon />}
                   {item.text === 'נוסעים' && <EmojiPeopleIcon />}
                   {item.text === 'מתנדבים' && <SupervisedUserCircleIcon />}
+                  {item.text === 'הגדרות' && <SettingsIcon />}
+
                 </ListItemIcon>
                 <div className="flex items-center">
                   <ListItemText
