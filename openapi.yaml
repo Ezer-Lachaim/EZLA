@@ -455,6 +455,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Hospital'
+  /settings:
+    get:
+      tags:
+        - settings
+      summary: Get settings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+    put:
+      tags:
+        - settings
+      summary: Update settings
+      description: Update the current settings
+      requestBody:
+        description: Updated settings object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Settings'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+        '404':
+          description: Settings not found
 
   /env/settings:
     get:
@@ -762,7 +794,13 @@ components:
       required:
         - id
         - name
-
+    Settings:
+      properties:
+        isRoundTripEnabled:
+          type: boolean
+          example: false
+        inviteTimeLimit:
+          type: integer
     EnvSettings:
       properties:
         allowGuestRideMode:
