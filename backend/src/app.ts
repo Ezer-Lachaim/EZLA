@@ -15,6 +15,7 @@ import { ridesRouter } from './routes/rides';
 import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';
+import { settingsRouter } from './routes/settings';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
@@ -46,9 +47,9 @@ app.use('/env', envRouter);
 app.use('/users', authHandler(), usersRouter);
 app.use('/drivers', authHandler(), driversRouter);
 app.use('/rides', ridesRouter);
+app.use('/settings', settingsRouter);
 app.use('/signup', checkTokenMiddleware, signupDriversRoutes);
 app.use('/', index);
-
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
