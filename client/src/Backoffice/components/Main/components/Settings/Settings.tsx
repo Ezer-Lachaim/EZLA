@@ -1,35 +1,46 @@
 import { useEffect, useState } from 'react';
 import { Box, Switch, TextField, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
-import { SettingsApi } from '../../../../../api-client';
-import { Settings } from '../../../../../api-client/models/Settings'
+import { Settings as SettingsType } from './../../../../../api-client/models/Settings';
+import { api } from '../../../../../services/api';
 
 const Settings = () => {
-  const [isRoundTripEnabled, setIsRoundTripEnabled] = useState(false);
-  const [inviteTimeLimit, setInviteTimeLimit] = useState(24);
+  const [isRoundTripEnabled, setIsRoundTripEnabled] = useState<boolean>(false);
+  const [inviteTimeLimit, setInviteTimeLimit] = useState<number>(24);
 
   useEffect(() => {
     // Fetch initial settings from the backend when the component mounts
     fetchSettings();
   }, []);
 
+  const fetchSettings = async () => {
+      const currentSettings = await api.settings.settingsGet();
+      console.log('Settings:', currentSettings);
+      // Update state with fetched settings
+      if (currentSettings) {
+        setIsRoundTripEnabled(currentSettings.isRoundTripEnabled || false);
+        setInviteTimeLimit(currentSettings.inviteTimeLimit || 24);
+      }
 
+  };
 
   const handleRoundTripToggle = () => {
+    const updatedSettings: SettingsType = { isRoundTripEnabled: !isRoundTripEnabled };
+    updateSettings(updatedSettings);
     setIsRoundTripEnabled(!isRoundTripEnabled);
-    updateSettings({ isRoundTripEnabled: !isRoundTripEnabled });
   };
 
   const handleInviteTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const hours = parseInt(e.target.value, 10);
     setInviteTimeLimit(hours);
-    updateSettings({ inviteTimeLimit: hours });
+    const updatedSettings: SettingsType = { inviteTimeLimit: hours };
+    updateSettings(updatedSettings);
   };
 
-  const updateSettings = async (updatedSettings: { isRoundTripEnabled?: boolean; inviteTimeLimit?: number }) => {
+  const updateSettings = async (updatedSettings: SettingsType) => {
     try {
       // Make API call to update settings in the backend
-      await SettingsApi.updateSettings(updatedSettings);
+      await api.settings.settingsPut({ settings: updatedSettings });
     } catch (error) {
       console.error('Error updating settings:', error);
     }
@@ -37,9 +48,9 @@ const Settings = () => {
 
   return (
     <div className="mt-20 gap-5 bg-white h-full p-5">
-        <Box sx={{fontWeight: '500', fontSize: '22px', color: '#007DFF'}}>
-           הגדרות 
-        </Box>
+      <Box sx={{ fontWeight: '500', fontSize: '22px', color: '#007DFF' }}>
+        הגדרות
+      </Box>
       <div className="flex flex-row mt-10">
         <Typography className=" text-lg font-normal ml-10  opacity-80">
           מינימום התראה להזמנת נסיעה (שעות) <br />
