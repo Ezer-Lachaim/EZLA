@@ -51,6 +51,11 @@ interface OrderRideFormData {
   selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
+interface Settings {
+  isRoundTripEnabled: boolean;
+  rideTimeRestriction: number;
+}
+
 const specialRequestLabels: { [key: string]: string } = {
   isWheelChair: 'התאמה לכסא גלגלים',
   isBabySafetySeat: 'מושב בטיחות לתינוק',
@@ -124,6 +129,7 @@ const OrderRide = () => {
   );
 
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
+  const [settings, setSettings] = useState<Settings>({ isRoundTripEnabled: false, rideTimeRestriction: 0 });
   const {
     register,
     watch,
@@ -138,7 +144,8 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
         passengerCount: 1,
-        relevantTime: 3
+        relevantTime: 3,
+        isRoundTrip: false
       },
       selectedSpecialRequests: []
     }
@@ -169,6 +176,17 @@ const OrderRide = () => {
   };
 
   useEffect(() => {
+    const settingsCall = async () => {
+      const settingsData = await api.settings.settingsGet();
+      if (settingsData) {
+          const settings: Settings = {
+            isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
+            rideTimeRestriction: settingsData.rideTimeRestriction || 0 
+          };
+          setSettings(settings);
+      }
+  };
+  settingsCall();
     if (!user) {
       return;
     }
@@ -398,7 +416,6 @@ const OrderRide = () => {
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
             multiline
             rows={2}
-            maxRows={2}
             error={!!errors?.ride?.comment}
             {...register('ride.comment', {
               maxLength: 100,
@@ -508,6 +525,21 @@ const OrderRide = () => {
               </MenuItem>
             ))}
           </Select>
+          {settings?.isRoundTripEnabled &&
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...register('ride.isRoundTrip')}
+               />
+              }
+              label={
+                <p className='text-lg'>
+                  זוהי נסיעה הלוך ושוב
+                </p>
+              }
+            />
+          </div>}
         </FormControl>
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>
