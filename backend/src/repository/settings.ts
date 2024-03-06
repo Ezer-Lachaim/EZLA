@@ -7,16 +7,16 @@ interface Settings {
 
 // Method to get settings from Redis
 export async function getSettings(): Promise<Settings> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const settingsJson: any = await client.json.get('settings');
   if (settingsJson) {
     return settingsJson;
-  } else {
-    // If settings not found, return default settings
-    return {
-      isRoundTripEnabled: false,
-      rideTimeRestriction: 24
-    };
   }
+  // If settings not found, return default settings
+  return {
+    isRoundTripEnabled: false,
+    rideTimeRestriction: 24
+  };
 }
 
 // Method to set or update settings in Redis

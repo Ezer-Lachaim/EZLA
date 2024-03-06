@@ -174,11 +174,11 @@ const OrderRide = () => {
     const settingsCall = async () => {
       const settingsData = await api.settings.settingsGet();
       if (settingsData) {
-        const settings = {
+        const newSettings = {
           isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
           rideTimeRestriction: settingsData.rideTimeRestriction || 0
         };
-        setSettings(settings);
+        setSettings(newSettings);
       }
     };
     settingsCall();
