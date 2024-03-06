@@ -5,20 +5,19 @@ interface Settings {
   inviteTimeLimit: number;
 }
 
-// Default settings
-const defaultSettings: Settings = {
-  isRoundTripEnabled: false,
-  inviteTimeLimit: 24
-};
-
 // Method to get settings from Redis
 export async function getSettings(): Promise<Settings> {
   const settingsString = await client.get('settings:');
+  console.log(settingsString)
   if (settingsString) {
+    console.log(JSON.parse(settingsString));
     return JSON.parse(settingsString);
   } else {
     // If settings not found, return default settings
-    return defaultSettings;
+    return {
+      isRoundTripEnabled: false,
+      inviteTimeLimit: 24
+    };
   }
 }
 
