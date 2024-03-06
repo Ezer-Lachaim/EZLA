@@ -71,7 +71,7 @@ const Settings = () => {
           style={{ backgroundColor: 'white' }}
           required
           label="מינימום התראה בשעות"
-          value={settings?.rideTimeRestriction || ''}
+          value={settings?.rideTimeRestriction || 0}
           onChange={handleInviteTimeChange}
           type="number"
           inputProps={{ min: 0, inputMode: 'numeric' }}
