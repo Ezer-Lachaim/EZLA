@@ -5,8 +5,7 @@ import { Settings as SettingsType } from './../../../../../api-client/models/Set
 import { api } from '../../../../../services/api';
 
 const Settings = () => {
-  const [isRoundTripEnabled, setIsRoundTripEnabled] = useState<boolean>(false);
-  const [inviteTimeLimit, setInviteTimeLimit] = useState<number>(24);
+  const [settings, setSettings] = useState<SettingsType | null>(null);
 
   useEffect(() => {
     // Fetch initial settings from the backend when the component mounts
@@ -14,33 +13,42 @@ const Settings = () => {
   }, []);
 
   const fetchSettings = async () => {
+    try {
       const currentSettings = await api.settings.settingsGet();
       console.log('Settings:', currentSettings);
-      // Update state with fetched settings
-      if (currentSettings) {
-        setIsRoundTripEnabled(currentSettings.isRoundTripEnabled || false);
-        setInviteTimeLimit(currentSettings.inviteTimeLimit || 24);
-      }
-
+      setSettings(currentSettings);
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
   };
 
   const handleRoundTripToggle = () => {
-    const updatedSettings: SettingsType = { isRoundTripEnabled: !isRoundTripEnabled };
-    updateSettings(updatedSettings);
-    setIsRoundTripEnabled(!isRoundTripEnabled);
+    if (settings) {
+      const updatedSettings: SettingsType = {
+        ...settings,
+        isRoundTripEnabled: !settings.isRoundTripEnabled
+      };
+      updateSettings(updatedSettings);
+    }
   };
 
   const handleInviteTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const hours = parseInt(e.target.value, 10);
-    setInviteTimeLimit(hours);
-    const updatedSettings: SettingsType = { inviteTimeLimit: hours };
-    updateSettings(updatedSettings);
+    if (settings) {
+      const updatedSettings: SettingsType = {
+        ...settings,
+        rideTimeRestriction: hours
+      };
+      updateSettings(updatedSettings);
+    }
   };
 
   const updateSettings = async (updatedSettings: SettingsType) => {
     try {
       // Make API call to update settings in the backend
       await api.settings.settingsPut({ settings: updatedSettings });
+      // Update state with the modified settings
+      setSettings(updatedSettings);
     } catch (error) {
       console.error('Error updating settings:', error);
     }
@@ -63,7 +71,7 @@ const Settings = () => {
           style={{ backgroundColor: 'white' }}
           required
           label="מינימום התראה בשעות"
-          value={inviteTimeLimit}
+          value={settings?.rideTimeRestriction || ''}
           onChange={handleInviteTimeChange}
           type="number"
           inputProps={{ min: 0, inputMode: 'numeric' }}
@@ -78,7 +86,7 @@ const Settings = () => {
       </div>
       <div>
         <Typography className="text-base  opacity-80">
-          <Switch checked={isRoundTripEnabled} onChange={handleRoundTripToggle} />
+          <Switch checked={settings?.isRoundTripEnabled || false} onChange={handleRoundTripToggle} />
           בקשה לנסיעה הלוך ושוב
           <p className="opacity-60">הנוסע יוכל לבקש נסיעה הלוך ושוב. זוהי אינדיקציה בלבד. לא יווצרו שתי נסיעות.</p>
         </Typography>
