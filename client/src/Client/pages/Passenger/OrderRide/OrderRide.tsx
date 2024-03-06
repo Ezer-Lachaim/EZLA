@@ -56,7 +56,6 @@ interface Settings {
   rideTimeRestriction: number;
 }
 
-
 const deliverySpecialRequestLabels: { [key: string]: string } = {
   isFood: 'מזון',
   isMilitaryEquipment: 'ציוד צבאי',
@@ -123,7 +122,10 @@ const OrderRide = () => {
   );
 
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
-  const [settings, setSettings] = useState<Settings>({ isRoundTripEnabled: false, rideTimeRestriction: 0 });
+  const [settings, setSettings] = useState<Settings>({
+    isRoundTripEnabled: false,
+    rideTimeRestriction: 0
+  });
   const {
     register,
     watch,
@@ -172,14 +174,14 @@ const OrderRide = () => {
     const settingsCall = async () => {
       const settingsData = await api.settings.settingsGet();
       if (settingsData) {
-          const settings: Settings = {
-            isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
-            rideTimeRestriction: settingsData.rideTimeRestriction || 0 
-          };
-          setSettings(settings);
+        const settings = {
+          isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
+          rideTimeRestriction: settingsData.rideTimeRestriction || 0
+        };
+        setSettings(settings);
       }
-  };
-  settingsCall();
+    };
+    settingsCall();
     if (!user) {
       return;
     }
@@ -254,13 +256,12 @@ const OrderRide = () => {
     isBabySafetySeat: 'מושב בטיחות לתינוק',
     isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
     isHighVehicle: 'רכב גבוה',
-    isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים',
+    isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
   };
 
   if (settings?.isRoundTripEnabled) {
     specialRequestLabels.isRoundTrip = 'זוהי נסיעה הלוך ושוב';
   }
-  
 
   useEffect(() => {
     if (!pickupDate || !pickupTime) {

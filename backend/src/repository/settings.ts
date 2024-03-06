@@ -1,4 +1,4 @@
-import client from "./redis-client";
+import client from './redis-client';
 
 interface Settings {
   isRoundTripEnabled: boolean;
@@ -20,6 +20,6 @@ export async function getSettings(): Promise<Settings> {
 }
 
 // Method to set or update settings in Redis
-export async function setSettings(settings: Settings): Promise<void> { 
-  await client.json.set('settings:','$', { ...settings });
+export async function setSettings(settings: Settings): Promise<void> {
+  await client.json.set('settings:', '$', { ...settings });
 }
