@@ -11,7 +11,6 @@ const routes = [
   <Route key="passengers" path="passengers" element={<Passengers />} />,
   <Route key="volunteers" path="volunteers" element={<Volunteers />} />,
   <Route key="settings" path="settings" element={<Settings />} />
-
 ];
 
 export default routes;

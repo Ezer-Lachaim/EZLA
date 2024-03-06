@@ -42,8 +42,7 @@ const SideBar = () => {
     { to: 'rides', text: 'נסיעות', id: 2, badgeCount: filteredRides.length },
     { to: 'passengers', text: 'נוסעים', id: 3 },
     { to: 'volunteers', text: 'מתנדבים', id: 4 },
-    { to: 'settings', text: 'הגדרות', id: 5}
-
+    { to: 'settings', text: 'הגדרות', id: 5 }
   ];
 
   return (
@@ -63,7 +62,6 @@ const SideBar = () => {
                   {item.text === 'נוסעים' && <EmojiPeopleIcon />}
                   {item.text === 'מתנדבים' && <SupervisedUserCircleIcon />}
                   {item.text === 'הגדרות' && <SettingsIcon />}
-
                 </ListItemIcon>
                 <div className="flex items-center">
                   <ListItemText

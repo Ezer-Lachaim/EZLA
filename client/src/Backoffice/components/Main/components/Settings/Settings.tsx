@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { Box, Switch, TextField, Typography } from '@mui/material';
-import { ChangeEvent } from 'react';
-import { Settings as SettingsType } from './../../../../../api-client/models/Settings';
+import { Settings as SettingsType } from '../../../../../api-client/models/Settings';
 import { api } from '../../../../../services/api';
 
 const Settings = () => {
@@ -56,13 +55,13 @@ const Settings = () => {
 
   return (
     <div className="mt-20 gap-5 bg-white h-full p-5">
-      <Box sx={{ fontWeight: '500', fontSize: '22px', color: '#007DFF' }}>
-        הגדרות
-      </Box>
+      <Box sx={{ fontWeight: '500', fontSize: '22px', color: '#007DFF' }}>הגדרות</Box>
       <div className="flex flex-row mt-10">
         <Typography className=" text-lg font-normal ml-10  opacity-80">
           מינימום התראה להזמנת נסיעה (שעות) <br />
-          <p className=" text-base opacity-60">נוסעים לא יוכלו להזמין נסיעה במועד מוקדם מהמינימום זמן שנקבע</p>
+          <p className=" text-base opacity-60">
+            נוסעים לא יוכלו להזמין נסיעה במועד מוקדם מהמינימום זמן שנקבע
+          </p>
         </Typography>
 
         <TextField
@@ -86,9 +85,14 @@ const Settings = () => {
       </div>
       <div>
         <Typography className="text-base  opacity-80">
-          <Switch checked={settings?.isRoundTripEnabled || false} onChange={handleRoundTripToggle} />
+          <Switch
+            checked={settings?.isRoundTripEnabled || false}
+            onChange={handleRoundTripToggle}
+          />
           בקשה לנסיעה הלוך ושוב
-          <p className="opacity-60">הנוסע יוכל לבקש נסיעה הלוך ושוב. זוהי אינדיקציה בלבד. לא יווצרו שתי נסיעות.</p>
+          <p className="opacity-60">
+            הנוסע יוכל לבקש נסיעה הלוך ושוב. זוהי אינדיקציה בלבד. לא יווצרו שתי נסיעות.
+          </p>
         </Typography>
       </div>
     </div>

@@ -8,4 +8,4 @@ export const getHospitals = async (req: CustomRequest, res: Response): Promise<v
   } catch (e) {
     res.status(500).send();
   }
-};;
+};
