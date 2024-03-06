@@ -799,7 +799,7 @@ components:
         isRoundTripEnabled:
           type: boolean
           example: false
-        inviteTimeLimit:
+        rideTimeRestriction:
           type: integer
     EnvSettings:
       properties:
