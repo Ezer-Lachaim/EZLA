@@ -2,19 +2,19 @@ import client from "./redis-client";
 
 interface Settings {
   isRoundTripEnabled: boolean;
-  inviteTimeLimit: number;
+  rideTimeRestriction: number;
 }
 
 // Method to get settings from Redis
 export async function getSettings(): Promise<Settings> {
-  const settingsJson: any = await client.json.get('settings:*');
+  const settingsJson: any = await client.json.get('settings');
   if (settingsJson) {
     return settingsJson;
   } else {
     // If settings not found, return default settings
     return {
       isRoundTripEnabled: false,
-      inviteTimeLimit: 24
+      rideTimeRestriction: 24
     };
   }
 }
