@@ -604,6 +604,9 @@ components:
             - DriverCanceled
             - RequesterCanceled
             - Canceled
+        isRoundTrip:
+          type: boolean
+          example: false
         passengerCount:
           type: number
           example: 2
