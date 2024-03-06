@@ -165,6 +165,7 @@ export enum RideSpecialRequestEnum {
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
     PatientDelivery = 'PatientDelivery',
+    RoundTrip = 'RoundTrip',
     Food = 'Food',
     MilitaryEquipment = 'MilitaryEquipment',
     MedicalEquipment = 'MedicalEquipment',
