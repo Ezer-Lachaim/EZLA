@@ -21,5 +21,5 @@ export async function getSettings(): Promise<Settings> {
 
 // Method to set or update settings in Redis
 export async function setSettings(settings: Settings): Promise<void> { 
-  await client.json.set('settings:*','$', { ...settings });
+  await client.json.set('settings:','$', { ...settings });
 }
