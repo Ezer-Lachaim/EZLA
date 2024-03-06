@@ -56,13 +56,6 @@ interface Settings {
   rideTimeRestriction: number;
 }
 
-const specialRequestLabels: { [key: string]: string } = {
-  isWheelChair: 'התאמה לכסא גלגלים',
-  isBabySafetySeat: 'מושב בטיחות לתינוק',
-  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
-  isHighVehicle: 'רכב גבוה',
-  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
-};
 
 const deliverySpecialRequestLabels: { [key: string]: string } = {
   isFood: 'מזון',
@@ -83,6 +76,7 @@ const specialMap: {
   isChildSafetySeat: RideSpecialRequestEnum.KidsChair,
   isHighVehicle: RideSpecialRequestEnum.AccessibleCar,
   isWheelChairTrunk: RideSpecialRequestEnum.WheelChairStorage,
+  isRoundTrip: RideSpecialRequestEnum.RoundTrip,
   isFood: RideSpecialRequestEnum.Food,
   isMilitaryEquipment: RideSpecialRequestEnum.MilitaryEquipment,
   isMedicalEquipment: RideSpecialRequestEnum.MedicalEquipment,
@@ -144,8 +138,7 @@ const OrderRide = () => {
         lastName: user?.lastName,
         cellphone: user?.cellPhone,
         passengerCount: 1,
-        relevantTime: 3,
-        isRoundTrip: false
+        relevantTime: 3
       },
       selectedSpecialRequests: []
     }
@@ -255,6 +248,19 @@ const OrderRide = () => {
   const timeDufault = fixTimeForDufault();
   const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
   const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+
+  const specialRequestLabels: { [key: string]: string } = {
+    isWheelChair: 'התאמה לכסא גלגלים',
+    isBabySafetySeat: 'מושב בטיחות לתינוק',
+    isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+    isHighVehicle: 'רכב גבוה',
+    isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים',
+  };
+
+  if (settings?.isRoundTripEnabled) {
+    specialRequestLabels.isRoundTrip = 'זוהי נסיעה הלוך ושוב';
+  }
+  
 
   useEffect(() => {
     if (!pickupDate || !pickupTime) {
@@ -525,21 +531,6 @@ const OrderRide = () => {
               </MenuItem>
             ))}
           </Select>
-          {settings?.isRoundTripEnabled &&
-          <div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  {...register('ride.isRoundTrip')}
-               />
-              }
-              label={
-                <p className='text-lg'>
-                  זוהי נסיעה הלוך ושוב
-                </p>
-              }
-            />
-          </div>}
         </FormControl>
         <p className=" -my-4 text-center">פרטי מזמין ההסעה </p>
         <FormControl>

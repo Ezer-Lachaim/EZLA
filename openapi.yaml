@@ -604,9 +604,6 @@ components:
             - DriverCanceled
             - RequesterCanceled
             - Canceled
-        isRoundTrip:
-          type: boolean
-          example: false
         passengerCount:
           type: number
           example: 2
@@ -620,6 +617,7 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
+              - RoundTrip
               - Food
               - MilitaryEquipment
               - MedicalEquipment
@@ -679,7 +677,7 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
+              - RoundTrip
               - Food
               - MilitaryEquipment
               - MedicalEquipment

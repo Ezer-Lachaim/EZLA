@@ -7,6 +7,7 @@ const specialRequestsMap = {
   [RideSpecialRequestEnum.BabyChair]: 'מושב בטיחות לתינוק',
   [RideSpecialRequestEnum.KidsChair]: 'מושב בטיחות לילדים (3-8)',
   [RideSpecialRequestEnum.AccessibleCar]: 'רכב גבוה',
+  [RideSpecialRequestEnum.RoundTrip]: 'נסיעה הלוך ושוב',
   [RideSpecialRequestEnum.Food]: 'מזון',
   [RideSpecialRequestEnum.MilitaryEquipment]: 'ציוד צבאי',
   [RideSpecialRequestEnum.MedicalEquipment]: 'ציוד רפואי',
