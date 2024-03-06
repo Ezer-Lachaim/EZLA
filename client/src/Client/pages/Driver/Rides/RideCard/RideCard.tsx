@@ -59,7 +59,7 @@ export const RideCard = ({
                 <Typography className="font-normal text-xs w-20">כמות:</Typography>
                 <Typography className="font-bold">
                   {' '}
-                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride?.serviceType === 'Ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
                   {ride.passengerCount}
                 </Typography>
               </div>
