@@ -48,8 +48,8 @@ const PassengersMissingModal = ({
           <Button variant="outlined" color="error" className="flex gap-2" onClick={onCancel}>
             ביטול הנסיעה
           </Button>
-          <Button variant="contained" className="flex gap-2" onClick={onContinue}>
-            התחילו נסיעה
+          <Button variant="outlined" className="flex gap-2" onClick={onContinue}>
+            המשך בנסיעה
           </Button>
         </div>
         <IconButton size="small" className="absolute left-2 top-1" onClick={onClose}>

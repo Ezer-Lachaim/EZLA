@@ -122,8 +122,7 @@ const columns: ColumnDef<Partial<Driver>>[] = [
             size="small"
             variant="outlined"
             color="primary"
-            style={{ minWidth: 0 }}
-            className="w-7 h-7"
+            className="w-7 h-7 min-w-0"
             onClick={() => handleModal(true)}
           >
             {driver.isGoogleForm ? <Description fontSize="small" /> : <Edit fontSize="small" />}

@@ -55,7 +55,6 @@ export enum RideRequesterSpecialRequestEnum {
     BabyChair = 'BabyChair',
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
-    PatientDelivery = 'PatientDelivery'
 }
 /**
     * @export
