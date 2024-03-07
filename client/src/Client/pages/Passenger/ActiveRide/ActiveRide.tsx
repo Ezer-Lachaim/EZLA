@@ -14,7 +14,7 @@ import DriverCanceledModal from './DriverCanceledModal.tsx';
 import ConfirmCancelRideModal from '../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal.tsx';
 import { ViewField } from '../../../components/ViewField/ViewField.tsx';
 import { SpecialRequestsChips } from '../../../components/SpecialRequests/SpecialRequests.tsx';
-import { formatPickupDateTimeMultiDay } from '../../../components/TimeFunctions/TimeFunctions.tsx';
+import { formatPickupDateTime } from '../../../../utils/datetime.ts';
 
 const ActiveRide = () => {
   const user = useUserStore((state) => state.user);
@@ -95,7 +95,7 @@ const ActiveRide = () => {
         <h1 className="text-center">
           מועד איסוף
           <br />
-          {formatPickupDateTimeMultiDay(ride?.pickupDateTime, ride?.relevantTime)}
+          {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
         </h1>
         <hr />
         <ViewField

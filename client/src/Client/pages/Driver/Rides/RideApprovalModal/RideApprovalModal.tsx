@@ -3,7 +3,7 @@ import { Close } from '@mui/icons-material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
+import { formatPickupDateTime } from '../../../../../utils/datetime';
 import { Ride } from '../../../../../api-client';
 
 const style = {
@@ -62,7 +62,7 @@ const RideApprovalModal = ({
                   מועד איסוף:
                 </Typography>
                 <Typography>
-                  {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime)}
+                  {formatPickupDateTime(ride?.pickupDateTime, ride?.relevantTime, true)}
                 </Typography>
               </div>
               <div className="flex items-stretch gap-2">

@@ -8,7 +8,7 @@ import { SpecialRequestsChips } from '../../../../components/SpecialRequests/Spe
 import { useActiveRide } from '../../../../../hooks/activeRide';
 import { api } from '../../../../../services/api';
 import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
-import { formatPickupDateTime } from '../../../../components/TimeFunctions/TimeFunctions';
+import { formatPickupDateTime } from '../../../../../utils/datetime';
 
 export const RideCard = ({
   ride,
@@ -52,7 +52,7 @@ export const RideCard = ({
                 <Typography className="font-normal text-xs w-20">מועד איסוף:</Typography>
 
                 <Typography className="font-bold">
-                  {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime)}
+                  {formatPickupDateTime(ride.pickupDateTime, ride.relevantTime, true)}
                 </Typography>
               </div>
               <div className="flex items-center gap-[0.3125rem]">
