@@ -38,7 +38,7 @@ const SideBar = () => {
   };
 
   const propsItem = [
-    { to: 'base', text: 'נרשמים חדשים', id: 1 },
+    { to: '', text: 'נרשמים חדשים', id: 1 },
     { to: 'rides', text: 'נסיעות', id: 2, badgeCount: filteredRides.length },
     { to: 'passengers', text: 'נוסעים', id: 3 },
     { to: 'volunteers', text: 'מתנדבים', id: 4 },

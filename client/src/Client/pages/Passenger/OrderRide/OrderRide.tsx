@@ -30,6 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
+import useSettings from '../../../../hooks/settings';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import {
@@ -51,10 +52,13 @@ interface OrderRideFormData {
   selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
-interface Settings {
-  isRoundTripEnabled: boolean;
-  rideTimeRestriction: number;
-}
+const staticSpecialRequestLabels: { [key: string]: string } = {
+  isWheelChair: 'התאמה לכסא גלגלים',
+  isBabySafetySeat: 'מושב בטיחות לתינוק',
+  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+  isHighVehicle: 'רכב גבוה',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
+};
 
 const deliverySpecialRequestLabels: { [key: string]: string } = {
   isFood: 'מזון',
@@ -122,10 +126,7 @@ const OrderRide = () => {
   );
 
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
-  const [settings, setSettings] = useState<Settings>({
-    isRoundTripEnabled: false,
-    rideTimeRestriction: 0
-  });
+  const { settings } = useSettings();
   const {
     register,
     watch,
@@ -171,17 +172,6 @@ const OrderRide = () => {
   };
 
   useEffect(() => {
-    const settingsCall = async () => {
-      const settingsData = await api.settings.settingsGet();
-      if (settingsData) {
-        const newSettings = {
-          isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
-          rideTimeRestriction: settingsData.rideTimeRestriction || 0
-        };
-        setSettings(newSettings);
-      }
-    };
-    settingsCall();
     if (!user) {
       return;
     }
@@ -251,14 +241,7 @@ const OrderRide = () => {
   const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
   const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
 
-  const specialRequestLabels: { [key: string]: string } = {
-    isWheelChair: 'התאמה לכסא גלגלים',
-    isBabySafetySeat: 'מושב בטיחות לתינוק',
-    isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
-    isHighVehicle: 'רכב גבוה',
-    isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
-  };
-
+  const specialRequestLabels = { ...staticSpecialRequestLabels };
   if (settings?.isRoundTripEnabled) {
     specialRequestLabels.isRoundTrip = 'זוהי נסיעה הלוך ושוב';
   }

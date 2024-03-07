@@ -12,10 +12,10 @@ import { envRouter } from './routes/env';
 import { usersRouter } from './routes/users';
 import { driversRouter } from './routes/drivers';
 import { ridesRouter } from './routes/rides';
+import { settingsRouter } from './routes/settings';
 import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';
-import { settingsRouter } from './routes/settings';
 
 export const app = express();
 app.use(express.json()); // Notice express.json middleware
