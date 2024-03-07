@@ -52,11 +52,7 @@ const Riding = () => {
           label="כתובת יעד"
           value={
             <div className="flex gap-2 justify-between">
-              <Typography
-                variant="body1"
-                component="div"
-                className="mb-2 min-w-0 break-words"
-              >
+              <Typography variant="body1" component="div" className="mb-2 min-w-0 break-words">
                 <a
                   href={`https://waze.com/ul?q=${ride?.destination}`}
                   target="_blank"
