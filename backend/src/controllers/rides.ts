@@ -23,9 +23,14 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
       rides = await Promise.all([].concat(...rides).map((ride) => populateRideDetails(ride)));
 
-      if (req.query.state) {
-        rides = rides.filter((item) => item.state === req.query.state);
+      if (req.query.driverId || req.query.state) {
+        rides = rides.filter(
+          (item) =>
+            (!req.query.driverId || item.driver?.userId === req.query.driverId) &&
+            (!req.query.state || item.state === req.query.state)
+        );
       }
+
       res.status(200).json(rides);
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
@@ -218,6 +223,19 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
         ]);
       }
 
+      if (updatedRide.state === RideStateEnum.DriverEnroute) {
+        await redisClient.set(`active_ride:${currentRide.driver.userId}`, rideId);
+        await Promise.all([
+          currentRide.rideRequester?.userId &&
+            sendPushByUserId(
+              currentRide.rideRequester?.userId,
+              'עדכון על הנסיעה',
+              'המתנדב/ת בדרך אליך'
+            ),
+          sendSMS(updatedRide.cellphone, getRideDriverEnroutePassengerSMSMessage(updatedRide))
+        ]);
+      }
+
       if (updatedRide.state === RideStateEnum.DriverArrived) {
         await Promise.all([
           currentRide.rideRequester?.userId &&
@@ -252,7 +270,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }
   } catch (error) {
-    console.log(error);
+    console.log('Error in update ride:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
@@ -314,7 +332,18 @@ function getNewRidePassengerSMSMessage(ride: Ride): string {
 function getRideBookedPassengerSMSMessage(ride: Ride): string {
   return (
     `${ride.firstName} שלום, ` +
-    `${ride.driver.firstName} המתנדב.ת בדרך אליכם. ` +
+    `${ride.driver.firstName} נמצא מתנדב.ת` +
+    `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
+    `מספר רכב ${ride.driver.carPlateNumber}.\n` +
+    `נקודת איסוף ${ride.origin}.\n` +
+    `ליצירת קשר הקישו כאן ${ride.driver.cellPhone}. צוות עזר לחיים`
+  );
+}
+
+function getRideDriverEnroutePassengerSMSMessage(ride: Ride): string {
+  return (
+    `${ride.firstName} שלום, ` +
+    `${ride.driver.firstName} המתנדב.ת בדרך אליך` +
     `סוג רכב ${ride.driver.carManufacturer} ${ride.driver.carModel} ${ride.driver.carColor}, ` +
     `מספר רכב ${ride.driver.carPlateNumber}.\n` +
     `נקודת איסוף ${ride.origin}.\n` +

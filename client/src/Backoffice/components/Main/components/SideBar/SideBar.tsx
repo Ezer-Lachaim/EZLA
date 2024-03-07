@@ -60,7 +60,7 @@ const SideBar = () => {
                   {item.text === 'נוסעים' && <EmojiPeopleIcon />}
                   {item.text === 'מתנדבים' && <SupervisedUserCircleIcon />}
                 </ListItemIcon>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="flex items-center">
                   <ListItemText
                     primary={
                       <Typography
