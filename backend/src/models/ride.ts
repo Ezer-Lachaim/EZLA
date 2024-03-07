@@ -160,11 +160,10 @@ export enum RideStateEnum {
     */
 export enum RideSpecialRequestEnum {
     WheelChair = 'WheelChair',
-    WheelChairStorage = 'WheelChairStorage', 
+    WheelChairStorage = 'WheelChairStorage',
     BabyChair = 'BabyChair',
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
-    PatientDelivery = 'PatientDelivery',
     Food = 'Food',
     MilitaryEquipment = 'MilitaryEquipment',
     MedicalEquipment = 'MedicalEquipment',

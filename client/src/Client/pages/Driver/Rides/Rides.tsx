@@ -55,7 +55,7 @@ const Rides = () => {
   });
   const { data: bookedRides = [] } = useQuery({
     queryKey: ['bookedRides'],
-    queryFn: () => api.ride.ridesGet({ driverID: user?.userId }),
+    queryFn: () => api.ride.ridesGet({ driverId: user?.userId }),
     refetchInterval: POLLING_INTERVAL
   });
 

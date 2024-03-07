@@ -23,11 +23,12 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       let rides: Ride[] = (await redisClient.json.mGet(keys, '$')) as Ride[];
       rides = await Promise.all([].concat(...rides).map((ride) => populateRideDetails(ride)));
 
-      if (req.query.driverID) {
-        rides = rides.filter((item) => item.driver.userId === req.query.driverID);
-      }
-      if (req.query.state) {
-        rides = rides.filter((item) => item.state === req.query.state);
+      if (req.query.driverId || req.query.state) {
+        rides = rides.filter(
+          (item) =>
+            (!req.query.driverId || item.driver.userId === req.query.driverId) &&
+            (!req.query.state || item.state === req.query.state)
+        );
       }
 
       res.status(200).json(rides);
@@ -87,7 +88,6 @@ export const getRideById = async (req: CustomRequest, res: Response): Promise<vo
  * POST /rides
  * Create a new ride.
  */
-
 export const createRide = async (req: CustomRequest, res: Response): Promise<void> => {
   const guestToken = req.get('guest-token');
   const rideId = uuidv4();
@@ -270,7 +270,7 @@ export const updateRide = async (req: CustomRequest, res: Response): Promise<voi
       res.status(404).json({ error: `Ride ${rideId} not found` });
     }
   } catch (error) {
-    console.log('Error retrieving current ride:', error);
+    console.log('Error in update ride:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

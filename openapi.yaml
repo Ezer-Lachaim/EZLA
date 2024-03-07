@@ -305,7 +305,7 @@ paths:
           required: false
           description: Ride state
         - in: query
-          name: driverID
+          name: driverId
           schema:
             type: string
           required: false
@@ -652,7 +652,6 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
               - Food
               - MilitaryEquipment
               - MedicalEquipment
