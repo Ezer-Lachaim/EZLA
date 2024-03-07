@@ -77,8 +77,7 @@ const SideBar = () => {
                   {item.text === 'נסיעות' && (
                     <Badge
                       badgeContent={item.badgeCount}
-                      color="warning"
-                      sx={{ backgroundColor: '#FF9800', marginLeft: '16px' }}
+                      classes={{ badge: 'bg-[#FF9800]', root: 'ms-4' }}
                     />
                   )}
                 </div>
