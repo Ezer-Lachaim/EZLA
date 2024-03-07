@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Typography } from '@mui/material';
 import CarIcon from '@mui/icons-material/DirectionsCarFilled';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import { Ride, RideStateEnum } from '../../../../../api-client';
+import { Ride, RideStateEnum, RideServiceTypeEnum } from '../../../../../api-client';
 import { SpecialRequestsChips } from '../../../../components/SpecialRequests/SpecialRequests';
 import { useActiveRide } from '../../../../../hooks/activeRide';
 import { api } from '../../../../../services/api';
@@ -12,14 +12,14 @@ import { formatPickupDateTime } from '../../../../../utils/datetime';
 
 export const RideCard = ({
   ride,
-  context,
-  onOpenContactModal,
-  onApprovePassenger
+  isApprovePassenger,
+  onApprovePassenger,
+  onOpenContactModal
 }: {
   ride: Ride;
-  context: 'openCalls' | 'myRides';
-  onOpenContactModal: () => void;
+  isApprovePassenger: boolean;
   onApprovePassenger: () => void;
+  onOpenContactModal: () => void;
   rideId: string | undefined;
 }) => {
   const { reFetch: reFetchActiveRide } = useActiveRide();
@@ -59,11 +59,15 @@ export const RideCard = ({
                 <Typography className="font-normal text-xs w-20">כמות:</Typography>
                 <Typography className="font-bold">
                   {' '}
-                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride?.serviceType === RideServiceTypeEnum.Ride ? (
+                    <EmojiPeopleIcon />
+                  ) : (
+                    <InventoryIcon />
+                  )}
                   {ride.passengerCount}
                 </Typography>
               </div>
-              {context === 'myRides' && (
+              {!isApprovePassenger && (
                 <>
                   <div className="flex items-center gap-[0.3125rem]">
                     <Typography className="font-normal text-xs w-20">שם הנוסע:</Typography>
@@ -118,7 +122,7 @@ export const RideCard = ({
         </div>
         <SpecialRequestsChips specialRequests={ride.specialRequest || []} />
         <div className="flex gap-4 mt-3">
-          {context === 'openCalls' && (
+          {isApprovePassenger && (
             <Button
               className="flex-1"
               variant="contained"
@@ -131,7 +135,7 @@ export const RideCard = ({
             </Button>
           )}
 
-          {context === 'myRides' && (
+          {!isApprovePassenger && (
             <div className="flex flex-grow flex-row gap-4 mt-2">
               <Button
                 variant="outlined"

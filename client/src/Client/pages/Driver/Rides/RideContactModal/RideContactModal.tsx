@@ -8,7 +8,7 @@ import { useState } from 'react';
 import ConfirmCancelRideModal from '../../../../components/ConfirmCancelRideModal/ConfirmCancelRideModal';
 import { api } from '../../../../../services/api';
 import { useActiveRide } from '../../../../../hooks/activeRide';
-import { Ride, RideStateEnum } from '../../../../../api-client';
+import { Ride, RideStateEnum, RideServiceTypeEnum } from '../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
@@ -50,8 +50,11 @@ const RideContactModal = ({
         rideId: ride.rideId,
         ride: { state: RideStateEnum.WaitingForDriver }
       });
+
       await reFetchActiveRide();
       // navigation will occur automatically (in @../Driver.tsx)
+
+      onClose();
     } catch (error) {
       console.error('Error canceling ride:', error);
     }
@@ -82,20 +85,24 @@ const RideContactModal = ({
             </Typography>
           </div>
           <Divider />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 px-4">
             <div className="flex items-center gap-2">
-              <Typography className="mr-2 font-normal text-xs w-20">כמות:</Typography>
+              <Typography className="font-normal text-xs w-20">כמות:</Typography>
               <Typography>
-                {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                {ride?.serviceType === RideServiceTypeEnum.Ride ? (
+                  <EmojiPeopleIcon />
+                ) : (
+                  <InventoryIcon />
+                )}
                 {ride?.passengerCount}
               </Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography className="mr-2 font-normal text-xs w-20">שם הנוסע:</Typography>
+              <Typography className="font-normal text-xs w-20">שם הנוסע:</Typography>
               <Typography className="font-bold">{`${ride?.firstName} ${ride?.lastName}`}</Typography>
             </div>
             <div className="flex items-center gap-2">
-              <Typography className="mr-2 font-normal text-xs w-20">טלפון הנוסע:</Typography>
+              <Typography className="font-normal text-xs w-20">טלפון הנוסע:</Typography>
               <Typography>
                 <a
                   href={`https://wa.me/972${ride?.cellphone?.replace(/-/g, '')}`}

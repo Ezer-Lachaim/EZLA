@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import { formatPickupDateTime } from '../../../../../utils/datetime';
-import { Ride } from '../../../../../api-client';
+import { Ride, RideServiceTypeEnum } from '../../../../../api-client';
 
 const style = {
   position: 'absolute' as const,
@@ -45,7 +45,7 @@ const RideApprovalModal = ({
         >
           <div className="flex flex-col w-full gap-8px">
             <div className="flex flex-row w-full p-3 items-center justify-between">
-              <Typography className=" font-medium text-[1.375rem] text-blue-500">
+              <Typography className="font-medium text-[1.375rem] text-blue-500">
                 פרטי נסיעה
               </Typography>
               <IconButton size="small" onClick={onClose}>
@@ -58,7 +58,7 @@ const RideApprovalModal = ({
             {/* Adjusted to remove unnecessary width */}
             <div className="flex flex-col gap-2.5 m-5">
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   מועד איסוף:
                 </Typography>
                 <Typography>
@@ -66,16 +66,20 @@ const RideApprovalModal = ({
                 </Typography>
               </div>
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   כמות:
                 </Typography>
                 <Typography>
-                  {ride?.serviceType === 'ride' ? <EmojiPeopleIcon /> : <InventoryIcon />}
+                  {ride?.serviceType === RideServiceTypeEnum.Ride ? (
+                    <EmojiPeopleIcon />
+                  ) : (
+                    <InventoryIcon />
+                  )}
                   {ride?.passengerCount}
                 </Typography>
               </div>
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   טלפון:
                 </Typography>
                 <Typography>
@@ -90,7 +94,7 @@ const RideApprovalModal = ({
                 </Typography>
               </div>
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   כתובת איסוף:
                 </Typography>
                 <a
@@ -103,7 +107,7 @@ const RideApprovalModal = ({
                 </a>
               </div>
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20  leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   יעד נסיעה:
                 </Typography>
                 <a
@@ -116,10 +120,10 @@ const RideApprovalModal = ({
                 </a>
               </div>
               <div className="flex items-stretch gap-2">
-                <Typography className="mr-2 font-normal text-xs w-20 leading-5 min-w-0 break-words">
+                <Typography className="shrink-0 font-normal text-xs w-20 leading-5 min-w-0 break-words">
                   תיאור הנסיעה:
                 </Typography>
-                <Typography className="mr-2 font-bold text-normal min-w-0 break-words">
+                <Typography className="font-bold text-normal min-w-0 break-words">
                   {ride?.comment}
                 </Typography>
               </div>
@@ -127,7 +131,7 @@ const RideApprovalModal = ({
           </div>
           <div className="flex flex-col">
             <Button
-              className="w-280 h-40px m-20px rounded-md gap-8 mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
+              className="w-280 h-40px m-20px rounded-md gap-8 mx-[0.8125rem] mb-[0.8125rem]"
               variant="contained"
               color="primary"
               type="submit"
@@ -135,7 +139,7 @@ const RideApprovalModal = ({
               בחירת נסיעה
             </Button>
             <Button
-              className="mr-[0.8125rem] ml-[0.8125rem] mb-[0.8125rem]"
+              className="mx-[0.8125rem] mb-[0.8125rem]"
               variant="outlined"
               color="primary"
               onClick={onClose}

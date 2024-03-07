@@ -26,7 +26,7 @@ export const getAll = async (req: CustomRequest, res: Response): Promise<void> =
       if (req.query.driverId || req.query.state) {
         rides = rides.filter(
           (item) =>
-            (!req.query.driverId || item.driver.userId === req.query.driverId) &&
+            (!req.query.driverId || item.driver?.userId === req.query.driverId) &&
             (!req.query.state || item.state === req.query.state)
         );
       }
