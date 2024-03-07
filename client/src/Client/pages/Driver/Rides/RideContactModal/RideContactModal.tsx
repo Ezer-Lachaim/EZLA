@@ -54,6 +54,7 @@ const RideContactModal = ({
       await reFetchActiveRide();
       // navigation will occur automatically (in @../Driver.tsx)
 
+      setConfirmCancelModalOpen(false);
       onClose();
     } catch (error) {
       console.error('Error canceling ride:', error);

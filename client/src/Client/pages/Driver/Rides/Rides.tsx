@@ -17,13 +17,6 @@ enum TabsEnum {
   MyRides
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  };
-}
-
 async function fetchSortedRides(filters: Parameters<typeof api.ride.ridesGet>[0]) {
   const rides = await api.ride.ridesGet(filters);
   rides.sort((a, b) => {
@@ -113,19 +106,21 @@ const Rides = () => {
         >
           <Tab
             value={TabsEnum.OpenCalls}
-            {...a11yProps(0)}
+            id="rides-open-calls-tab"
+            aria-controls="rides-panel"
             className="flex items-center flex-1 bg-white shadow-md text-center"
             label={<span className="text-sm font-bold">קריאות פתוחות ({openRides.length})</span>}
           />
           <Tab
             value={TabsEnum.MyRides}
-            {...a11yProps(1)}
+            id="rides-my-rides-tab"
+            aria-controls="rides-panel"
             className="flex items-center flex-1 bg-white shadow-md text-center"
             label={<span className="text-sm font-bold">נסיעות שלי ({userRides.length})</span>}
           />
         </Tabs>
       </div>
-      <div className="w-full h-full flex flex-col gap-5 py-4">
+      <div id="rides-panel" className="w-full h-full flex flex-col gap-5 py-4">
         {displayedRides.length > 0 ? (
           <Stack spacing={2}>
             {displayedRides.map((ride) => (
