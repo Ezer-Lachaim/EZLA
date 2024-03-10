@@ -1,102 +1,139 @@
-import { useEffect, useState, ChangeEvent } from 'react';
-import { Box, Switch, TextField, Typography } from '@mui/material';
-import { Settings as SettingsType } from '../../../../../api-client/models/Settings';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Switch,
+  TextField,
+  FormControlLabel,
+  Button,
+  InputLabel,
+  FormHelperText,
+  FormControl
+} from '@mui/material';
+import PageHeader from '../PageHeader/PageHeader';
+import { Settings } from '../../../../../api-client';
+import useSettings from '../../../../../hooks/settings';
 import { api } from '../../../../../services/api';
 
-const Settings = () => {
-  const [settings, setSettings] = useState<SettingsType | null>(null);
+const SettingsPage = () => {
+  const { settings, isLoading, setSettings } = useSettings();
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    // Fetch initial settings from the backend when the component mounts
-    fetchSettings();
-  }, []);
+  const onSubmit: SubmitHandler<Settings> = async (formData) => {
+    setIsUpdating(true);
 
-  const fetchSettings = async () => {
     try {
-      const currentSettings = await api.settings.settingsGet();
-      console.log('Settings:', currentSettings);
-      setSettings(currentSettings);
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-    }
-  };
-
-  const handleRoundTripToggle = () => {
-    if (settings) {
-      const updatedSettings: SettingsType = {
-        ...settings,
-        isRoundTripEnabled: !settings.isRoundTripEnabled
+      const newSettings = {
+        ...formData,
+        rideTimeRestriction: Number(formData.rideTimeRestriction)
       };
-      updateSettings(updatedSettings);
-    }
-  };
 
-  const handleInviteTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const hours = parseInt(e.target.value, 10);
-    if (settings) {
-      const updatedSettings: SettingsType = {
-        ...settings,
-        rideTimeRestriction: hours
-      };
-      updateSettings(updatedSettings);
-    }
-  };
-
-  const updateSettings = async (updatedSettings: SettingsType) => {
-    try {
       // Make API call to update settings in the backend
-      await api.settings.settingsPut({ settings: updatedSettings });
+      await api.settings.settingsPut({ settings: newSettings });
+
       // Update state with the modified settings
-      setSettings(updatedSettings);
+      setSettings(newSettings);
     } catch (error) {
       console.error('Error updating settings:', error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   return (
-    <div className="mt-20 gap-5 bg-white h-full p-5">
-      <Box sx={{ fontWeight: '500', fontSize: '22px', color: '#007DFF' }}>הגדרות</Box>
-      <div className="flex flex-row mt-10">
-        <Typography className=" text-lg font-normal ml-10  opacity-80">
-          מינימום התראה להזמנת נסיעה (שעות) <br />
-          <p className=" text-base opacity-60">
-            נוסעים לא יוכלו להזמין נסיעה במועד מוקדם מהמינימום זמן שנקבע
-          </p>
-        </Typography>
+    <div className="flex flex-col h-full">
+      <PageHeader>
+        <PageHeader.Title>הגדרות</PageHeader.Title>
+      </PageHeader>
 
-        <TextField
-          className="mt-5 w-40"
-          id="hours"
-          style={{ backgroundColor: 'white' }}
-          required
-          label="מינימום התראה בשעות"
-          value={settings?.rideTimeRestriction || 0}
-          onChange={handleInviteTimeChange}
-          type="number"
-          inputProps={{ min: 0, inputMode: 'numeric' }}
-          defaultValue={1}
-          sx={{
-            '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
-              {
-                opacity: 1
-              }
-          }}
-        />
-      </div>
-      <div>
-        <Typography className="text-base  opacity-80">
-          <Switch
-            checked={settings?.isRoundTripEnabled || false}
-            onChange={handleRoundTripToggle}
+      <div className="flex-grow bg-white p-5 rounded-md shadow-md">
+        {!isLoading && (
+          <SettingsForm
+            defaultSettings={settings ?? undefined}
+            onSubmit={onSubmit}
+            disabled={isUpdating}
           />
-          בקשה לנסיעה הלוך ושוב
-          <p className="opacity-60">
-            הנוסע יוכל לבקש נסיעה הלוך ושוב. זוהי אינדיקציה בלבד. לא יווצרו שתי נסיעות.
-          </p>
-        </Typography>
+        )}
       </div>
     </div>
   );
 };
 
-export default Settings;
+export default SettingsPage;
+
+function SettingsForm({
+  defaultSettings = undefined,
+  onSubmit,
+  disabled = false
+}: {
+  defaultSettings?: Settings;
+  onSubmit: SubmitHandler<Settings>;
+  disabled?: boolean;
+}) {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm<Settings>({
+    defaultValues: defaultSettings
+  });
+
+  return (
+    <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <FormControl>
+        <InputLabel
+          htmlFor="ride-time-restriction-input"
+          className="static transform-none text-base pointer-events-auto text-black"
+        >
+          מינימום התראה בשעות
+        </InputLabel>
+
+        <TextField
+          className="w-40"
+          id="ride-time-restriction-input"
+          required
+          {...register('rideTimeRestriction', {
+            required: true,
+            min: 0
+          })}
+          type="number"
+        />
+
+        {errors.rideTimeRestriction && (
+          <FormHelperText error className="mx-1">
+            {errors.rideTimeRestriction.type === 'required' && 'נא להזין ערך'}
+            {errors.rideTimeRestriction.type === 'min' && 'ערך לא תקין'}
+          </FormHelperText>
+        )}
+
+        <FormHelperText className="mx-1">
+          נוסעים לא יוכלו להזמין נסיעה במועד מוקדם ממינימום הזמן שנקבע
+        </FormHelperText>
+      </FormControl>
+
+      <FormControl>
+        <FormControlLabel
+          required
+          control={
+            <Switch
+              checked={watch('isRoundTripEnabled')}
+              onChange={(event) => setValue('isRoundTripEnabled', event.target.checked)}
+            />
+          }
+          label="נסיעה הלוך ושוב"
+        />
+
+        <FormHelperText className="mx-1">
+          נוסעים לא יוכלו להזמין נסיעה במועד מוקדם ממינימום הזמן שנקבע
+        </FormHelperText>
+      </FormControl>
+
+      <div>
+        <Button variant="contained" size="large" type="submit" disabled={disabled}>
+          {disabled ? 'טוען...' : 'שמירה'}
+        </Button>
+      </div>
+    </form>
+  );
+}

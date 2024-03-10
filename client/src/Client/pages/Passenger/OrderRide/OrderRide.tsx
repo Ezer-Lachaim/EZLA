@@ -30,6 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
 import withLayout from '../../../components/LayoutHOC.tsx';
 import { api } from '../../../../services/api';
+import useSettings from '../../../../hooks/settings';
 import { useUserStore } from '../../../../services/auth/user';
 import { setToken as setGuestToken } from '../../../../services/auth/guest';
 import {
@@ -51,10 +52,13 @@ interface OrderRideFormData {
   selectedSpecialRequests: (RideSpecialRequestEnum | string)[];
 }
 
-interface Settings {
-  isRoundTripEnabled: boolean;
-  rideTimeRestriction: number;
-}
+const staticSpecialRequestLabels: { [key: string]: string } = {
+  isWheelChair: 'התאמה לכסא גלגלים',
+  isBabySafetySeat: 'מושב בטיחות לתינוק',
+  isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
+  isHighVehicle: 'רכב גבוה',
+  isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
+};
 
 const deliverySpecialRequestLabels: { [key: string]: string } = {
   isFood: 'מזון',
@@ -122,10 +126,7 @@ const OrderRide = () => {
   );
 
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
-  const [settings, setSettings] = useState<Settings>({
-    isRoundTripEnabled: false,
-    rideTimeRestriction: 0
-  });
+  const { settings, setSettings } = useSettings();
   const {
     register,
     watch,
@@ -251,14 +252,7 @@ const OrderRide = () => {
   const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
   const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
 
-  const specialRequestLabels: { [key: string]: string } = {
-    isWheelChair: 'התאמה לכסא גלגלים',
-    isBabySafetySeat: 'מושב בטיחות לתינוק',
-    isChildSafetySeat: 'מושב בטיחות לילדים (גיל 3-8)',
-    isHighVehicle: 'רכב גבוה',
-    isWheelChairTrunk: 'תא מטען מתאים לכסא גלגלים'
-  };
-
+  const specialRequestLabels = { ...staticSpecialRequestLabels };
   if (settings?.isRoundTripEnabled) {
     specialRequestLabels.isRoundTrip = 'זוהי נסיעה הלוך ושוב';
   }
@@ -385,7 +379,7 @@ const OrderRide = () => {
         </div>
         <FormControl>
           <InputLabel htmlFor="passengerCount" />
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div className="flex flex-row">
             <IconButton aria-label="decrement" onClick={handleDecrement} disabled={quantity === 1}>
               <RemoveCircleOutlineOutlined />
             </IconButton>
@@ -458,10 +452,10 @@ const OrderRide = () => {
           />
         </FormControl>
         <div className="flex gap-8">
-          <div style={{ flex: '1' }}>
+          <div className="flex-1">
             <FormControl>
               <TimePicker
-                sx={{ width: '100%' }}
+                className="w-full"
                 label="שעת איסוף"
                 disablePast
                 ampm={false}
@@ -471,7 +465,7 @@ const OrderRide = () => {
               />
             </FormControl>
           </div>
-          <div style={{ flex: '1' }}>
+          <div className="flex-1">
             <FormControl sx={{ width: '100%' }} required>
               <InputLabel id="relevant-time-label" required>
                 כמה זמן רלוונטי

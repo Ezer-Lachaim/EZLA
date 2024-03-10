@@ -12,6 +12,7 @@ import { envRouter } from './routes/env';
 import { usersRouter } from './routes/users';
 import { driversRouter } from './routes/drivers';
 import { ridesRouter } from './routes/rides';
+import { settingsRouter } from './routes/settings';
 import { index } from './routes';
 import { signupDriversRoutes } from './routes/signupDrivers'; // Import the missing module
 import checkTokenMiddleware from './middlewares/checkTokenForm';

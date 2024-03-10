@@ -146,6 +146,7 @@ export type RideServiceTypeEnum = typeof RideServiceTypeEnum[keyof typeof RideSe
 export enum RideStateEnum {
     WaitingForDriver = 'WaitingForDriver',
     Booked = 'Booked',
+    DriverEnroute = 'DriverEnroute',
     DriverArrived = 'DriverArrived',
     Riding = 'Riding',
     Completed = 'Completed',
@@ -163,7 +164,6 @@ export enum RideSpecialRequestEnum {
     BabyChair = 'BabyChair',
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
-    PatientDelivery = 'PatientDelivery',
     RoundTrip = 'RoundTrip',
     Food = 'Food',
     MilitaryEquipment = 'MilitaryEquipment',

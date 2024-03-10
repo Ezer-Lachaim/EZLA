@@ -46,7 +46,7 @@ const SideBar = () => {
   ];
 
   return (
-    <nav className="bg-blue-600 shrink-0 w-250 mt-16">
+    <nav className="bg-blue-600 shrink-0 w-250">
       <List>
         {propsItem.map((item) => (
           <Link to={item.to} key={item.id} style={{ textDecoration: 'none' }}>
@@ -63,7 +63,7 @@ const SideBar = () => {
                   {item.text === 'מתנדבים' && <SupervisedUserCircleIcon />}
                   {item.text === 'הגדרות' && <SettingsIcon />}
                 </ListItemIcon>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="flex items-center">
                   <ListItemText
                     primary={
                       <Typography

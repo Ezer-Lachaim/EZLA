@@ -1,25 +1,24 @@
 import client from './redis-client';
+import { Settings } from '../models/settings';
 
-interface Settings {
-  isRoundTripEnabled: boolean;
-  rideTimeRestriction: number;
-}
+const SETTINGS_KEY = 'settings';
 
 // Method to get settings from Redis
-export async function getSettings(): Promise<Settings> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const settingsJson: any = await client.json.get('settings');
-  if (settingsJson) {
-    return settingsJson;
+export async function getSettings(): Promise<Settings | undefined> {
+  const value = (await client.json.get(SETTINGS_KEY)) as unknown;
+  if (value) {
+    return value as Settings;
   }
-  // If settings not found, return default settings
-  return {
-    isRoundTripEnabled: false,
-    rideTimeRestriction: 24
-  };
+
+  return undefined;
 }
 
 // Method to set or update settings in Redis
-export async function setSettings(settings: Settings): Promise<void> {
-  await client.json.set('settings:', '$', { ...settings });
+export async function updateSettings(settings: Settings): Promise<Settings> {
+  const dbSettings = await getSettings();
+
+  const joinedSettings = { ...dbSettings, ...settings };
+  await client.json.set(SETTINGS_KEY, '$', joinedSettings);
+
+  return joinedSettings;
 }
