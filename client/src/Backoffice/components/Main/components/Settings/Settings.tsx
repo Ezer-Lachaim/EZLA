@@ -125,7 +125,7 @@ function SettingsForm({
         />
 
         <FormHelperText className="mx-1">
-          נוסעים לא יוכלו להזמין נסיעה במועד מוקדם ממינימום הזמן שנקבע
+          הנוסע יוכל לבקש נסיעה הלוך ושוב. זוהי אינדיקציה בלבד. לא יווצרו שתי נסיעות.
         </FormHelperText>
       </FormControl>
 
