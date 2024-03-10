@@ -108,7 +108,7 @@ function SettingsForm({
         )}
 
         <FormHelperText className="mx-1">
-          נוסעים לא יוכלו להזמין נסיעה במועד מוקדם ממינימום הזמן שנקבע
+          נוסעים לא יוכלו להזמין נסיעה במועד מוקדם ממינימום הזמן שנקבע.
         </FormHelperText>
       </FormControl>
 

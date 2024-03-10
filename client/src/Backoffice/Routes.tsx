@@ -6,7 +6,7 @@ import Rides from './components/Main/components/Rides/Rides';
 import Settings from './components/Main/components/Settings/Settings';
 
 const routes = [
-  <Route key="" path="" element={<NewCustomers />} />,
+  <Route key="base" index element={<NewCustomers />} />,
   <Route key="rides" path="rides" element={<Rides />} />,
   <Route key="passengers" path="passengers" element={<Passengers />} />,
   <Route key="volunteers" path="volunteers" element={<Volunteers />} />,

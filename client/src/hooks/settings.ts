@@ -10,6 +10,7 @@ export default function useSettings() {
     queryKey: [QUERY_KEY],
     queryFn: async () => {
       try {
+        // eslint-disable-next-line @typescript-eslint/return-await
         return await api.settings.settingsGet();
       } catch (e) {
         return null;
