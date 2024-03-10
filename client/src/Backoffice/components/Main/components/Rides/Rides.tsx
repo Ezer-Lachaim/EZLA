@@ -252,10 +252,15 @@ const columns: ColumnDef<Partial<Ride>>[] = [
 const Rides = () => {
   const [rides, setRides] = useState<Ride[]>([]);
   const [isAddRideModalOpen, setIsAddRideModalOpen] = useState(false);
+  const [waitingRides, setWaitingRides] = useState<Ride[]>([]);
 
   useEffect(() => {
     const fetchRides = async () => {
       const response = await api.ride.ridesGet();
+
+      setWaitingRides(
+        response.filter((ride) => ride.state === 'WaitingForDriver' || ride.state === 'Booked')
+      );
 
       const sortedRides = response.sort((a, b) => {
         if (!a.requestTimeStamp) return 1;
@@ -272,7 +277,19 @@ const Rides = () => {
   return (
     <div className="flex flex-col flex-grow">
       <PageHeader>
-        <PageHeader.Title>נסיעות ({rides?.length})</PageHeader.Title>
+        <PageHeader.Title>
+          נסיעות ({rides?.length}){' '}
+          {waitingRides.length ? (
+            <Chip
+              label={
+                <Typography className="text-sm font-normal text-white p-0">
+                  {waitingRides.length} ממתינות לנהג
+                </Typography>
+              }
+              className="bg-[#FF9800] leading-tight h-auto ms-4"
+            />
+          ) : null}
+        </PageHeader.Title>
 
         <PageHeader.ActionButton onClick={() => setIsAddRideModalOpen(true)}>
           נסיעה חדשה
