@@ -22,7 +22,7 @@ enum TabsEnum {
   Rides = 2,
   Passengers = 3,
   Volunteers = 4,
-  Settings = 4
+  Settings = 5
 }
 
 const tabs = [
