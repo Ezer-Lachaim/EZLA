@@ -7,7 +7,7 @@ import {
   Typography,
   Badge
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -16,49 +16,58 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { Ride } from '../../../../../api-client';
 import { api } from '../../../../../services/api';
 
+enum TabsEnum {
+  NewRegistrations = 1,
+  Rides = 2,
+  Passengers = 3,
+  Volunteers = 4
+}
+
+const tabs = [
+  { to: '', text: 'נרשמים חדשים', id: TabsEnum.NewRegistrations, icon: <MoveToInboxIcon /> },
+  { to: 'rides', text: 'נסיעות', id: TabsEnum.Rides, icon: <DirectionsCarIcon /> },
+  { to: 'passengers', text: 'נוסעים', id: TabsEnum.Passengers, icon: <EmojiPeopleIcon /> },
+  { to: 'volunteers', text: 'מתנדבים', id: TabsEnum.Volunteers, icon: <SupervisedUserCircleIcon /> }
+];
+
+const tabsPathMap = new Map(tabs.map((tab) => [tab.to, tab.id]));
+
 const SideBar = () => {
-  const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
-  const [activeLink, setActiveLink] = useState('נרשמים חדשים');
+  const [waitingRides, setWaitingRides] = useState<Ride[]>([]);
+  const [activeTab, setActiveTab] = useState<TabsEnum | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchRides = async () => {
       const response = await api.ride.ridesGet();
 
-      const filtered = response.filter(
-        (ride) => ride.state === 'WaitingForDriver' || ride.state === 'Booked'
+      setWaitingRides(
+        response.filter((ride) => ride.state === 'WaitingForDriver' || ride.state === 'Booked')
       );
-      setFilteredRides(filtered);
     };
     fetchRides();
   }, []);
 
-  const handleClick = (path: string) => {
-    setActiveLink(path);
-  };
-
-  const propsItem = [
-    { to: '', text: 'נרשמים חדשים', id: 1 },
-    { to: 'rides', text: 'נסיעות', id: 2, badgeCount: filteredRides.length },
-    { to: 'passengers', text: 'נוסעים', id: 3 },
-    { to: 'volunteers', text: 'מתנדבים', id: 4 }
-  ];
+  useEffect(() => {
+    const currentPath = location.pathname.split('/backoffice/')?.[1]?.split('/')?.[0] ?? '';
+    const currentTab = tabsPathMap.get(currentPath);
+    if (currentTab) {
+      setActiveTab(currentTab);
+    }
+  }, [location]);
 
   return (
     <nav className="bg-blue-600 shrink-0 w-250">
       <List>
-        {propsItem.map((item) => (
-          <Link to={item.to} key={item.id} style={{ textDecoration: 'none' }}>
+        {tabs.map((tab) => (
+          <Link to={tab.to} key={tab.id} style={{ textDecoration: 'none' }}>
             <ListItem disablePadding>
               <ListItemButton
-                className={activeLink === item.text ? 'bg-blue-600' : 'text-white'}
-                style={{ backgroundColor: activeLink === item.text ? 'white' : '' }}
-                onClick={() => handleClick(item.text)}
+                className={activeTab === tab.id ? 'bg-blue-600' : 'text-white'}
+                style={{ backgroundColor: activeTab === tab.id ? 'white' : '' }}
               >
-                <ListItemIcon className={activeLink === item.text ? '#007DFF' : 'text-white'}>
-                  {item.text === 'נרשמים חדשים' && <MoveToInboxIcon />}
-                  {item.text === 'נסיעות' && <DirectionsCarIcon />}
-                  {item.text === 'נוסעים' && <EmojiPeopleIcon />}
-                  {item.text === 'מתנדבים' && <SupervisedUserCircleIcon />}
+                <ListItemIcon className={activeTab === tab.id ? '#007DFF' : 'text-white'}>
+                  {tab.icon}
                 </ListItemIcon>
                 <div className="flex items-center">
                   <ListItemText
@@ -67,19 +76,19 @@ const SideBar = () => {
                         variant="body1"
                         sx={{
                           fontWeight: 400,
-                          color: activeLink === item.text ? '#007DFF' : 'white'
+                          color: activeTab === tab.id ? '#007DFF' : 'white'
                         }}
                       >
-                        {item.text}
+                        {tab.text}
                       </Typography>
                     }
                   />
-                  {item.text === 'נסיעות' && (
+                  {tab.id === TabsEnum.Rides && waitingRides.length ? (
                     <Badge
-                      badgeContent={item.badgeCount}
+                      badgeContent={waitingRides.length}
                       classes={{ badge: 'bg-[#FF9800]', root: 'ms-4' }}
                     />
-                  )}
+                  ) : null}
                 </div>
               </ListItemButton>
             </ListItem>
