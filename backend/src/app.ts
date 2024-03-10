@@ -50,6 +50,7 @@ app.use('/rides', ridesRouter);
 app.use('/settings', settingsRouter);
 app.use('/signup', checkTokenMiddleware, signupDriversRoutes);
 app.use('/', index);
+
 app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
