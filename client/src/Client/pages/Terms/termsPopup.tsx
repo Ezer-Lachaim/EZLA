@@ -23,7 +23,14 @@ function TermsPolicyPopup() {
 
   return (
     <>
-      <Button onClick={handleOpen} className="underline p-0">
+      <Button
+        onClick={handleOpen}
+        style={{
+          fontSize: 'inherit',
+          textDecoration: 'underline',
+          padding: 0
+        }}
+      >
         תנאי השימוש
       </Button>
       <Modal

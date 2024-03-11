@@ -31,7 +31,7 @@ function PrivacyPolicyPopup() {
           padding: 0
         }}
       >
-        מדיניות פרטיות
+        מדיניות הפרטיות
       </Button>
       <Modal
         open={open}
