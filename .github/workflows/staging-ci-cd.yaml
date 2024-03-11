@@ -1,8 +1,8 @@
 name: Staging CI/CD
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
 
 jobs:
   staging-ci-cd:
@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: 18
       - run: npm ci
       - run: npm run build -w backend
       - run: npm run build-staging -w client
@@ -34,16 +34,14 @@ jobs:
       - name: Configure Docker
         run: |
           gcloud auth configure-docker
-
         # Build the Docker image
       - name: Build & Publish
         run: |
-          docker build . --tag 'gcr.io/ezla-pickup/ezer-lachaim/ezla_stage'
-          docker push 'gcr.io/ezla-pickup/ezer-lachaim/ezla_stage'
-
+          docker build . --tag 'gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}'
+          docker push 'gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}'
       - name: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: api-hub-staging
-          image: gcr.io/ezla-pickup/ezer-lachaim/ezla_stage
+          image: gcr.io/ezla-pickup/ezer-lachaim/ezla:${{github.run_number}}
           region: us-east1
