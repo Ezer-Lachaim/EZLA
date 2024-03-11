@@ -1,26 +1,63 @@
 import {
+  Box,
   Checkbox,
   FormControl,
   FormHelperText,
   InputLabel,
   ListItemText,
   MenuItem,
-  OutlinedInput,
   Select,
-  TextField
+  TextField,
+  Grid
 } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { TimePicker } from '@mui/x-date-pickers';
 import { useFormContext } from 'react-hook-form';
-import { Ride } from '../../../../../../../api-client';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import dayjs, { Dayjs } from 'dayjs';
+import { Ride, RideServiceTypeEnum } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
+import DayPicker from '../../../DayPicker/DayPicker';
+import {
+  fixTimeForDufault,
+  getHoursArray,
+  getMenuHoursLabel
+} from '../../../../../../../utils/datetime';
+
+const menuHours = getHoursArray(7);
 
 function NewRideInfo() {
   const {
     register,
     watch,
+    setValue,
     formState: { errors }
   } = useFormContext<Ride>();
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
+  const serviceType = watch('serviceType');
+
+  // For pickupDateTime
+  const timeDufault = fixTimeForDufault();
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+
+  useEffect(() => {
+    if (!pickupDate || !pickupTime) {
+      setValue('pickupDateTime', undefined);
+      return;
+    }
+
+    const joined = pickupDate
+      .clone()
+      .hour(pickupTime.hour())
+      .minute(pickupTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    setValue('pickupDateTime', joined.toDate());
+  }, [pickupDate, pickupTime, setValue]);
 
   return (
     <div className="flex gap-4">
@@ -77,6 +114,37 @@ function NewRideInfo() {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <DayPicker
+            label="תאריך איסוף מבוקש"
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            value={pickupDate}
+            onChange={(date) => setPickupDate(date)}
+            format="DD/MM/YYYY"
+          />
+        </FormControl>
+        <FormControl sx={{ width: '100%' }} required>
+          <InputLabel id="relevant-time-label" required>
+            כמה זמן רלוונטי
+          </InputLabel>
+          <Select
+            labelId="relevant-time-label"
+            aria-labelledby="relevant-time-label"
+            id="relevant-time"
+            value={watch('relevantTime')}
+            onChange={(e) => setValue('relevantTime', e.target.value as number)}
+            label="כמה זמן רלוונטי"
+            required
+          >
+            {menuHours.map((hour) => (
+              <MenuItem key={hour} value={hour}>
+                {getMenuHoursLabel(hour)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl>
           <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
           <Select
@@ -84,7 +152,7 @@ function NewRideInfo() {
             aria-labelledby="special-requests-label"
             id="special-requests"
             multiple
-            input={<OutlinedInput label="בקשות מיוחדות" />}
+            label="בקשות מיוחדות"
             {...register('specialRequest')}
             value={selectedSpecialRequests}
             renderValue={(selected: unknown[]) =>
@@ -140,21 +208,62 @@ function NewRideInfo() {
           )}
         </FormControl>
         <FormControl>
-          <TextField
-            id="passengerCount"
-            required
-            label="מספר נוסעים"
-            type="number"
-            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-            defaultValue={1}
-            error={!!errors?.passengerCount}
-            {...register('passengerCount', { required: true })}
-            sx={{
-              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
-                {
-                  opacity: 1
-                }
-            }}
+          <Grid container justifyContent="space-between">
+            <Grid item xs={6}>
+              <Box>
+                <InputLabel id="serviceType">סוגי נסיעה</InputLabel>
+                <Select
+                  style={{ width: '98%', padding: 0, height: 54 }}
+                  labelId="serviceType"
+                  id="serviceType"
+                  defaultValue={serviceType}
+                  label="סוגי נסיעה *"
+                >
+                  <MenuItem
+                    value={RideServiceTypeEnum.Ride}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Ride)}
+                  >
+                    <EmojiPeopleIcon /> נסיעה
+                  </MenuItem>
+                  <MenuItem
+                    value={RideServiceTypeEnum.Delivery}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Delivery)}
+                  >
+                    <InventoryIcon /> משלוח
+                  </MenuItem>
+                </Select>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                style={{ width: '100%' }}
+                id="passengerCount"
+                required
+                label="כמות"
+                type="number"
+                inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+                defaultValue={1}
+                error={!!errors?.passengerCount}
+                {...register('passengerCount', { required: true })}
+                sx={{
+                  '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                    {
+                      opacity: 1
+                    }
+                }}
+              />
+            </Grid>
+          </Grid>
+        </FormControl>
+        <FormControl>
+          <TimePicker
+            sx={{ width: '100%' }}
+            label="שעת איסוף"
+            disablePast
+            ampm={false}
+            value={pickupTime}
+            onChange={(date) => setPickupTime(date)}
+            views={['minutes', 'hours']}
           />
         </FormControl>
         <FormControl>
@@ -163,10 +272,12 @@ function NewRideInfo() {
             type="string"
             placeholder="הסבר קצר לגבי תיאור הנסיעה"
             multiline
+            required
             maxRows={2}
             error={!!errors?.comment}
             {...register('comment', {
-              maxLength: 100
+              maxLength: 100,
+              required: true
             })}
             inputProps={{
               maxLength: 100
@@ -181,6 +292,7 @@ function NewRideInfo() {
           </span>
           {errors.comment && (
             <FormHelperText error className="absolute top-full mr-0">
+              {errors.comment.type === 'required' && 'יש להזין את תיאור הנסיעה'}
               {errors.comment.type === 'maxLength' && 'חרגתם מאורך ההודעה המותר'}
             </FormHelperText>
           )}

@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { api } from '../../../../../../services/api';
-import { Ride, RideStateEnum, FetchError } from '../../../../../../api-client';
+import { Ride, RideStateEnum, FetchError, RideServiceTypeEnum } from '../../../../../../api-client';
 import NewRideInfo from './NewRideInfo/NewRideInfo.tsx';
 
 const style = {
@@ -29,7 +29,9 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
 
   const methods = useForm<Ride>({
     defaultValues: {
-      specialRequest: []
+      serviceType: RideServiceTypeEnum.Ride,
+      specialRequest: [],
+      relevantTime: 3
     }
   });
 
@@ -43,7 +45,8 @@ function AddRideModal({ open, handleModal }: AddCustomerModalProps) {
       'destination',
       'cellphone',
       'passengerCount',
-      'comment'
+      'comment',
+      'serviceType'
     ]);
 
     if (isStepValid) {

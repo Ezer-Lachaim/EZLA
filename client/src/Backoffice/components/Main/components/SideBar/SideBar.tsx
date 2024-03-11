@@ -69,7 +69,7 @@ const SideBar = () => {
                 <ListItemIcon className={activeTab === tab.id ? '#007DFF' : 'text-white'}>
                   {tab.icon}
                 </ListItemIcon>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="flex items-center">
                   <ListItemText
                     primary={
                       <Typography
@@ -86,8 +86,7 @@ const SideBar = () => {
                   {tab.id === TabsEnum.Rides && waitingRides.length ? (
                     <Badge
                       badgeContent={waitingRides.length}
-                      color="error"
-                      sx={{ backgroundColor: '#FF9800', marginLeft: '16px' }}
+                      classes={{ badge: 'bg-[#FF9800]', root: 'ms-4' }}
                     />
                   ) : null}
                 </div>

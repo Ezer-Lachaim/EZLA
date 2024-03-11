@@ -25,7 +25,7 @@ const RideCompleted = () => {
         className="w-full absolute bottom-2"
         onClick={confirmComplete}
       >
-        סיום נסיעה
+        לקריאות פתוחות
       </Button>
     </div>
   );

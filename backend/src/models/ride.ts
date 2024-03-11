@@ -26,6 +26,12 @@ export interface Ride {
      */
     rideId?: string;
     /**
+     * 
+     * @type {string}
+     * @memberof Ride
+     */
+    serviceType?: RideServiceTypeEnum;
+    /**
      *
      * @type {string}
      * @memberof Ride
@@ -73,6 +79,18 @@ export interface Ride {
      * @type {number}
      * @memberof Ride
      */
+    pickupDateTime?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
+    relevantTime?: number; 
+        /**
+     * 
+     * @type {number}
+     * @memberof Ride
+     */
     destinationArrivalTime?: number | null;
     /**
      * 
@@ -113,12 +131,22 @@ export interface Ride {
 }
 
 /**
+ * @export
+ */
+export const RideServiceTypeEnum = {
+    Ride: 'Ride',
+    Delivery: 'Delivery'
+} as const;
+export type RideServiceTypeEnum = typeof RideServiceTypeEnum[keyof typeof RideServiceTypeEnum];
+
+/**
     * @export
     * @enum {string}
     */
 export enum RideStateEnum {
     WaitingForDriver = 'WaitingForDriver',
     Booked = 'Booked',
+    DriverEnroute = 'DriverEnroute',
     DriverArrived = 'DriverArrived',
     Riding = 'Riding',
     Completed = 'Completed',
@@ -136,6 +164,13 @@ export enum RideSpecialRequestEnum {
     BabyChair = 'BabyChair',
     KidsChair = 'KidsChair',
     AccessibleCar = 'AccessibleCar',
-    PatientDelivery = 'PatientDelivery'
+    Food = 'Food',
+    MilitaryEquipment = 'MilitaryEquipment',
+    MedicalEquipment = 'MedicalEquipment',
+    HolyItems = 'HolyItems',
+    LargeVolume = 'LargeVolume',
+    SmallVolume = 'SmallVolume',
+    HeavyWeight = 'HeavyWeight',
+    Fragile = 'Fragile'
 }
 

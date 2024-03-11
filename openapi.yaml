@@ -295,6 +295,7 @@ paths:
             enum:
               - WaitingForDriver
               - Booked
+              - DriverEnroute
               - DriverArrived
               - Riding
               - Completed
@@ -303,6 +304,12 @@ paths:
               - Canceled
           required: false
           description: Ride state
+        - in: query
+          name: driverId
+          schema:
+            type: string
+          required: false
+          description: ID of the driver associated with the ride
       responses:
         '200':
           description: Successful operation
@@ -547,6 +554,11 @@ components:
         rideId:
           type: string
           example: 'v4xpr8hLrLR3W5VUTN2zZ3XXKrF3'
+        serviceType:
+          type: string
+          enum:
+            - Ride
+            - Delivery
         destination:
           type: string
           example: "Airport"
@@ -561,6 +573,7 @@ components:
           enum:
             - WaitingForDriver
             - Booked
+            - DriverEnroute
             - DriverArrived
             - Riding
             - Completed
@@ -580,12 +593,26 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         requestTimeStamp:
           type: string
           format: date
           example: "2023-06-14"
+        pickupDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-31T16:10:00Z" 
+        relevantTime:
+          type: integer
+          example: 3
         destinationArrivalTime:
           type: number
           nullable: true
@@ -625,7 +652,14 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
+              - Food
+              - MilitaryEquipment
+              - MedicalEquipment
+              - HolyItems
+              - LargeVolume
+              - SmallVolume
+              - HeavyWeight
+              - Fragile
           example: ["WheelChair"]
         startServiceDate:
           type: string
@@ -672,7 +706,6 @@ components:
               - BabyChair
               - KidsChair
               - AccessibleCar
-              - PatientDelivery
     CreateUserResponse:
       properties:
         user:
