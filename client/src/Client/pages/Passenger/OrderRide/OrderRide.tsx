@@ -237,7 +237,7 @@ const OrderRide = () => {
   );
 
   // For pickupDateTime
-  const timeDufault = fixTimeForDufault();
+  const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
   const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
   const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
 
