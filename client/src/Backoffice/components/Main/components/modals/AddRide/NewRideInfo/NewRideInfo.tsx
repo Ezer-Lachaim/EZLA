@@ -25,7 +25,6 @@ import {
   getMenuHoursLabel
 } from '../../../../../../../utils/datetime';
 import useSettings from '../../../../../../../hooks/settings';
-import { api } from '../../../../../../../services/api';
 
 const menuHours = getHoursArray(7);
 
@@ -39,25 +38,12 @@ function NewRideInfo() {
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
   const serviceType = watch('serviceType');
-  const { settings, setSettings } = useSettings();
+  const { settings } = useSettings();
 
-  // For pickupDateTime
-  const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
-  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
-  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(null);
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(null);
 
   useEffect(() => {
-    const settingsCall = async () => {
-      const settingsData = await api.settings.settingsGet();
-      if (settingsData) {
-        const newSettings = {
-          isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
-          rideTimeRestriction: settingsData.rideTimeRestriction || 0
-        };
-        setSettings(newSettings);
-      }
-    };
-    settingsCall();
     if (!pickupDate || !pickupTime) {
       setValue('pickupDateTime', undefined);
       return;
@@ -72,6 +58,15 @@ function NewRideInfo() {
 
     setValue('pickupDateTime', joined.toDate());
   }, [pickupDate, pickupTime, setValue]);
+
+  useEffect(() => {
+    if (settings === undefined) {
+      return;
+    }
+    const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
+    setPickupDate(timeDufault.clone());
+    setPickupTime(timeDufault.clone());
+  }, [settings]);
 
   return (
     <div className="flex gap-4">

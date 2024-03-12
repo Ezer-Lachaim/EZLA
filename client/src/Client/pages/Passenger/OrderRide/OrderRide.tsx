@@ -237,9 +237,8 @@ const OrderRide = () => {
   );
 
   // For pickupDateTime
-  const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
-  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
-  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(null);
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(null);
 
   const specialRequestLabels = { ...staticSpecialRequestLabels };
   if (settings?.isRoundTripEnabled) {
@@ -261,6 +260,15 @@ const OrderRide = () => {
 
     setValue('ride.pickupDateTime', joined.toDate());
   }, [pickupDate, pickupTime, setValue]);
+
+  useEffect(() => {
+    if (settings === undefined) {
+      return;
+    }
+    const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
+    setPickupDate(timeDufault.clone());
+    setPickupTime(timeDufault.clone());
+  }, [settings]);
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);
