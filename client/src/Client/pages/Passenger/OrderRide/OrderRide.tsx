@@ -126,7 +126,7 @@ const OrderRide = () => {
   );
 
   const [isOrderRideLoading, setIsOrderRideLoading] = useState(false);
-  const { settings, setSettings } = useSettings();
+  const { settings } = useSettings();
   const {
     register,
     watch,
@@ -172,17 +172,6 @@ const OrderRide = () => {
   };
 
   useEffect(() => {
-    const settingsCall = async () => {
-      const settingsData = await api.settings.settingsGet();
-      if (settingsData) {
-        const newSettings = {
-          isRoundTripEnabled: settingsData.isRoundTripEnabled ?? false,
-          rideTimeRestriction: settingsData.rideTimeRestriction || 0
-        };
-        setSettings(newSettings);
-      }
-    };
-    settingsCall();
     if (!user) {
       return;
     }
