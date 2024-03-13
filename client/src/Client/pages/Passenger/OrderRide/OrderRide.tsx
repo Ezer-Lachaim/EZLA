@@ -267,8 +267,8 @@ const OrderRide = () => {
     }
     const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
     if (pickupDate === null && pickupTime === null) {
-    setPickupDate(timeDufault.clone());
-    setPickupTime(timeDufault.clone());
+      setPickupDate(timeDufault.clone());
+      setPickupTime(timeDufault.clone());
     }
   }, [settings]);
 

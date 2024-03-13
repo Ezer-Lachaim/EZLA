@@ -67,7 +67,7 @@ function NewRideInfo() {
     if (pickupDate === null && pickupTime === null) {
       setPickupDate(timeDufault.clone());
       setPickupTime(timeDufault.clone());
-      }
+    }
   }, [settings]);
 
   return (
