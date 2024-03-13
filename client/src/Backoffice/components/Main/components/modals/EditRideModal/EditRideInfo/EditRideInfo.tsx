@@ -9,9 +9,15 @@ import {
   TextField
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { TimePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 import { Ride } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
+import DayPicker from '../../../DayPicker/DayPicker';
+import { getHoursArray, getMenuHoursLabel } from '../../../../../../../utils/datetime';
+
+const menuHours = getHoursArray(7);
 
 function EditRideInfo({ ride }: { ride: Ride }) {
   const {
@@ -21,17 +27,27 @@ function EditRideInfo({ ride }: { ride: Ride }) {
     formState: { errors }
   } = useFormContext<Ride>();
 
-  useEffect(() => {
-    setValue('firstName', ride.firstName || '');
-    setValue('origin', ride.origin || '');
-    setValue('cellphone', ride.cellphone || '');
-    setValue('lastName', ride.lastName || '');
-    setValue('destination', ride.destination || '');
-    setValue('comment', ride.comment || '');
-    setValue('specialRequest', ride.specialRequest || []);
-  }, [ride, setValue]);
-
   const selectedSpecialRequests = watch('specialRequest', []);
+
+  // For pickupDateTime
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(dayjs(watch('pickupDateTime')));
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(dayjs(watch('pickupDateTime')));
+
+  useEffect(() => {
+    if (!pickupDate || !pickupTime) {
+      setValue('pickupDateTime', undefined);
+      return;
+    }
+
+    const joined = pickupDate
+      .clone()
+      .hour(pickupTime.hour())
+      .minute(pickupTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    setValue('pickupDateTime', joined.toDate());
+  }, [pickupDate, pickupTime, setValue]);
 
   return (
     <div className="flex gap-4">
@@ -88,6 +104,38 @@ function EditRideInfo({ ride }: { ride: Ride }) {
             </FormHelperText>
           )}
         </FormControl>
+
+        <FormControl>
+          <DayPicker
+            label="תאריך איסוף מבוקש"
+            maxDate={dayjs().add(3, 'day')}
+            disablePast
+            value={pickupDate}
+            onChange={(date) => setPickupDate(date)}
+            format="DD/MM/YYYY"
+          />
+        </FormControl>
+        <FormControl sx={{ width: '100%' }} required>
+          <InputLabel id="relevant-time-label" required>
+            כמה זמן רלוונטי
+          </InputLabel>
+          <Select
+            labelId="relevant-time-label"
+            aria-labelledby="relevant-time-label"
+            id="relevant-time"
+            value={watch('relevantTime')}
+            onChange={(e) => setValue('relevantTime', e.target.value as number)}
+            label="כמה זמן רלוונטי"
+            required
+          >
+            {menuHours.map((hour) => (
+              <MenuItem key={hour} value={hour}>
+                {getMenuHoursLabel(hour)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <div className="flex flex-col gap-8 flex-1">
           <FormControl className="flex flex-col gap-2">
             <InputLabel id="special-requests-label">בקשות מיוחדות</InputLabel>
@@ -168,6 +216,17 @@ function EditRideInfo({ ride }: { ride: Ride }) {
                   opacity: 1
                 }
             }}
+          />
+        </FormControl>
+        <FormControl>
+          <TimePicker
+            sx={{ width: '100%' }}
+            label="שעת איסוף"
+            disablePast
+            ampm={false}
+            value={pickupTime}
+            onChange={(date) => setPickupTime(date)}
+            views={['minutes', 'hours']}
           />
         </FormControl>
         <FormControl>
