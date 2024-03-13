@@ -266,11 +266,13 @@ const OrderRide = () => {
       return;
     }
     const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
-    if (pickupDate === null && pickupTime === null) {
+    if (pickupDate === null) {
       setPickupDate(timeDufault.clone());
+    }
+    if (pickupTime === null) {
       setPickupTime(timeDufault.clone());
     }
-  }, [settings]);
+  }, [settings, pickupTime, pickupDate]);
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {
     setRideOrDelivery(newValue);
