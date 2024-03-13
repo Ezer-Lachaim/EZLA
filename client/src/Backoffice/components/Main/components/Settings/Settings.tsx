@@ -69,15 +69,11 @@ function SettingsForm({
   onSubmit,
   disabled = false
 }: {
-  defaultSettings?: Settings,
+  defaultSettings?: Settings;
   onSubmit: SubmitHandler<Settings>;
   disabled?: boolean;
 }) {
-  const {
-    watch,
-    handleSubmit,
-    setValue,
-  } = useForm<Settings>({
+  const { watch, handleSubmit, setValue } = useForm<Settings>({
     defaultValues: defaultSettings
   });
 
