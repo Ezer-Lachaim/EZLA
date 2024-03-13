@@ -266,8 +266,10 @@ const OrderRide = () => {
       return;
     }
     const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
+    if (pickupDate === null && pickupTime === null) {
     setPickupDate(timeDufault.clone());
     setPickupTime(timeDufault.clone());
+    }
   }, [settings]);
 
   const handleDeliveryDriverButtonClick = (newValue: RideServiceTypeEnum) => {

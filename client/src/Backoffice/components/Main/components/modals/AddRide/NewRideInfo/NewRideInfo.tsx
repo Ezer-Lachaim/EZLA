@@ -64,8 +64,10 @@ function NewRideInfo() {
       return;
     }
     const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
-    setPickupDate(timeDufault.clone());
-    setPickupTime(timeDufault.clone());
+    if (pickupDate === null && pickupTime === null) {
+      setPickupDate(timeDufault.clone());
+      setPickupTime(timeDufault.clone());
+      }
   }, [settings]);
 
   return (
