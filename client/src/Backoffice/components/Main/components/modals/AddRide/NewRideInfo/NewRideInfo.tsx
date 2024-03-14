@@ -24,6 +24,7 @@ import {
   getHoursArray,
   getMenuHoursLabel
 } from '../../../../../../../utils/datetime';
+import useSettings from '../../../../../../../hooks/settings';
 
 const menuHours = getHoursArray(7);
 
@@ -37,11 +38,10 @@ function NewRideInfo() {
   const specialRequestsDefaultValue = DRIVER_CAPABILITIES.map(({ value }) => value);
   const selectedSpecialRequests = watch('specialRequest', specialRequestsDefaultValue) || [];
   const serviceType = watch('serviceType');
+  const { settings } = useSettings();
 
-  // For pickupDateTime
-  const timeDufault = fixTimeForDufault();
-  const [pickupDate, setPickupDate] = useState<Dayjs | null>(timeDufault.clone());
-  const [pickupTime, setPickupTime] = useState<Dayjs | null>(timeDufault.clone());
+  const [pickupDate, setPickupDate] = useState<Dayjs | null>(null);
+  const [pickupTime, setPickupTime] = useState<Dayjs | null>(null);
 
   useEffect(() => {
     if (!pickupDate || !pickupTime) {
@@ -58,6 +58,19 @@ function NewRideInfo() {
 
     setValue('pickupDateTime', joined.toDate());
   }, [pickupDate, pickupTime, setValue]);
+
+  useEffect(() => {
+    if (settings === undefined) {
+      return;
+    }
+    const timeDufault = fixTimeForDufault(settings?.rideTimeRestriction);
+    if (pickupDate === null) {
+      setPickupDate(timeDufault.clone());
+    }
+    if (pickupTime === null) {
+      setPickupTime(timeDufault.clone());
+    }
+  }, [settings, pickupTime, pickupDate]);
 
   return (
     <div className="flex gap-4">

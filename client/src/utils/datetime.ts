@@ -9,9 +9,9 @@ export function getDayStart(date: Date) {
   return clone;
 }
 
-export const fixTimeForDufault = () => {
+export const fixTimeForDufault = (rideTimeRestriction?: number | undefined) => {
   let today = dayjs();
-  today = today.add(3, 'hour');
+  today = today.add(3 + (rideTimeRestriction ?? 0), 'hour');
   const remainderMinutes = today.minute() % 5;
   today = today.minute(today.minute() + 5 - remainderMinutes);
   return today;
