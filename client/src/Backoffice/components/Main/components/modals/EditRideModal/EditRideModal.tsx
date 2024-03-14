@@ -28,7 +28,19 @@ function EditRideModal({ open, handleModal, ride }: EditRideModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const methods = useForm<Ride>();
+  const methods = useForm<Ride>({
+    defaultValues: {
+      firstName: ride.firstName || '',
+      origin: ride.origin || '',
+      cellphone: ride.cellphone || '',
+      lastName: ride.lastName || '',
+      destination: ride.destination || '',
+      comment: ride.comment || '',
+      specialRequest: ride.specialRequest || [],
+      pickupDateTime: ride.pickupDateTime || undefined,
+      relevantTime: ride.relevantTime || 3
+    }
+  });
 
   const { handleSubmit, trigger } = methods;
 
