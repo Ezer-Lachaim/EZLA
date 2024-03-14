@@ -9,9 +9,14 @@ import {
   FormControl,
   Select,
   MenuItem,
-  Typography
+  Typography,
+  TextField
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import AddIcon from '@mui/icons-material/Add';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PageHeader from '../PageHeader/PageHeader';
 import { Settings } from '../../../../../api-client';
 import useSettings from '../../../../../hooks/settings';
@@ -64,6 +69,17 @@ const SettingsPage = () => {
 
 export default SettingsPage;
 
+const genericSpecialRequest = ({ text, onDelete }: { text: string; onDelete: () => void }) => (
+  <div className="flex flex-row justify-between w-[31.25rem]">
+    <Typography className="text-lg">{text}</Typography>
+    <span>
+      <ArrowDropUpIcon />
+      <ArrowDropDownIcon />
+      <DeleteForeverIcon onClick={onDelete} />
+    </span>
+  </div>
+);
+
 function SettingsForm({
   defaultSettings = undefined,
   onSubmit,
@@ -76,6 +92,40 @@ function SettingsForm({
   const { watch, handleSubmit, setValue } = useForm<Settings>({
     defaultValues: defaultSettings
   });
+
+  // State variables for special requests
+  const [ridesSpecialRequests, setRidesSpecialRequests] = useState<string[]>([
+    'התאמה לכסא גלגלים',
+    'מושב בטיחות לתינוק'
+  ]);
+  const [deliversSpecialRequests, setDeliversSpecialRequests] = useState<string[]>([
+    'משלוח מזון',
+    'ציוד רפואי'
+  ]);
+  const [rideSpecialRequest, setRideSpecialRequest] = useState<string>('');
+  const [deliverySpecialRequest, setDeliverySpecialRequest] = useState<string>('');
+
+  const handleAddRideSpecialRequest = () => {
+    setRidesSpecialRequests((prevRequests) => [...prevRequests, rideSpecialRequest]);
+    setRideSpecialRequest(''); // Clear the input after adding
+  };
+
+  const handleAddDeliverySpecialRequest = () => {
+    setDeliversSpecialRequests((prevRequests) => [...prevRequests, deliverySpecialRequest]);
+    setDeliverySpecialRequest(''); // Clear the input after adding
+  };
+
+  const handleDeleteRideSpecialRequest = (index: number) => {
+    const updatedRequests = [...ridesSpecialRequests];
+    updatedRequests.splice(index, 1);
+    setRidesSpecialRequests(updatedRequests);
+  };
+
+  const handleDeleteDeliverySpecialRequest = (index: number) => {
+    const updatedRequests = [...deliversSpecialRequests];
+    updatedRequests.splice(index, 1);
+    setDeliversSpecialRequests(updatedRequests);
+  };
 
   return (
     <form className="flex flex-col gap-9 w-full" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -127,7 +177,72 @@ function SettingsForm({
           יתווספו שתי נסיעות.
         </FormHelperText>
       </FormControl>
-
+      <div>
+        {/* Special requests for rides */}
+        <Typography className="text-base font-normal gap-1 opacity-60">
+          בקשות מיוחדות עבור נסיעה (בחרו עד 6 אפשרויות)
+        </Typography>
+        <TextField
+          className="w-[24.625rem] my-2"
+          id="ride-special-request"
+          label="בקשה מיוחדת חדשה"
+          placeholder="כתבו בקשה מיוחדת עבור נסיעה"
+          variant="outlined"
+          value={rideSpecialRequest}
+          onChange={(e) => setRideSpecialRequest(e.target.value)}
+        />
+        <Button
+          className="my-3 mx-2"
+          variant="text"
+          startIcon={<AddIcon />}
+          onClick={handleAddRideSpecialRequest}
+        >
+          הוספה
+        </Button>
+        <ul>
+          {ridesSpecialRequests.map((request, index) => (
+            <li key={index}>
+              {genericSpecialRequest({
+                text: request,
+                onDelete: () => handleDeleteRideSpecialRequest(index)
+              })}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        {/* Special requests for deliveries */}
+        <Typography className="text-base font-normal gap-1 opacity-60">
+          בקשות מיוחדות עבור משלוח (בחרו עד 6 אפשרויות)
+        </Typography>
+        <TextField
+          className="w-[24.625rem] my-2"
+          id="delivery-special-request"
+          label="בקשה מיוחדת חדשה"
+          placeholder="כתבו בקשה מיוחדת עבור משלוח"
+          variant="outlined"
+          value={deliverySpecialRequest}
+          onChange={(e) => setDeliverySpecialRequest(e.target.value)}
+        />
+        <Button
+          className="my-3 mx-2"
+          variant="text"
+          startIcon={<AddIcon />}
+          onClick={handleAddDeliverySpecialRequest}
+        >
+          הוספה
+        </Button>
+        <ul className="my-1">
+          {deliversSpecialRequests.map((request, index) => (
+            <li key={index}>
+              {genericSpecialRequest({
+                text: request,
+                onDelete: () => handleDeleteDeliverySpecialRequest(index)
+              })}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div>
         <Button
           className="text-base font-medium"
@@ -135,7 +250,7 @@ function SettingsForm({
           size="large"
           type="submit"
           disabled={disabled}
-          startIcon={<SaveIcon />} // Add SaveIcon as startIcon
+          startIcon={<SaveIcon />}
         >
           {disabled ? 'טוען...' : 'שמירה'}
         </Button>

@@ -33,7 +33,7 @@ export async function getSettings(req: Request, res: Response): Promise<void> {
     if (!settings) {
       settings = {
         isRoundTripEnabled: false,
-        rideTimeRestriction: 24
+        rideTimeRestriction: 0
       };
     }
 

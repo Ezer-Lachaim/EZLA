@@ -22,6 +22,9 @@ export function getHoursArray(maxHour: number, minHour = 1) {
 }
 
 export function getMenuHoursLabel(hour: number) {
+  if (hour === 0) {
+    return 'ללא זמן התרעה';
+  }  
   if (hour === 1) {
     return 'שעה';
   }
