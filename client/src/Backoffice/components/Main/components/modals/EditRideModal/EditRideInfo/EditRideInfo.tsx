@@ -6,20 +6,24 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  TextField
+  TextField,
+  Grid,
+  Box
 } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { TimePicker } from '@mui/x-date-pickers';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import dayjs, { Dayjs } from 'dayjs';
-import { Ride } from '../../../../../../../api-client';
+import { Ride, RideServiceTypeEnum } from '../../../../../../../api-client';
 import { DRIVER_CAPABILITIES } from '../../../Volunteers/Volunteers.constants';
 import DayPicker from '../../../DayPicker/DayPicker';
 import { getHoursArray, getMenuHoursLabel } from '../../../../../../../utils/datetime';
 
 const menuHours = getHoursArray(7);
 
-function EditRideInfo({ ride }: { ride: Ride }) {
+function EditRideInfo() {
   const {
     register,
     watch,
@@ -28,6 +32,7 @@ function EditRideInfo({ ride }: { ride: Ride }) {
   } = useFormContext<Ride>();
 
   const selectedSpecialRequests = watch('specialRequest', []);
+  const serviceType = watch('serviceType');
 
   // For pickupDateTime
   const [pickupDate, setPickupDate] = useState<Dayjs | null>(dayjs(watch('pickupDateTime')));
@@ -201,22 +206,52 @@ function EditRideInfo({ ride }: { ride: Ride }) {
           )}
         </FormControl>
         <FormControl>
-          <TextField
-            id="passengerCount"
-            required
-            label="מספר נוסעים"
-            type="number"
-            inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
-            defaultValue={ride.passengerCount || 0}
-            error={!!errors?.passengerCount}
-            {...register('passengerCount', { required: true })}
-            sx={{
-              '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
-                {
-                  opacity: 1
-                }
-            }}
-          />
+          <Grid container justifyContent="space-between">
+            <Grid item xs={6}>
+              <Box>
+                <InputLabel id="serviceType">סוגי נסיעה</InputLabel>
+                <Select
+                  style={{ width: '98%', padding: 0, height: 54 }}
+                  labelId="serviceType"
+                  id="serviceType"
+                  defaultValue={serviceType}
+                  label="סוגי נסיעה *"
+                >
+                  <MenuItem
+                    value={RideServiceTypeEnum.Ride}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Ride)}
+                  >
+                    <EmojiPeopleIcon /> נסיעה
+                  </MenuItem>
+                  <MenuItem
+                    value={RideServiceTypeEnum.Delivery}
+                    onClick={() => setValue('serviceType', RideServiceTypeEnum.Delivery)}
+                  >
+                    <InventoryIcon /> משלוח
+                  </MenuItem>
+                </Select>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                style={{ width: '100%' }}
+                id="passengerCount"
+                required
+                label="כמות"
+                type="number"
+                inputProps={{ min: 1, max: 12, inputMode: 'numeric' }}
+                defaultValue={1}
+                error={!!errors?.passengerCount}
+                {...register('passengerCount', { required: true })}
+                sx={{
+                  '& input[type="number"]::-webkit-inner-spin-button, & input[type="number"]::-webkit-outer-spin-button':
+                    {
+                      opacity: 1
+                    }
+                }}
+              />
+            </Grid>
+          </Grid>
         </FormControl>
         <FormControl>
           <TimePicker

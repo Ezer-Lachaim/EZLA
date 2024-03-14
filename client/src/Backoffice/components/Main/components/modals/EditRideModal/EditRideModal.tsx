@@ -38,7 +38,9 @@ function EditRideModal({ open, handleModal, ride }: EditRideModalProps) {
       comment: ride.comment || '',
       specialRequest: ride.specialRequest || [],
       pickupDateTime: ride.pickupDateTime || undefined,
-      relevantTime: ride.relevantTime || 3
+      relevantTime: ride.relevantTime || 3,
+      serviceType: ride.serviceType || 'Ride',
+      passengerCount: ride.passengerCount || 1
     }
   });
 
